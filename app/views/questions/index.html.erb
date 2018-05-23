@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Question</h1>
+
+
+  <tbody>
+    
+    <% @question = @questions.order("RANDOM()").first %>
+
+    <%= simple_form_for :questionGuess do |f| %>
+      <%= f.input :answer, label: @question.text %>
+      <!--
+      Look at Slim
+       -->
+    <% end %>
+
+    <button id="foo">Guess!</button>
+    <div id="response"></div>
+
+<br>
+
+<script type="text/javascript">
+
+  let guessButton = document.querySelector('#foo')
+
+  guessButton.addEventListener('click', () => {
+    let responseDiv = document.querySelector('#response')
+    let guess       = document.querySelector('#questionGuess_answer').value
+
+    if ( guess === '<%= @question.answer %>' ) {
+      responseDiv.textContent = 'Correct!'
+    } else {
+      responseDiv.textContent = 'Incorrect :(' + guess + ' does not match <%= @question.answer %>'
+    }
+  })
+
+</script>
