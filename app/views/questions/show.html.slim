@@ -1,0 +1,25 @@
+p#notice= notice
+
+h2 Question
+
+p 
+  = @question.text
+
+p
+  strong Current Answers:
+  table
+    - @answers = @question.answers
+    - @answers.each do |answer|
+        tr
+        td= answer.text
+        td= answer.correct
+        td= link_to 'Destroy', [answer.question, answer], method: :delete
+
+h3 Add Answer
+= simple_form_for([@question, @question.answers.build ]) do |f|
+  = f.input :text, label: 'Answer'
+  = f.input :correct, label: 'Correct answer?', as: :boolean
+  = f.button :submit
+
+= link_to 'Edit', edit_question_path(@question)
+= link_to 'Back', questions_path

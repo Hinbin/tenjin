@@ -9,9 +9,6 @@
 
     <%= simple_form_for :questionGuess do |f| %>
       <%= f.input :answer, label: @question.text %>
-      <!--
-      Look at Slim
-       -->
     <% end %>
 
     <button id="foo">Guess!</button>
@@ -22,15 +19,22 @@
 <script type="text/javascript">
 
   let guessButton = document.querySelector('#foo')
+  let answers = []
+
+  <% @question.answers.where(correct: true).each do |answer| %>
+    answers.push('<%=answer.text%>')
+  <% end %>
+
+  console.log(answers)
 
   guessButton.addEventListener('click', () => {
     let responseDiv = document.querySelector('#response')
     let guess       = document.querySelector('#questionGuess_answer').value
 
-    if ( guess === '<%= @question.answer %>' ) {
+    if ( answers.includes(guess) ) {
       responseDiv.textContent = 'Correct!'
     } else {
-      responseDiv.textContent = 'Incorrect :(' + guess + ' does not match <%= @question.answer %>'
+      responseDiv.textContent = 'Incorrect :(' + guess + ' does not match ' + answers
     }
   })
 

@@ -69,3 +69,6 @@ gem 'simple_form'
 
 # Webpacker for React
 gem 'webpacker', '~> 3.5'
+
+# Slim for clean HTML
+gem 'slim'
