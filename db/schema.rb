@@ -10,35 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_21_121617) do
+ActiveRecord::Schema.define(version: 2018_05_21_121003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "answers", force: :cascade do |t|
+    t.bigint "question_id"
     t.string "text"
     t.boolean "correct"
-    t.bigint "question_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["question_id"], name: "index_answers_on_question_id"
   end
 
   create_table "questions", force: :cascade do |t|
+    t.bigint "topic_id"
     t.string "text"
-    t.string "answer"
+    t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
 
-  create_table "sessions", force: :cascade do |t|
-    t.bigint "question_id"
-    t.text "user"
-    t.integer "score"
-    t.integer "question_no"
+  create_table "topics", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["question_id"], name: "index_sessions_on_question_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -59,5 +57,5 @@ ActiveRecord::Schema.define(version: 2018_05_21_121617) do
   end
 
   add_foreign_key "answers", "questions"
-  add_foreign_key "sessions", "questions"
+  add_foreign_key "questions", "topics"
 end
