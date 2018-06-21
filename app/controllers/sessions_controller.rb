@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
     before_action :authenticate_user!
-    before_action :set_session, only: [:show]
+    before_action :set_session, only: [:show, :update]
+    before_action :set_question, only: [:show, :update]
 
   # GET /questions
   # GET /questions.json
@@ -9,6 +10,18 @@ class SessionsController < ApplicationController
   end
 
   def show
+    @questionNumber = @session.getQuestion 
+  end
+
+  def update
+
+    unless ( params.dig(:question, :answer_ids).blank? )
+      @session.nextQuestion!
+      check_correct_answer(params[:question][:answer_ids])
+    else
+      redirect_to action: 'show'
+    end
+
   end
 
   def new
@@ -37,7 +50,33 @@ class SessionsController < ApplicationController
 
   private
     def set_session
-        @session = Session.find(params[:id])
+      @session = Session.find(params[:id])
+    end
+
+    def set_question
+      @questionNumber = @session.getQuestion 
+      @question = Question.find_by(id: @questionNumber)
+    end
+
+    def check_correct_answer(answerID)
+
+      @answerGiven = Answer.find_by( id: answerID )
+
+      if @answerGiven.correct
+        @session.answeredCorrect = @session.answeredCorrect + 1
+        @session.streak = @session.streak + 1
+      else
+        @session.streak = 0
+      end
+  
+      @session.save
+  
+      if (@session.numQuestionsAsked >= @session.questionsAsked_id.length)
+        @session.endSession!
+        redirect_to action: 'new'
+      else
+        redirect_to action: 'show'
+      end
     end
 
 end

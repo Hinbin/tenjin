@@ -2,7 +2,15 @@ p#notice= notice
 
 h1 Sessions
 
-=@sessions.each do |session|
+table
   tr
-    td= session.user
-    td= session.questionAsked
+    th ID
+    th E-Mail
+    th Num Questions Asked
+    th Updated Last
+  -@sessions.each do |session|
+    tr
+      td = session.id
+      td = session.user.email
+      td = session.numQuestionsAsked
+      td = session.updated_at

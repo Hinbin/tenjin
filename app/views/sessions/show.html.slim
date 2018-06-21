@@ -1,4 +1,12 @@
 p#notice= notice
 
-p
-  =@session.questionsAsked_id
+p = "Number of questions Asked:" + @session.numQuestionsAsked.to_s
+p = 'Answered Correct:' + @session.answeredCorrect.to_s
+p = 'Streak:' + @session.streak.to_s
+
+=simple_form_for(@question, url: session_path(@session)) do |f|
+  p = @question.text
+  = f.association :answers, collection: @question.answers, label_method: :text, as: :radio_buttons
+  = f.submit
+
+
