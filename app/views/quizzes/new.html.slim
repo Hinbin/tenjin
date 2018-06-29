@@ -1,0 +1,12 @@
+p#notice= notice
+
+h1 New Quiz
+
+= if @quiz.errors.any?
+  div id="error_explanation"
+  h2 Errors
+  =@quiz.errors.full_messages.each do |msg|
+    =msg
+
+= simple_form_for(@quiz) do |f|
+  = f.button :submit

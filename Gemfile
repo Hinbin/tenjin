@@ -72,3 +72,12 @@ gem 'webpacker', '~> 3.5'
 
 # Slim for clean HTML
 gem 'slim'
+
+# Pry for debugging goodness
+gem 'pry-rails'
+
+# Better errors - development only!
+group :development do
+  gem "better_errors"
+  gem "binding_of_caller"
+end

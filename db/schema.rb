@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_13_130326) do
+ActiveRecord::Schema.define(version: 2018_06_27_083451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,17 +33,18 @@ ActiveRecord::Schema.define(version: 2018_06_13_130326) do
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
 
-  create_table "sessions", force: :cascade do |t|
-    t.bigint "questionsAsked_id", default: [], array: true
-    t.datetime "timeAsked"
+  create_table "quizzes", force: :cascade do |t|
+    t.bigint "questions_asked_id", default: [], array: true
+    t.datetime "date_started"
+    t.datetime "time_last_updated"
     t.integer "streak"
-    t.integer "answeredCorrect"
-    t.integer "numQuestionsAsked"
+    t.integer "answered_correct"
+    t.integer "num_questions_asked"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["questionsAsked_id"], name: "index_sessions_on_questionsAsked_id"
-    t.index ["user_id"], name: "index_sessions_on_user_id"
+    t.index ["questions_asked_id"], name: "index_quizzes_on_questions_asked_id"
+    t.index ["user_id"], name: "index_quizzes_on_user_id"
   end
 
   create_table "topics", force: :cascade do |t|
@@ -71,5 +72,5 @@ ActiveRecord::Schema.define(version: 2018_06_13_130326) do
 
   add_foreign_key "answers", "questions"
   add_foreign_key "questions", "topics"
-  add_foreign_key "sessions", "users"
+  add_foreign_key "quizzes", "users"
 end

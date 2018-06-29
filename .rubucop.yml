@@ -1,0 +1,7 @@
+inherit_from: ../.rubocop.yml
+
+Style/Encoding:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 99
