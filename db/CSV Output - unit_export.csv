@@ -1,19 +1,19 @@
-id,name
-0,1-1 System Architecture
-1,1-2 Memory
-2,1-3 Storage
-3,1-4 Wired  Wireless Networks
-4,1-5 Topologies Protocols  Layers
-5,1-6 System Security
-6,1-7 System Software
-7,1-8 Ethical Legal Cultural Environmental Concerns
-8,2-1 Algorithms
-9,2-2 Programming Techniques
-10,2-3 Making Robust Programs
-11,2-4 Computational Logic
-12,2-5 Translators and Languages
-13,2-6 Binary Addition
-14,2-6 Binary and Denary
-15,2-6 Data Representation
-16,2-6 Hex and Binary
-17,2-6 Hex and Denary
+id,name,subject_id
+0,1-1 System Architecture,1
+1,1-2 Memory,1
+2,1-3 Storage,1
+3,1-4 Wired  Wireless Networks,1
+4,1-5 Topologies Protocols Layers,1
+5,1-6 System Security,1
+6,1-7 System Software,1
+7,1-8 Ethical Legal Cultural Environmental Concerns,1
+8,2-1 Algorithms,1
+9,2-2 Programming Techniques,1
+10,2-3 Making Robust Programs,1
+11,2-4 Computational Logic,1
+12,2-5 Translators and Languages,1
+13,2-6 Binary Addition,1
+14,2-6 Binary and Denary,1
+15,2-6 Data Representation,1
+16,2-6 Hex and Binary,1
+17,2-6 Hex and Denary,1

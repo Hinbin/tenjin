@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+# Quizzes Controller
 class QuizzesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_quiz, only: %i[show update]
@@ -14,7 +13,7 @@ class QuizzesController < ApplicationController
   # GET /quizzes/1
   # GET /quizzes/1.json
   def show
-    @question_number = @quiz.question
+    @question_number = @quiz.questions
   end
 
   # GET /quizzes/new
@@ -42,15 +41,16 @@ class QuizzesController < ApplicationController
   # PATCH/PUT /quizzes/1
   # PATCH/PUT /quizzes/1.json
   def update
-    if params.dig(:question, :answer_ids).blank?
-      redirect_to action: 'show'
+    permitted_params = quiz_params
+    if permitted_params.dig(:answer_ids).blank?
+      render_question
     else
       @answer = params[:question][:answer_ids]
-      update_quiz = UpdateQuiz.new(quiz: @quiz, answer: @answer).call
-      if update_quiz.quiz_finished
-        redirect_to action: 'new'
+      UpdateQuiz.new(quiz: @quiz, question: @question, answer: @answer).call
+      if @quiz.active
+        render_question
       else
-        redirect_to action: 'show'
+        redirect_to action: 'new'
       end
     end
   end
@@ -63,11 +63,19 @@ class QuizzesController < ApplicationController
   end
 
   def set_question
-    @question = Question.find_by(id: @quiz.question)
+    @question = @quiz.questions.limit(1).offset(@quiz.num_questions_asked).first
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def quiz_params
-    params.fetch(:quiz, {})
+    params.require(:question).permit(:question, :answer_ids)
+  end
+
+  def render_question
+    if @question.answers.length == 1
+      redirect_to action: 'show'
+    else
+      redirect_to action: 'show'
+    end
   end
 end

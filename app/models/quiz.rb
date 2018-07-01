@@ -2,9 +2,6 @@
 
 class Quiz < ApplicationRecord
   belongs_to :user
-
-  def question
-    questions_asked_id[num_questions_asked]
-  end
-
+  has_many :asked_questions
+  has_many :questions, through: :asked_questions
 end

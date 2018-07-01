@@ -1,0 +1,11 @@
+FeatureEnvy:
+  enabled: true
+
+TooManyStatements:
+  max_statements: 12
+
+InstanceVariableAssumption:
+  enabled: false
+
+DuplicateMethodCall
+  enabled: false

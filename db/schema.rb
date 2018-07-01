@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_27_083451) do
+ActiveRecord::Schema.define(version: 2018_06_29_152211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,16 @@ ActiveRecord::Schema.define(version: 2018_06_27_083451) do
     t.index ["question_id"], name: "index_answers_on_question_id"
   end
 
+  create_table "asked_questions", force: :cascade do |t|
+    t.bigint "question_id"
+    t.bigint "quiz_id"
+    t.boolean "correct"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_asked_questions_on_question_id"
+    t.index ["quiz_id"], name: "index_asked_questions_on_quiz_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.bigint "topic_id"
     t.string "text"
@@ -34,23 +44,29 @@ ActiveRecord::Schema.define(version: 2018_06_27_083451) do
   end
 
   create_table "quizzes", force: :cascade do |t|
-    t.bigint "questions_asked_id", default: [], array: true
-    t.datetime "date_started"
-    t.datetime "time_last_updated"
+    t.datetime "time_last_answered"
     t.integer "streak"
     t.integer "answered_correct"
     t.integer "num_questions_asked"
     t.bigint "user_id"
+    t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["questions_asked_id"], name: "index_quizzes_on_questions_asked_id"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
+  end
+
+  create_table "subjects", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "topics", force: :cascade do |t|
     t.string "name"
+    t.bigint "subject_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_topics_on_subject_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -73,4 +89,5 @@ ActiveRecord::Schema.define(version: 2018_06_27_083451) do
   add_foreign_key "answers", "questions"
   add_foreign_key "questions", "topics"
   add_foreign_key "quizzes", "users"
+  add_foreign_key "topics", "subjects"
 end
