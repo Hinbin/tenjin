@@ -13,7 +13,7 @@ class CreateQuiz
     quiz.num_questions_asked = 0
     quiz.active = true
 
-    questions = Question.where('topic_id < ?', 13).order('RANDOM()').take(10)#.pluck(:id)
+    questions = Question.where('topic_id < ? AND answers_count = ?', 13, 1).order('RANDOM()').take(10)
     quiz.questions = questions
 
     quiz

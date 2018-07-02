@@ -14,6 +14,7 @@ class QuizzesController < ApplicationController
   # GET /quizzes/1.json
   def show
     @question_number = @quiz.questions
+    render_question
   end
 
   # GET /quizzes/new
@@ -45,9 +46,9 @@ class QuizzesController < ApplicationController
     if permitted_params.dig(:answer_ids).blank?
       render_question
     else
-      @answer = params[:question][:answer_ids]
-      UpdateQuiz.new(quiz: @quiz, question: @question, answer: @answer).call
+      UpdateQuiz.new(quiz: @quiz, question: @question, answer_given: permitted_params.dig(:answer_ids)).call
       if @quiz.active
+        set_question
         render_question
       else
         redirect_to action: 'new'
@@ -72,10 +73,10 @@ class QuizzesController < ApplicationController
   end
 
   def render_question
-    if @question.answers.length == 1
-      redirect_to action: 'show'
+    if @question.answers_count == 1
+      render 'question_short_response'
     else
-      redirect_to action: 'show'
+      render 'question_multiple_choice'
     end
   end
 end

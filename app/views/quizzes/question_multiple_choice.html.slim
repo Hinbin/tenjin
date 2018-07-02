@@ -1,9 +1,4 @@
-p#notice= notice
-
-p = "Number of questions Asked:" + @quiz.num_questions_asked.to_s
-p = 'Answered Correct:' + @quiz.answered_correct.to_s
-p = 'Streak:' + @quiz.streak.to_s
-
+=render 'question_top'
 =simple_form_for(@question, url: quiz_path(@quiz)) do |f|
   p = @question.text
   = f.association :answers, collection: @question.answers, label_method: :text, as: :radio_buttons

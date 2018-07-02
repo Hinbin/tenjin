@@ -1,0 +1,7 @@
+=render 'question_top'
+=simple_form_for(@question, url: quiz_path(@quiz)) do |f|
+  p = @question.text
+  = f.input :answer_ids, label: 'Answer here:', input_html: {value:'', autocomplete:'off'}
+  = f.submit
+
+

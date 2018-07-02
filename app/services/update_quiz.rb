@@ -3,11 +3,10 @@
 # Finally, checks to see if the quiz has finished and destroys as necessary.
 class UpdateQuiz
   def initialize(params)
-    @answer = params[:answer]
     @quiz = params[:quiz]
     @question = params[:question]
+    @answer_given = params[:answer_given]
     @asked_question = @question.asked_questions.first
-    @quiz_finished = false
   end
 
   def call
@@ -20,15 +19,10 @@ class UpdateQuiz
   private
 
   def check_answer_correct
-    answer_given = Answer.find_by(id: @answer)
-
-    if answer_given.correct
-      @quiz.answered_correct = @quiz.answered_correct + 1
-      @quiz.streak = @quiz.streak + 1
-      @asked_question.correct = true
+    if @question.answers_count == 1
+      check_short_answer
     else
-      @quiz.streak = 0
-      @asked_question.correct = false
+      check_multiple_choice
     end
 
     @asked_question.save
@@ -44,5 +38,34 @@ class UpdateQuiz
     return unless @quiz.num_questions_asked >= @quiz.questions.length
     @quiz.active = false
     @quiz.save
+  end
+
+  def process_correct_answer
+    @quiz.answered_correct = @quiz.answered_correct + 1
+    @quiz.streak = @quiz.streak + 1
+    @asked_question.correct = true
+  end
+
+  def process_incorrect_answer
+    @quiz.streak = 0
+    @asked_question.correct = false
+  end
+
+  def check_short_answer
+    @correct_answer = @question.answers.first.text
+    if @answer_given.casecmp(@correct_answer).zero?
+      process_correct_answer
+    else
+      process_incorrect_answer
+    end
+  end
+
+  def check_multiple_choice
+    @answer = Answer.find_by(id: @answer_given)
+    if @answer.correct
+      process_correct_answer
+    else
+      process_incorrect_answer
+    end
   end
 end
