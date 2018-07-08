@@ -9,3 +9,6 @@ InstanceVariableAssumption:
 
 DuplicateMethodCall
   enabled: false
+
+exclude_paths:
+  - db/

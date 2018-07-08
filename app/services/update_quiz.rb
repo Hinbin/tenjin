@@ -6,6 +6,7 @@ class UpdateQuiz
     @quiz = params[:quiz]
     @question = params[:question]
     @answer_given = params[:answer_given]
+    @user = params[:user]
     @asked_question = @question.asked_questions.first
   end
 
@@ -41,14 +42,26 @@ class UpdateQuiz
   end
 
   def process_correct_answer
-    @quiz.answered_correct = @quiz.answered_correct + 1
-    @quiz.streak = @quiz.streak + 1
+    @quiz.answered_correct += 1
+    @quiz.streak += 1
     @asked_question.correct = true
+    add_to_leaderboard
   end
 
   def process_incorrect_answer
     @quiz.streak = 0
     @asked_question.correct = false
+  end
+
+  def add_to_leaderboard
+    @leaderboard_entry = @user.leaderboard_entries.where('classroom_id = ?', @quiz.classroom.id).first
+    if @leaderboard_entry.nil?
+      @leaderboard_entry = LeaderboardEntry.new(score: 1, classroom_id: @quiz.classroom_id, user_id: @user.id)
+    else
+      @leaderboard_entry.score += 1
+    end
+    @leaderboard_entry.save
+    LeaderboardChannel.broadcast_to(@question.topic.subject.name, @leaderboard_entry)
   end
 
   def check_short_answer

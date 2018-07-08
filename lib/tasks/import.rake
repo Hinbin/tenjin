@@ -19,5 +19,15 @@ namespace :import do
     CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
       Answer.create!(row.to_hash)
     end
+
+    Classroom.create([{name: '9B/Cs1', subject_id: 1}])
+    School.create([{name:'Outwood Grange'}, [{name:'Outwood Academy Adwick'}]])
+
+    
   end
 end
+
+# Examples:
+#
+#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
+#   Character.create(name: 'Luke', movie: movies.first)

@@ -34,6 +34,9 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
 
 
       t.timestamps null: false
+
+      # End of devise default fields
+      t.belongs_to :school, index: true
     end
 
     add_index :users, :email,                unique: true

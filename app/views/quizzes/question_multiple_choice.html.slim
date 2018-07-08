@@ -3,5 +3,5 @@
   p = @question.text
   = f.association :answers, collection: @question.answers, label_method: :text, as: :radio_buttons
   = f.submit
-
+=render 'leaderboard'
 
