@@ -7,6 +7,6 @@ class QuizAccessPolicy
   end
 
   def update?
-    @user.id == @quiz.user_id
+    @user.id == @quiz.user_id && @quiz.active
   end
 end

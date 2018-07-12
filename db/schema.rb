@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_06_130401) do
+ActiveRecord::Schema.define(version: 2018_07_12_124130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,27 +37,21 @@ ActiveRecord::Schema.define(version: 2018_07_06_130401) do
   create_table "classrooms", force: :cascade do |t|
     t.string "name"
     t.bigint "subject_id"
+    t.bigint "school_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_classrooms_on_school_id"
     t.index ["subject_id"], name: "index_classrooms_on_subject_id"
   end
 
-  create_table "leaderboard_connections", force: :cascade do |t|
-    t.bigint "user_id"
-    t.integer "connections"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_leaderboard_connections_on_user_id"
-  end
-
-  create_table "leaderboard_entries", force: :cascade do |t|
-    t.integer "score"
+  create_table "enrollments", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "classroom_id"
+    t.integer "score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["classroom_id"], name: "index_leaderboard_entries_on_classroom_id"
-    t.index ["user_id"], name: "index_leaderboard_entries_on_user_id"
+    t.index ["classroom_id"], name: "index_enrollments_on_classroom_id"
+    t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
   create_table "questions", force: :cascade do |t|
@@ -124,9 +118,8 @@ ActiveRecord::Schema.define(version: 2018_07_06_130401) do
   end
 
   add_foreign_key "answers", "questions"
-  add_foreign_key "leaderboard_connections", "users"
-  add_foreign_key "leaderboard_entries", "classrooms"
-  add_foreign_key "leaderboard_entries", "users"
+  add_foreign_key "enrollments", "classrooms"
+  add_foreign_key "enrollments", "users"
   add_foreign_key "questions", "topics"
   add_foreign_key "quizzes", "users"
   add_foreign_key "topics", "subjects"

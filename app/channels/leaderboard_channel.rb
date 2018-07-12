@@ -1,7 +1,7 @@
 class LeaderboardChannel < ApplicationCable::Channel
   def subscribed
     return if params[:subject].blank?
-    stream_from params[:subject].to_s
+    stream_from "leaderboard:#{params[:subject]}"
   end
 
   def unsubscribed; end

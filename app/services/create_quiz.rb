@@ -19,7 +19,7 @@ class CreateQuiz
     @quiz.streak = 0
     @quiz.answered_correct = 0
     @quiz.num_questions_asked = 0
-    @quiz.classroom_id = 1 #Do later!
+    @quiz.classroom_id = 2 #Do later!
     @quiz.active = true
   end
 

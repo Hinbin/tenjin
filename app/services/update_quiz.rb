@@ -46,6 +46,7 @@ class UpdateQuiz
     @quiz.streak += 1
     @asked_question.correct = true
     add_to_leaderboard
+    broadcast_leaderboard_point
   end
 
   def process_incorrect_answer
@@ -54,14 +55,19 @@ class UpdateQuiz
   end
 
   def add_to_leaderboard
-    @leaderboard_entry = @user.leaderboard_entries.where('classroom_id = ?', @quiz.classroom.id).first
+    @leaderboard_entry =
+      @user.leaderboard_entries.where('classroom_id = ?', @quiz.classroom.id).first
     if @leaderboard_entry.nil?
-      @leaderboard_entry = LeaderboardEntry.new(score: 1, classroom_id: @quiz.classroom_id, user_id: @user.id)
+      @leaderboard_entry =
+        LeaderboardEntry.new(score: 1, classroom_id: @quiz.classroom_id, user_id: @user.id)
     else
       @leaderboard_entry.score += 1
     end
     @leaderboard_entry.save
-    LeaderboardChannel.broadcast_to(@question.topic.subject.name, @leaderboard_entry)
+  end
+
+  def broadcast_leaderboard_point
+    LeaderboardChannel.broadcast_to('Computer Science', @leaderboard_entry)
   end
 
   def check_short_answer

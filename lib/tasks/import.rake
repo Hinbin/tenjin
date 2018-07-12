@@ -20,10 +20,17 @@ namespace :import do
       Answer.create!(row.to_hash)
     end
 
-    Classroom.create([{name: '9B/Cs1', subject_id: 1}])
-    School.create([{name:'Outwood Grange'}, [{name:'Outwood Academy Adwick'}]])
+    School.create([{ name: 'Outwood Grange' }, [{ name: 'Outwood Academy Adwick' }]])
 
-    
+    Classroom.create([{ name: '9B/Cs1', subject_id: 1, school_id: 1 }])
+    Classroom.create([{ name: '9B/Hi2', subject_id: 2, school_id: 1 }])
+    Classroom.create([{ name: '9A/Cs1', subject_id: 1, school_id: 2 }])
+
+    User.create!([
+                   { email: 'nhoulton@grange.outwood.com', password: 'Outwood01', password_confirmation: 'Outwood01', school_id: 1 },
+                   { email: 'another@adwick.outwood.com', password: 'Outwood01', password_confirmation: 'Outwood01', school_id: 2 },
+                   { email: 'sudenim@grange.outwood.com', password: 'Outwood01', password_confirmation: 'Outwood01', school_id: 1 }
+                 ])
   end
 end
 

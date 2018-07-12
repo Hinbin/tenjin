@@ -13,9 +13,7 @@ class QuizzesController < ApplicationController
     elsif @quizzes.length == 1
       redirect_to @quizzes.first
     else
-      correct_quiz = SelectCorrectQuiz.new(quizzes: @quizzes).call
-
-      redirect_to correct_quiz
+      redirect_to SelectCorrectQuiz.new(quizzes: @quizzes).call
     end
   end
 
@@ -69,9 +67,8 @@ class QuizzesController < ApplicationController
   def set_quiz
     @quiz = Quiz.find(params[:id])
 
-    unless QuizAccessPolicy.new(current_user, @quiz).update?
-      raise Pundit::NotAuthorizedError, 'you are not allowed to update this quiz!'
-    end
+    return false if QuizAccessPolicy.new(current_user, @quiz).update?
+    raise Pundit::NotAuthorizedError, 'you are not allowed to update this quiz!'
   end
 
   def set_question

@@ -1,4 +1,4 @@
-App.cable.subscriptions.create { channel: "LeaderboardChannel", subject: "Computer Science" },
+App.leaderboard = App.cable.subscriptions.create { channel: "LeaderboardChannel", subject: "Computer Science" },
   connected: ->
     # Called when the subscription is ready for use on the server
 
