@@ -1,4 +1,4 @@
-App.leaderboard = App.cable.subscriptions.create { channel: "LeaderboardChannel", subject: "Computer Science" },
+App.leaderboard = App.cable.subscriptions.create {channel: 'LeaderboardChannel', subject: gon.subject, school: gon.school},
   connected: ->
     # Called when the subscription is ready for use on the server
 
@@ -8,6 +8,13 @@ App.leaderboard = App.cable.subscriptions.create { channel: "LeaderboardChannel"
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
     doc = document.getElementById('leaderboard')
-    doc.innerHTML = data.score
-    console.log(data)
+    user = document.getElementById(data.user)
+    userName = data.user
+    userScore = data.score
+
+    if user?
+      user.innerHTML = userName + ' - ' + userScore
+    else 
+      doc.innerHTML = doc.innerHTML + '<li id=' + userName + '>' + userName + ' - ' + userScore + '</li>'
+      
     

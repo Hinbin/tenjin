@@ -1,11 +1,25 @@
+AllCops:
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'bin/**/*'
+    - 'node_modules/**/*'
+    - !ruby/regexp /old_and_unused\.rb$/
+    
 Style/FrozenStringLiteralComment:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 99
+  Max: 120
 
 Metrics/MethodLength:
   Max: 12
 
 Style/Documentation:
   Enabled: false
+
+Layout/IndentArray:
+  EnforcedStyle: consistent
+
+

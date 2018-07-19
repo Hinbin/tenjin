@@ -2,7 +2,8 @@
 class CreateQuiz
   def initialize(params)
     @user = params[:user]
-    @topic = params[:topic]
+    @topic_id = params[:topic]
+    @topic = Topic.find(@topic_id)
     @quiz = Quiz.new
   end
 
@@ -19,7 +20,7 @@ class CreateQuiz
     @quiz.streak = 0
     @quiz.answered_correct = 0
     @quiz.num_questions_asked = 0
-    @quiz.classroom_id = 2 #Do later!
+    @quiz.classroom_id = @user.classrooms.where('subject_id = ?', @topic.subject_id).first.id
     @quiz.active = true
   end
 
@@ -27,7 +28,7 @@ class CreateQuiz
     questions = if @topic.blank?
                   Question.where('topic_id < ?', 13).order('RANDOM()').take(10)
                 else
-                  Question.where('topic_id = ?', @topic).order('RANDOM()').take(10)
+                  Question.where('topic_id = ?', @topic_id).order('RANDOM()').take(10)
                 end
 
     @quiz.questions = questions

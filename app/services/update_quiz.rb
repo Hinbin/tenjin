@@ -56,18 +56,18 @@ class UpdateQuiz
 
   def add_to_leaderboard
     @leaderboard_entry =
-      @user.leaderboard_entries.where('classroom_id = ?', @quiz.classroom.id).first
-    if @leaderboard_entry.nil?
-      @leaderboard_entry =
-        LeaderboardEntry.new(score: 1, classroom_id: @quiz.classroom_id, user_id: @user.id)
-    else
-      @leaderboard_entry.score += 1
-    end
+      @user.enrollments.where('classroom_id = ?', @quiz.classroom.id).first
+    return false if @leaderboard_entry.nil?
+
+    @leaderboard_entry.score += 1
     @leaderboard_entry.save
   end
 
   def broadcast_leaderboard_point
-    LeaderboardChannel.broadcast_to('Computer Science', @leaderboard_entry)
+    @subject = @quiz.subject
+    @channel_name = @subject.name, @user.school.name
+    @message = { user: @user.email, score: @leaderboard_entry.score }
+    LeaderboardChannel.broadcast_to(@channel_name, @message)
   end
 
   def check_short_answer

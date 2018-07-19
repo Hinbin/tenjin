@@ -1,0 +1,33 @@
+
+[1mFrom:[0m /home/nicholas/code/tenjin/app/models/user.rb @ line 14 User.from_omniauth:
+
+    [1;34m13[0m: [32mdef[0m [1;36mself[0m.[1;34mfrom_omniauth[0m(auth)
+ => [1;34m14[0m:   binding.pry
+    [1;34m15[0m:   [32munless[0m where([35memail[0m: auth.email).first.blank? [32mdo[0m |user|
+    [1;34m16[0m:     binding.pry
+    [1;34m17[0m:     [32mif[0m user.provider.blank?
+    [1;34m18[0m:       user.email = auth.info.email
+    [1;34m19[0m:       user.password = [1;34;4mDevise[0m.friendly_token[[1;34m0[0m,[1;34m20[0m]
+    [1;34m20[0m:       user.name = auth.info.name   [1;34m# assuming the user model has a name[0m
+    [1;34m21[0m:       user.image = auth.info.image [1;34m# assuming the user model has an image[0m
+    [1;34m22[0m:       user.school_id = [1;34m1[0m [1;34m# HARDCODED - CHANGE THIS[0m
+    [1;34m23[0m:       user.save
+    [1;34m24[0m:       binding.pry
+    [1;34m25[0m:     [32mend[0m
+    [1;34m26[0m:   [32mend[0m
+    [1;34m27[0m:   [32mend[0m
+    [1;34m28[0m: 
+    [1;34m29[0m:   where([35mprovider[0m: auth.provider, [35muid[0m: auth.uid).first_or_create [32mdo[0m |user|
+    [1;34m30[0m:     user.email = auth.info.email
+    [1;34m31[0m:     user.password = [1;34;4mDevise[0m.friendly_token[[1;34m0[0m,[1;34m20[0m]
+    [1;34m32[0m:     user.name = auth.info.name   [1;34m# assuming the user model has a name[0m
+    [1;34m33[0m:     user.image = auth.info.image [1;34m# assuming the user model has an image[0m
+    [1;34m34[0m:     user.school_id = [1;34m1[0m [1;34m# HARDCODED - CHANGE THIS[0m
+    [1;34m35[0m: 
+    [1;34m36[0m:     [1;34m# If you are using confirmable and the provider(s) you use validate emails, [0m
+    [1;34m37[0m:     [1;34m# uncomment the line below to skip the confirmation emails.[0m
+    [1;34m38[0m:     [1;34m# user.skip_confirmation![0m
+    [1;34m39[0m:   [32mend[0m
+    [1;34m40[0m: 
+    [1;34m41[0m: [32mend[0m
+

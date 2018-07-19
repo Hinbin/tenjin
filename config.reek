@@ -1,4 +1,7 @@
 directories:
+  "db":
+    StringLiterals:
+      enabled: false
   "app/controllers":
     IrresponsibleModule:
       enabled: false

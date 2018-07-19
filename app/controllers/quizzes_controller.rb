@@ -3,6 +3,7 @@ class QuizzesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_quiz, only: %i[show update]
   before_action :set_question, only: %i[show update]
+  before_action :set_subject, only: %i[new create]
 
   # GET /quizzes
   # GET /quizzes.json
@@ -28,8 +29,15 @@ class QuizzesController < ApplicationController
   # GET /quizzes/new
   def new
     @quiz = Quiz.new
-    @subjects = Subject.all
-    @topics = Topic.all
+    @subject = Subject.where('name = ?', params.permit(:subject).dig(:subject)).first
+
+    if @subject.blank?
+      @subjects = current_user.subjects.uniq
+      render 'new'
+    else
+      @topics = @subject.topics
+      render 'select_topic'
+    end
   end
 
   # GET /quizzes/1/edit
@@ -39,6 +47,11 @@ class QuizzesController < ApplicationController
   # POST /quizzes.json
   def create
     @topic = quiz_params.dig(:picked_topic)
+    if @topic.blank?
+      redirect_to 'new'
+      return
+    end
+
     @quiz = CreateQuiz.new(user: current_user, topic: @topic).call
     @quiz.save
     redirect_to @quiz
@@ -90,5 +103,9 @@ class QuizzesController < ApplicationController
     else
       render 'question_multiple_choice'
     end
+  end
+
+  def set_subject
+    @subject = params.permit(:subject).dig(:subject)
   end
 end

@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 2018_07_12_124130) do
     t.integer "score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["classroom_id", "user_id"], name: "index_enrollments_on_classroom_id_and_user_id", unique: true
     t.index ["classroom_id"], name: "index_enrollments_on_classroom_id"
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
@@ -112,6 +113,11 @@ ActiveRecord::Schema.define(version: 2018_07_12_124130) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "school_id"
+    t.integer "role"
+    t.string "provider"
+    t.string "uid"
+    t.string "name"
+    t.string "image"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["school_id"], name: "index_users_on_school_id"
