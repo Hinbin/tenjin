@@ -1,4 +1,5 @@
 class LeaderboardController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_subject, only: %i[show]
 
   def show

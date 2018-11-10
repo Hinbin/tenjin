@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_12_124130) do
+ActiveRecord::Schema.define(version: 2018_11_06_192300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admins", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admins_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
 
   create_table "answers", force: :cascade do |t|
     t.bigint "question_id"
@@ -55,6 +67,14 @@ ActiveRecord::Schema.define(version: 2018_07_12_124130) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
+  create_table "permitted_schools", force: :cascade do |t|
+    t.text "schoolID"
+    t.text "name"
+    t.text "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "questions", force: :cascade do |t|
     t.bigint "topic_id"
     t.string "text"
@@ -81,8 +101,17 @@ ActiveRecord::Schema.define(version: 2018_07_12_124130) do
 
   create_table "schools", force: :cascade do |t|
     t.string "name"
+    t.string "clientID"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["clientID"], name: "index_schools_on_clientID", unique: true
+  end
+
+  create_table "subject_maps", force: :cascade do |t|
+    t.bigint "permitted_school_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["permitted_school_id"], name: "index_subject_maps_on_permitted_school_id"
   end
 
   create_table "subjects", force: :cascade do |t|
@@ -97,6 +126,14 @@ ActiveRecord::Schema.define(version: 2018_07_12_124130) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["subject_id"], name: "index_topics_on_subject_id"
+  end
+
+  create_table "user_settings", force: :cascade do |t|
+    t.bigint "user_id"
+    t.text "placeholderSetting"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_settings_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -115,12 +152,13 @@ ActiveRecord::Schema.define(version: 2018_07_12_124130) do
     t.bigint "school_id"
     t.integer "role"
     t.string "provider"
-    t.string "uid"
-    t.string "name"
-    t.string "image"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.string "upi"
+    t.string "forename"
+    t.string "surname"
+    t.string "photo"
+    t.string "type"
     t.index ["school_id"], name: "index_users_on_school_id"
+    t.index ["upi"], name: "index_users_on_upi", unique: true
   end
 
   add_foreign_key "answers", "questions"
@@ -128,5 +166,7 @@ ActiveRecord::Schema.define(version: 2018_07_12_124130) do
   add_foreign_key "enrollments", "users"
   add_foreign_key "questions", "topics"
   add_foreign_key "quizzes", "users"
+  add_foreign_key "subject_maps", "permitted_schools"
   add_foreign_key "topics", "subjects"
+  add_foreign_key "user_settings", "users"
 end

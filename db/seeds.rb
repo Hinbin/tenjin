@@ -22,22 +22,3 @@ end
 CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
   Answer.create!(row.to_hash)
 end
-
-School.create([{ name: 'Outwood Grange' }, [{ name: 'Outwood Academy Adwick' }]])
-
-Classroom.create([{ name: '9B/Cs1', subject_id: 1, school_id: 1 }])
-Classroom.create([{ name: '9B/Hi2', subject_id: 2, school_id: 1 }])
-Classroom.create([{ name: '9A/Cs1', subject_id: 1, school_id: 2 }])
-
-User.create!([
-  { email: 't.account@grange.outwood.com', password: 'Outwood01', password_confirmation: 'Outwood01', school_id: 1 },
-  { email: 'a.nother@adwick.outwood.com', password: 'Outwood01', password_confirmation: 'Outwood01', school_id: 2 },
-  { email: 's.udenim@grange.outwood.com', password: 'Outwood01', password_confirmation: 'Outwood01', school_id: 1 }
-])
-
-Enrollment.create!([
-  { user_id: 1, classroom_id: 1, score: 0 },
-  { user_id: 2, classroom_id: 3, score: 0 },
-  { user_id: 3, classroom_id: 1, score: 0 },
-  { user_id: 1, classroom_id: 2, score: 0 }
-])

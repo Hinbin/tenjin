@@ -1,0 +1,2 @@
+class SubjectMap < ApplicationRecord
+end

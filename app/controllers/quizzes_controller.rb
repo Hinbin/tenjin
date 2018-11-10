@@ -8,7 +8,7 @@ class QuizzesController < ApplicationController
   # GET /quizzes
   # GET /quizzes.json
   def index
-    @quizzes = current_user.quizzes.where('active = ?', true)
+    @quizzes = policy_scope(Quiz)
     if @quizzes.length.zero?
       redirect_to action: 'new'
     elsif @quizzes.length == 1
@@ -21,6 +21,7 @@ class QuizzesController < ApplicationController
   # GET /quizzes/1
   # GET /quizzes/1.json
   def show
+    authorize @quiz
     @question_number = @quiz.questions
     cookies.encrypted[:user_id] = current_user.id
     render_question
@@ -38,6 +39,7 @@ class QuizzesController < ApplicationController
       @topics = @subject.topics
       render 'select_topic'
     end
+    authorize @quiz
   end
 
   # GET /quizzes/1/edit
@@ -53,6 +55,7 @@ class QuizzesController < ApplicationController
     end
 
     @quiz = CreateQuiz.new(user: current_user, topic: @topic).call
+    authorize @quiz
     @quiz.save
     redirect_to @quiz
   end
@@ -79,9 +82,6 @@ class QuizzesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_quiz
     @quiz = Quiz.find(params[:id])
-
-    return false if QuizAccessPolicy.new(current_user, @quiz).update?
-    raise Pundit::NotAuthorizedError, 'you are not allowed to update this quiz!'
   end
 
   def set_question

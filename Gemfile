@@ -39,6 +39,18 @@ gem 'bootsnap', '>= 1.1.0', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+
+  # Use the following gems for rspec testing
+  #gem 'rspec-rails', '~> 3.8'
+  %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
+    gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'master'
+  end  
+  # Fast creation of test objects
+  gem 'factory_bot_rails'
+  # Lets us mock web calls
+  gem 'webmock'
+  # Allows us to create a fake API
+  gem 'vcr'
 end
 
 group :development do
@@ -48,6 +60,18 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console', '>= 3.3.0'
+  
+  # better errors for debugging
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  
+  #httplog to get all messages sent to/from server
+  gem 'httplog'
+
+  # Pry for debugging goodness
+  gem 'pry-rails'
+
+  gem 'rubocop'
 end
 
 group :test do
@@ -63,8 +87,9 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # User authentication
 gem 'devise'
-gem 'omniauth-google-oauth2'
 gem 'omniauth'
+gem 'omniauth-oauth2'
+gem 'omniauth-wonde', :path=>"omniauth-wonde/"
 
 # Simple forms
 gem 'simple_form'
@@ -75,17 +100,11 @@ gem 'webpacker', '~> 3.5'
 # Slim for clean HTML
 gem 'slim'
 
-# Pry for debugging goodness
-gem 'pry-rails'
-
-# Better errors - development only!
-group :development do
-  gem 'better_errors'
-  gem 'binding_of_caller'
-end
-
 # Pundit to control authorization
 gem 'pundit'
 
 # Gon to pass rails variables to Javascript
 gem 'gon'
+
+# Wonde client to easily access Wonde data
+gem 'wondeclient'

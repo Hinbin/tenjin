@@ -1,0 +1,13 @@
+h1 Classroom Members
+table
+  tr
+   th E-Mail
+   th Questions
+   th Accuracy
+  -@classroom.users.each do |u|
+    - @total_questions = u.quizzes.where('classroom_id = ?', @classroom.id).sum(:num_questions_asked)
+    - @total_correct = u.quizzes.where('classroom_id = ?', @classroom.id).sum(:answered_correct)
+    tr
+      td =u.email
+      td =@total_questions
+      td =number_to_percentage( (@total_correct.to_f/@total_questions.to_f) * 100, precision: 0 )
