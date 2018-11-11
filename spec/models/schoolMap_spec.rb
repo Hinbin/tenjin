@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe School, type: :model do
-  it 'Adds a school to a database' do
+  it 'Adds a subject to a database' do
     create(:school)
     expect(School.count).to eq(1)
   end
@@ -17,5 +17,5 @@ RSpec.describe School, type: :model do
     expect { create(:school, client_id: '') }.to raise_error(ActiveRecord::RecordInvalid)
   end
   it 'Adds a school from a wonde object'
-  it 'Updates a school from a wonde object'  
+  it 'Updates a school from a wonde object'
 end

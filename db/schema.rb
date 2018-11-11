@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_06_192300) do
+ActiveRecord::Schema.define(version: 2018_11_11_170619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,14 @@ ActiveRecord::Schema.define(version: 2018_11_06_192300) do
     t.index ["subject_id"], name: "index_classrooms_on_subject_id"
   end
 
+  create_table "default_subject_maps", force: :cascade do |t|
+    t.string "name"
+    t.bigint "subject_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_default_subject_maps_on_subject_id"
+  end
+
   create_table "enrollments", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "classroom_id"
@@ -68,7 +76,7 @@ ActiveRecord::Schema.define(version: 2018_11_06_192300) do
   end
 
   create_table "permitted_schools", force: :cascade do |t|
-    t.text "schoolID"
+    t.text "school_id"
     t.text "name"
     t.text "token"
     t.datetime "created_at", null: false
@@ -101,17 +109,21 @@ ActiveRecord::Schema.define(version: 2018_11_06_192300) do
 
   create_table "schools", force: :cascade do |t|
     t.string "name"
-    t.string "clientID"
+    t.string "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["clientID"], name: "index_schools_on_clientID", unique: true
+    t.index ["client_id"], name: "index_schools_on_client_id", unique: true
   end
 
   create_table "subject_maps", force: :cascade do |t|
-    t.bigint "permitted_school_id"
+    t.bigint "school_id"
+    t.string "client_id"
+    t.string "client_subject_name"
+    t.bigint "subject_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["permitted_school_id"], name: "index_subject_maps_on_permitted_school_id"
+    t.index ["school_id"], name: "index_subject_maps_on_school_id"
+    t.index ["subject_id"], name: "index_subject_maps_on_subject_id"
   end
 
   create_table "subjects", force: :cascade do |t|
@@ -126,14 +138,6 @@ ActiveRecord::Schema.define(version: 2018_11_06_192300) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["subject_id"], name: "index_topics_on_subject_id"
-  end
-
-  create_table "user_settings", force: :cascade do |t|
-    t.bigint "user_id"
-    t.text "placeholderSetting"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_user_settings_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -162,11 +166,12 @@ ActiveRecord::Schema.define(version: 2018_11_06_192300) do
   end
 
   add_foreign_key "answers", "questions"
+  add_foreign_key "default_subject_maps", "subjects"
   add_foreign_key "enrollments", "classrooms"
   add_foreign_key "enrollments", "users"
   add_foreign_key "questions", "topics"
   add_foreign_key "quizzes", "users"
-  add_foreign_key "subject_maps", "permitted_schools"
+  add_foreign_key "subject_maps", "schools"
+  add_foreign_key "subject_maps", "subjects"
   add_foreign_key "topics", "subjects"
-  add_foreign_key "user_settings", "users"
 end
