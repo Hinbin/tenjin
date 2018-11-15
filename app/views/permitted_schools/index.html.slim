@@ -5,7 +5,7 @@ table
   - @permitted_schools.each do |school|
     tr
       td =school.id
-      td =school.schoolID
+      td =school.school_id
       td =school.name
       td =link_to 'Show', permitted_school_path(school)
       td =link_to 'Update'

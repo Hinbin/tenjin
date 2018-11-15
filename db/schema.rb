@@ -47,7 +47,10 @@ ActiveRecord::Schema.define(version: 2018_11_11_170619) do
   end
 
   create_table "classrooms", force: :cascade do |t|
+    t.string "client_id"
     t.string "name"
+    t.string "code"
+    t.string "description"
     t.bigint "subject_id"
     t.bigint "school_id"
     t.datetime "created_at", null: false

@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.wonde.com/v1.0/schools/A852030759
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip
+      Authorization:
+      - Basic 2a550dc912f6a63488af42352b79c5961e87daf9
+      User-Agent:
+      - unirest-ruby/1.1
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 15 Nov 2018 14:08:14 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '471'
+      Connection:
+      - keep-alive
+      Server:
+      - Apache/2.4.10 (Debian)
+      Vary:
+      - Authorization
+      X-Powered-By:
+      - PHP/7.1.12
+      Cache-Control:
+      - no-cache, private
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin,
+        Authorization
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: '{"data":{"id":"A852030759","name":"Outwood Grange Academy 1532082212","establishment_number":3430,"urn":848187,"phase_of_education":"SECONDARY","la_code":970,"timezone":null,"mis":"SIMS","address":{"address_line_1":"78
+        Bruce Roads","address_line_2":"Zachary Ford","address_town":"Louismouth","address_postcode":"PE25
+        1AA","address_country":{"code":"GBR","name":"United Kingdom"}},"extended":{"allows_writeback":true,"has_timetables":false,"has_lesson_attendance":false}}}'
+    http_version: 
+  recorded_at: Thu, 15 Nov 2018 14:08:14 GMT
+recorded_with: VCR 4.0.0

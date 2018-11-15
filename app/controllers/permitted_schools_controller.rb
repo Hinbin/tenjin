@@ -13,14 +13,13 @@ class PermittedSchoolsController < ApplicationController
   def new
     authorize @permitted_school = PermittedSchool.new
   end
-
   def edit
     authorize @permitted_school = PermittedSchool.find(params[:id])
   end
 
   def create
     authorize @permitted_school = PermittedSchool.new(permitted_school_params)
-    @permitted_school.name = addSchool(@permitted_school.token, @permitted_school.schoolID)
+    @permitted_school.name = addSchool(@permitted_school.token, @permitted_school.school_id)
 
     if @permitted_school.save
       redirect_to @permitted_school
@@ -50,6 +49,6 @@ class PermittedSchoolsController < ApplicationController
   private
 
   def permitted_school_params
-    params.require(:permitted_school).permit(:schoolID, :name)
+    params.require(:permitted_school).permit(:school_id, :name, :token)
   end
 end
