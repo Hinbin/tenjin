@@ -21,13 +21,31 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(auth)
-    where(provider: auth['provider'], upi: auth['upi']).first do |user|
-      user.provider = auth['provider']
-      user.upi = auth['upi']
-      user.forename = auth['forename']
-      user.surname = auth['surname']
-      user.role = auth['type']
-      user.school_id = auth['School']['id']
+    where(provider: auth['provider'], upi: auth['upi']).first
+  end
+
+  def self.from_wonde(school_data, sync_data)
+    school = School.school_from_client_id(school_data.id)
+    mapped_subjects = SubjectMap.where.not(subject_id: nil).where(school_id: school)
+
+    # We only want entries for students that are completing subjects
+    # covered by the quiz platform
+    sync_data.each do |classroom|
+      subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
+      classroom.students.data.each do |student|
+        create_student(student, school)
+      end
     end
+  end
+
+  def self.create_student(student, school)
+    u = User.where(provider: 'Wonde', upi: student.upi).first_or_initialize
+    u.school = school
+    u.role = 'student'
+    u.provider = 'Wonde'
+    u.upi = student.upi
+    u.forename = student.forename
+    u.surname = student.surname
+    u.save
   end
 end

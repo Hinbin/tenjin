@@ -153,6 +153,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.15.3)
       multipart-post (>= 1.2, < 3)
+    ffaker (2.10.0)
     ffi (1.9.25)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
@@ -365,6 +366,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   devise
   factory_bot_rails
+  ffaker
   gon
   httplog
   jbuilder (~> 2.5)

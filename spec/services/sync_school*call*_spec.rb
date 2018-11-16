@@ -43,8 +43,25 @@ RSpec.describe SyncSchool, '#call' do
   end
 
   context 'with student data' do
-    it 'creates student entries'
-    it 'updates a students details'
+    before do
+      sync_school_with_wonde
+    end
+
+    it 'creates student entries', :vcr do
+      expect(User.count).to be > 0
+    end
+
+    it 'links a student to a school', :vcr do
+      expect(User.first.school.name).to eq('Outwood Grange Academy 1532082212')
+    end
+  end
+
+  context 'when given updated student data' do
+    it 'updates student details', :vcr do
+      create(:student, upi: '1479cf1d289684f08600c9ad1f6406fc')
+      sync_school_with_wonde
+      expect(User.where(upi: '1479cf1d289684f08600c9ad1f6406fc').first.forename).to eq('Leo')
+    end
   end
 
   context 'with employee data' do

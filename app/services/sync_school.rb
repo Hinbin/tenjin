@@ -14,5 +14,6 @@ class SyncSchool
     sync_data = @data_from_client.classes.all(%w[subject students])
     SubjectMap.from_wonde(@school_from_client, subject_data)
     Classroom.from_wonde(@school_from_client, sync_data)
+    User.from_wonde(@school_from_client, sync_data)
   end
 end

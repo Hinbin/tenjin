@@ -51,6 +51,8 @@ group :development, :test do
   gem 'webmock'
   # Allows us to create a fake API
   gem 'vcr'
+
+  gem 'ffaker'
 end
 
 group :development do
@@ -73,7 +75,7 @@ group :development do
 
   # All them rules for development
   gem 'rubocop'
-  gem 'rubocop-rspec'
+  gem 'rubocop-rspec'  
 end
 
 group :test do
