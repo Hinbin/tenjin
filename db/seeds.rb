@@ -22,3 +22,12 @@ end
 CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
   Answer.create!(row.to_hash)
 end
+
+case Rails.env
+  when "development"
+    Admin.create(email: 'n.houlton@grange.outwood.com', password: 'password', password_confirmation: 'password')
+    subject = Subject.where(name:'Computer Science').first
+    DefaultSubjectMap.create(name: 'Sociology', subject: subject)
+end
+
+

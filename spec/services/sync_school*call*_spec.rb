@@ -28,7 +28,14 @@ RSpec.describe SyncSchool, '#call' do
       expect(Classroom.first.subject.name).to eq 'Computer Science'
     end
 
-    it 'enrolls students into the classroom'
+    it 'enrolls students into the classroom', :vcr do
+      expect(Enrollment.first.classroom.name).to eq 'SOC 2'
+    end
+
+    it 'does not duplicate enrollments', :vcr do
+      sync_school_with_wonde
+      expect(Enrollment.where(user_id: User.first).count).to eq(1)
+    end
   end
 
   context 'when receiving updated classroom data' do

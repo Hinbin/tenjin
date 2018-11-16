@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2018_11_11_170619) do
   end
 
   create_table "classrooms", force: :cascade do |t|
-    t.string "client_id"
+    t.string "client_id", null: false
     t.string "name"
     t.string "code"
     t.string "description"
@@ -70,7 +70,6 @@ ActiveRecord::Schema.define(version: 2018_11_11_170619) do
   create_table "enrollments", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "classroom_id"
-    t.integer "score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["classroom_id", "user_id"], name: "index_enrollments_on_classroom_id_and_user_id", unique: true

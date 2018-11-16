@@ -24,14 +24,16 @@ class User < ApplicationRecord
     where(provider: auth['provider'], upi: auth['upi']).first
   end
 
-  def self.from_wonde(school_data, sync_data)
-    school = School.school_from_client_id(school_data.id)
-    mapped_subjects = SubjectMap.where.not(subject_id: nil).where(school_id: school)
+  def self.from_wonde(school, sync_data)
+    mapped_subjects = SubjectMap.subjects_for_school(school)
 
     # We only want entries for students that are completing subjects
     # covered by the quiz platform
+
     sync_data.each do |classroom|
       subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
+      next unless subject.present?
+
       classroom.students.data.each do |student|
         create_student(student, school)
       end
@@ -47,5 +49,9 @@ class User < ApplicationRecord
     u.forename = student.forename
     u.surname = student.surname
     u.save
+  end
+
+  def self.user_from_upi(upi)
+    User.where(upi: upi).first
   end
 end

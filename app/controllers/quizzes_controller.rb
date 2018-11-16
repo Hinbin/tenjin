@@ -63,6 +63,7 @@ class QuizzesController < ApplicationController
   # PATCH/PUT /quizzes/1
   # PATCH/PUT /quizzes/1.json
   def update
+    authorize @quiz
     if question_params.dig(:answer_ids).blank?
       render_question
     else
