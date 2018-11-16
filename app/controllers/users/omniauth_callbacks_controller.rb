@@ -1,91 +1,60 @@
-class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  def wonde
-    # For Wonde - we're not finished when we get a callback response
-    # Another request needs to be made to the GraphQL server using
-    # the provided bearer token to retrieve user information
+module Users
+  class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+    def wonde
+      # For Wonde - we're not finished when we get a callback response
+      # Another request needs to be made to the GraphQL server using
+      # the provided bearer token to retrieve user information
 
-    # The bearer token can be found in the response callback
-    bearer_token = request.env['omniauth.auth'].credentials['token']
+      # Setup the GraphQL query that will return all essential information
+      query = File.read('app/graphql/user_graphql_query')
 
-    # Setup the GraphQL query that will return all essential information
-    query = <<-GRAPHQL
-    {
-      Me {
-        Person {
-          ... on Student {
-            type
-            forename
-            middle_names
-            surname
-            upi
-            Photo {
-              id
-              content
-            }
-            School {
-              id
-              name
-            }
-          }
-          ... on Employee {
-            type
-            forename
-            middle_names
-            surname
-            upi
-            School {
-              id
-              name
-            }
-          }
-          ... on Contact {
-            type
-            forename
-            middle_names
-            surname
-            upi
-            School {
-              id
-              name
-            }
-          }
-        }
-      }
-    }
-    GRAPHQL
+      # The bearer token can be found in the response callback
+      bearer_token = request.env['omniauth.auth'].credentials['token']
 
-    # Connect to the GraphQL interface and run the query.
-    # Save the response that has the user information into a response
-    # object
-    conn = Faraday.new(url: 'https://api.wonde.com/graphql') do |faraday|
-      faraday.request :url_encoded
-      faraday.response :logger
-      faraday.adapter Faraday.default_adapter
-      faraday.authorization :Bearer, bearer_token
+      body = run_graphql_query(query, bearer_token)
+      # Now we have a response with useful user information, send this to
+      # our user object.  Standard boiler plate code below
+
+      query_data = extract_query_data(body)
+
+      # You need to implement the method below in your model (e.g. app/models/user.rb)
+      user = User.from_omniauth(query_data)
+      attempt_user_sign_in(user)
     end
 
-    response = conn.get '/graphql/me', query: query
+    def attempt_user_sign_in(user)
+      # persisted? means if the record already existed (or hasn't been deleted)
+      # So this effectively prevents a new record from being created if an
+      # e-mail has not been found.
+      if user.persisted?
+        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: 'Wonde'
+        sign_in_and_redirect user, event: :authentication
+      else
+        flash[:notice] = 'Your account has not been found'
+        redirect_to '/quizzes'
+      end
+    end
 
-    # Now we have a response with useful user information, send this to
-    # our user object.  Standard boiler plate code below
+    def run_graphql_query(query, bearer_token)
+      # Connect to the GraphQL interface and run the query.
+      # Save the response that has the user information into a response
+      # object
+      conn = Faraday.new(url: 'https://api.wonde.com/graphql') do |faraday|
+        faraday.request :url_encoded
+        faraday.response :logger
+        faraday.adapter Faraday.default_adapter
+        faraday.authorization :Bearer, bearer_token
+      end
 
-    body = JSON.parse response.body
+      response = conn.get '/graphql/me', query: query
 
-    query_data = body['data']['Me']['Person']
-    query_data['provider'] = 'Wonde'
+      JSON.parse response.body
+    end
 
-    # You need to implement the method below in your model (e.g. app/models/user.rb)
-    @user = User.from_omniauth(query_data)
-
-    # persisted? means if the record already existed (or hasn't been deleted)
-    # So this effectively prevents a new record from being created if an
-    # e-mail has not been found.
-    if @user.persisted?
-      flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: 'Google'
-      sign_in_and_redirect @user, event: :authentication
-    else
-      flash[:notice] = 'Your account has not been found'
-      redirect_to '/users/sign_in'
+    def extract_query_data(body)
+      query_data = body['data']['Me']['Person']
+      query_data['provider'] = 'Wonde'
+      query_data
     end
   end
 end

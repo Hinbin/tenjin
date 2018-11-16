@@ -15,7 +15,4 @@ class ClassroomsController < ApplicationController
   def classroom_params
     params.permit(:id)
   end
-
-  def check_access
-  end
 end

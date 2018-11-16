@@ -21,7 +21,7 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(auth)
-    where(provider: auth['provider'], upi: auth['upi']).first_or_create do |user|
+    where(provider: auth['provider'], upi: auth['upi']).first do |user|
       user.provider = auth['provider']
       user.upi = auth['upi']
       user.forename = auth['forename']

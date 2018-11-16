@@ -1,7 +1,7 @@
 class CreateClassrooms < ActiveRecord::Migration[5.2]
   def change
     create_table :classrooms do |t|
-      t.string :client_id
+      t.string :client_id, null: false
       t.string :name
       t.string :code
       t.string :description

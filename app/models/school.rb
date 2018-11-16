@@ -10,4 +10,8 @@ class School < ApplicationRecord
     school.save
     school
   end
+
+  def self.school_from_client_id(client_id)
+    School.where(client_id: client_id).first
+  end
 end

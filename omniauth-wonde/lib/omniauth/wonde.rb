@@ -1,2 +1,2 @@
-require "omniauth/wonde/version"
-require "omniauth/strategies/wonde"
+require 'omniauth/wonde/version'
+require 'omniauth/strategies/wonde'

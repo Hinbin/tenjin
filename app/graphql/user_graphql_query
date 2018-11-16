@@ -1,0 +1,43 @@
+{
+  Me {
+    Person {
+      ... on Student {
+        type
+        forename
+        middle_names
+        surname
+        upi
+        Photo {
+          id
+          content
+        }
+        School {
+          id
+          name
+        }
+      }
+      ... on Employee {
+        type
+        forename
+        middle_names
+        surname
+        upi
+        School {
+          id
+          name
+        }
+      }
+      ... on Contact {
+        type
+        forename
+        middle_names
+        surname
+        upi
+        School {
+          id
+          name
+        }
+      }
+    }
+  }
+}

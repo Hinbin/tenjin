@@ -10,8 +10,9 @@ class SyncSchool
 
   def call
     # To limit API calls and improve performance - get all classroom and student data here
+    subject_data = @data_from_client.subjects.all
     sync_data = @data_from_client.classes.all(%w[subject students])
-    SubjectMap.from_wonde(@school_from_client, @data_from_client)
+    SubjectMap.from_wonde(@school_from_client, subject_data)
     Classroom.from_wonde(@school_from_client, sync_data)
   end
 end

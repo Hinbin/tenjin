@@ -12,12 +12,10 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    if ( resource.class == User)
+    if resource.class == User
       '/quizzes'
-    end
-    if ( resource.class == Admin)
+    elsif resource.class == Admin
       '/settings'
     end
   end
-
 end

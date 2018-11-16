@@ -1,5 +1,4 @@
 class QuizPolicy < ApplicationPolicy
-
   def initialize(user, quiz)
     @user = user
     @quiz = quiz
@@ -14,7 +13,7 @@ class QuizPolicy < ApplicationPolicy
   end
 
   def new?
-    @user.student? || @user.teacher?
+    @user.student? || @user.employee?
   end
 
   def create?
@@ -22,7 +21,6 @@ class QuizPolicy < ApplicationPolicy
   end
 
   class Scope
-
     def initialize(user, scope)
       @user = user
       @scope = scope
@@ -32,5 +30,4 @@ class QuizPolicy < ApplicationPolicy
       @scope.where('active = ? and user_id = ?', true, @user.id)
     end
   end
-
 end

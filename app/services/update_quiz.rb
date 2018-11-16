@@ -37,6 +37,7 @@ class UpdateQuiz
 
   def check_if_quiz_finished
     return unless @quiz.num_questions_asked >= @quiz.questions.length
+
     @quiz.active = false
     @quiz.save
   end

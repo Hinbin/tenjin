@@ -1,9 +1,7 @@
 class SettingsController < ApplicationController
   def index
     @settings = policy_scope(UserSetting)
-    if @settings.blank?
-      @settings = UserSetting.create
-    end
+    @settings = UserSetting.create if @settings.blank?
     redirect_to @settings.first
   end
 
@@ -11,5 +9,4 @@ class SettingsController < ApplicationController
     @subjects = GetSchoolClasses.new.call
     authorize @settings
   end
-
 end

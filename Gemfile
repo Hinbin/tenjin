@@ -41,7 +41,7 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
 
   # Use the following gems for rspec testing
-  #gem 'rspec-rails', '~> 3.8'
+  # gem 'rspec-rails', '~> 3.8'
   %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
     gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'master'
   end  
@@ -71,7 +71,9 @@ group :development do
   # Pry for debugging goodness
   gem 'pry-rails'
 
+  # All them rules for development
   gem 'rubocop'
+  gem 'rubocop-rspec'
 end
 
 group :test do

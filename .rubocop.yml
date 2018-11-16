@@ -1,5 +1,8 @@
+require: rubocop-rspec
+
 AllCops:
   Exclude:
+    - 'Gemfile'
     - 'db/**/*'
     - 'config/**/*'
     - 'script/**/*'
@@ -11,10 +14,18 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 120
+  Max: 120  
 
 Metrics/MethodLength:
   Max: 12
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'  
+
+Naming/FileName:
+  Exclude:
+    - 'spec/**/*'
 
 Style/Documentation:
   Enabled: false
