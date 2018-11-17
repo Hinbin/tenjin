@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :enrollments
   has_many :classrooms, through: :enrollments
   has_many :subjects, through: :classrooms
+  has_many :topic_scores
   belongs_to :school
 
   enum role: %i[student employee contact admin_school admin_mat admin]
@@ -34,20 +35,28 @@ class User < ApplicationRecord
       subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
       next unless subject.present?
 
-      classroom.students.data.each do |student|
-        create_student(student, school)
-      end
+      create_classroom_users(classroom, school)
     end
   end
 
-  def self.create_student(student, school)
-    u = User.where(provider: 'Wonde', upi: student.upi).first_or_initialize
+  def self.create_classroom_users(classroom, school)
+    classroom.students.data.each do |student|
+      create_user(student, 'student', school)
+    end
+
+    classroom.employees.data.each do |employee|
+      create_user(employee, 'employee', school)
+    end
+  end
+
+  def self.create_user(user, role, school)
+    u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
     u.school = school
-    u.role = 'student'
+    u.role = role
     u.provider = 'Wonde'
-    u.upi = student.upi
-    u.forename = student.forename
-    u.surname = student.surname
+    u.upi = user.upi
+    u.forename = user.forename
+    u.surname = user.surname
     u.save
   end
 

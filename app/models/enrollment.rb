@@ -12,16 +12,20 @@ class Enrollment < ApplicationRecord
       classroom = Classroom.classroom_from_client_id(c.id)
 
       # To handle updates to classrooms, delete all existing enrollments and start again
-      destroy_existing_enrollments(classroom)
-
-      c.students.data.each do |s|
-        student = User.user_from_upi(s.upi)
-        create_enrollment(classroom, student)
-      end
+      destroy_classroom_enrollments(classroom)
+      create_classroom_enrollments(c.students.data, classroom)
+      create_classroom_enrollments(c.employees.data, classroom)
     end
   end
 
-  def self.destroy_existing_enrollments(classroom)
+  def self.create_classroom_enrollments(students, classroom)
+    students.each do |s|
+      student = User.user_from_upi(s.upi)
+      create_enrollment(classroom, student)
+    end
+  end
+
+  def self.destroy_classroom_enrollments(classroom)
     Enrollment.where(classroom: classroom).destroy_all
   end
 

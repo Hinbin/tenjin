@@ -10,7 +10,8 @@ App.leaderboard = App.cable.subscriptions.create {channel: 'LeaderboardChannel',
     doc = document.getElementById('leaderboard')
     user = document.getElementById(data.user)
     userName = data.user
-    userScore = data.score
+    userScore = data.subject_score
+    console.log(data)
 
     if user?
       user.innerHTML = userName + ' - ' + userScore

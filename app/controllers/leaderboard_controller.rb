@@ -6,6 +6,7 @@ class LeaderboardController < ApplicationController
     @subject = leaderboard_params.dig(:subject)
     @subjects = current_user.subjects.uniq
     @school = current_user.school.name
+    authorize @current_user.school
     gon.subject = @subject
     gon.school = @school
     if @subject.blank?

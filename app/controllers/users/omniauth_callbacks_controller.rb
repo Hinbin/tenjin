@@ -23,7 +23,6 @@ module Users
     end
 
     def attempt_user_sign_in(user)
-
       if user.blank?
         flash[:notice] = 'Your account has not been found'
         redirect_to '/'
