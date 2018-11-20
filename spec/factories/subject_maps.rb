@@ -3,5 +3,6 @@ FactoryBot.define do
     client_id { 'subject1' }
     client_subject_name { 'Computer Science' }
     association :subject, factory: :subject
+    association :school, factory: :school
   end
 end

@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
 
   create_table "classrooms", force: :cascade do |t|
     t.string "client_id", null: false
-    t.string "name"
+    t.string "name", null: false
     t.string "code"
     t.string "description"
     t.bigint "subject_id"
@@ -77,14 +77,6 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
-  create_table "permitted_schools", force: :cascade do |t|
-    t.text "school_id"
-    t.text "name"
-    t.text "token"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "questions", force: :cascade do |t|
     t.bigint "topic_id"
     t.string "text"
@@ -110,8 +102,12 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
   end
 
   create_table "schools", force: :cascade do |t|
+    t.string "client_id", null: false
     t.string "name"
-    t.string "client_id"
+    t.string "token"
+    t.date "last_sync"
+    t.boolean "last_sync_successful"
+    t.boolean "permitted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_schools_on_client_id", unique: true
@@ -129,7 +125,7 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
   end
 
   create_table "subjects", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -174,7 +170,7 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
     t.string "photo"
     t.string "type"
     t.index ["school_id"], name: "index_users_on_school_id"
-    t.index ["upi"], name: "index_users_on_upi", unique: true
+    t.index ["upi"], name: "index_users_on_upi"
   end
 
   add_foreign_key "answers", "questions"

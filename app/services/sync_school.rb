@@ -2,7 +2,7 @@ require 'wondeclient'
 class SyncSchool
   def initialize(school_id)
     @school_id = school_id
-    @school = PermittedSchool.find_by(school_id: school_id)
+    @school = School.find_by(client_id: school_id)
     @client = Wonde::Client.new(@school.token)
     @school_from_client = @client.schools.get(school_id)
     @data_from_client = @client.school(school_id)

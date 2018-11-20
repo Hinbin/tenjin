@@ -50,14 +50,22 @@ RSpec.describe SyncSchool, '#call', :vcr do
   end
 
   context 'when receiving updated classroom data' do
-    it 'updates a classroom' do
+    before do
       school = create(:school, client_id: school_id)
       create(:classroom, client_id: classroom_client_id, school: school)
+    end
+
+    it 'updates a classroom' do
       sync_school_with_wonde
       expect(Classroom.first.name).to eq classroom_name
     end
 
-    it 'updates the enrollment of a classroom'
+    it 'removes enrollments that no longer exist' do
+      student = create(:student)
+      create(:enrollment, classroom: Classroom.first, user: student)
+      sync_school_with_wonde
+      expect(Enrollment.where(user: student)).to be_empty
+    end
   end
 
   context 'with student data' do

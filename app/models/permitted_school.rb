@@ -1,2 +1,0 @@
-class PermittedSchool < ApplicationRecord
-end

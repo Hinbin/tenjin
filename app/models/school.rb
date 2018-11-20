@@ -4,9 +4,10 @@ class School < ApplicationRecord
   validates :client_id, presence: true, uniqueness: true
   validates :name, presence: true
 
-  def self.from_wonde(client_school)
+  def self.from_wonde(client_school, token)
     school = where(client_id: client_school.id).first_or_initialize
     school.name = client_school.name
+    school.token = token
     school.save
     school
   end

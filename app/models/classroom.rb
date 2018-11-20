@@ -5,6 +5,7 @@ class Classroom < ApplicationRecord
   has_many :users, through: :enrollments
 
   validates :client_id, presence: true, uniqueness: true
+  validates :name, presence: true
 
   def self.from_wonde(school, sync_data)
     mapped_subjects = SubjectMap.subjects_for_school(school)

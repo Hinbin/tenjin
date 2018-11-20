@@ -41,18 +41,16 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
 
       #Omniauth fields
       t.string :provider
-      t.string :upi
+      t.string :upi, index: true, unique: true
       t.string :forename
       t.string :surname
       t.string :photo
       t.string :type
 
     end
-
-    add_index :users, :upi,                unique: true
     
-    #add_index :users, :email,                unique: true
-    #add_index :users, :reset_password_token, unique: true
+    # add_index :users, :email,                unique: true
+    # add_index :users, :reset_password_token, unique: true
     # add_index :users, :confirmation_token,   unique: true
     # add_index :users, :unlock_token,         unique: true
   end

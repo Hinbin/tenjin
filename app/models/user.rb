@@ -10,15 +10,21 @@ class User < ApplicationRecord
   has_many :classrooms, through: :enrollments
   has_many :subjects, through: :classrooms
   has_many :topic_scores
+
   belongs_to :school
 
   enum role: %i[student employee contact admin_school admin_mat admin]
+  validates :upi, presence: true
 
   # Disable the requirements for a password and e-mail as we're getting our
   # users from Wonde, which will provide neither.
 
   def set_default_role
     self.role ||= :student
+  end
+
+  def self.user_from_upi(upi)
+    User.where(upi: upi).first
   end
 
   def self.from_omniauth(auth)
@@ -30,37 +36,45 @@ class User < ApplicationRecord
 
     # We only want entries for students that are completing subjects
     # covered by the quiz platform
-
     sync_data.each do |classroom|
       subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
       next unless subject.present?
 
-      create_classroom_users(classroom, school)
+      create_student_users(classroom, school)
+      create_employee_users(classroom, school)
     end
   end
 
-  def self.create_classroom_users(classroom, school)
-    classroom.students.data.each do |student|
-      create_user(student, 'student', school)
+  class << self
+    private
+
+    def create_student_users(classroom, school)
+      return unless classroom.students.present?
+      return unless classroom.students.data.present?
+
+      classroom.students.data.each do |student|
+        create_user(student, 'student', school)
+      end
     end
 
-    classroom.employees.data.each do |employee|
-      create_user(employee, 'employee', school)
+    def create_employee_users(classroom, school)
+      return unless classroom.employees.present?
+      return unless classroom.employees.data.present?
+
+      classroom.employees.data.each do |student|
+        create_user(student, 'employee', school)
+      end
     end
-  end
 
-  def self.create_user(user, role, school)
-    u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
-    u.school = school
-    u.role = role
-    u.provider = 'Wonde'
-    u.upi = user.upi
-    u.forename = user.forename
-    u.surname = user.surname
-    u.save
-  end
-
-  def self.user_from_upi(upi)
-    User.where(upi: upi).first
+    def create_user(user, role, school)
+      u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
+      u.school = school
+      u.role = role
+      u.provider = 'Wonde'
+      u.upi = user.upi
+      u.forename = user.forename
+      u.surname = user.surname
+      u.save
+    end
   end
 end
