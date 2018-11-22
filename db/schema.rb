@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
   end
 
   create_table "default_subject_maps", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.bigint "subject_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -141,7 +141,7 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
   end
 
   create_table "topics", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.bigint "subject_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

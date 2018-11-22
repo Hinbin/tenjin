@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'support/api_data'
 
 RSpec.describe User, type: :model do
   describe '#user_from_upi' do
@@ -18,13 +19,7 @@ RSpec.describe User, type: :model do
   end
 
   describe '#from_wonde' do
-    let(:school_api_data) { School.from_wonde(OpenStruct.new(id: '1234', name: 'test'), 'token') }
-    let(:user_api_data) { OpenStruct.new(data: [OpenStruct.new(id: '01234', upi: '01234', forename: 'TestForename', surname: 'TestSurname')]) }
-    let(:alt_user_api_data) { OpenStruct.new(data: [OpenStruct.new(id: '56789', upi: '56789', forename: 'TestForename', surname: 'TestSurname')]) }
-    let(:classroom_api_data) do
-      subject_data = OpenStruct.new(data: OpenStruct.new(id: 'sub1234', name: 'Computer Science'))
-      [OpenStruct.new(id: '5678', subject: subject_data, code: 'CS')]
-    end
+    include_context 'api_data'
 
     before do
       school = create(:school, client_id: '1234')

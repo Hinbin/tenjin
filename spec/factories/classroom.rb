@@ -3,7 +3,7 @@ FactoryBot.define do
     name { '10x/Cs1' }
     description { 'Year 10 Computer Science' }
     code { '10x/Cs1' }
-    client_id { 'classroom1' }
+    sequence(:client_id)  { |n| "classroom#{n}" }
     association :subject, factory: :subject
     association :school, factory: :school
   end

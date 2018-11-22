@@ -2,37 +2,50 @@ class Enrollment < ApplicationRecord
   belongs_to :user
   belongs_to :classroom
 
-  def self.from_wonde(school, sync_data)
-    mapped_subjects = SubjectMap.subjects_for_school(school)
+  validates :user, uniqueness: { scope: [:classroom] }
 
-    sync_data.each do |c|
-      subject = mapped_subjects.where(client_subject_name: c.subject.data.name).first
+  def self.from_wonde(school, sync_data)
+    mapped_subjects = SubjectMap.subject_maps_for_school(school)
+
+    sync_data.each do |classroom_api_data|
+      subject = mapped_subjects.where(client_subject_name: classroom_api_data.subject.data.name).first
       next unless subject.present?
 
-      classroom = Classroom.classroom_from_client_id(c.id)
+      classroom = Classroom.classroom_from_client_id(classroom_api_data.id)
 
+      update_classrooms(classroom_api_data, classroom)
+    end
+  end
+
+  class << self
+    private
+
+    def update_classrooms(classroom_api_data, classroom)
       # To handle updates to classrooms, delete all existing enrollments and start again
       destroy_classroom_enrollments(classroom)
-      create_classroom_enrollments(c.students.data, classroom)
-      create_classroom_enrollments(c.employees.data, classroom)
+      create_classroom_enrollments(classroom_api_data.students, classroom) if classroom_api_data.students.present?
+      create_classroom_enrollments(classroom_api_data.employees, classroom) if classroom_api_data.employees.present?
     end
-  end
 
-  def self.create_classroom_enrollments(students, classroom)
-    students.each do |s|
-      student = User.user_from_upi(s.upi)
-      create_enrollment(classroom, student)
+    def create_classroom_enrollments(students_data, classroom)
+      return unless students_data.data.present?
+
+      students = students_data.data
+      students.each do |s|
+        student = User.user_from_upi(s.upi)
+        create_enrollment(classroom, student)
+      end
     end
-  end
 
-  def self.destroy_classroom_enrollments(classroom)
-    Enrollment.where(classroom: classroom).destroy_all
-  end
+    def destroy_classroom_enrollments(classroom)
+      Enrollment.where(classroom: classroom).destroy_all
+    end
 
-  def self.create_enrollment(classroom, student)
-    e = Enrollment.where(classroom: classroom, user: student).first_or_initialize
-    e.user = student
-    e.classroom = classroom
-    e.save
-  end
+    def create_enrollment(classroom, student)
+      e = Enrollment.where(classroom: classroom, user: student).first_or_initialize
+      e.user = student
+      e.classroom = classroom
+      e.save
+    end
+end
 end

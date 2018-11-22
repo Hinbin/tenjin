@@ -2,6 +2,9 @@ class SubjectMap < ApplicationRecord
   belongs_to :subject, optional: true
   belongs_to :school
 
+  validates :client_id, presence: true, uniqueness: true 
+  validates :client_subject_name, presence: true
+
   def self.from_wonde(school, subject_data)
     subject_data.each do |client_subject|
       create_subject_map(client_subject, school)
@@ -19,7 +22,7 @@ class SubjectMap < ApplicationRecord
     subject_map.save
   end
 
-  def self.subjects_for_school(school)
+  def self.subject_maps_for_school(school)
     SubjectMap.where.not(subject_id: nil).where(school_id: school)
   end
 end

@@ -8,7 +8,7 @@ class Classroom < ApplicationRecord
   validates :name, presence: true
 
   def self.from_wonde(school, sync_data)
-    mapped_subjects = SubjectMap.subjects_for_school(school)
+    mapped_subjects = SubjectMap.subject_maps_for_school(school)
 
     sync_data.each do |classroom|
       subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
