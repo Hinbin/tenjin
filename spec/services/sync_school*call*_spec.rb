@@ -9,12 +9,14 @@ RSpec.describe SyncSchool, '#call', :vcr do
   let(:student_name) { 'Leo' }
   let(:employee_upi) { 'caea4baa5b7adac73ab1259987d2bcc0' }
   let(:employee_name) { 'Emma' }
+  let(:school_params) { ActionController::Parameters.new(token: school_token, client_id: school_id) }
+  let(:default_subject_map) { create(:default_subject_map, name: subject_to_map) }
 
   def sync_school_with_wonde
-    create(:default_subject_map, name: subject_to_map)
-    add_school = AddSchool.new(school_token, school_id)
-    add_school.call
-    sync_school = SyncSchool.new(school_id)
+    default_subject_map
+    add_school = AddSchool.new(school_params)
+    school = add_school.call
+    sync_school = SyncSchool.new(school)
     sync_school.call
   end
 
@@ -36,7 +38,7 @@ RSpec.describe SyncSchool, '#call', :vcr do
     end
 
     it 'creates the classrooms for subjects that have been mapped' do
-      expect(Classroom.first.subject.name).to eq 'Computer Science'
+      expect(Classroom.first.subject.name).to eq default_subject_map.subject.name
     end
 
     it 'enrolls students into the classroom' do
@@ -135,9 +137,8 @@ RSpec.describe SyncSchool, '#call', :vcr do
       expect(SubjectMap.where(client_id: 'A1209580994').first.client_subject_name).to eq(subject_to_map)
     end
     it 'uses default subject maps' do
-      create(:default_subject_map)
-      # Create a subject map that maps Sociology to Computer Science
-      create(:default_subject_map, name: subject_to_map)
+      subject = create(:subject, name: 'Computer Science')
+      create(:default_subject_map, name: subject_to_map, subject: subject)
       sync_school_with_wonde
       expect(SubjectMap.where(client_subject_name: subject_to_map).first.subject.name).to eq('Computer Science')
     end

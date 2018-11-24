@@ -1,4 +1,4 @@
-class PermittedSchoolPolicy < ApplicationPolicy
+class SubjectMapPolicy < ApplicationPolicy
   class Scope < Scope
     def initialize(user, scope)
       @user = user
@@ -8,11 +8,6 @@ class PermittedSchoolPolicy < ApplicationPolicy
     def resolve
       @scope.all
     end
-  end
-
-  def initialize(user, permitted_school)
-    @user = user
-    @permitted_school = permitted_school
   end
 
   def new?

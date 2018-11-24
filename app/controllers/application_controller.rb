@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
     if resource.class == User
       '/quizzes'
     elsif resource.class == Admin
-      '/settings'
+      '/schools'
     end
   end
 end

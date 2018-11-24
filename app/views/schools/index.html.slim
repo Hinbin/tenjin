@@ -1,0 +1,23 @@
+=render "shared/admin_navigation" 
+div class="container"
+  h1 class="display-4" Schools
+  table class="table table-responsive"
+    tr
+      th scope="col" Name
+      th scope="col" Client ID
+      th scope="col" Subjects
+      th scope="col" Users
+      th scope="col" Sync Status
+      th scope="col" Permitted?
+      th 
+
+    - @schools.each do |school|
+      tr 
+        td =link_to(school.name, school)
+        td =school.client_id
+        td =school.valid_subject_count
+        td =school.users.count
+        td =sync_status_icon(school.sync_status)
+        td =boolean_icon(school.permitted?)
+  =link_to(new_school_path)
+    button type="button" class="btn btn-dark" Add School

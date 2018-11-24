@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :subject do
-    name { 'Computer Science' }
+    sequence(:name)  { |n| "subject#{n}" }
   end
 end

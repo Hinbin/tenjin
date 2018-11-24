@@ -75,7 +75,10 @@ group :development do
 
   # All them rules for development
   gem 'rubocop'
-  gem 'rubocop-rspec'  
+  gem 'rubocop-rspec'
+
+  # ESLinter for javascript
+  gem 'eslint-rails'
 end
 
 group :test do
@@ -117,3 +120,9 @@ gem 'gon'
 
 # Wonde client to easily access Wonde data
 gem 'wondeclient'
+
+# Pretty things!
+# Bootstrap and JQuery for Bootstrap!
+gem 'bootstrap'
+gem 'jquery-rails'
+gem 'font-awesome-sass'

@@ -4,13 +4,15 @@ require 'support/api_data'
 RSpec.describe SubjectMap, type: :model do
   include_context 'api_data'
 
+  subject { create(:subject_map) }
+
   it { is_expected.to validate_presence_of(:client_id) }
-  it { is_expected.to validate_uniqueness_of(:client_id) }
   it { is_expected.to validate_presence_of(:client_subject_name) }
   it { is_expected.to belong_to(:school) }
+  it { is_expected.to validate_uniqueness_of(:client_id) }
 
   describe '#from_wonde' do
-    let (:subject_map_record) { SubjectMap.from_wonde(create(:school), [subject_api_data.data]) }
+    let(:subject_map_record) { SubjectMap.from_wonde(create(:school), [subject_api_data.data]) }
 
     it 'creates subject maps from api data' do
       expect { subject_map_record }.to change(SubjectMap, :count)

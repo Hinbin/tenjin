@@ -1,19 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Classroom, type: :model do
-  context 'when creating a classroom' do
-    it 'must have a client ID' do
-      expect { create(:classroom, client_id: nil) }.to raise_error ActiveRecord::RecordInvalid
-    end
+  it { is_expected.to validate_presence_of(:client_id) }
+  it { is_expected.to validate_presence_of(:name) }
 
-    it 'must have a name' do
-      expect { create(:classroom, name: nil) }.to raise_error ActiveRecord::RecordInvalid
-    end
+  describe 'validate uniqueness' do
+    subject { create(:classroom) }
 
-    it 'Prevents duplicate client_ids' do
-      create(:classroom)
-      expect { create(:classroom) }.to raise_error ActiveRecord::RecordInvalid
-    end
+    it { is_expected.to validate_uniqueness_of(:client_id) }
   end
 
   describe '.classroom_from_client_id' do

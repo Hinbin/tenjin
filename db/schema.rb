@@ -104,10 +104,11 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
   create_table "schools", force: :cascade do |t|
     t.string "client_id", null: false
     t.string "name"
-    t.string "token"
+    t.string "token", null: false
     t.date "last_sync"
     t.boolean "last_sync_successful"
     t.boolean "permitted"
+    t.boolean "sync_in_progress"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_schools_on_client_id", unique: true
@@ -115,8 +116,8 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
 
   create_table "subject_maps", force: :cascade do |t|
     t.bigint "school_id"
-    t.string "client_id"
-    t.string "client_subject_name"
+    t.string "client_id", null: false
+    t.string "client_subject_name", null: false
     t.bigint "subject_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe AddSchool, '#call' do
+  let(:school_token) { '2a550dc912f6a63488af42352b79c5961e87daf9' }
+  let(:school_id) { 'A852030759' }
+  let(:school_params) { ActionController::Parameters.new(token: school_token, client_id: school_id) }
+
   def update_school_from_wonde
-    add_school = AddSchool.new('2a550dc912f6a63488af42352b79c5961e87daf9', 'A852030759')
+    add_school = AddSchool.new(school_params)
     add_school.call
   end
 

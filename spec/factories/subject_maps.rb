@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :subject_map do
-    client_id { 'subject1' }
+    sequence(:client_id)  { |n| "subject_map#{n}" }
     client_subject_name { 'Computer Science' }
     association :subject, factory: :subject
     association :school, factory: :school

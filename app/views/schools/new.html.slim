@@ -1,0 +1,7 @@
+=render "shared/admin_navigation" 
+div class="container"
+  h1 class="display-4" Add School
+  =simple_form_for(@school) do |f|
+    = f.input :client_id, label: 'Client ID'
+    = f.input :token
+    = f.submit 'Add School'

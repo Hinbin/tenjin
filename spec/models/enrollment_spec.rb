@@ -2,11 +2,14 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe Enrollment, type: :model do
+  let(:school) {create(:school, client_id: '1234')}
+  let(:subject_map) {create(:subject_map, school: school)}
+
   it { is_expected.to belong_to(:user) }
   it { is_expected.to belong_to(:classroom) }
   context 'with classroom and user data ' do
     let(:school) { create(:school) }
-    let(:classrooms) { create_list(:classroom, 2, school: school) }
+    let(:classrooms) { create_list(:classroom, 2, school: school, subject: subject_map.subject) }
     let(:student) { create(:student, school: school) }
 
     before do
@@ -25,9 +28,7 @@ RSpec.describe Enrollment, type: :model do
   describe '#from_wonde' do
     include_context 'api_data'
     before do
-      school = create(:school, client_id: '1234')
-      create(:subject_map, school: school)
-      create(:classroom, client_id: 'classroom_id', school: school)
+      create(:classroom, client_id: 'classroom_id', school: school, subject: subject_map.subject)
       create(:student, upi: '01234')
       classroom_api_data[0].id = 'classroom_id'
     end

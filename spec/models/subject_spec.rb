@@ -1,11 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Subject, type: :model do
-  context 'when creating a subject' do
-    it 'prevents a subject with no name' do
-      expect { create(:subject, name: nil) }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-  end
+  subject { create(:subject) }
+
+  it { is_expected.to validate_uniqueness_of(:name) }
+  it { is_expected.to validate_presence_of(:name) }
 
   describe '#subjects_for_school' do
     context 'with a school object' do
