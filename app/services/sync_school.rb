@@ -8,16 +8,12 @@ class SyncSchool
   end
 
   def call
-    return unless @school.sync_in_progress == false
+    return if @school.sync_status == 'syncing'
 
-    @school.last_sync_successful = false
-    @school.sync_in_progress = true
-    @school.save
+    School.from_wonde_sync_start(@school)
     fetch_api_data
     sync_all_data
-    @school.sync_in_progress = false
-    @school.last_sync_successful = true
-    @school.save
+    School.from_wonde_sync_end(@school)
   end
 
   def fetch_api_data

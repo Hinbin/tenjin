@@ -21,7 +21,7 @@ div class="container"
     tr 
       th School Subject Name
       th Tenjin Subject Name
-    -@school.subject_maps.each do |sm|
+    -@school.subject_maps.order(:client_subject_name).each do |sm|
         tr
           td = sm.client_subject_name
           td =simple_form_for sm, url:school_path do |f|

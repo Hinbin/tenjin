@@ -5,9 +5,8 @@ class CreateSchools < ActiveRecord::Migration[5.2]
       t.string :name
       t.string :token, null: false
       t.date :last_sync
-      t.boolean :last_sync_successful
+      t.integer :sync_status
       t.boolean :permitted
-      t.boolean :sync_in_progress
 
       t.timestamps
     end

@@ -1,5 +1,6 @@
 class SchoolsController < ApplicationController
   before_action :authenticate_admin!
+  before_action :set_school, only: %i[show update]
 
   def index
     @schools = policy_scope(School)
@@ -23,15 +24,24 @@ class SchoolsController < ApplicationController
     end
   end
 
+  def update
+    authorize @school
+    sync_school = SyncSchool.new(@school)
+    sync_school.call
+  end
+
   def show
-    @school = School.find(params[:id])
+    authorize @school
     @asked_questions =
       AskedQuestion.joins(quiz: [{ user: :school }])
                    .where('asked_questions.correct IS NOT NULL AND schools.id = ?', @school.id).count
-    authorize @school
   end
 
   private
+
+  def set_school
+    @school = School.find(params[:id])
+  end
 
   def school_params
     params.require(:school).permit(:client_id, :token)

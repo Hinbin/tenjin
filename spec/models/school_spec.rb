@@ -8,7 +8,7 @@ RSpec.describe School, type: :model do
   it { is_expected.to validate_presence_of(:name) }
   it { is_expected.to validate_presence_of(:token) }
 
-  describe '#school_from_wonde' do
+  describe '#from_wonde' do
     let(:school) { School.from_wonde(OpenStruct.new(id: '1234', name: 'test'), 'token') }
 
     it 'Adds a school from a wonde object' do
@@ -20,6 +20,17 @@ RSpec.describe School, type: :model do
       school
       expect(school).to have_attributes(client_id: '1234', name: 'test')
     end
+  end
+
+  describe 'from_wonde_sync_start' do
+    it 'removes older enrollments that are no longer present'
+      # classroom_api_data[0].students = user_api_data
+      # School.from_wonde(school_api_data, classroom_api_data)
+      # classroom_api_data[0].students = alt_user_api_data
+      # Enrollment.from_wonde(school_api_data, classroom_api_data)
+      # expect(Enrollment.count).to eq(0)
+
+    it 'removes old classrooms'
   end
 
   describe '#school_from_client_id' do

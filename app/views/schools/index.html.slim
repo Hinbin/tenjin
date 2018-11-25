@@ -19,5 +19,6 @@ div class="container"
         td =school.users.count
         td =sync_status_icon(school.sync_status)
         td =boolean_icon(school.permitted?)
+        td =link_to("Sync", school, method: :put)
   =link_to(new_school_path)
     button type="button" class="btn btn-dark" Add School

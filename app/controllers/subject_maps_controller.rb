@@ -7,7 +7,11 @@ class SubjectMapsController < ApplicationController
 
     subject_name = subject_map_params[:name]
     subject_map.subject = Subject.where(name: subject_name).first
+    head 403 unless subject_map.subject.present? || (subject_name == '')
+    subject_map.school.sync_status = 'needed'
+    subject_map.school.save
     subject_map.save
+
   end
 
   private

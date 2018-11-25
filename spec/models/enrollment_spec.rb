@@ -46,14 +46,6 @@ RSpec.describe Enrollment, type: :model do
         expect(Enrollment.count).to eq(1)
       end
 
-      it 'removes older enrollments that are no longer present' do
-        classroom_api_data[0].students = user_api_data
-        Enrollment.from_wonde(school_api_data, classroom_api_data)
-        classroom_api_data[0].students = alt_user_api_data
-        Enrollment.from_wonde(school_api_data, classroom_api_data)
-        expect(Enrollment.count).to eq(0)
-      end
-
       it 'handles null student and employee data' do
         Enrollment.from_wonde(school_api_data, classroom_api_data)
         expect(Enrollment.count).to eq(0)

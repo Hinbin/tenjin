@@ -106,9 +106,8 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
     t.string "name"
     t.string "token", null: false
     t.date "last_sync"
-    t.boolean "last_sync_successful"
+    t.integer "sync_status"
     t.boolean "permitted"
-    t.boolean "sync_in_progress"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_schools_on_client_id", unique: true
