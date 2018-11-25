@@ -44,11 +44,5 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-
-HighVoltage.configure do |config|
-  config.route_drawer = HighVoltage::RouteDrawers::Root
-  config.routes = false
-end
-
 end
 

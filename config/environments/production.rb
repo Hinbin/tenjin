@@ -94,10 +94,6 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  HighVoltage.configure do |config|
-    config.route_drawer = HighVoltage::RouteDrawers::Root
-    config.routes = false
-  end
 end
 
 
