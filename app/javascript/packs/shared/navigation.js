@@ -1,15 +1,16 @@
 $(document).ready( () => {
   "use strict"; // Start of use strict
+
   // Collapse Navbar
-  var navbarCollapse = function() {
+  var triggerBackground = function() {
     if ($("#navbar-main").offset().top > 0) {
-      $("#navbar-main").addClass("collapsed");
+      $("#navbar-main").addClass("bg-black");
     } else {
-      $("#navbar-main").removeClass("collapsed");
+      $("#navbar-main").removeClass("bg-black");
     }
   };
   // Collapse now if page is not at top
-  navbarCollapse();
+  triggerBackground();
   // Collapse the navbar when page is scrolled
-  $(window).scroll(navbarCollapse);
+  $(window).scroll(triggerBackground);
 });
