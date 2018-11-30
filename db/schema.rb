@@ -93,11 +93,11 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
     t.integer "answered_correct"
     t.integer "num_questions_asked"
     t.bigint "user_id"
-    t.bigint "classroom_id"
+    t.bigint "subject_id"
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["classroom_id"], name: "index_quizzes_on_classroom_id"
+    t.index ["subject_id"], name: "index_quizzes_on_subject_id"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
   end
 

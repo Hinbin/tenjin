@@ -2,6 +2,62 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.navbar {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+}
+
+#branding-text {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+  margin-bottom: 0rem;
+}
+
+#navbar-btn {
+  line-height: 1rem;
+}
+
+.flex-centered {
+  display: flex;
+  justify-content: center;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Raleway", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+
+hr.small {
+  max-width: 10rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr.primary {
+  border-top-width: 3px;
+  border-bottom-width: 3px;
+  border-style: solid;
+  height: 0.125rem;
+  border-color: #ef4035;
+}
+
+html {
+  
+  @include media-breakpoint-up(xs) {    
+    font-size: 2.5rem;    
+  }
+
+  @include media-breakpoint-up(lg) {    
+    font-size: 3rem;   
+  }
+}
+
+a:hover { 
+  background-color: transparent !important;
+}
 
 .masthead {
   position: relative;
@@ -13,14 +69,12 @@
   height: 100vh;
 }
 
+
+
 .masthead-full {
   padding: 0rem 0;
     padding-top: 10rem;
     padding-right: 0px;
     padding-bottom: 10rem;
     padding-left: 0px;
-}
-
-.section-heading {
-  font-size: 3rem;
 }

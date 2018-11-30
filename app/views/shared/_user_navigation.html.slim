@@ -1,10 +1,12 @@
+=javascript_pack_tag 'shared/_user_navigation'
+
 nav class="navbar navbar-expand-sm navbar-dark justify-content-between fixed-top" id="navbar-main"
   a class="navbar-brand" href='/'
-    =icon('fas', 'vihara', class: 'fa-2x', style: 'color: White d-inline-block align-top')
-    h1 style="color:white" class="navbar-text"  TENJIN
+    =icon('fas', 'vihara', class: 'fa-1x', style: 'color: White d-inline-block align-top')
+    h4 style="color:white" class="navbar-text text-uppercase" id="branding-text" Tenjin
   form class="form-inline my-2 my-lg-0"
     =link_to(user_wonde_omniauth_authorize_path) do
-      button class='btn btn-light' Log In
+      button class='btn btn-light' id='navbar-btn' Log In
 
 
       

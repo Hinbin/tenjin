@@ -20,7 +20,7 @@ class CreateQuiz
     @quiz.streak = 0
     @quiz.answered_correct = 0
     @quiz.num_questions_asked = 0
-    @quiz.classroom_id = @user.classrooms.where('subject_id = ?', @topic.subject_id).first.id
+    @quiz.subject = @topic.subject
     @quiz.active = true
   end
 
