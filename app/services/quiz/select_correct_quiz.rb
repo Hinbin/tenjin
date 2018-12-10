@@ -5,9 +5,15 @@ class Quiz::SelectCorrectQuiz
   end
 
   def call
-    deactivate_old_quizzes
-    # Return the last, active record.
-    @quizzes.last
+    if @quizzes.length.zero?
+      '/quizzes/new'
+    elsif @quizzes.length == 1
+      @quizzes.first
+    else
+      deactivate_old_quizzes
+      # Return the last, active record.
+      @quizzes.last
+    end
   end
 
   def deactivate_old_quizzes

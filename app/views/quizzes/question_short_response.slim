@@ -1,8 +1,7 @@
 =render 'question_top'
+=javascript_pack_tag 'shared/short_response_question'
 .container
-  =simple_form_for(@question, url: quiz_path(@quiz)) do |f|
-    p.lead = @question.text
-    = f.input :answer_ids, label: 'Answer here:', input_html: {value:'', autocomplete:'off'}
-    = f.submit
-
-
+  p.lead.text-center = @question.text
+  input.form-control.text-center.container-fluid.m-2#shortAnswerText autofocus=''
+  .btn.container-fluid.m-2.question-button#shortAnswerButton Check Answer
+  button.btn.container-fluid.m-2.next-button.invisible#nextButton onclick='location.reload()' Next Question

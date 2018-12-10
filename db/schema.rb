@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 2018_11_17_083132) do
     t.string "text"
     t.string "image"
     t.integer "answers_count"
+    t.integer "question_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["topic_id"], name: "index_questions_on_topic_id"

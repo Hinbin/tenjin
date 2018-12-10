@@ -3,41 +3,37 @@ class QuizzesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_quiz, only: %i[show update]
   before_action :set_question, only: %i[show update]
-  before_action :set_subject, only: %i[new create]
+  rescue_from Pundit::NotAuthorizedError, with: :quiz_not_authorized
 
   # GET /quizzes
   # GET /quizzes.json
   def index
     quizzes = policy_scope(Quiz)
-    if quizzes.length.zero?
-      redirect_to action: 'new'
-    elsif quizzes.length == 1
-      redirect_to quizzes.first
-    else
-      redirect_to Quiz::SelectCorrectQuiz.new(quizzes: quizzes).call
-    end
+    redirect_to Quiz::SelectCorrectQuiz.new(quizzes: quizzes).call
   end
 
   # GET /quizzes/1
   # GET /quizzes/1.json
   def show
+
     authorize @quiz
-    cookies.encrypted[:user_id] = current_user.id
+    gon.quiz_id = @quiz.id
     render_question
   end
 
   # GET /quizzes/new
   def new
-    quiz = Quiz.new
+    authorize Quiz.new
+
     subject = Subject.where('name = ?', params.permit(:subject).dig(:subject)).first
 
     if subject.blank?
+      @subjects = current_user.subjects
       render 'new'
     else
-      topics = @subject.topics
+      @topics = subject.topics
       render 'select_topic'
     end
-    authorize quiz
   end
 
   # GET /quizzes/1/edit
@@ -59,26 +55,8 @@ class QuizzesController < ApplicationController
   # PATCH/PUT /quizzes/1.json
   def update
     authorize @quiz
-    return render_question unless CheckAnswer.new(params).call
-    AskedQuestion.where('quiz_id = ? AND question_id = ?', @quiz.id, @question.id)
-    
-
-    #check if question has already been answer
-      #if so move them on
-    #if not, check to see if we have an answer
-
-    if question_params.dig(:answer_ids).blank?
-      render_question
-    else
-      UpdateQuiz.new(quiz: @quiz, question: @question,
-                     user: current_user, answer_given: question_params.dig(:answer_ids)).call
-      if @quiz.active
-        set_question
-        render_question
-      else
-        redirect_to action: 'new'
-      end
-    end
+    check_answer = Quiz::CheckAnswer.new(quiz: @quiz, question: @question, answer_given: answer_params).call
+    render(json: check_answer)
   end
 
   private
@@ -97,15 +75,15 @@ class QuizzesController < ApplicationController
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
-  def question_params
-    params.require(:question).permit(:question, :answer_ids, :picked_topic)
+  def answer_params
+    params.require(:answer).permit(:id, :short_answer)
   end
 
   def quiz_params
     params.require(:quiz).permit(:picked_topic)
   end
-
-  def set_subject
-    @subject = params.permit(:subject).dig(:subject)
+  
+  def quiz_not_authorized
+    redirect_to '/dashboard/'
   end
 end

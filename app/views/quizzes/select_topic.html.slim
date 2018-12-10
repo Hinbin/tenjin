@@ -4,7 +4,7 @@ section.page-section.text-center#newQuiz
     h1.page-section-header.text-uppercase Select Topic
     hr.primary.small.mb-5
 
-    = simple_form_for(@quiz) do |f|
+    = simple_form_for(Quiz.new) do |f|
         = f.input :picked_topic, label: 'Pick a topic:',as: :select, collection: @topics
         = f.button :submit
 

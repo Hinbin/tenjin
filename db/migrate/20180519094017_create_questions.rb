@@ -5,6 +5,8 @@ class CreateQuestions < ActiveRecord::Migration[5.2]
       t.string :text
       t.string :image
       t.integer :answers_count
+      t.integer :question_type
+      
 
       t.timestamps
     end

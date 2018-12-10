@@ -18,8 +18,24 @@
 @import 'dashboard.scss';
 @import 'pages.scss';
 
+.incorrect-answer {
+  background-color: darkred !important;
+  color: white !important;
+  opacity: 1.0 !important;
+}
+
+.correct-answer {
+  background-color: darkgreen !important;
+  color: white !important;
+  opacity: 1.0 !important;
+}
 
 .question-button {
+  background-color: black;
+  color: white;
+}
+
+.next-button {
   background-color: black;
   color: white;
 }
