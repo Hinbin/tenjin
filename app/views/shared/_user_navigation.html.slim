@@ -1,12 +1,16 @@
-=javascript_pack_tag 'shared/navigation'
-
-nav class="navbar navbar-expand-sm navbar-dark justify-content-between fixed-top" id="navbar-main"
-  a class="navbar-brand" href='/'
+nav class="navbar navbar-expand-sm navbar-dark justify-content-between fixed-top bg-black" id="navbar-main"
+  a class="navbar-brand" href='/dashboard'
     =icon('fas', 'vihara', class: 'fa-2x', style: 'color: White d-inline-block align-top')
     h1 style="color:white" class="navbar-text text-uppercase" id="branding-text" Tenjin
-  form class="form-inline my-2 my-lg-0"
-    =link_to(user_wonde_omniauth_authorize_path) do
-      button class='btn btn-light' id='navbar-btn' Log In
+  button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+      span class="navbar-toggler-icon"
+
+  div class="collapse navbar-collapse" id="navbarSupportedContent" 
+    ul class='navbar-nav mr-auto'  
+      li class="nav-item active"
+        a class='nav-link' href=new_quiz_path Quiz
+    =link_to(destroy_admin_session_path, method: :delete) do
+      button class='btn btn-light' Logout
 
 
       

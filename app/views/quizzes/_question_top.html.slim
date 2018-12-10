@@ -1,5 +1,11 @@
-p#notice= notice
-
-p = "Number of questions Asked:" + @quiz.num_questions_asked.to_s
-p = 'Answered Correct:' + @quiz.answered_correct.to_s
-p = 'Streak:' + @quiz.streak.to_s
+=render('shared/user_navigation')
+section.page-section#newQuiz
+  .container
+    .progress
+      .progress-bar role="progressbar" style="width:#{@percent_complete.to_s}%" aria-valuenow="#{@percent_complete.to_s}" aria-valuemin="0" aria-valuemax="100"
+    .row
+      .col
+        p= 'Streak: ' + @quiz.streak.to_s
+      .col
+        p= 'Multiplier: '
+    

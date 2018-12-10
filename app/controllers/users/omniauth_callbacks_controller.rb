@@ -30,7 +30,6 @@ module Users
       # So this effectively prevents a new record from being created if an
       # e-mail has not been found.
       elsif user.persisted?
-        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: 'Wonde'
         sign_in_and_redirect user, event: :authentication
       else
         flash[:notice] = 'Your account has not been found'

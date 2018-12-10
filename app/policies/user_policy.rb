@@ -11,7 +11,7 @@ class UserPolicy
   end
 
   def show?
-    @current_user.admin_school? || (@current_user == @user)
+    @current_user == @user && @user.school.permitted
   end
 
   def update?

@@ -1,0 +1,516 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.wonde.com/v1.0/schools/A852030759
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip
+      Authorization:
+      - Basic 2a550dc912f6a63488af42352b79c5961e87daf9
+      User-Agent:
+      - unirest-ruby/1.1
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 09 Dec 2018 21:49:41 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '471'
+      Connection:
+      - keep-alive
+      Server:
+      - Apache/2.4.10 (Debian)
+      Vary:
+      - Authorization
+      X-Powered-By:
+      - PHP/7.1.12
+      Cache-Control:
+      - no-cache, private
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin,
+        Authorization
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: '{"data":{"id":"A852030759","name":"Outwood Grange Academy 1532082212","establishment_number":3430,"urn":848187,"phase_of_education":"SECONDARY","la_code":970,"timezone":null,"mis":"SIMS","address":{"address_line_1":"78
+        Bruce Roads","address_line_2":"Zachary Ford","address_town":"Louismouth","address_postcode":"PE25
+        1AA","address_country":{"code":"GBR","name":"United Kingdom"}},"extended":{"allows_writeback":true,"has_timetables":false,"has_lesson_attendance":false}}}'
+    http_version: 
+  recorded_at: Sun, 09 Dec 2018 21:49:41 GMT
+- request:
+    method: get
+    uri: https://api.wonde.com/v1.0/schools/A852030759
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip
+      Authorization:
+      - Basic 2a550dc912f6a63488af42352b79c5961e87daf9
+      User-Agent:
+      - unirest-ruby/1.1
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 09 Dec 2018 21:49:41 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '471'
+      Connection:
+      - keep-alive
+      Server:
+      - Apache/2.4.10 (Debian)
+      Vary:
+      - Authorization
+      X-Powered-By:
+      - PHP/7.1.12
+      Cache-Control:
+      - no-cache, private
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin,
+        Authorization
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: '{"data":{"id":"A852030759","name":"Outwood Grange Academy 1532082212","establishment_number":3430,"urn":848187,"phase_of_education":"SECONDARY","la_code":970,"timezone":null,"mis":"SIMS","address":{"address_line_1":"78
+        Bruce Roads","address_line_2":"Zachary Ford","address_town":"Louismouth","address_postcode":"PE25
+        1AA","address_country":{"code":"GBR","name":"United Kingdom"}},"extended":{"allows_writeback":true,"has_timetables":false,"has_lesson_attendance":false}}}'
+    http_version: 
+  recorded_at: Sun, 09 Dec 2018 21:49:41 GMT
+- request:
+    method: get
+    uri: https://api.wonde.com/v1.0/schools/A852030759/subjects
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip
+      Authorization:
+      - Basic 2a550dc912f6a63488af42352b79c5961e87daf9
+      User-Agent:
+      - unirest-ruby/1.1
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 09 Dec 2018 21:49:41 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '2600'
+      Connection:
+      - keep-alive
+      Server:
+      - Apache/2.4.10 (Debian)
+      Vary:
+      - Authorization
+      X-Powered-By:
+      - PHP/7.1.12
+      Cache-Control:
+      - no-cache, private
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin,
+        Authorization
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: '{"data":[{"id":"A841226283","mis_id":null,"code":"LE","name":"Leisure
+        & Tourism","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1209580994","mis_id":null,"code":"SO","name":"Sociology","created_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1310675293","mis_id":null,"code":"FO","name":"Food
+        Tech","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1142158068","mis_id":null,"code":"TE","name":"Textiles","created_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1511429775","mis_id":null,"code":"PH","name":"Physical
+        Ed","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1343564326","mis_id":null,"code":"PE","name":"Peer
+        Support","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1443483569","mis_id":null,"code":"RU","name":"Rural
+        Science","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1812751176","mis_id":null,"code":"DE","name":"Design
+        & Tech","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1644365027","mis_id":null,"code":"TH","name":"Theatre
+        Studies","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A2013780090","mis_id":null,"code":"FO","name":"Food
+        Tech","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}],"meta":{"pagination":{"next":null,"previous":null,"more":false,"per_page":50,"current_page":1},"includes":["classes","classes.lessons","classes.lessons.period","classes.lessons.room"]}}'
+    http_version: 
+  recorded_at: Sun, 09 Dec 2018 21:49:42 GMT
+- request:
+    method: get
+    uri: https://api.wonde.com/v1.0/schools/A852030759/classes?include=subject,students,employees
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip
+      Authorization:
+      - Basic 2a550dc912f6a63488af42352b79c5961e87daf9
+      User-Agent:
+      - unirest-ruby/1.1
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 09 Dec 2018 21:49:42 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - Apache/2.4.10 (Debian)
+      Vary:
+      - Authorization
+      X-Powered-By:
+      - PHP/7.1.12
+      Cache-Control:
+      - no-cache, private
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin,
+        Authorization
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: '{"data":[{"id":"A2073985657","mis_id":null,"name":"LEI 2","code":null,"description":"51b\/ow9","subject":{"data":{"id":"A841226283","mis_id":null,"code":"LE","name":"Leisure
+        & Tourism","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:41.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:41.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A1906124304","mis_id":null,"name":"SOC
+        2","code":null,"description":"43v\/gp8","subject":{"data":{"id":"A1209580994","mis_id":null,"code":"SO","name":"Sociology","created_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:41.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:41.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A2006055851","mis_id":null,"name":"FOO
+        7","code":null,"description":"50n\/rs8","subject":{"data":{"id":"A1310675293","mis_id":null,"code":"FO","name":"Food
+        Tech","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:42.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:42.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A227843906","mis_id":null,"name":"TEX
+        7","code":null,"description":"49u\/ro4","subject":{"data":{"id":"A1142158068","mis_id":null,"code":"TE","name":"Textiles","created_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:43.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:43.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A59453661","mis_id":null,"name":"PHY
+        6","code":null,"description":"44m\/xv7","subject":{"data":{"id":"A1511429775","mis_id":null,"code":"PH","name":"Physical
+        Ed","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:43.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:43.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A428856436","mis_id":null,"name":"PEE
+        7","code":null,"description":"82o\/ns2","subject":{"data":{"id":"A1343564326","mis_id":null,"code":"PE","name":"Peer
+        Support","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:44.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:44.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A528640015","mis_id":null,"name":"RUR
+        8","code":null,"description":"95x\/rv4","subject":{"data":{"id":"A1443483569","mis_id":null,"code":"RU","name":"Rural
+        Science","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:45.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:45.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A360779174","mis_id":null,"name":"DES
+        7","code":null,"description":"60f\/fa4","subject":{"data":{"id":"A1812751176","mis_id":null,"code":"DE","name":"Design
+        & Tech","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:46.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:46.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A730177841","mis_id":null,"name":"THE
+        3","code":null,"description":"78r\/zx4","subject":{"data":{"id":"A1644365027","mis_id":null,"code":"TH","name":"Theatre
+        Studies","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:46.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:46.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}},{"id":"A569918152","mis_id":null,"name":"FOO
+        6","code":null,"description":"87g\/gy6","subject":{"data":{"id":"A2013780090","mis_id":null,"code":"FO","name":"Food
+        Tech","created_at":{"date":"2018-07-20 10:23:40.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:40.000000","timezone_type":3,"timezone":"UTC"}}},"created_at":{"date":"2018-07-20
+        10:23:47.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:47.000000","timezone_type":3,"timezone":"UTC"},"students":{"data":[{"id":"A205797104","upi":"1479cf1d289684f08600c9ad1f6406fc","mis_id":null,"initials":null,"surname":"Ward","forename":"Leo","middle_names":"Benjamin","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2009-11-03
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A514982845","upi":"36668e5f8d115276618dec59c5004bd6","mis_id":null,"initials":null,"surname":"Simpson","forename":"Tina","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2006-07-11
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:34.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A547888262","upi":"d6afbe23d7599a61d3462c17e19ed6be","mis_id":null,"initials":null,"surname":"Bell","forename":"Neil","middle_names":"Lucas","legal_surname":null,"legal_forename":null,"gender":"MALE","date_of_birth":{"date":"2003-05-31
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:35.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A849865027","upi":"c21f0b2ef271174212842a625aa31451","mis_id":null,"initials":null,"surname":"Johnson","forename":"Carole","middle_names":"Tiffany","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2009-03-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:36.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"}},{"id":"A1352088382","upi":"38030758e888337617c6b886f191482c","mis_id":null,"initials":null,"surname":"Wilkinson","forename":"Zoe","middle_names":"Carrie","legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"2011-05-26
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"created_at":{"date":"2018-07-20
+        10:23:37.000000","timezone_type":3,"timezone":"UTC"},"updated_at":{"date":"2018-07-20
+        10:23:38.000000","timezone_type":3,"timezone":"UTC"}}]},"employees":{"data":[{"id":"A1984009561","upi":"caea4baa5b7adac73ab1259987d2bcc0","mis_id":null,"initials":null,"title":"Miss","surname":"Marshall","forename":"Emma","middle_names":null,"legal_surname":null,"legal_forename":null,"gender":"FEMALE","date_of_birth":{"date":"1969-06-27
+        00:00:00.000000","timezone_type":3,"timezone":"Europe\/London"},"updated_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"created_at":{"date":"2018-07-20
+        10:23:33.000000","timezone_type":3,"timezone":"UTC"},"meta":{"role":"Main
+        Class Teacher","all_roles":["Main Class Teacher","Class Teacher"],"is_main_teacher":true,"is_class_teacher":true}}]}}],"meta":{"pagination":{"next":null,"previous":null,"more":false,"per_page":50,"current_page":1},"includes":["subject","students","students.contact_details","students.education_details","students.extended_details","students.house","students.registration","students.year","students.boarding","employees","employees.employment_details","lessons","lessons.room","lessons.period"]}}'
+    http_version: 
+  recorded_at: Sun, 09 Dec 2018 21:49:42 GMT
+- request:
+    method: get
+    uri: https://api.wonde.com/v1.0/schools/A852030759/deletions
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip
+      Authorization:
+      - Basic 2a550dc912f6a63488af42352b79c5961e87daf9
+      User-Agent:
+      - unirest-ruby/1.1
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 09 Dec 2018 21:49:42 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '107'
+      Connection:
+      - keep-alive
+      Server:
+      - Apache/2.4.10 (Debian)
+      Vary:
+      - Authorization
+      X-Powered-By:
+      - PHP/7.1.12
+      Cache-Control:
+      - no-cache, private
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin,
+        Authorization
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: '{"data":[],"meta":{"pagination":{"next":null,"previous":null,"more":false,"per_page":50,"current_page":1}}}'
+    http_version: 
+  recorded_at: Sun, 09 Dec 2018 21:49:42 GMT
+recorded_with: VCR 4.0.0

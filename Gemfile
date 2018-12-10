@@ -125,6 +125,7 @@ gem 'wondeclient'
 # Bootstrap and JQuery for Bootstrap!
 gem 'bootstrap'
 gem 'jquery-rails'
+gem "jquery-slick-rails"
 gem 'font-awesome-sass'
 
 # High-voltage for our static pages (e.g. home)

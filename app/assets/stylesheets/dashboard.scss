@@ -1,0 +1,49 @@
+// Place all the styles related to the dashboard controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+#newQuiz{
+  background-color: white
+}
+
+.subject-carousel-item-text {
+  position: absolute;
+  color: white;
+  pointer-events: none;
+  max-width: 15rem;
+}
+
+.subject-carousel-item-image {
+  filter: brightness(50%);
+}
+
+.slick-arrow {
+  position: absolute;
+  background-color: #ef4035;
+  height: 3.75rem;
+  width: 2.5rem;
+  text-align: center;
+  color: #fff;
+  line-height: 3.75rem;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  opacity: 0.6;
+  -webkit-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.slick-arrow.slick-prev {
+  right: 15px;
+}
+
+.slick-arrow.slick-next {
+  left: 15px;
+}
+
+.slick-arrow:active {
+  opacity: 1;
+}

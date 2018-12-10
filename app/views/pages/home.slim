@@ -1,10 +1,14 @@
-=render('shared/user_navigation')
-header class="masthead masthead-container masthead-full text-white"  
-  div class="container h-100"
-    div class="row h-100 align-items-center"
-      div class="col text-center"
-        h1 class="section-heading text-uppercase" id="masthead-text" Learn, Compete, Succeed
-        hr class="primary small"
+=render('shared/logged_out_navigation')
+=javascript_pack_tag 'pages/pages'
+header.masthead.masthead-container.masthead-full.text-white  
+  div.container.h-100
+    div.row.h-100.align-items-center
+      div.col.text-center
+        h1.section-heading.text-uppercase#mastheadText Learn, Compete, Succeed
+        hr.primary.small
+=render('shared/notice_modal')
+
+
 
 
 

@@ -1,0 +1,11 @@
+section.page-section.text-center#newQuiz
+  .container-fluid
+    h1.page-section-header.text-uppercase Start a Quiz
+    p Select a subject below
+    hr.primary.small.mb-5
+    .subject-carousel
+      -@subjects.each do |s|
+        .d-flex.align-items-center.justify-content-center.subject-carousel-item            
+          a href=new_quiz_path(subject: s.name)
+            img.img-fluid.subject-carousel-item-image src=image_url(s.name.parameterize + ".jpg")
+          h3.text-uppercase.subject-carousel-item-text =s.name

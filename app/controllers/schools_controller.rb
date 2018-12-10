@@ -12,13 +12,11 @@ class SchoolsController < ApplicationController
   end
 
   def create
-    add_school = AddSchool.new(school_params)
-    @school = add_school.call
+    @school = School::AddSchool.new(school_params).call
     if @school.persisted?
       authorize @school
       redirect_to @school
-      sync_school = SyncSchool.new(@school)
-      sync_school.call
+      School::SyncSchool.new(@school).call
     else
       render 'new'
     end
@@ -26,8 +24,7 @@ class SchoolsController < ApplicationController
 
   def update
     authorize @school
-    sync_school = SyncSchool.new(@school)
-    sync_school.call
+    School::SyncSchool.new(@school).call
   end
 
   def show

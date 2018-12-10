@@ -10,6 +10,9 @@ AllCops:
     - 'node_modules/**/*'
     - !ruby/regexp /old_and_unused\.rb$/
     
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
 Style/FrozenStringLiteralComment:
   Enabled: false
 

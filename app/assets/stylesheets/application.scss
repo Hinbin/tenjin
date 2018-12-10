@@ -14,16 +14,47 @@
 @import "bootstrap";
 @import "font-awesome-sprockets";
 @import "font-awesome";
-@import "*";
+@import 'slick';
+@import 'dashboard.scss';
+@import 'pages.scss';
 
 
-body {
-  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  margin: 0;
+.question-button {
+  background-color: black;
+  color: white;
 }
 
-.nav-link {
+hr.small {
+  max-width: 10rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr.primary {
+  border-top-width: 3px;
+  border-bottom-width: 3px;
+  border-style: solid;
+  height: 0.125rem;
+  border-color: #ef4035;
+}
+
+.page-section
+{
+  padding-top: 7.25rem;
+}
+
+.page-section-header
+{
+  font-size: 3rem;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  margin-bottom: 0.5rem;
   font-family: "Raleway", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-weight: 900;
+  line-height: 1.2;
+  color: inherit;
 }
 
 #navbar-main.bg-black {
@@ -35,3 +66,41 @@ body {
   min-height: 66px;
 }
 
+#navbar-btn {  
+  @include media-breakpoint-up(sm) {
+    font-size: 2rem;
+  }
+
+  @include media-breakpoint-up(lg) {
+    font-size: 2rem;
+  }
+}
+
+#branding-text, .fa-2x {
+
+  @include media-breakpoint-up(sm) {
+    font-size: 3rem;
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+    margin-bottom: 0rem;
+  }
+
+  @include media-breakpoint-up(lg) {
+    font-size: 3rem;
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+    margin-bottom: 0rem;
+  }
+
+}
+
+.navbar {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+}
+
+body {
+  font-size: 1.125rem;
+  font-weight: 400;
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}

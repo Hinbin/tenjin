@@ -1,6 +1,6 @@
 =render 'question_top'
-=simple_form_for(@question, url: quiz_path(@quiz)) do |f|
-  p = @question.text
-  = f.association :answers, collection: @question.answers, label_method: :text, as: :radio_buttons
-  = f.submit
-
+=javascript_pack_tag 'shared/question'
+.container
+  p.lead.text-center = @question.text
+  -@question.answers.each do |a|
+    .btn.container-fluid.m-2.question-button id=a.id =a.text

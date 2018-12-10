@@ -1,13 +1,11 @@
-p#notice= notice
+=render('shared/user_navigation')
+section.page-section.text-center#newQuiz
+  .container-fluid
+    h1.page-section-header.text-uppercase Select Topic
+    hr.primary.small.mb-5
 
-h1 New Quiz
+    = simple_form_for(@quiz) do |f|
+        = f.input :picked_topic, label: 'Pick a topic:',as: :select, collection: @topics
+        = f.button :submit
 
-= if @quiz.errors.any?
-  div id="error_explanation"
-  h2 Errors
-  =@quiz.errors.full_messages.each do |msg|
-    =msg
-
-= simple_form_for(@quiz) do |f|
-  = f.input :picked_topic, as: :radio_buttons, collection: @topics
-  = f.button :submit
+=render('shared/notice_modal')
