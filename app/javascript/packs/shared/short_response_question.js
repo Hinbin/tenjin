@@ -20,8 +20,6 @@ function processResponse(results, guess) {
   $('#nextButton').removeClass('invisible')
   $('#nextButton').focus()
   
-
-  
 }
 
 $(document).on('turbolinks:load', function () {

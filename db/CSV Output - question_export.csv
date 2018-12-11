@@ -3765,3 +3765,4 @@ id,topic_id,text,image,question_type
 3763,17,What is denary number 253 in hexadecimal (2 characters)?,,short_answer
 3764,17,What is denary number 254 in hexadecimal (2 characters)?,,short_answer
 3765,17,What is denary number 255 in hexadecimal (2 characters)?,,short_answer
+3766,18,Test question the answer is test,,short_answer

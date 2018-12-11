@@ -15,9 +15,11 @@ class QuizzesController < ApplicationController
   # GET /quizzes/1
   # GET /quizzes/1.json
   def show
-
     authorize @quiz
     gon.quiz_id = @quiz.id
+    cookies.encrypted[:user_id] = current_user.id
+    @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
+    @percent_complete = (@quiz.num_questions_asked.to_f / @quiz.questions.length.to_f) * 100.to_f
     render_question
   end
 
@@ -82,7 +84,7 @@ class QuizzesController < ApplicationController
   def quiz_params
     params.require(:quiz).permit(:picked_topic)
   end
-  
+
   def quiz_not_authorized
     redirect_to '/dashboard/'
   end

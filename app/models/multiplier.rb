@@ -1,0 +1,2 @@
+class Multiplier < ApplicationRecord
+end

@@ -1,1 +1,12 @@
 div id='leaderboard'
+.container-fluid
+  table
+    tr
+      th Name
+      th School
+      th Score
+    -@entries.each do |e|
+      tr
+        td=e[0][1] + ' ' + e[0][2]
+        td=e[0][3]
+        td id=e[0][0] =e[1]

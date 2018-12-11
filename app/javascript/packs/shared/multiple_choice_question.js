@@ -18,6 +18,9 @@ function processResponse(results, guess) {
 $(document).on('turbolinks:load', function () {
 
   $('.question-button').click( (click) => {   
+
+    if ( $(click.target).hasClass('disabled') )
+      return
     
     $('.question-button').attr('disabled', 'disabled')
     $('.question-button').addClass('disabled')
