@@ -13,7 +13,7 @@ class QuizPolicy < ApplicationPolicy
   end
 
   def new?
-    @user.student? || @user.employee?
+    @user.school.permitted?
   end
 
   def create?

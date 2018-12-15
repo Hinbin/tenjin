@@ -2,7 +2,7 @@
 function processResponse(results, guess) {  
   var correct = false
   for (var result of results) {
-    if ( result.text == guess ) {
+    if ( result.text.toUpperCase() == guess.toUpperCase() ) {
       $('#shortAnswerButton').addClass('correct-answer')
       $('#shortAnswerButton').text('Correct!')
       correct = true

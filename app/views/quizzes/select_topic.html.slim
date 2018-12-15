@@ -6,6 +6,7 @@ section.page-section.text-center#newQuiz
 
     = simple_form_for(Quiz.new) do |f|
         = f.input :picked_topic, label: 'Pick a topic:',as: :select, collection: @topics
+        = f.input :subject, as: :hidden, input_html: { value: @subject.name }
         = f.button :submit
 
 =render('shared/notice_modal')

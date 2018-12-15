@@ -27,13 +27,13 @@ class QuizzesController < ApplicationController
   def new
     authorize Quiz.new
 
-    subject = Subject.where('name = ?', params.permit(:subject).dig(:subject)).first
+    @subject = Subject.where('name = ?', params.permit(:subject).dig(:subject)).first
 
-    if subject.blank?
+    if @subject.blank?
       @subjects = current_user.subjects
       render 'new'
     else
-      @topics = subject.topics
+      @topics = @subject.topics
       render 'select_topic'
     end
   end
@@ -44,11 +44,13 @@ class QuizzesController < ApplicationController
   # POST /quizzes
   # POST /quizzes.json
   def create
+    quiz = Quiz.new
+    authorize quiz, :new?
     topic = quiz_params.dig(:picked_topic)
-    return redirect_to 'new' if topic.blank?
+    subject = quiz_params.dig(:subject)
+    return redirect_to new_quiz_path(subject: subject) if topic.blank?
 
     quiz = Quiz::CreateQuiz.new(user: current_user, topic: topic).call
-    authorize quiz
     quiz.save
     redirect_to quiz
   end
@@ -82,7 +84,7 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:picked_topic)
+    params.require(:quiz).permit(:picked_topic, :subject)
   end
 
   def quiz_not_authorized
