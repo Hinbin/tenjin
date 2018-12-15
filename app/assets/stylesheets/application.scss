@@ -18,6 +18,29 @@
 @import 'dashboard.scss';
 @import 'pages.scss';
 
+.score-changed {
+  -webkit-animation: flash 1s 1 !important;
+  -animation: flash 1s 1 !important;
+}
+
+@-webkit-keyframes flash {
+  from {
+      background-color: red;
+  }
+  to {
+      background-color: inherit;
+  }
+}
+
+@keyframes flash {
+  from {
+    background-color: red;
+  }
+  to {
+      background-color: inherit;
+  }
+}
+
 .incorrect-answer {
   background-color: darkred !important;
   color: white !important;

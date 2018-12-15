@@ -21,9 +21,11 @@ class Quiz::AddLeaderboardPoint
   def broadcast_leaderboard_point
     subject = @quiz.subject
     channel_name = subject.name, @user.school.name
-    subject_score = TopicScore.joins(:subject).where('user_id = ? AND subject_id = ?', @user.id, subject.id)
-                              .group(:subject_id).sum(:score)[1]
-    message = { user: @user.id, topic_score: @topic_score.score, subject_score: subject_score }
+    subject_score = TopicScore.joins(:subject)
+                              .where('user_id = ? AND subject_id = ?', @user.id, subject.id)
+                              .sum(:score)
+    message = { user: @user.id, topic: @topic_score.topic.id, topic_score: @topic_score.score,
+                subject_score: subject_score }
     LeaderboardChannel.broadcast_to(channel_name, message)
   end
 end

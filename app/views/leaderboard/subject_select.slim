@@ -1,6 +1,4 @@
-h1 Pick a Subject
--@subjects.each do |s|
-  ul
-    a href=('/leaderboard/' +s.name)
-      li =s.name
-    
+section.page-section
+  h3.text-uppercase.text-center Pick a Subject
+  hr.primary.small.mb-5
+=render('subject_select')

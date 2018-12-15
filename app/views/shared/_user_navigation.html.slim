@@ -8,8 +8,10 @@ nav class="navbar navbar-expand-sm navbar-dark justify-content-between fixed-top
   div class="collapse navbar-collapse" id="navbarSupportedContent" 
     ul class='navbar-nav mr-auto'  
       li class="nav-item active"
-        a.nav-link.h3 href=new_quiz_path Quiz
-    h4.m-3.text-white = current_user.forename + ' ' + current_user.surname
+        a.nav-link href=new_quiz_path Quiz
+      li class="nav-item active"
+        a.nav-link href=leaderboard_index_path Leaderboard
+    p.m-2.text-white = current_user.forename + ' ' + current_user.surname
     =link_to(destroy_admin_session_path, method: :delete) do
       button class='btn btn-light' Logout
 

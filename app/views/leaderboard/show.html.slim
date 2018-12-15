@@ -1,7 +1,14 @@
 =render 'shared/user_navigation'
 =javascript_pack_tag 'subscriptions/leaderboard'
+=javascript_pack_tag 'leaderboard/leaderboard'
+- content_for :head do
+  meta content="reload" name="turbolinks-visit-control" /
 section.page-section
-  .container-fluid
-    h1 =@subject.name
-    h2 =@school
-    =render 'leaderboard'
+  .container
+    .row
+      .col-4.d-none.d-lg-block
+        =render 'subject_select'
+      .col
+        h1 =@subject.name
+        h3 =@topic_name
+        =render 'leaderboard'
