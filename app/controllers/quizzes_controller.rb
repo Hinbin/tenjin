@@ -33,7 +33,8 @@ class QuizzesController < ApplicationController
       @subjects = current_user.subjects
       render 'new'
     else
-      @topics = @subject.topics
+      @topics = @subject.topics.pluck(:name, :id)
+      @topics.prepend(['Lucky Dip', 'LD'])
       render 'select_topic'
     end
   end
@@ -48,9 +49,9 @@ class QuizzesController < ApplicationController
     authorize quiz, :new?
     topic = quiz_params.dig(:picked_topic)
     subject = quiz_params.dig(:subject)
-    return redirect_to new_quiz_path(subject: subject) if topic.blank?
+    return redirect_to new_quiz_path(subject: Subject.find(subject)) if topic.blank?
 
-    quiz = Quiz::CreateQuiz.new(user: current_user, topic: topic).call
+    quiz = Quiz::CreateQuiz.new(user: current_user, topic: topic, subject: subject).call
     quiz.save
     redirect_to quiz
   end

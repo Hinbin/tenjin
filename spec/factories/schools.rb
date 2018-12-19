@@ -3,5 +3,6 @@ FactoryBot.define do
     client_id { 'school1' }
     name { 'Test School' }
     token { 'AAAAA' }
+    permitted { true }
   end
 end

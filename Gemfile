@@ -77,8 +77,6 @@ group :development do
   gem 'rubocop'
   gem 'rubocop-rspec'
 
-  # ESLinter for javascript
-  gem 'eslint-rails'
 end
 
 group :test do

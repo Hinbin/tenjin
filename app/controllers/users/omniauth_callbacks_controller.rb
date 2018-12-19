@@ -14,7 +14,6 @@ module Users
       body = run_graphql_query(query, bearer_token)
       # Now we have a response with useful user information, send this to
       # our user object.  Standard boiler plate code below
-
       query_data = extract_query_data(body)
 
       # You need to implement the method below in your model (e.g. app/models/user.rb)

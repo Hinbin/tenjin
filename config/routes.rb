@@ -7,10 +7,12 @@ Rails.application.routes.draw do
   resources :leaderboard, only:[:show, :index]
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'
-
   get "/pages/*id" => 'pages#show', as: :page, format: false
+
+  authenticated :user do
+    root to: 'dashboard#show', as: :authenticated_root
+  end
 
   # if routing the root path, update for your controller
   root to: 'pages#show', id: 'home'
-
 end

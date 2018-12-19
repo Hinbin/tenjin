@@ -3,7 +3,8 @@ class Quiz::CreateQuiz
   def initialize(params)
     @user = params[:user]
     @topic_id = params[:topic]
-    @topic = Topic.find(@topic_id)
+    @subject_id = params[:subject]
+    @topic = Topic.find(@topic_id) unless @topic_id == 'Lucky Dip'    
     @quiz = Quiz.new
   end
 
@@ -25,8 +26,8 @@ class Quiz::CreateQuiz
   end
 
   def initialise_questions
-    questions = if @topic.blank?
-                  Question.where('topic_id < ?', 13).order('RANDOM()').take(10)
+    questions = if @topic_id == 'LD'
+                  Question.joins(topic: [:subject]).where('subject_id = ?', @subject_id).order('RANDOM()').take(10)
                 else
                   Question.where('topic_id = ?', @topic_id).order('RANDOM()').take(10)
                 end

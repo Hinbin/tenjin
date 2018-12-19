@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :multiplier do
-    integer { "" }
-    integer { "" }
+    score { 0 }
+    multiplier { 1 }
   end
 end

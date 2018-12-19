@@ -1,16 +1,6 @@
 RSpec.describe School::SyncSchool, '#call', :vcr do
-  let(:school_token) { '2a550dc912f6a63488af42352b79c5961e87daf9' }
-  let(:school_id) { 'A852030759' }
-  let(:subject_to_map) { 'Sociology' }
-  let(:classroom_client_id) { 'A1906124304' }
-  let(:classroom_name) { 'SOC 2' }
-  let(:school_name) { 'Outwood Grange Academy 1532082212' }
-  let(:student_upi) { '1479cf1d289684f08600c9ad1f6406fc' }
-  let(:student_name) { 'Leo' }
-  let(:employee_upi) { 'caea4baa5b7adac73ab1259987d2bcc0' }
-  let(:employee_name) { 'Emma' }
-  let(:school_params) { ActionController::Parameters.new(token: school_token, client_id: school_id) }
-  let(:default_subject_map) { create(:default_subject_map, name: subject_to_map) }
+  include_context 'api_data'
+  include_context 'wonde_test_data'
 
   def sync_school_with_wonde
     default_subject_map
@@ -47,6 +37,8 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
       sync_school_with_wonde
       expect(Enrollment.where(user_id: User.first).count).to eq(1)
     end
+
+    it 'disables old classrooms'
   end
 
   context 'when receiving updated classroom data' do
@@ -88,9 +80,9 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
 
   context 'when given updated student data' do
     it 'updates student details' do
-      create(:student, upi: student_upi)
+      create(:student, forename: 'test', upi: student_upi)
       sync_school_with_wonde
-      expect(User.where(upi: student_upi).first.forename).to eq(student_name)
+      expect(User.where(upi: student_upi).first.forename).to eq(student_forename)
     end
   end
 

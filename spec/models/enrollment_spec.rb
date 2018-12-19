@@ -8,7 +8,6 @@ RSpec.describe Enrollment, type: :model do
   it { is_expected.to belong_to(:user) }
   it { is_expected.to belong_to(:classroom) }
   context 'with classroom and user data ' do
-    let(:school) { create(:school) }
     let(:classrooms) { create_list(:classroom, 2, school: school, subject: subject_map.subject) }
     let(:student) { create(:student, school: school) }
 
@@ -29,7 +28,7 @@ RSpec.describe Enrollment, type: :model do
     include_context 'api_data'
     before do
       create(:classroom, client_id: 'classroom_id', school: school, subject: subject_map.subject)
-      create(:student, upi: '01234')
+      create(:student, upi: '01234', school: school)
       classroom_api_data[0].id = 'classroom_id'
     end
 
