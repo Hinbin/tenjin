@@ -15,7 +15,14 @@ RSpec.describe QuizzesController, type: :controller do
       expect(response).to render_template('quizzes/select_topic', 'layouts/application')
     end
 
-    it 'prevents me selecting a topic for a subject I am not allowed to use'
+    it 'prevents me selecting a topic for a subject I am not allowed to use' do
+      create(:enrollment, school: school, user: student)
+      different_subject = create(:classroom, school: school)
+      
+      get :new, params: { subject: different_subject.subject.name }
+      expect(response).to redirect_to dashboard_path
+    end
+
 
     it 'redirects to dashboard for a subject that does not exist' do
       get :new, params: { subject: 'NOSUBJECT' }
@@ -24,13 +31,3 @@ RSpec.describe QuizzesController, type: :controller do
  
   end
 end
-
-# it 'prevents me selecting a topic for a subject I am not allowed to use' do
-#   visit('quizzes/new?subject=History')
-#   expect(page).to have_current_path(/dashboard/)
-# end
-
-# it 'prevents me selecting a topic for a subject that does not exist' do
-#   visit('quizzes/new?subject=MadeUpTopic')
-#   expect(page).to have_current_path(/dashboard/)
-# end
