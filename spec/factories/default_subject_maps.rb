@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :default_subject_map do
-    name { 'Computer Science' }
+    name { FFaker::HipsterIpsum.word }
     association :subject, factory: :subject
   end
 end

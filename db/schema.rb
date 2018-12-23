@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 2018_12_11_121513) do
     t.string "name", null: false
     t.string "code"
     t.string "description"
+    t.boolean "disabled"
     t.bigint "subject_id"
     t.bigint "school_id"
     t.datetime "created_at", null: false

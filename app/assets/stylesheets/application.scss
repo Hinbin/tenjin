@@ -18,6 +18,8 @@
 @import 'dashboard.scss';
 @import 'pages.scss';
 
+
+
 .score-changed {
   -webkit-animation: flash 1s 1 !important;
   -animation: flash 1s 1 !important;
@@ -139,8 +141,12 @@ h1, h2, h3, h4, h5, h6,
   padding-bottom: 0.15rem;
 }
 
+.form-control {
+  font-size: 1.25rem;
+}
+
 body {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 300;
   font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }

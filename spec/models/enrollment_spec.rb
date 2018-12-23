@@ -26,9 +26,14 @@ RSpec.describe Enrollment, type: :model do
 
   describe '#from_wonde' do
     include_context 'api_data'
+
+    let(:subject_map) { create(:subject_map, school: School.first, client_subject_name: subject_api_data.data.name)}
+
     before do
-      create(:classroom, client_id: 'classroom_id', school: school, subject: subject_map.subject)
-      create(:student, upi: '01234', school: school)
+      school_api_data
+      create(:classroom, client_id: 'classroom_id', school: School.first, subject: subject_map.subject)
+      
+      create(:student, upi: user_api_data.data[0].upi, school: School.first)
       classroom_api_data[0].id = 'classroom_id'
     end
 

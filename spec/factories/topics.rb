@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :topic do
-    name {'TestTopic'}
+    name {FFaker::HipsterIpsum.word}
     association :subject, factory: :subject
   end
 end

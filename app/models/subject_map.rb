@@ -15,6 +15,7 @@ class SubjectMap < ApplicationRecord
     subject_map = where(client_id: client_subject.id).first_or_initialize
     subject_map.school = school
     subject_map.client_subject_name = client_subject.name
+
     # Check to see if this subject is in the default
     # subject map table
     default_subject = DefaultSubjectMap.where(name: subject_map.client_subject_name).first

@@ -5,6 +5,7 @@ class CreateClassrooms < ActiveRecord::Migration[5.2]
       t.string :name, null: false
       t.string :code
       t.string :description
+      t.boolean :disabled
       t.belongs_to :subject, index: true
       t.belongs_to :school, index: true
 

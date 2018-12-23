@@ -23,17 +23,12 @@ RSpec.describe 'User creates a quiz', :vcr, type: :feature, js: true do
     it 'allows me to select a topic' do
       visit('quizzes/new?subject=Computer+Science')
       find(:xpath, '//select/option[1]')
-      expect(page).to have_select('quiz_picked_topic', options: ['Lucky Dip', 'TestTopic'])
+      expect(page).to have_select('quiz_picked_topic', options: ['Lucky Dip', Topic.first.name])
     end
 
     it 'creates a quiz on the correct topic' do
       navigate_to_quiz
       expect(page).to have_current_path(%r{quizzes/[0-9]*})
-    end
-
-    it 'prevents me selecting a topic for a subject I am not allowed to use' do
-      visit('quizzes/new?subject=History')
-      expect(page).to have_current_path(/dashboard/)
     end
   end
 end

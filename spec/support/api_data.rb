@@ -1,20 +1,21 @@
 require 'rails_helper'
 
 RSpec.shared_context 'api_data', shared_context: :metadata do
-  let(:school_api_data) { School.from_wonde(OpenStruct.new(id: '1234', name: 'test'), 'token') }
+  let(:subject) { create(:subject) }
+  let(:school_api_data) { School.from_wonde(OpenStruct.new(id: SecureRandom.hex, name: FFaker::Education.school), SecureRandom.hex) }
   let(:user_api_data) do
-    OpenStruct.new(data: [OpenStruct.new(id: '01234', upi: '01234',
-                                         forename: 'TestForename', surname: 'TestSurname')])
+    OpenStruct.new(data: [OpenStruct.new(id: SecureRandom.hex, upi: SecureRandom.hex,
+                                         forename: FFaker::Name.first_name, surname: FFaker::Name.last_name)])
   end
   let(:alt_user_api_data) do
-    OpenStruct.new(data: [OpenStruct.new(id: '56789', upi: '56789',
-                                         forename: 'TestForename', surname: 'TestSurname')])
+    OpenStruct.new(data: [OpenStruct.new(id: SecureRandom.hex, upi: SecureRandom.hex,
+                                         forename: FFaker::Name.first_name, surname: FFaker::Name.last_name)])
   end
   let(:subject_api_data) do
-    OpenStruct.new(data: OpenStruct.new(id: 'sub1234', name: 'Computer Science'))
+    OpenStruct.new(data: OpenStruct.new(id: SecureRandom.hex, name: FFaker::HipsterIpsum.word))
   end
   let(:classroom_api_data) do
-    [OpenStruct.new(id: '5678', subject: subject_api_data, code: 'CS')]
+    [OpenStruct.new(id: SecureRandom.hex, subject: subject_api_data, code: FFaker::HipsterIpsum.word)]
   end
 end
 
@@ -23,7 +24,7 @@ RSpec.shared_context 'wonde_test_data', shared_context: :metadata do
   let(:school_id) { 'A852030759' }
   let(:school_name) { 'Outwood Grange Academy 1532082212' }
   let(:school_params) { ActionController::Parameters.new(token: school_token, client_id: school_id) }
-  let(:school) { create(:school, client_id: school_id, name: school_name, token: school_token, sync_status: 'successful', permitted: true )}
+  let(:school) { create(:school, client_id: school_id, name: school_name, token: school_token, sync_status: 'successful', permitted: true) }
 
   let(:subject_to_map) { 'Sociology' }
   let(:default_subject_map) { create(:default_subject_map, name: subject_to_map) }
@@ -39,5 +40,5 @@ RSpec.shared_context 'wonde_test_data', shared_context: :metadata do
   let(:employee_name) { 'Emma' }
 
   let(:computer_science) { create(:computer_science) }
-  let(:topic_cs) {create(:topic, subject: computer_science)}
+  let(:topic_cs) { create(:topic, subject: computer_science) }
 end

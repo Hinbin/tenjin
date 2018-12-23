@@ -21,6 +21,7 @@ class Enrollment < ApplicationRecord
     private
 
     def update_classrooms(classroom_api_data, classroom)
+
       # To handle updates to classrooms, delete all existing enrollments and start again
       create_classroom_enrollments(classroom_api_data.students, classroom) if classroom_api_data.students.present?
       create_classroom_enrollments(classroom_api_data.employees, classroom) if classroom_api_data.employees.present?

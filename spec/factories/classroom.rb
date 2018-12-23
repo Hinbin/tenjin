@@ -1,10 +1,11 @@
 FactoryBot.define do
   factory :classroom do
-    name { '10x/Cs1' }
-    description { 'Year 10 Computer Science' }
-    code { '10x/Cs1' }
-    sequence(:client_id)  { |n| "classroom#{n}" }
-    association :subject, factory: :subject
-    association :school, factory: :school
+    name { FFaker::AddressUK.street_address }
+    description { FFaker::AddressUK.street_name }
+    code { FFaker::AddressUK.postcode }
+    sequence(:client_id) { |n| "classroom#{n}" }
+    disabled { false }
+    subject
+    school
   end
 end

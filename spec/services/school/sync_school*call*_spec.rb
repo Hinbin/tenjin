@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe School::SyncSchool, '#call', :vcr do
   include_context 'api_data'
   include_context 'wonde_test_data'
@@ -38,7 +40,11 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
       expect(Enrollment.where(user_id: User.first).count).to eq(1)
     end
 
-    it 'disables old classrooms'
+    it 'disables old classrooms' do
+      create(:classroom, school: School.first, client_id: '1234')
+      sync_school_with_wonde
+      expect(Classroom.where(client_id: '1234').first.disabled).to eq true
+    end
   end
 
   context 'when receiving updated classroom data' do
@@ -53,7 +59,7 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
     end
 
     it 'removes enrollments that no longer exist' do
-      student = create(:student)
+      student = create(:student, upi: '1234')
       create(:enrollment, classroom: Classroom.first, user: student)
       sync_school_with_wonde
       expect(Enrollment.where(user: student)).to be_empty

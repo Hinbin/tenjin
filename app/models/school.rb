@@ -1,6 +1,7 @@
 class School < ApplicationRecord
   has_many :users
   has_many :subject_maps
+  has_many :subjects, through: :subject_maps
   validates :client_id, presence: true, uniqueness: true
   validates :name, presence: true
   validates :token, presence: true
@@ -21,7 +22,7 @@ class School < ApplicationRecord
     school.save
 
     Enrollment.joins(:classroom).where('school_id = ?', school.id).destroy_all
-    Classroom.where('school_id = ?', school.id).destroy_all
+    Classroom.where('school_id = ?', school.id).update_all(disabled: true)
   end
 
   def self.from_wonde_sync_end(school)

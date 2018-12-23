@@ -13,9 +13,9 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     if resource.class == User
-      '/dashboard'
+      dashboard_path
     elsif resource.class == Admin
-      '/schools'
+      schools_path
     end
   end
 end

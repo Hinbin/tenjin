@@ -33,7 +33,6 @@ class User < ApplicationRecord
 
   def self.from_wonde(school, sync_data)
     mapped_subjects = SubjectMap.subject_maps_for_school(school)
-
     # We only want entries for students that are completing subjects
     # covered by the quiz platform
     sync_data.each do |classroom|

@@ -4,7 +4,7 @@ class Quiz::CreateQuiz
     @user = params[:user]
     @topic_id = params[:topic]
     @subject_id = params[:subject]
-    @topic = Topic.find(@topic_id) unless @topic_id == 'Lucky Dip'    
+    @topic = Topic.find(@topic_id) unless @topic_id == 'Lucky Dip'
     @quiz = Quiz.new
   end
 
@@ -27,9 +27,29 @@ class Quiz::CreateQuiz
 
   def initialise_questions
     questions = if @topic_id == 'LD'
-                  Question.joins(topic: [:subject]).where('subject_id = ?', @subject_id).order('RANDOM()').take(10)
+                  # We want an even distribution of topics where possible
+                  question_array = []
+
+                  # Keep getting random questions, one from each topic until we have at
+                  # least 10 questions
+
+                  while question_array.length < 10
+                    question_array += Question.find_by_sql(["
+                    SELECT
+                      DISTINCT ON (questions.topic_id)
+                      questions.topic_id, questions.*
+                    FROM questions
+                    INNER JOIN topics ON questions.topic_id = topics.id
+                    LEFT JOIN subjects ON subjects.id = topics.id
+                    WHERE subject_id = ?
+                    ORDER by questions.topic_id, random()", @subject_id])
+                  end
+
+                  # Get maximum of 10 questions only
+                  question_array.sample(10)
+
                 else
-                  Question.where('topic_id = ?', @topic_id).order('RANDOM()').take(10)
+                  Question.where('topic_id = ?', @topic_id).order(Arel.sql('RANDOM()')).take(10)
                 end
 
     @quiz.questions = questions

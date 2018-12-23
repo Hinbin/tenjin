@@ -22,8 +22,8 @@ RSpec.describe User, type: :model do
     include_context 'api_data'
 
     before do
-      school = create(:school, client_id: '1234')
-      create(:subject_map, school: school)
+      school_api_data
+      create(:subject_map, client_subject_name: subject_api_data.data.name, school: School.first)
     end
 
     context 'with student api data' do
@@ -33,13 +33,13 @@ RSpec.describe User, type: :model do
       it 'creates students who have a classroom for a mapped subject' do
         classroom_api_data[0].students = user_api_data
         User.from_wonde(school_api_data, classroom_api_data)
-        expect(User.where(role: 'student').first.forename).to eq('TestForename')
+        expect(User.where(role: 'student').first.forename).to eq(user_api_data.data[0].forename)
       end
 
       it 'creates employees who have a classroom for a mapped subject' do
         classroom_api_data[0].employees = user_api_data
         User.from_wonde(school_api_data, classroom_api_data)
-        expect(User.where(role: 'employee').first.forename).to eq('TestForename')
+        expect(User.where(role: 'employee').first.forename).to eq(user_api_data.data[0].forename)
       end
 
       it 'only creates user accounts for those that need them' do

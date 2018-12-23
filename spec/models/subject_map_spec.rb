@@ -18,8 +18,8 @@ RSpec.describe SubjectMap, type: :model do
       expect { subject_map_record }.to change(SubjectMap, :count)
     end
 
-    it 'Uses default subject maps' do
-      default_map = create(:default_subject_map)
+    it 'maps subjects using default subject maps' do
+      default_map = create(:default_subject_map, name: subject_api_data.data.name)
       subject_map_record
       expect(SubjectMap.first.subject).to eq(default_map.subject)
     end

@@ -9,7 +9,6 @@ class Classroom < ApplicationRecord
 
   def self.from_wonde(school, sync_data)
     mapped_subjects = SubjectMap.subject_maps_for_school(school)
-
     sync_data.each do |classroom|
       subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
       create_classroom(classroom, school, subject) if subject.present?
@@ -24,6 +23,7 @@ class Classroom < ApplicationRecord
     c.code = classroom.code
     c.school = school
     c.subject = subject.subject
+    c.disabled = false
     c.save
   end
 
