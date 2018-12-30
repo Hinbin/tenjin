@@ -17,10 +17,9 @@ class QuizzesController < ApplicationController
   def show
     authorize @quiz
     gon.quiz_id = @quiz.id
-    cookies.encrypted[:user_id] = current_user.id
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     @percent_complete = (@quiz.num_questions_asked.to_f / @quiz.questions.length.to_f) * 100.to_f
-    render_question
+    render Quiz::RenderQuestionType.new(question: @question).call
   end
 
   # GET /quizzes/new
@@ -37,9 +36,6 @@ class QuizzesController < ApplicationController
       render 'select_topic'
     end
   end
-
-  # GET /quizzes/1/edit
-  def edit; end
 
   # POST /quizzes
   # POST /quizzes.json
@@ -59,15 +55,10 @@ class QuizzesController < ApplicationController
   # PATCH/PUT /quizzes/1.json
   def update
     authorize @quiz
-    check_answer = Quiz::CheckAnswer.new(quiz: @quiz, question: @question, answer_given: answer_params).call
-    render(json: check_answer)
+    render(json: Quiz::CheckAnswer.new(quiz: @quiz, question: @question, answer_given: answer_params).call)
   end
 
   private
-
-  def render_question
-    render Quiz::RenderQuestionType.new(question: @question).call
-  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_quiz
@@ -87,7 +78,21 @@ class QuizzesController < ApplicationController
     params.require(:quiz).permit(:picked_topic, :subject)
   end
 
-  def quiz_not_authorized
+  def quiz_not_authorized(exception)
+    case exception.query
+    when 'new?'
+      flash[:alert] = if exception.record.subject.present?
+                        ['Invalid subject ', exception.record.subject]
+                      else
+                        'Subject does not exist'
+                      end
+    when 'show?'
+      flash[:alert] = if exception.record.active?
+                        'Quiz does not belong to you'
+                      else
+                        'This quiz has finished'
+                      end
+    end
     redirect_to dashboard_path
   end
 end

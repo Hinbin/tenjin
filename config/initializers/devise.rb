@@ -257,20 +257,20 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  CALLBACK_URL = 'http://localhost:3000/users/auth/wonde/callback'
+  callback_url = 'http://localhost:3000/users/auth/wonde/callback'
 
   if Rails.env == 'production'
-    CALLBACK_URL = 'https://protected-meadow-45841.herokuapp.com/users/auth/wonde/callback'
+    callback_url = 'https://protected-meadow-45841.herokuapp.com/users/auth/wonde/callback'
   end
 
   config.omniauth :wonde, 
     Rails.application.credentials.wonde_client_id, 
     Rails.application.credentials.wonde_secret, 
     :provider_ignores_state => true,
-    :redirect_uri => CALLBACK_URL,
+    :redirect_uri => callback_url,
     setup: (lambda do |env|
       request = Rack::Request.new(env)
-      env['omniauth.strategy'].options['token_params'] = {:redirect_uri => CALLBACK_URL}
+      env['omniauth.strategy'].options['token_params'] = {:redirect_uri => callback_url}
     end)
   
   # ==> Warden configuration

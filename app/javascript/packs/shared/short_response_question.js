@@ -9,7 +9,7 @@ function processResponse(results, guess) {
     }
   }
 
-  if (!correct) {
+  if (!correct && results[0]) {
     $('#shortAnswerButton').addClass('incorrect-answer')
     $('#shortAnswerButton').text('Incorrect')
 

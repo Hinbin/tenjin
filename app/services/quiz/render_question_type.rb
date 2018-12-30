@@ -4,7 +4,8 @@ class Quiz::RenderQuestionType
   end
 
   def call
-    if @question.answers_count == 1
+    case @question.question_type
+    when 'short_answer'
       'question_short_response'
     else
       'question_multiple_choice'

@@ -29,12 +29,8 @@ module SessionHelpers
     create(:subject_map, school: school, subject: computer_science)
     classroom = create(:classroom, school: school, subject: computer_science)
     create(:enrollment, classroom: classroom, user: student_wonde)
-  end
-
-  def setup_question_database
-    setup_subject_database
     create(:multiplier)
-    create(:question, topic: topic_cs)
+    
   end
 
   def navigate_to_quiz

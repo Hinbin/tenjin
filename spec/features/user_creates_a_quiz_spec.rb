@@ -15,8 +15,11 @@ RSpec.describe 'User creates a quiz', :vcr, type: :feature, js: true do
   end
 
   context 'when selecting a topic' do
+    let(:topic) { create(:topic, subject: Subject.first) }
+
     before do
-      setup_question_database
+      setup_subject_database
+      create(:question, topic: topic)
       log_in
     end
 

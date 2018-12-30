@@ -2,13 +2,14 @@
 function processResponse(results, guess) {  
   var correct = false
   for (var result of results) {
-    $('#' + result.id).addClass('correct-answer')
-    if ( result.id == guess )
+    const resultID = '#response-' + result.id
+    $(resultID).addClass('correct-answer')
+    if ( resultID.slice(1) === guess )
       correct = true
   }
 
   if (!correct) {
-    $('#' + guess).addClass('incorrect-answer')
+    $('#'+ guess).addClass('incorrect-answer')
   }
 
   $('#nextButton').removeClass('invisible')
@@ -31,7 +32,7 @@ $(document).on('turbolinks:load', function () {
       success: (result) => processResponse(result, click.target.id),
       data: {
         answer: {
-            id: click.target.id
+            id: click.target.id.slice(9)
           }
       }
     })

@@ -2,6 +2,8 @@ class Enrollment < ApplicationRecord
   belongs_to :user
   belongs_to :classroom
 
+  has_one :subject, through: :classroom
+
   validates :user, uniqueness: { scope: [:classroom] }
 
   def self.from_wonde(school, sync_data)

@@ -29,6 +29,8 @@ class Quiz::CheckAnswer
   end
 
   def check_short_answer
+    return unless @question.answers.count.positive?
+
     correct_answer = @question.answers.first.text
     if @answer_given[:short_answer].casecmp(correct_answer).zero?
       process_correct_answer
@@ -41,6 +43,8 @@ class Quiz::CheckAnswer
     raise 'no valid answer given to multiple choice' if @answer_given[:id].blank?
 
     @answer = Answer.find_by(id: @answer_given[:id])
+    return unless @answer.present?
+
     if @answer.correct
       process_correct_answer
     else
