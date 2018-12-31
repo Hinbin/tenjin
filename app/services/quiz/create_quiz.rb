@@ -48,6 +48,9 @@ class Quiz::CreateQuiz
                   # Get maximum of 10 questions only
                   question_array.sample(10)
 
+                  # Shuffle the array so the questions are not in topic order
+                  question_array.shuffle
+
                 else
                   Question.where('topic_id = ?', @topic_id).order(Arel.sql('RANDOM()')).take(10)
                 end

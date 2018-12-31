@@ -1,15 +1,21 @@
 
 function processResponse(results, guess) {  
+  const guessDiv = '#'+ guess
+
   var correct = false
   for (var result of results) {
     const resultID = '#response-' + result.id
+
     $(resultID).addClass('correct-answer')
-    if ( resultID.slice(1) === guess )
+    if ( resultID === guessDiv ) {
       correct = true
+      $(guessDiv).append('<i class="fas fa-check fa-lg float-right my-1"></i>')
+    }
   }
 
   if (!correct) {
-    $('#'+ guess).addClass('incorrect-answer')
+    $(guessDiv).addClass('incorrect-answer')
+    $(guessDiv).append('<i class="fas fa-times fa-lg float-right my-1"></i>')
   }
 
   $('#nextButton').removeClass('invisible')

@@ -2,6 +2,7 @@ class School < ApplicationRecord
   has_many :users
   has_many :subject_maps
   has_many :subjects, through: :subject_maps
+  belongs_to :school_group
   validates :client_id, presence: true, uniqueness: true
   validates :name, presence: true
   validates :token, presence: true

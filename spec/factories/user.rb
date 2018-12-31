@@ -6,7 +6,7 @@ FactoryBot.define do
     surname { FFaker::Name.last_name }
     role { 'student' }
     provider { 'Wonde' }
-    upi { SecureRandom.hex}
+    upi { SecureRandom.hex }
     association :school, factory: :school
 
     factory :student do

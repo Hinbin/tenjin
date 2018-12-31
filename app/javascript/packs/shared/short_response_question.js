@@ -5,13 +5,17 @@ function processResponse(results, guess) {
     if ( result.text.toUpperCase() == guess.toUpperCase() ) {
       $('#shortAnswerButton').addClass('correct-answer')
       $('#shortAnswerButton').text('Correct!')
+      $('#shortAnswerButton').append('<i class="fas fa-check fa-lg float-right my-1"></i>')
       correct = true
+
     }
   }
 
   if (!correct && results[0]) {
     $('#shortAnswerButton').addClass('incorrect-answer')
     $('#shortAnswerButton').text('Incorrect')
+    $('#shortAnswerButton').append('<i class="fas fa-times fa-lg float-right my-1"></i>')
+
 
     $('#shortAnswerText').addClass('correct-answer')
     $('#shortAnswerText').val(results[0].text)

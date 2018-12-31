@@ -1,11 +1,8 @@
 module SessionHelpers
   def log_in
-    stub_omniauth
+    sign_in student
     visit root_path
-    student_wonde
-
-    click_link 'Log In'
-    expect(page).to have_content('Leo Ward')
+    expect(page).to have_content('START A QUIZ')
   end
 
   def stub_omniauth
@@ -26,15 +23,13 @@ module SessionHelpers
   end
 
   def setup_subject_database
-    create(:subject_map, school: school, subject: computer_science)
-    classroom = create(:classroom, school: school, subject: computer_science)
-    create(:enrollment, classroom: classroom, user: student_wonde)
+    create(:subject_map, school: school, subject: subject)
+    create(:enrollment, classroom: classroom, user: student)
     create(:multiplier)
-    
   end
 
   def navigate_to_quiz
-    find(class: 'subject-carousel-item-image').click
+    visit(new_quiz_path(subject: subject.name))
     find(:xpath, '//select').click
     find(:xpath, '//select/option[2]').click
     click_button('Create Quiz')
