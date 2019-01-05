@@ -29,7 +29,7 @@ class Leaderboard::BuildLeaderboard
                         Arel.sql('row_number() OVER (ORDER by SUM(score) DESC, users.forename) as rank'))
     @query = @query.join(users).on(users[:id].eq(ts[:user_id]))
     @query = @query.join(schools).on(schools[:id].eq(users[:school_id]))
-    @query = @query.group('user_id', 'users.forename', 'users.surname', 'schools.name', 'score')
+    @query = @query.group('user_id', 'users.forename', 'users.surname', 'schools.name')
   end
 
   def by_school
@@ -58,7 +58,7 @@ class Leaderboard::BuildLeaderboard
     return @window / 2 unless rank_results.count.positive?
 
     user_rank = rank_results.first.rank
-    user_rank = user_rank < (@window / 2) ? @window / 2 : user_rank
+    user_rank < (@window / 2) ? @window / 2 : user_rank
   end
 
   def call

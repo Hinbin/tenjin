@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :subject do
-    name { FFaker::HipsterIpsum.word }
+    name { FFaker::Lorem.word }
 
     factory :computer_science do
       name { 'Computer Science' }

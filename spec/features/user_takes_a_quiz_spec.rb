@@ -60,7 +60,7 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true do
 
   context 'when answering a short answer question' do
     let(:question) { create(:short_answer_question, topic: topic) }
-    let(:incorrect_response) { FFaker::HipsterIpsum.word }
+    let(:incorrect_response) { FFaker::Lorem.word }
     let(:correct_response) { Answer.first.text }
 
     before do

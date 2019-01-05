@@ -7,5 +7,7 @@ class CreateTopicScores < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+
+    add_index :topic_scores, [:user, :topic], unique: true
   end
 end

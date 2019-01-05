@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :question do
-    sequence(:text) { FFaker::HipsterIpsum.sentence }
+    sequence(:text) { FFaker::Lorem.sentence }
     question_type { 'multiple' }
     answers_count { 2 }
     image { nil }

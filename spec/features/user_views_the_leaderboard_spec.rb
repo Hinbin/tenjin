@@ -85,7 +85,16 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
     it 'hides schools on a small screen'
 
     context 'when viewing a subjects overall score' do
-      it 'adds up scores from different topics'
+      let(:second_topic_score) { create(:topic_score, user: student, topic: create(:topic, subject: Subject.first)) }
+      let(:second_subject_score) { create(:topic_score, user: student, topic: create(:topic)) }
+      let(:overall_total) { TopicScore.first.score + TopicScore.second.score }
+
+      it 'adds up scores from different topics' do
+        second_topic_score
+        visit(leaderboard_path(subject.name))
+        expect(page).to have_css('tr.bg-dark td:nth-child(4)', exact_text: overall_total)
+      end
+
       it 'ignores scores from topics of a different subject'
     end
 

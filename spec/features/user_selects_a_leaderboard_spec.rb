@@ -39,4 +39,17 @@ RSpec.describe 'User selects a leaderboard', type: :feature, js: true do
       expect(page).to have_css('h3', text: 'All') && have_css('h1', text: second_subject.name)
     end
   end
+
+  context 'when the leaderboard has been loaded' do
+    before do
+      create(:topic_score, user: student, topic: topic)
+      visit leaderboard_index_path
+    end
+
+    it 'highlights the current user' do # javascript/turbolinks bug
+      click_link(subject.name)
+      click_link('All')
+      expect(page).to have_css('tr.bg-dark')
+    end
+  end
 end

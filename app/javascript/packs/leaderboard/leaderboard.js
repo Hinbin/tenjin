@@ -1,8 +1,9 @@
 let allLeaderboardData = []
 const maxUsersToDisplay = 10
 
-$(document).on('turbolinks:load', function () {
+$(document).ready(function () {
   const myRow = 'tr#row-' + gon.user
+  console.log(myRow)
   $(myRow).addClass('bg-dark text-light')
   allLeaderboardData = Array.from($('tbody').find('tr'))
   sortLeaderboardTable()
