@@ -4,8 +4,6 @@ html
     meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
     title Tenjin
     meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
-    - if content_for?(:head)
-      = yield(:head)
     = csrf_meta_tags
     = csp_meta_tag
     = include_gon
@@ -15,6 +13,8 @@ html
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application'
   body
+    - if content_for?(:body_attributes)
+      = yield(:body_attributes)
     - if current_user.class == 'Admin'
       = render 'layouts/navigation'
     = yield

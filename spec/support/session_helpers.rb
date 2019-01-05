@@ -34,4 +34,8 @@ module SessionHelpers
     find(:xpath, '//select/option[2]').click
     click_button('Create Quiz')
   end
+
+  def initialize_name( user )
+    return user.forename + ' ' + user.surname[0] 
+  end
 end

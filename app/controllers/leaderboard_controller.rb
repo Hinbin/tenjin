@@ -1,6 +1,5 @@
 class LeaderboardController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_subject, only: %i[show]
 
   def index
     @subjects = policy_scope(Subject)
@@ -9,45 +8,44 @@ class LeaderboardController < ApplicationController
   end
 
   def show
-    @subject = Subject.where(name: leaderboard_params.dig(:id)).first
-    @subjects = current_user.subjects.uniq
-    @school = current_user.school.name
+    set_subject_and_topic
+    set_leaderboard_show_data
     authorize @current_user.school
-    gon.subject = @subject
-    gon.school = @school
+
     if @subject.blank?
       render 'subject_select'
     else
-      @topic = Topic.where('id = ?', leaderboard_params[:topic]).first
-      if @topic.blank?
-        @topic_name = 'All'
-        gon.topic = nil
-        @entries = TopicScore
-                   .joins(user: :school, topic: :subject)
-                   .group('user_id', 'forename', 'surname', 'schools.name')
-                   .where('school_id = ?', current_user.school.id)
-                   .where('subject_id = ?', @subject.id)
-                   .sum(:score)
-      else
-        @topic_name = @topic.name
-        gon.topic = @topic.id
-        @entries = TopicScore
-                   .joins(user: :school, topic: :subject)
-                   .group('user_id', 'forename', 'surname', 'schools.name')
-                   .where('school_id = ?', current_user.school.id)
-                   .where('topic_id = ?', @topic.id)
-                   .sum(:score)
-      end
-
+      @entries = Leaderboard::BuildLeaderboard.new(current_user, @subject, @topic).call
+      set_topic_name
       render 'show'
     end
   end
 
   private
 
+  def set_subject_and_topic
+    @subject = Subject.where(name: leaderboard_params.dig(:id)).first
+    @topic = Topic.where('id = ?', leaderboard_params[:topic]).first
+  end
+
+  def set_leaderboard_show_data
+    @subjects = current_user.subjects.uniq
+    @school = current_user.school.name
+    gon.subject = @subject
+    gon.school = @school
+    gon.user = current_user.id
+  end
+
+  def set_topic_name
+    @topic_name = if @topic.nil?
+                    'All'
+                  else
+                    @topic.name
+                  end
+    gon.topic = @topic_name
+  end
+
   def leaderboard_params
     params.permit(:id, :topic)
   end
-
-  def set_subject; end
 end

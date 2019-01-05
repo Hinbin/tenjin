@@ -7,6 +7,7 @@ class CreateSchools < ActiveRecord::Migration[5.2]
       t.date :last_sync
       t.integer :sync_status
       t.boolean :permitted
+      t.belongs_to :school_group, foreign_key: true
 
       t.timestamps
     end

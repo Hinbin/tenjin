@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_30_171155) do
+ActiveRecord::Schema.define(version: 2018_12_11_121513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -123,9 +123,11 @@ ActiveRecord::Schema.define(version: 2018_12_30_171155) do
     t.date "last_sync"
     t.integer "sync_status"
     t.boolean "permitted"
+    t.bigint "school_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_schools_on_client_id", unique: true
+    t.index ["school_group_id"], name: "index_schools_on_school_group_id"
   end
 
   create_table "subject_maps", force: :cascade do |t|
@@ -194,6 +196,7 @@ ActiveRecord::Schema.define(version: 2018_12_30_171155) do
   add_foreign_key "enrollments", "users"
   add_foreign_key "questions", "topics"
   add_foreign_key "quizzes", "users"
+  add_foreign_key "schools", "school_groups"
   add_foreign_key "subject_maps", "schools"
   add_foreign_key "subject_maps", "subjects"
   add_foreign_key "topic_scores", "topics"

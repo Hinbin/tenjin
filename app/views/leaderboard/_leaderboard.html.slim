@@ -1,14 +1,16 @@
 div id='leaderboard'
-.container-fluid.invisible#tableContainer
+.container-fluid#tableContainer
   table.table#leaderboardTable
     thead
       tr
-        th Name
-        th School
-        th#scoreColumn data-sort="int" data-sort-default="desc" Score
+        th#rankColumn data-sort="int" data-sort-default="asc" Rank
+        th#nameColumn data-sort="string" data-sort-default="asc" Name 
+        th.d-none.d-sm-table-cell School
+        th#scoreColumn data-sort="int" data-sort-default="desc" data-sort-multicolumn="rankColumn" Score
     tbody
-      -@entries.each do |e|
-        tr id=('row-' + e[0][0].to_s)
-          td=e[0][1] + ' ' + e[0][2][0]
-          td=e[0][3]
-          td id=('score-' + e[0][0].to_s) =e[1]
+      -@entries.each do |e|   
+        tr id=('row-' + e.user_id.to_s)
+          td=e.rank
+          td=e.forename + ' ' + e.surname[0]
+          td.d-none.d-sm-table-cell =e.school_name
+          td id=('score-' + e.user_id.to_s) =e.score
