@@ -15,7 +15,10 @@ class LeaderboardController < ApplicationController
     if @subject.blank?
       render 'subject_select'
     else
-      @entries = Leaderboard::BuildLeaderboard.new(current_user, @subject, @topic).call
+      @entries = Leaderboard::BuildLeaderboard.new(current_user,
+                                                   @subject,
+                                                   @topic,
+                                                   leaderboard_params).call
       set_topic_name
       render 'show'
     end
@@ -30,10 +33,12 @@ class LeaderboardController < ApplicationController
 
   def set_leaderboard_show_data
     @subjects = current_user.subjects.uniq
-    @school = current_user.school.name
+    @school = current_user.school
     gon.subject = @subject
     gon.school = @school
     gon.user = current_user.id
+    gon.params = leaderboard_params
+    gon.path = leaderboard_path(id: @subject.name)
   end
 
   def set_topic_name
@@ -46,6 +51,6 @@ class LeaderboardController < ApplicationController
   end
 
   def leaderboard_params
-    params.permit(:id, :topic)
+    params.permit(:id, :topic, :school_group, :all_time, :format)
   end
 end

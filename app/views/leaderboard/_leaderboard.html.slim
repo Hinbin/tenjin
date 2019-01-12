@@ -1,5 +1,21 @@
 div id='leaderboard'
 .container-fluid#tableContainer
+  .d-flex#optionFlex name="Toggle Options" data-toggle="collapse" data-target="#leaderboardOptions"
+      p.mx-2 style="font-size: 1rem" Options  
+      i.fas.fa-sort-down
+  .row.justify-content-around.my-2.collapse#leaderboardOptions
+    =render('school_option') if @school.school_group_id.present?
+    .btn-group.btn-group-toggle data-toggle="buttons"
+      label.btn.btn-secondary.option-label.active#weekly
+        input#SchoolGroupButton type='radio' name="timeOptions" autocomplete="off" checked="" Weekly
+      label.btn.btn-secondary.option-label#allTime
+        input#SchoolOnlyButton type='radio' name="timeOptions" autocomplete="off" All Time
+    .btn-group.btn-group-toggle data-toggle="buttons"
+      label.btn.btn-secondary.option-label.active#myPosition
+        input#SchoolGroupButton type='radio' name="schoolGroupOptions" autocomplete="off" checked="" Me
+      label.btn.btn-secondary.option-label#top50
+        input#SchoolOnlyButton type='radio' name="schoolGroupOptions" autocomplete="off" Top 50
+
   table.table#leaderboardTable
     thead
       tr
@@ -7,10 +23,9 @@ div id='leaderboard'
         th#nameColumn data-sort="string" data-sort-default="asc" Name 
         th.d-none.d-sm-table-cell School
         th#scoreColumn data-sort="int" data-sort-default="desc" data-sort-multicolumn="rankColumn" Score
-    tbody
-      -@entries.each do |e|   
-        tr id=('row-' + e.user_id.to_s)
-          td=e.rank
-          td=e.forename + ' ' + e.surname[0]
-          td.d-none.d-sm-table-cell =e.school_name
-          td id=('score-' + e.user_id.to_s) =e.score
+    tbody#tableData
+  
+  .row#loading
+    .d-flex.spinner
+      div.double-bounce1
+      div.double-bounce2    

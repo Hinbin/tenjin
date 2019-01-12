@@ -1,13 +1,13 @@
 
-function processResponse(results, guess) {  
-  const guessDiv = '#'+ guess
+function processResponse (results, guess) {
+  const guessDiv = '#' + guess
 
   var correct = false
   for (var result of results) {
     const resultID = '#response-' + result.id
 
     $(resultID).addClass('correct-answer')
-    if ( resultID === guessDiv ) {
+    if (resultID === guessDiv) {
       correct = true
       $(guessDiv).append('<i class="fas fa-check fa-lg float-right my-1"></i>')
     }
@@ -23,23 +23,22 @@ function processResponse(results, guess) {
 }
 
 $(document).on('turbolinks:load', function () {
-
-  $('.question-button').click( (click) => {   
-
-    if ( $(click.target).hasClass('disabled') )
+  $('.question-button').click((click) => {
+    if ($(click.target).hasClass('disabled')) {
       return
-    
+    }
+
     $('.question-button').attr('disabled', 'disabled')
     $('.question-button').addClass('disabled')
 
     $.ajax({
       type: 'PUT',
-      url: '/quizzes/' + gon.quiz_id ,
+      url: '/quizzes/' + gon.quiz_id,
       success: (result) => processResponse(result, click.target.id),
       data: {
         answer: {
-            id: click.target.id.slice(9)
-          }
+          id: click.target.id.slice(9)
+        }
       }
     })
   })
