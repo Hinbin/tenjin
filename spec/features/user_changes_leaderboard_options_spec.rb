@@ -1,4 +1,3 @@
-require 'pry'
 RSpec.describe 'User changes leaderboard options', type: :feature, js: true do
   include_context 'default_creates'
 
@@ -40,7 +39,7 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true do
       expect(page).to have_css('table#leaderboardTable tr', count: 3)
     end
 
-    it 'allows me to toggle back to viewing the school group from my school' do
+    it 'allows me to toggle back to viewing the school group from my school,' do
       find(:css, '#schoolGroup').click
       find(:css, '#schoolOnly').click
       expect(page).to have_css('table#leaderboardTable tr', count: 2)
@@ -66,6 +65,60 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true do
     end
   end
 
-  it 'allows me to see an all time leaderboard'
-  it 'defaults to a weekly leaderboard'
+  context 'when viewing the all time leaderboard' do
+    let(:overall_score) { (AllTimeTopicScore.first.score + TopicScore.first.score).to_s }
+    let(:second_topic) { create(:topic, subject: subject) }
+    let(:second_subject_topic) { create(:topic) }
+    let(:second_student) { create(:student, school: student.school) }
+
+    before do
+      create(:all_time_topic_score, user: student, topic: topic)
+      visit(leaderboard_path(subject.name))
+      find(:css, '#optionFlex').click
+    end
+
+    it 'adds up the the overall score correctly' do
+      find(:css, '#allTime').click
+      expect(page).to have_css('td', exact_text: overall_score)
+    end
+
+    it 'adds up a subject score accross multiple topics correctly' do
+      create(:all_time_topic_score, user: student, topic: second_topic)
+      find(:css, '#allTime').click
+      expect(page).to have_css('td', exact_text: (TopicScore.first.score +
+                                                  AllTimeTopicScore.first.score +
+                                                  AllTimeTopicScore.second.score).to_s)
+    end
+
+    it 'defaults to a weekly leaderboard' do
+      expect(page).to have_css('td', exact_text: TopicScore.first.score)
+    end
+
+    it 'adds up scores only for that subject' do
+      create(:all_time_topic_score, user: student, topic: second_subject_topic)
+      find(:css, '#allTime').click
+      expect(page).to have_css('td', exact_text: TopicScore.first.score)
+    end
+
+    it 'adds up scores only for that topic' do
+      create(:all_time_topic_score, user: student, topic: second_topic)
+      visit(leaderboard_path(subject.name, topic: second_topic))
+      find(:css, '#optionFlex').click
+      find(:css, '#allTime').click
+      expect(page).to have_css('td', exact_text: AllTimeTopicScore.second.score)
+    end
+
+    it 'adds up scores correctly for another user if I have no score' do
+      AllTimeTopicScore.first.destroy
+      create(:all_time_topic_score, user: second_student, topic: second_topic)
+      find(:css, '#allTime').click
+      expect(page).to have_css('td', exact_text: AllTimeTopicScore.first.score)
+    end
+
+    it 'works if there is only an all time score and no topic score' do
+      TopicScore.first.destroy
+      find(:css, '#allTime').click
+      expect(page).to have_css('td', exact_text: AllTimeTopicScore.first.score)
+    end
+  end
 end

@@ -3,12 +3,11 @@ class Leaderboard::BuildLeaderboard
     @user = user
     @subject = subject
     @topic = topic
-    @query = base_query
-    @school_group = true if @user.school.school_group_id.present? && params.dig(:school_group) == "true"
-    @all_time = true if params.dig(:all_time) == "true"
+    @school_group = true if @user.school.school_group_id.present? && params.dig(:school_group) == 'true'
+    @all_time = true if params.dig(:all_time) == 'true'
   end
 
-  def ts
+  def topic_scores
     TopicScore.arel_table
   end
 
@@ -24,13 +23,31 @@ class Leaderboard::BuildLeaderboard
     School.arel_table
   end
 
-  def base_query
-    @query = ts.project(ts[:user_id], users[:forename], Arel.sql('left (surname, 1) as surname'), schools[:name].as('school_name'),
-                        ts[:score].sum.as('score'),
-                        Arel.sql('row_number() OVER (ORDER by SUM(score) DESC, users.forename) as rank'))
-    @query = @query.join(users).on(users[:id].eq(ts[:user_id]))
+  def all_time_topic_scores
+    AllTimeTopicScore.arel_table
+  end
+
+  def surname_initial
+    Arel::Nodes::NamedFunction.new('LEFT', [users[:surname], 1]).as('surname')
+  end
+
+  def base_query(topic_table)
+    @query = users.project(users[:id],
+                           users[:forename],
+                           surname_initial,
+                           schools[:name].as('school_name'),
+                           topic_table[:score].sum.as('score'))
+    users_and_schools
+    @query = @query.join(topic_table).on(users[:id].eq(topic_table[:user_id]))
+    @query = @query.join(topics).on(topics[:id].eq(topic_table[:topic_id]))
+
+    @school_group ? by_school_group : by_school
+    @topic.present? ? by_topic : by_subject
+  end
+
+  def users_and_schools
     @query = @query.join(schools).on(schools[:id].eq(users[:school_id]))
-    @query = @query.group('user_id', 'users.forename', 'users.surname', 'schools.name')
+    @query = @query.group('users.id', 'schools.id')
   end
 
   def by_school
@@ -42,17 +59,26 @@ class Leaderboard::BuildLeaderboard
   end
 
   def by_topic
-    @query = @query.where(ts[:topic_id].eq(@topic.id))
+    @query = @query.where(topics[:id].eq(@topic.id))
   end
 
   def by_subject
-    @query = @query.join(topics).on(topics[:id].eq(ts[:topic_id]))
     @query = @query.where(topics[:subject_id].eq(@subject.id))
   end
 
   def call
-    @school_group ? by_school_group : by_school
-    @topic.present? ? by_topic : by_subject
-    TopicScore.find_by_sql(@query.to_sql)
+    @query = base_query(topic_scores)
+
+    if @all_time
+      @query = Arel::Table.new('results').project('results.id',
+                                                  'results.forename',
+                                                  'results.surname',
+                                                  'results.school_name',
+                                                  'SUM(results.score) as "score"')
+                          .from(Arel::Nodes::TableAlias.new(@query.union(base_query(all_time_topic_scores)), :results))
+      @query = @query.group('results.id, results.forename, results.surname, results.school_name')
+    end
+
+    User.find_by_sql(@query.to_sql)
   end
 end

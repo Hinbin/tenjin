@@ -7,25 +7,16 @@ class Quiz::AddLeaderboardPoint
   end
 
   def call
-    add_to_leaderboard
-    broadcast_leaderboard_point
+    add_points
+    Leaderboard::BroadcastLeaderboardPoint.new(@quiz.subject, @user, @topic_score).call
   end
 
-  def add_to_leaderboard
+  def add_points
     @multiplier = Multiplier.where('score < ?', @quiz.streak).last.multiplier
+
     @topic_score.score = 0 if @topic_score.new_record?
     @topic_score.score += @multiplier.to_i
     @topic_score.save
   end
 
-  def broadcast_leaderboard_point
-    subject = @quiz.subject
-    channel_name = subject.name, @user.school.name
-    subject_score = TopicScore.joins(:subject)
-                              .where('user_id = ? AND subject_id = ?', @user.id, subject.id)
-                              .sum(:score)
-    message = { user: @user.id, topic: @topic_score.topic.id, topic_score: @topic_score.score,
-                subject_score: subject_score }
-    LeaderboardChannel.broadcast_to(channel_name, message)
-  end
 end

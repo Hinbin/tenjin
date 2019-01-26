@@ -66,21 +66,15 @@
 }
 
 @-webkit-keyframes flash {
-  from {
-      background-color: red;
-  }
-  to {
-      background-color: inherit;
-  }
+  0%  {background-color:inherit};
+  50% {background-color:red};
+  100%{background-color:inherit};
 }
 
 @keyframes flash {
-  from {
-    background-color: red;
-  }
-  to {
-      background-color: inherit;
-  }
+  0%  {background-color:inherit};
+  50% {background-color:red};
+  100%{background-color:inherit};
 }
 
 .incorrect-answer {
