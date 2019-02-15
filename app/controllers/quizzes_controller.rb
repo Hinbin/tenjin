@@ -47,7 +47,6 @@ class QuizzesController < ApplicationController
     return redirect_to new_quiz_path(subject: subject) if topic.blank?
 
     quiz = Quiz::CreateQuiz.new(user: current_user, topic: topic, subject: subject).call
-    quiz.save
     redirect_to quiz
   end
 

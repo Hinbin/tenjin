@@ -121,14 +121,32 @@ class Leaderboard {
     const dataToDisplay = this.snipTableData()
 
     let table = $('#tableData')
-    table.children('tr').remove()
-    dataToDisplay.map((row) => {
-      table.append($('<tr>').attr('id', 'row-' + row.id)
-        .append($('<td>').text(row.rank))
-        .append($('<td>').text(row.forename + ' ' + row.surname))
-        .append($('<td>').attr('class', 'd-none d-sm-table-cell').text(row.school_name))
-        .append($('<td>').text(Math.round(row.score))))
-    })
+    let tableRows = $('#tableData tr')
+    for (let i = 0; i < dataToDisplay.length; i++) {
+      if (tableRows[i] === undefined) {
+        table.append(this.buildRow(dataToDisplay[i], false))
+      } else {
+        let rowData = $(tableRows[i]).find('td')
+        if (rowData[0] !== dataToDisplay[i].id) {
+          $(tableRows[i]).replaceWith(this.buildRow(dataToDisplay[i], $(tableRows[i]).hasClass('score-changed')))
+        }
+      }
+    }
+  }
+
+  buildRow (row, hasScoreFlash) {
+    let tr
+    if (hasScoreFlash === true) {
+      tr = $('<tr>').attr('id', 'row-' + row.id).addClass('score-changed')
+    } else {
+      tr = $('<tr>').attr('id', 'row-' + row.id)
+    }
+    tr.append($('<td>').text(row.rank))
+      .append($('<td>').text(row.forename + ' ' + row.surname))
+      .append($('<td>').attr('class', 'd-none d-sm-table-cell').text(row.school_name))
+      .append($('<td>').text(Math.round(row.score)))
+
+    return tr
   }
 
   snipTableData () {
@@ -148,7 +166,10 @@ class Leaderboard {
       return tableData.slice(0, (this.maxUsersToDisplay))
       // Otherwise snip the 5 around the user
     } else if ((userRowIndex + (this.maxUsersToDisplay / 2)) > tableSize) {
-      return tableData.slice(userRowIndex - this.maxUsersToDisplay + 1, userRowIndex + 1)
+      // If the user is too close to the bottom - display from the bottom of the table up
+      let distanceFromBottom = tableData.length - userRowIndex
+      console.debug('user close to bottom to display all distance:', distanceFromBottom, 'ts:', tableSize, ' mu:', this.maxUsersToDisplay)
+      return tableData.slice(tableSize - this.maxUsersToDisplay)
     } else {
       let lower = Math.max(0, userRowIndex - (this.maxUsersToDisplay / 2) + 1)
       let upper = Math.min(tableSize, lower + this.maxUsersToDisplay)
@@ -172,7 +193,7 @@ class Leaderboard {
         surname: data.surname,
         rank: 0,
         school_name: data.school_name,
-        score: data.score
+        score: data.topic_score
       })
     }
 

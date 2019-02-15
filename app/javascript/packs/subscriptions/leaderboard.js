@@ -2,7 +2,9 @@ const gon = window.gon
 const App = window.App
 
 App.leaderboard = App.cable.subscriptions.create({ channel: 'LeaderboardChannel', subject: gon.subject, school: gon.school, school_group: gon.school_group }, {
-  connected () { },
+  connected () { 
+    console.log('connected')
+  },
   // Called when the subscription is ready for use on the server
 
   disconnected () { },

@@ -8,7 +8,7 @@ class Quiz::AddLeaderboardPoint
 
   def call
     add_points
-    Leaderboard::BroadcastLeaderboardPoint.new(@quiz.subject, @user, @topic_score).call
+    Leaderboard::BroadcastLeaderboardPoint.new(@topic_score).call
   end
 
   def add_points

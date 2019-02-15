@@ -1,9 +1,9 @@
 class Leaderboard::BroadcastLeaderboardPoint
-  def initialize(subject, user, topic_score)
-    @subject = subject
-    @user = user
+  def initialize(topic_score)
+    @subject = topic_score.subject
+    @user = topic_score.user
     @topic_score = topic_score
-    @channel_name = subject.name, @user.school.name
+
     @subject_score = 0
     @message = {}
   end
@@ -11,6 +11,17 @@ class Leaderboard::BroadcastLeaderboardPoint
   def call
     calculate_subject_score
     build_json_data
+    broadcast_point
+  end
+
+  def broadcast_point
+    school = @user.school
+    @channel_name = @subject.name + ':'
+    @channel_name += if school.school_group_id.present?
+                       school.school_group.name
+                     else
+                       school.name
+                     end
     LeaderboardChannel.broadcast_to(@channel_name, @message)
   end
 

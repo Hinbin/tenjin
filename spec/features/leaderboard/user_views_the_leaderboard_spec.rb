@@ -2,16 +2,16 @@ require 'rails_helper'
 require 'support/api_data'
 require 'pry'
 
-RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
+RSpec.describe 'User views the leaderboard',   type: :feature, js: true do
   include_context 'default_creates'
 
   before do
     setup_subject_database
     sign_in student
-    create(:quiz, topic: topic, user: student)
-    visit(leaderboard_path(subject.name))
+    create(:topic_score, topic: topic, user: student)
   end
 
+  let(:student) { create(:student, forename: 'Aaaron', school: school) } # Ensure first alphabetically
   let(:student_name) { initialize_name student }
   let(:another_name) { initialize_name User.second }
   let(:one_to_ten) do
@@ -19,31 +19,9 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       create(:topic_score, topic: topic, school: school, score: n)
     end
   end
-  let(:add_point) do
-    @quiz = params[:quiz]
-    @question = params[:question]
-  end
 
-  it 'flashes an update if another person has a score' do
-    update_score
-  end
-  it 'does not update if update is from an unaffiliated school'
-  it 'does update if score is from the same school group'
-  it 'works when there is no school group'
-  it 'only updates the current subject'
-  it 'flashes me when I have a score'
-  it 'can handle receiving two scores at the same time'
-  it 'only flashes once, for a second'
-  it 'handles a new student having a score'
-  it 're-ranks correctly'
-
-
-  context 'when viewing a single topic' do
-    it 'only updates the current topic'
-  end
-  
   it 'displays myself if I have a score' do
-
+    visit(leaderboard_path(subject.name))
     expect(page).to have_css('td', exact_text: student_name)
   end
 
@@ -101,6 +79,13 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     one_to_ten
     visit(leaderboard_path(subject.name))
     expect(page).to have_css('tr:nth-child(10) td:nth-child(4)', text: TopicScore.first.score)
+  end
+
+  it 'shows others when I am near the bottom of the table' do # bug
+    TopicScore.first.update(score: 3)
+    one_to_ten
+    visit(leaderboard_path(subject.name))
+    expect(page).to have_css('tr:nth-child(8) td:nth-child(2)', text: student.forename)
   end
 
   it 'hides schools on a small screen' do

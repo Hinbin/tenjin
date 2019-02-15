@@ -4,14 +4,15 @@ class Quiz::CreateQuiz
     @user = params[:user]
     @topic_id = params[:topic]
     @subject_id = params[:subject]
-    @topic = Topic.find(@topic_id) unless @topic_id == 'Lucky Dip'
+    @lucky_dip = @topic_id == 'Lucky Dip'
+    @topic = Topic.find(@topic_id) unless @lucky_dip
     @quiz = Quiz.new
   end
 
   def call
     initialise_quiz
     initialise_questions
-
+    @quiz.save
     @quiz
   end
 
@@ -21,12 +22,12 @@ class Quiz::CreateQuiz
     @quiz.streak = 0
     @quiz.answered_correct = 0
     @quiz.num_questions_asked = 0
-    @quiz.subject = @topic.subject
+    @quiz.subject = @subject_id
     @quiz.active = true
   end
 
   def initialise_questions
-    questions = if @topic_id == 'LD'
+    questions = if @lucky_dip
                   # We want an even distribution of topics where possible
                   question_array = []
 

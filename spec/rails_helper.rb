@@ -8,6 +8,10 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'webmock/rspec'
 require 'vcr'
+
+require 'action_cable/testing/rspec'
+require 'action_cable/testing/rspec/features'
+
 WebMock.disable_net_connect!(allow_localhost: true)
 # WebMock.allow_net_connect!
 
@@ -76,23 +80,25 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :feature
 
+  # Required to use database cleaner with action cable
+  # or feature testing will not work
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
- 
-  config.before(:each) do
+
+  config.before do
     DatabaseCleaner.strategy = :transaction
   end
- 
-  config.before(:each, :js => true) do
+
+  config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
   end
- 
-  config.before(:each) do
+
+  config.before do
     DatabaseCleaner.start
   end
- 
-  config.after(:each) do
+
+  config.after do
     DatabaseCleaner.clean
   end
 end
@@ -107,10 +113,9 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+Capybara.server = :puma
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
 end
 
 Capybara.javascript_driver = :chrome
-Capybara.server = :puma
-
