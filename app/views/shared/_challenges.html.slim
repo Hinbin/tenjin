@@ -1,0 +1,22 @@
+=
+section.page-section.text-center#challenges
+  .container
+    h1.page-section-header.text-uppercase Challenges
+    hr.primary.small.mb-5
+    .row.justify-content-center
+      .col-lg-10.col.mx-auto
+        table.table.table-hover.table-responsive#challenge-table
+          thead
+            tr  
+              th Challenge
+              th Progress
+              th.d-none.d-sm-table-cell Points
+              th Expires in
+          tbody
+            -@challenges.each do |c|        
+              tr[data-topic=c.topic.id data-subject=c.topic.subject.id]
+                td.text-left =Challenge.stringify(c)
+                td 0%
+                td.d-none.d-sm-table-cell =c.points
+                td =distance_of_time_in_words(DateTime.now, c.end_date) 
+      

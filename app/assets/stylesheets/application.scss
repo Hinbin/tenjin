@@ -15,10 +15,8 @@
 @import "font-awesome-sprockets";
 @import "font-awesome";
 @import 'slick';
-@import 'dashboard.scss';
 @import 'pages.scss';
-
-
+@import 'dashboard.scss';
 .spinner {
   width: 40px;
   height: 40px;
@@ -106,22 +104,36 @@ hr.small {
   margin-right: auto;
 }
 
-hr.primary {
+%hr.primary-shared {
   border-top-width: 3px;
   border-bottom-width: 3px;
   border-style: solid;
   height: 0.125rem;
+}
+
+hr.primary {
+  @extend %hr.primary-shared;
   border-color: #ef4035;
+}
+
+hr.secondary {
+  @extend %hr.primary-shared;
+  border-color: white;
 }
 
 .page-section
 {
-  padding-top: 7.25rem;
+  padding-top: 3.25rem;
+  padding-bottom: 3.25rem;
 }
 
 .page-section-header
 {
   font-size: 3rem;
+  @include media-breakpoint-down(sm) {
+    font-size: 2rem;
+  }
+
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -149,13 +161,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 h1, h3, #branding-text, .fa-2x {
-
-  @include media-breakpoint-down(md) {
-    font-size: 2rem;
-    padding-top: 0.15rem;
-    padding-bottom: 0.15rem;
-    margin-bottom: 0rem;
-  }
+  font-size: 2rem;
 
 }
 

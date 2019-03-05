@@ -1,10 +1,30 @@
 // Place all the styles related to the dashboard controller here.
 // They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+// You can use Sass (SCSS) here: http://sass-lang.com/ 
+
+@import "bootstrap";
+
+.table-hover> tbody> tr:hover{
+  background-color: #ef4035;
+}
+
+#homework{
+  @include media-breakpoint-up(lg) {
+    background-attachment: fixed;    
+  }
+
+  background-color: #ef4035;  
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), image-url("athletics.jpg") no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
 
 
 #newQuiz{
-  background-color: white
+  background-color: white;
+  padding-top: 6.25rem;
 }
 
 .subject-carousel-item-text {

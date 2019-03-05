@@ -1,0 +1,19 @@
+section.page-section.text-center#homework
+  .container
+    h1.page-section-header.text-uppercase Homework
+    hr.primary.small.mb-5
+    .row.justify-content-center
+      .col-lg-10.col.mx-auto
+        table.table.table-hover.table-responsive
+          thead
+            tr  
+              th Topic
+              th Due
+              th Complete?
+          -@challenges.each do |c|        
+            tbody
+              tr
+                td.text-left Test
+                td Soon
+                td No
+      

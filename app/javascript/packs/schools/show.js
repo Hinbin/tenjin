@@ -12,7 +12,7 @@ $(document).on('turbolinks:load', function () {
     $.ajax({
       type: 'PUT',
       url: '/subject_maps/' + subject_map_id,
-      success: () => { $(change.target).removeAttr('disabled')},
+      success: () => { $(change.target).removeAttr('disabled') },
       data: {
         subject_map: {
           name: subject_picked,

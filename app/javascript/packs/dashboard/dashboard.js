@@ -1,4 +1,6 @@
 
+var gon = window.gon
+
 $(document).on('turbolinks:load', () => {
   $('.subject-carousel').slick({
     infinite: true,
@@ -20,5 +22,11 @@ $(document).on('turbolinks:load', () => {
         }
       }
     ]
+  })
+
+  $('#challenge-table tr').click(function () {
+    var pickedSubject = $(this).data('subject')
+    var pickedTopic = $(this).data('topic')
+    $.post(gon.quiz_path, { quiz: { subject: pickedSubject, picked_topic: pickedTopic } })
   })
 })

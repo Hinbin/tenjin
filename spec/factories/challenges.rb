@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :challenge do
-    type { "" }
-    start_date { "" }
-    end_date { "" }
-    points { "" }
-    topic { nil }
+    challenge_type { 'full_marks' }
+    start_date { DateTime.now }
+    end_date { DateTime.now + 7.days }
+    points { 10 }
+    topic
   end
 end
