@@ -23,4 +23,5 @@ class Challenge < ApplicationRecord
 
     challenge_strings[Challenge.challenge_types[challenge.challenge_type]] + ' ' + challenge.topic.name
   end
+
 end

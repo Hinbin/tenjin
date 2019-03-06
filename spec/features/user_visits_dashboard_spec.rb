@@ -1,4 +1,4 @@
-RSpec.describe 'User visits dashboard', :focus, type: :feature, js: true do
+RSpec.describe 'User visits dashboard', type: :feature, js: true do
   include_context 'default_creates'
 
   before do
