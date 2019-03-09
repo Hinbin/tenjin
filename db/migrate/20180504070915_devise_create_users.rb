@@ -47,6 +47,9 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
       t.string :photo
       t.string :type
 
+      #Additional custom fields
+      t.integer :challenge_points
+
     end
     
     # add_index :users, :email,                unique: true

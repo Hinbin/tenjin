@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_15_141023) do
+ActiveRecord::Schema.define(version: 2019_03_06_101117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,17 @@ ActiveRecord::Schema.define(version: 2019_02_15_141023) do
     t.datetime "updated_at", null: false
     t.index ["question_id"], name: "index_asked_questions_on_question_id"
     t.index ["quiz_id"], name: "index_asked_questions_on_quiz_id"
+  end
+
+  create_table "challenge_progresses", force: :cascade do |t|
+    t.bigint "challenge_id"
+    t.bigint "user_id"
+    t.integer "progress"
+    t.boolean "completed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_id"], name: "index_challenge_progresses_on_challenge_id"
+    t.index ["user_id"], name: "index_challenge_progresses_on_user_id"
   end
 
   create_table "challenges", force: :cascade do |t|
@@ -207,6 +218,7 @@ ActiveRecord::Schema.define(version: 2019_02_15_141023) do
     t.string "surname"
     t.string "photo"
     t.string "type"
+    t.integer "challenge_points"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
   end
@@ -214,6 +226,8 @@ ActiveRecord::Schema.define(version: 2019_02_15_141023) do
   add_foreign_key "all_time_topic_scores", "topics"
   add_foreign_key "all_time_topic_scores", "users"
   add_foreign_key "answers", "questions"
+  add_foreign_key "challenge_progresses", "challenges"
+  add_foreign_key "challenge_progresses", "users"
   add_foreign_key "challenges", "topics"
   add_foreign_key "default_subject_maps", "subjects"
   add_foreign_key "enrollments", "classrooms"

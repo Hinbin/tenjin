@@ -19,6 +19,8 @@ class Quiz::MoveQuizForward
   def check_if_quiz_finished
     return unless @quiz.num_questions_asked >= @quiz.questions.length
 
+    Challenge::UpdateChallengeProgress.new(@quiz).call
+
     @quiz.active = false
     @quiz.save
   end

@@ -15,11 +15,13 @@ RSpec.describe 'User visits dashboard', type: :feature, js: true do
   end
 
   context 'when looking at the challenges' do
-    let(:challenge_one) { create(:challenge, topic: topic) }
+    let(:challenge_one) { create(:challenge, topic: topic, end_date: DateTime.now + 1.hour) }
     let(:second_subject) { create(:subject) }
     let(:second_topic) { create(:topic, subject: second_subject) }
     let(:challenge_two) { create(:challenge, topic: create(:topic, subject: subject)) }
-    let(:question) {create(:question, topic: topic)}
+    let(:question) { create(:question, topic: topic) }
+    let(:progressed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 70) }
+    let(:completed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 100, completed: true) }
 
     before do
       challenge_one
@@ -27,12 +29,24 @@ RSpec.describe 'User visits dashboard', type: :feature, js: true do
       create(:answer, question: question, correct: true)
     end
 
-    it 'shows challenges for subjects I am subscribed to' do
+    it 'shows challenges for subjects' do
       visit(dashboard_path)
       expect(page).to have_content(Challenge.stringify(challenge_one))
     end
 
-    it 'only shows challenges for subjects I am subscribed to' do
+    it 'shows progress for full marks challenges' do
+      progressed_challenge
+      visit(dashboard_path)
+      expect(page).to have_css('td', exact_text: progressed_challenge.progress)
+    end
+
+    it 'shows challenge as complete if finished' do
+      completed_challenge
+      visit(dashboard_path)
+      expect(page).to have_css('td.i.fa-check')
+    end
+
+    it 'only shows challenges for subjects I take' do
       second_topic
       c = Challenge.create_challenge(second_subject)
       visit(dashboard_path)

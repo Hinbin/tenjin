@@ -29,6 +29,8 @@ RSpec.describe Challenge, type: :model do
     it 'doubles the amount of challenge points for a ten out of ten' do
       expect(challenge_full_marks.points).to eq(20)
     end
+
+    it 'throws an error if there are no topics for the subject'
   end
 
   describe '#stringify' do

@@ -8,7 +8,9 @@ class Challenge < ApplicationRecord
     challenge.start_date = DateTime.now
     challenge.end_date = DateTime.now + 1.week
     challenge.topic = Topic.where(subject: subject).order(Arel.sql('RANDOM()')).first
-    challenge.challenge_type = challenge_type == nil ? Challenge.challenge_types.keys.sample : challenge_type
+    raise 'no topic available in subject when creating a challenge' if challenge.topic.nil?
+
+    challenge.challenge_type = challenge_type.nil? ? Challenge.challenge_types.keys.sample : challenge_type
     challenge.points = challenge.challenge_type == 'full_marks' ? 20 : 10
     challenge.save
     challenge
@@ -23,5 +25,4 @@ class Challenge < ApplicationRecord
 
     challenge_strings[Challenge.challenge_types[challenge.challenge_type]] + ' ' + challenge.topic.name
   end
-
 end

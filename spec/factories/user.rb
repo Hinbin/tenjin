@@ -8,6 +8,7 @@ FactoryBot.define do
     provider { 'Wonde' }
     upi { SecureRandom.hex }
     association :school, factory: :school
+    challenge_points { 0 }
 
     factory :student do
       role { 'student' }

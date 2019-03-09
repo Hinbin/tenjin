@@ -14,9 +14,9 @@ section.page-section.text-center#challenges
               th Expires in
           tbody
             -@challenges.each do |c|        
-              tr[data-topic=c.topic.id data-subject=c.topic.subject.id]
+              tr[data-topic=c.topic.id data-subject=c.topic.subject_id]
                 td.text-left =Challenge.stringify(c)
-                td 0%
+                td =find_challenge_progress(@challenge_progress, c)
                 td.d-none.d-sm-table-cell =c.points
                 td =distance_of_time_in_words(DateTime.now, c.end_date) 
       
