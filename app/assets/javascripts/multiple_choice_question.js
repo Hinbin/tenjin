@@ -22,17 +22,17 @@ function processMultipleChoiceResponse (results, guess) {
 }
 
 $(document).on('turbolinks:load', function () {
-  $('.question-button').click((click) => {
+  $('.multiple-choice-button').click((click) => {
     if ($(click.target).hasClass('disabled')) {
       return
     }
 
-    $('.question-button').attr('disabled', 'disabled')
-    $('.question-button').addClass('disabled')
+    $('.multiple-choice-button').attr('disabled', 'disabled')
+    $('.multiple-choice-button').addClass('disabled')
 
     $.ajax({
       type: 'PUT',
-      url: '/quizzes/' + gon.quiz_id,
+      url: '/quizzes/' + window.gon.quiz_id,
       success: (result) => processMultipleChoiceResponse(result, click.target.id),
       data: {
         answer: {

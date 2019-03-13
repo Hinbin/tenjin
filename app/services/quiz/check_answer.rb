@@ -30,7 +30,7 @@ class Quiz::CheckAnswer
 
   def check_short_answer
     return unless @question.answers.count.positive?
-
+    
     correct_answer = @question.answers.first.text
     if @answer_given[:short_answer].casecmp(correct_answer).zero?
       process_correct_answer

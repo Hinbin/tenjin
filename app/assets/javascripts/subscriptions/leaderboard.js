@@ -1,6 +1,6 @@
 $(document).on('turbolinks:load', function () {
   if (page.controller() === 'leaderboard') {
-    App.leaderboard = App.cable.subscriptions.create({ channel: 'LeaderboardChannel', subject: gon.subject, school: gon.school, school_group: gon.school_group }, {
+    App.leaderboard = App.cable.subscriptions.create({ channel: 'LeaderboardChannel', subject: window.gon.subject, school: window.gon.school, school_group: window.gon.school_group }, {
       connected () {
 
       },
@@ -12,7 +12,7 @@ $(document).on('turbolinks:load', function () {
       received (data) {
 
         // If this isn't for the topic being shown, return and do nothing   
-        if (gon.topic !== undefined && data.topic !== gon.topic) {
+        if (window.gon.topic !== undefined && data.topic !== window.gon.topic) {
           return
         }
 

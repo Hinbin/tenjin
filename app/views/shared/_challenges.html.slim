@@ -13,7 +13,7 @@ section.page-section.text-center#challenges
               th.d-none.d-sm-table-cell Points
               th Expires in
           tbody
-            -@challenges.each do |c|        
+            -@challenges.order(:end_date).each do |c|        
               tr[data-topic=c.topic.id data-subject=c.topic.subject_id]
                 td.text-left =Challenge.stringify(c)
                 td =find_challenge_progress(@challenge_progress, c)

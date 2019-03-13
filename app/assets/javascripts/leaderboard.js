@@ -1,5 +1,3 @@
-const gon = window.gon
-
 // Load leaderboard with initial data
 $(document).on('turbolinks:load', function () {
   if (page.controller() === 'leaderboard' && page.action() === 'show') {
@@ -52,7 +50,7 @@ class Leaderboard {
   }
 
   getData (id) {
-    const path = gon.path + '.json?' + this.buildParams(id)
+    const path = window.gon.path + '.json?' + this.buildParams(id)
     $.ajax({
       type: 'GET',
       url: path,
@@ -62,12 +60,12 @@ class Leaderboard {
   }
 
   buildParams (id) {
-    const schoolGroup = gon.params.school_group
-    const allTime = gon.params.allTime
+    const schoolGroup = window.gon.params.school_group
+    const allTime = window.gon.params.allTime
     let params = {}
 
     if (gon.topic !== undefined) {
-      params.topic = gon.topic
+      params.topic = window.gon.topic
     }
 
     if (id === 'schoolGroup' || schoolGroup) {
@@ -96,7 +94,7 @@ class Leaderboard {
   }
 
   highlightUser () {
-    const myRow = 'tr#row-' + gon.user
+    const myRow = 'tr#row-' + window.gon.user
     $(myRow).addClass('bg-dark text-light')
   }
 
@@ -154,7 +152,7 @@ class Leaderboard {
   snipTableData () {
     let tableData = this.allLeaderboardData
     const tableSize = tableData.length
-    let userRowIndex = tableData.findIndex(x => x.id === gon.user)
+    let userRowIndex = tableData.findIndex(x => x.id === window.gon.user)
 
     if (this.top50) {
       return tableData.slice(0, 50)

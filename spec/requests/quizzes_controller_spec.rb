@@ -18,7 +18,7 @@ RSpec.describe 'using a quiz', type: :request do
     end
 
     context 'when I have multiple quizzes' do
-      let(:quiz) { create(:quiz, user: student) }
+      let(:quiz) { create(:quiz, user: student, created_at: DateTime.now - 1.hour) }
       let(:new_quiz) { create(:quiz, user: student) }
 
       it 'only shows the latest quiz' do
@@ -81,7 +81,8 @@ RSpec.describe 'using a quiz', type: :request do
     context 'when displaying a question' do
       let(:question) { create(:question) }
       let(:multiplier) { create(:multiplier) }
-      let(:asked_question) { create(:asked_question, question: question, user: student) }
+      let(:quiz) { create(:quiz, num_questions_asked: 0, user: student) }
+      let(:asked_question) { create(:asked_question, question: question, user: student, quiz: quiz) }
       let(:a_subject) { create(:subject) }
       let(:topic) { create(:topic, subject: a_subject) }
       let(:classroom) { create(:classroom, subject: a_subject) }
@@ -106,7 +107,7 @@ RSpec.describe 'using a quiz', type: :request do
       it 'renders a single word answer question' do
         asked_question = create(:asked_question,
                                 question: create(:question, question_type: 'short_answer'),
-                                user: student)
+                                user: student, quiz: quiz)
         get quiz_path(id: asked_question.quiz.id)
         expect(response).to render_template('quizzes/question_short_response')
       end

@@ -23,6 +23,7 @@ RSpec.describe 'User visits dashboard', type: :feature, js: true do
     let(:answer) { create(:answer, question: question, correct: true) }
     let(:progressed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 70) }
     let(:completed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 100, completed: true) }
+    let(:quiz) { create(:new_quiz) }
 
     before do
       challenge_one
@@ -44,7 +45,7 @@ RSpec.describe 'User visits dashboard', type: :feature, js: true do
     it 'shows challenge as complete if finished' do
       completed_challenge
       visit(dashboard_path)
-      expect(page).to have_css('td.i.fa-check')
+      expect(page).to have_css('td i.fa-check')
     end
 
     it 'only shows challenges for subjects I take' do

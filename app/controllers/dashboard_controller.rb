@@ -6,6 +6,5 @@ class DashboardController < ApplicationController
     @subjects = current_user.subjects
     @challenges = Challenge.includes(:topic).where(topics: { subject_id: [@subjects.pluck(:id)] })
     @challenge_progress = ChallengeProgress.where(user: current_user)
-    gon.quiz_path = quizzes_path
   end
 end

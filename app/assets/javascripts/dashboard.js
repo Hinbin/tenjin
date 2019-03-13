@@ -6,10 +6,10 @@ $(document).on('ready turbolinks:load', () => {
 
     $.ajax({
       type: 'post',
-      url: gon.quiz_path,
+      url: '/quizzes',
       data: { quiz: { subject: pickedSubject, picked_topic: pickedTopic } },
       success: function (data) {
-        Turbolinks.visit(gon.quiz_path)
+        Turbolinks.visit('/quizzes')
       }
     })
   })

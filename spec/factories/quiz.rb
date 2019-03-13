@@ -8,5 +8,9 @@ FactoryBot.define do
 
     user
     subject
+
+    factory :new_quiz do
+      num_questions_asked { 0 }
+    end
   end
 end

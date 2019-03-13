@@ -32,7 +32,7 @@ class QuizzesController < ApplicationController
       render 'new'
     else
       @topics = @subject.topics.pluck(:name, :id)
-      @topics.prepend(['Lucky Dip', 'LD'])
+      @topics.prepend(['Lucky Dip', 'Lucky Dip'])
       render 'select_topic'
     end
   end
