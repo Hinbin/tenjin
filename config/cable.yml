@@ -1,8 +1,8 @@
 development:
-  adapter: postgresql
+  adapter: async
 
 test:
-  adapter: async
+  adapter: test
 
 production:
   adapter: postgresql

@@ -1,14 +1,16 @@
 const gon = window.gon
 
 // Load leaderboard with initial data
-$(document).ready(function () {
-  let leaderboard = new Leaderboard()
-  leaderboard.optionSelected(null)
-  window.leaderboard = leaderboard
+$(document).on('turbolinks:load', function () {
+  if (page.controller() === 'leaderboard' && page.action() === 'show') {
+    let leaderboard = new Leaderboard()
+    leaderboard.optionSelected(null)
+    window.leaderboard = leaderboard
+  }
 })
 
 class Leaderboard {
-  constructor () {
+  constructor() {
     this.allLeaderboardData = []
     this.top50 = false
     this.maxUsersToDisplay = 10

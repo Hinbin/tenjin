@@ -2,6 +2,13 @@ div.modal.fade#noticeModal
   div.modal-dialog role="document"
     div.modal-content 
       div.modal-body
-        p#notice=notice
+        p#notice=flash[:notice]
+      div.modal-footer
+        button.btn.btn-secondary type="button" data-dismiss="modal" Close
+div.modal.fade#alertModal
+  div.modal-dialog role="document"
+    div.modal-content 
+      div.modal-body
+        p#alert=flash[:alert]
       div.modal-footer
         button.btn.btn-secondary type="button" data-dismiss="modal" Close

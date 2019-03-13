@@ -1,6 +1,4 @@
-let gon = window.gon
-
-function processResponse (results, guess) {
+function processShortResponse (results, guess) {
   var correct = false
   for (var result of results) {
     if (result.text.toUpperCase() === guess.toUpperCase()) {
@@ -39,7 +37,7 @@ $(document).on('turbolinks:load', function () {
     $.ajax({
       type: 'PUT',
       url: '/quizzes/' + gon.quiz_id,
-      success: (result) => processResponse(result, $('#shortAnswerText').val()),
+      success: (result) => processShortResponse(result, $('#shortAnswerText').val()),
       data: {
         answer: {
           short_answer: $('#shortAnswerText').val()

@@ -1,5 +1,4 @@
-
-function processResponse (results, guess) {
+function processMultipleChoiceResponse (results, guess) {
   const guessDiv = '#' + guess
 
   var correct = false
@@ -34,7 +33,7 @@ $(document).on('turbolinks:load', function () {
     $.ajax({
       type: 'PUT',
       url: '/quizzes/' + gon.quiz_id,
-      success: (result) => processResponse(result, click.target.id),
+      success: (result) => processMultipleChoiceResponse(result, click.target.id),
       data: {
         answer: {
           id: click.target.id.slice(9)

@@ -4,6 +4,7 @@ html
     meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
     title Tenjin
     meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
+    = tag :meta, name: :psj, action: action_name, controller: controller_name 
     = csrf_meta_tags
     = csp_meta_tag
     = include_gon
@@ -11,11 +12,12 @@ html
     = stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Raleway:300,900,900i'
     = stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Roboto:300,900,900i'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-    = javascript_pack_tag 'application'
-  body
+    
+    //= javascript_include_tag params[:controller], 'data-turbolinks-track': 'reload' if controller_name != 'sessions'
+  = content_tag :body, data: { action: action_name, controller: controller_name } do
     - if content_for?(:body_attributes)
       = yield(:body_attributes)
     - if current_user.class == 'Admin'
-      = render 'layouts/navigation'
+      =render('layouts/navigation')
     = yield
-  =render('shared/notice_modal')
+

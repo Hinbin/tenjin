@@ -14,8 +14,24 @@
 //= require activestorage
 //= require turbolinks
 //= require jquery3
-//= require_tree .
 //= require jquery_ujs
 //= require popper
 //= require bootstrap-sprockets
 //= require jquery.slick
+//= require_tree .
+
+var Page; var bind = function (fn, me) { return function () { return fn.apply(me, arguments) } }
+Page = (function () {
+  function Page () {
+    this.action = bind(this.action, this)
+    this.controller = bind(this.controller, this)
+  }
+  Page.prototype.controller = function () {
+    return $('meta[name=psj]').attr('controller')
+  }
+  Page.prototype.action = function () {
+    return $('meta[name=psj]').attr('action')
+  }
+  return Page
+})()
+this.page = new Page()

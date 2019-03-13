@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Challenge::UpdateChallengeProgress, :focus do
+RSpec.describe Challenge::UpdateChallengeProgress do
   include_context 'default_creates'
 
   let(:quiz_full_marks) { create(:quiz, subject: subject, num_questions_asked: 10, answered_correct: 10) }

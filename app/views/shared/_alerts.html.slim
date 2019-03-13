@@ -1,0 +1,6 @@
+-unless flash[:alert].nil?
+  div.container-fluid.row.alert.alert-danger
+    p#alert=flash[:alert]
+-unless flash[:notice].nil?
+  div.container-fluid.row.alert.alert-warning
+    p#notice=flash[:notice]

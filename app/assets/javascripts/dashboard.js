@@ -1,7 +1,19 @@
+$(document).on('ready turbolinks:load', () => {
 
-var gon = window.gon
+  $('#challenge-table tr').click(function () {
+    let pickedSubject = $(this).data('subject')
+    let pickedTopic = $(this).data('topic')
 
-$(document).on('turbolinks:load', () => {
+    $.ajax({
+      type: 'post',
+      url: gon.quiz_path,
+      data: { quiz: { subject: pickedSubject, picked_topic: pickedTopic } },
+      success: function (data) {
+        Turbolinks.visit(gon.quiz_path)
+      }
+    })
+  })
+
   $('.subject-carousel').slick({
     infinite: true,
     slidesToShow: 3,
@@ -22,11 +34,5 @@ $(document).on('turbolinks:load', () => {
         }
       }
     ]
-  })
-
-  $('#challenge-table tr').click(function () {
-    var pickedSubject = $(this).data('subject')
-    var pickedTopic = $(this).data('topic')
-    $.post(gon.quiz_path, { quiz: { subject: pickedSubject, picked_topic: pickedTopic } })
   })
 })

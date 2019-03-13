@@ -51,8 +51,4 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     end
   end
 
-  context 'when creating a quiz straight from a challenge' do
-    it 'creates the quiz in the correct topic'
-    it 'allows me to answer a question' #bug
-  end
 end
