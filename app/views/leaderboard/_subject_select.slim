@@ -1,15 +1,14 @@
-=render('shared/user_navigation')
 .container
   .accordion
     .card
       -@subjects.each do |s|
         -subject_id = s.name.split(' ').join('-').downcase
         .card-header id=('heading' + s.name)
-          a href=('/leaderboard/' + s.name) data-toggle="collapse" data-target=('#body'+ subject_id)
+          =link_to leaderboard_path(id: s.name), data: { turbolinks: false, toggle: 'collapse', target: ('#body'+ subject_id) }
             p =s.name
         .collapse id=('body'+ subject_id) aria-labelledby=('heading' + subject_id)
           .card-body
-            a href=('/leaderboard/' + s.name)
+            =link_to leaderboard_path(id: s.name), data: { turbolinks: false }
               p All
             -s.topics.each do |t|
               -topic_id = t.name.split(' ').join('-').downcase

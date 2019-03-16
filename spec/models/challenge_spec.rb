@@ -6,7 +6,10 @@ RSpec.describe Challenge, type: :model do
   let(:different_subject_topic) { create(:topic) }
   let(:challenge_one) { Challenge.create_challenge(topic.subject) }
   let(:challenge_two) { Challenge.create_challenge(topic.subject) }
-  let(:challenge_full_marks) { Challenge.create_challenge(topic.subject, 'full_marks') }
+  let(:challenge_full_marks) do
+    create(:challenge, topic: topic, challenge_type: 'number_correct',
+                       number_required: 10, end_date: DateTime.now + 1.hour)
+  end
 
   describe '#create_challenge' do
     it 'creates a new challenge for a given subject' do
@@ -23,11 +26,7 @@ RSpec.describe Challenge, type: :model do
     end
 
     it 'allows me to specify a challenge type' do
-      expect(challenge_full_marks.challenge_type).to eq('full_marks')
-    end
-
-    it 'doubles the amount of challenge points for a ten out of ten' do
-      expect(challenge_full_marks.points).to eq(20)
+      expect(challenge_full_marks.challenge_type).to eq('number_correct')
     end
 
     it 'throws an error if there are no topics for the subject'
@@ -36,7 +35,8 @@ RSpec.describe Challenge, type: :model do
   describe '#stringify' do
     it 'turns a challenge into a string describing the challenge' do
       srand(1)
-      expect(Challenge.stringify(challenge_one)).to eq('Obtain a streak of 5 correct answers for ' + topic.name)
+      expect(Challenge.stringify(challenge_one)).to eq('Obtain a streak of ' +
+        challenge_one.number_required.to_s + ' correct answers for ' + topic.name)
     end
   end
 end

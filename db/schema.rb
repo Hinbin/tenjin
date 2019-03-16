@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 2019_03_06_101117) do
     t.integer "challenge_type"
     t.datetime "start_date"
     t.datetime "end_date"
+    t.integer "number_required"
     t.integer "points"
     t.bigint "topic_id"
     t.datetime "created_at", null: false

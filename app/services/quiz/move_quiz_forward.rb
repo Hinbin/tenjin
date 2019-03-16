@@ -12,6 +12,8 @@ class Quiz::MoveQuizForward
   private
 
   def move_to_next_question
+    Challenge::UpdateChallengeProgress.new(@quiz, 'streak').call
+
     @quiz.num_questions_asked = @quiz.num_questions_asked + 1
     @quiz.save
   end
@@ -19,10 +21,9 @@ class Quiz::MoveQuizForward
   def check_if_quiz_finished
     return unless @quiz.num_questions_asked >= @quiz.questions.length
 
-    Challenge::UpdateChallengeProgress.new(@quiz).call
-
     @quiz.active = false
+    Challenge::UpdateChallengeProgress.new(@quiz, 'number_correct').call
+
     @quiz.save
   end
-
 end
