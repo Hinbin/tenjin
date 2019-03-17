@@ -134,7 +134,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       find('p', text: student.forename)
     end
 
-    let(:different_topic) { create(:topic) }
+    let(:different_topic) { create(:topic, subject: subject) }
     let(:different_topic_score) { create(:topic_score, school: school, score: 11, topic: different_topic) }
 
     it 'updates for the current topic' do
@@ -142,9 +142,16 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       expect(page).to have_css('tr.score-changed')
     end
 
+    it 'updates with the topic score and not the total score' do
+      different_topic_score
+      Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score).call
+      expect(page).to have_css('td', exact_text: student_topic_score.score)
+    end
+
     it 'does not update for a different topic' do
       Leaderboard::BroadcastLeaderboardPoint.new(different_topic_score).call
       expect(page).to have_no_css('tr.score-changed')
     end
+
   end
 end

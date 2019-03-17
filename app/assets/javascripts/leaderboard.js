@@ -177,11 +177,11 @@ class Leaderboard {
     }
   }
 
-  scoreChanged (data) {
+  scoreChanged (data, scoreType) {
     let found = false
     this.allLeaderboardData.map((x) => {
       if (x.id === data.id) {
-        x.score = data.subject_score
+        x.score = scoreType === 'TOPIC' ? data.topic_score : data.subject_score
         found = true
       }
     })
@@ -193,7 +193,7 @@ class Leaderboard {
         surname: data.surname,
         rank: 0,
         school_name: data.school_name,
-        score: data.topic_score
+        score: scoreType === 'TOPIC' ? data.topic_score : data.subject_score
       })
     }
 

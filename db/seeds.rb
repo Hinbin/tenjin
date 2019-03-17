@@ -25,6 +25,15 @@ end
 
 Multiplier.create([ {score: 0, multiplier: 1}, {score: 4, multiplier: 2}, {score: 7, multiplier: 4}, {score: 10, multiplier: 10} ] )
 
+Customisation.create([ 
+  {customisation_type: 0, cost: 1, name: 'Race Red', value: 'default'},
+  {customisation_type: 0, cost: 1, name: 'Climber Orange', value: 'orange'},
+  {customisation_type: 0, cost: 1, name: 'Ferrari Dark Red', value: 'darkred'},
+  {customisation_type: 0, cost: 1, name: 'Hiking Dark Blue', value: 'darkblue'},
+  {customisation_type: 0, cost: 1, name: 'Football Dark Green', value: 'darkgreen'},
+  {customisation_type: 0, cost: 1, name: 'Music Yellow', value: 'yellow'}  
+])
+
 case Rails.env
   when "development"
     Admin.create(email: 'n.houlton@grange.outwood.com', password: 'password', password_confirmation: 'password')

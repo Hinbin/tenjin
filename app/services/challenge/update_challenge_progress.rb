@@ -1,9 +1,10 @@
 class Challenge::UpdateChallengeProgress
-  def initialize(quiz, challenge_type, number_to_add = 0)
+  def initialize(quiz, challenge_type, number_to_add = 0, question_topic = nil)
     @quiz = quiz
     @challenges = Challenge.joins(:topic).where('topics.subject_id = ? AND end_date > ? AND challenge_type = ?',
                                                 @quiz.subject, DateTime.now, Challenge.challenge_types[challenge_type])
     @number_to_add = number_to_add
+    @question_topic = question_topic
   end
 
   def call
@@ -18,14 +19,20 @@ class Challenge::UpdateChallengeProgress
   end
 
   def check_number_correct(challenge, challenge_progress)
+    return unless @quiz.topic == challenge.topic
+
     check_progress_percentage(@quiz.answered_correct.to_f / challenge.number_required.to_f, challenge_progress)
   end
 
   def check_streak(challenge, challenge_progress)
+    return unless @quiz.topic == challenge.topic
+
     check_progress_percentage(@quiz.streak.to_f / challenge.number_required.to_f, challenge_progress)
   end
 
   def check_number_of_points(challenge, challenge_progress)
+    return unless @question_topic == challenge.topic
+
     challenge_progress.progress += @number_to_add
     complete_challenge(challenge_progress) if challenge_progress.progress >= challenge.number_required
     challenge_progress.save if challenge_progress.changed?

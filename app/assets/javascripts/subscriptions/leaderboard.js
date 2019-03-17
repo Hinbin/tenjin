@@ -11,12 +11,13 @@ $(document).on('turbolinks:load', function () {
 
       received (data) {
 
+        console.log(data)
         // If this isn't for the topic being shown, return and do nothing   
-        if (window.gon.topic !== undefined && data.topic !== window.gon.topic) {
-          return
-        }
-
-        window.leaderboard.scoreChanged(data)
+        if (window.gon.topic === undefined) {
+          window.leaderboard.scoreChanged(data, 'ALL')
+        } else if (data.topic === window.gon.topic) {
+          window.leaderboard.scoreChanged(data, 'TOPIC')
+        }        
       }
     })
   }

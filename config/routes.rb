@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :leaderboard, only:[:show, :index]
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'
+  get 'customise/', to: 'customise#show'
   get "/pages/*id" => 'pages#show', as: :page, format: false
 
   authenticated :user do

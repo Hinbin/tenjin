@@ -16,7 +16,7 @@ class Quiz::AddLeaderboardPoint
 
     @topic_score.score = 0 if @topic_score.new_record?
     @topic_score.score += @multiplier.to_i
-    Challenge::UpdateChallengeProgress.new(@quiz, 'number_of_points', @topic_score.score).call
+    Challenge::UpdateChallengeProgress.new(@quiz, 'number_of_points', @multiplier.to_i, @question.topic).call
 
     @topic_score.save
   end
