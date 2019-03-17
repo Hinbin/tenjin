@@ -49,6 +49,12 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
       navigate_to_quiz
       expect(page).to have_current_path(%r{quizzes/[0-9]*})
     end
+
+    it 'has a separator of the correct colour' do
+      student.update_attribute(:dashboard_style, 'orange')
+      visit(new_quiz_path(params: { subject: subject.name }))
+      expect(page).to have_css('hr.primary-orange')
+    end
   end
 
 end

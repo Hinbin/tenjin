@@ -4,6 +4,9 @@ require 'support/api_data'
 RSpec.describe 'User takes a quiz', type: :feature, js: true do
   include_context 'default_creates'
 
+  it 'displays images for a question'
+  it 'allows multiple answers for a single word question'
+
   context 'when answering a multiple choice question' do
     let(:question) { create(:question, topic: topic) }
     let(:correct_response) { Answer.where(correct: true).first }

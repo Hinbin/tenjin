@@ -74,6 +74,7 @@ class User < ApplicationRecord
       u.forename = user.forename
       u.surname = user.surname
       u.challenge_points = 0
+      u.dashboard_style = 'default'
       u.save
     end
   end

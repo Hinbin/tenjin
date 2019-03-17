@@ -9,6 +9,7 @@ class CreateQuizzes < ActiveRecord::Migration[5.2]
       t.integer :num_questions_asked
       t.references :user, foreign_key: true
       t.references :subject, foreign_Key: true
+      t.references :topic, foreign_key: true
       t.boolean :active
 
       t.timestamps

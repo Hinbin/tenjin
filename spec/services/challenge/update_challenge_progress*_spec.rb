@@ -46,6 +46,8 @@ RSpec.describe Challenge::UpdateChallengeProgress do
       described_class.new(quiz_full_marks, 'number_correct').call
       expect(ChallengeProgress.first.user.challenge_points).to eq(challenge_full_marks.points)
     end
+
+    it 'only updates the streak progress for the topic of the challenge'
   end
 
   context 'when updating a 5 streak challenge' do
@@ -73,6 +75,8 @@ RSpec.describe Challenge::UpdateChallengeProgress do
       described_class.new(quiz_streak_of_five, 'streak').call
       expect(ChallengeProgress.first.user.challenge_points).to eq(challenge_streak_of_five.points)
     end
+
+    it 'only adds the challenge points once' #bug
   end
 
   context 'when updating a 50 point challenge' do

@@ -34,7 +34,7 @@ class Challenge::UpdateChallengeProgress
   def check_progress_percentage(percentage, challenge_progress)
     percentage *= 100
     challenge_progress.progress = percentage if percentage > challenge_progress.progress
-    complete_challenge(challenge_progress) if challenge_progress.progress >= 100
+    complete_challenge(challenge_progress) if challenge_progress.progress >= 100 && challenge_progress.completed == false
     challenge_progress.save if challenge_progress.changed?
   end
 

@@ -3,6 +3,7 @@ class QuizzesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_quiz, only: %i[show update]
   before_action :set_question, only: %i[show update]
+  before_action :set_css_flavour, only: %i[new]
   rescue_from Pundit::NotAuthorizedError, with: :quiz_not_authorized
 
   # GET /quizzes
@@ -31,6 +32,7 @@ class QuizzesController < ApplicationController
       @subjects = current_user.subjects
       render 'new'
     else
+      @css_flavour = current_user.dashboard_style
       @topics = @subject.topics.pluck(:name, :id)
       @topics.prepend(['Lucky Dip', 'Lucky Dip'])
       render 'select_topic'
@@ -66,6 +68,10 @@ class QuizzesController < ApplicationController
 
   def set_question
     @question = @quiz.questions.limit(1).offset(@quiz.num_questions_asked).first
+  end
+
+  def set_css_flavour
+    @css_flavour = current_user.dashboard_style
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

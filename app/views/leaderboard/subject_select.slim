@@ -1,4 +1,5 @@
+=render('shared/user_navigation')
 section.page-section
   h3.text-uppercase.text-center Pick a Subject
-  hr.primary.small.mb-5
+  hr class=("small mb-5 primary-" + @css_flavour)
 =render('subject_select')

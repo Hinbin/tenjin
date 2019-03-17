@@ -5,6 +5,7 @@ FactoryBot.define do
     streak { rand(num_questions_asked) }
     answered_correct { rand(streak..num_questions_asked) }
     active { true }
+    topic { nil }
 
     user
     subject

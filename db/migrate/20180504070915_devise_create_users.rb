@@ -49,6 +49,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
 
       #Additional custom fields
       t.integer :challenge_points
+      t.string  :dashboard_style
 
     end
     

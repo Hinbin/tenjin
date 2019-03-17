@@ -136,10 +136,12 @@ ActiveRecord::Schema.define(version: 2019_03_06_101117) do
     t.integer "num_questions_asked"
     t.bigint "user_id"
     t.bigint "subject_id"
+    t.bigint "topic_id"
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["subject_id"], name: "index_quizzes_on_subject_id"
+    t.index ["topic_id"], name: "index_quizzes_on_topic_id"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
   end
 
@@ -220,6 +222,7 @@ ActiveRecord::Schema.define(version: 2019_03_06_101117) do
     t.string "photo"
     t.string "type"
     t.integer "challenge_points"
+    t.string "dashboard_style"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
   end
@@ -234,6 +237,7 @@ ActiveRecord::Schema.define(version: 2019_03_06_101117) do
   add_foreign_key "enrollments", "classrooms"
   add_foreign_key "enrollments", "users"
   add_foreign_key "questions", "topics"
+  add_foreign_key "quizzes", "topics"
   add_foreign_key "quizzes", "users"
   add_foreign_key "schools", "school_groups"
   add_foreign_key "subject_maps", "schools"

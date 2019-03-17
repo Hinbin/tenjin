@@ -1,5 +1,4 @@
 module ApplicationHelper
-
   def boolean_icon(status)
     if status
       icon('fas', 'check', style: 'color:green')
@@ -13,4 +12,8 @@ module ApplicationHelper
     image_url url || 'default-subject.jpg'
   end
 
+  def render_small_separator
+    @css_flavour = 'default' if @css_flavour.nil?
+    'small mb-5 primary-' + @css_flavour
+  end
 end

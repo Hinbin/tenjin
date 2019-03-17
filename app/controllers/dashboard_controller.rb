@@ -6,5 +6,6 @@ class DashboardController < ApplicationController
     @subjects = current_user.subjects
     @challenges = Challenge.includes(:topic).where(topics: { subject_id: [@subjects.pluck(:id)] })
     @challenge_progress = ChallengeProgress.where(user: current_user)
+    @css_flavour = current_user.dashboard_style
   end
 end

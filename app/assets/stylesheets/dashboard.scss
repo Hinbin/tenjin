@@ -8,23 +8,89 @@
   background-color: #ef4035;
 }
 
-#homework{
+%homework{
   @include media-breakpoint-up(lg) {
-    background-attachment: fixed;    
+    background-attachment: fixed !important;    
   }
-
-  background-color: #ef4035;  
-  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), image-url("athletics.jpg") no-repeat;
-  background-size: cover;
-  background-position: center;
+  background-size: cover !important;
+  background-position: center !important; 
   color: white;
 }
 
+// DEFAULT
+#homework-default{
+  @extend %homework;
+  background-color: #ef4035;  
+  background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("athletics.jpg") no-repeat;
+}
 
+hr.primary-default {
+  @extend %hr.primary-shared;
+  border-color: #ef4035;
+}
+
+//DARK RED - FERRARI
+#homework-darkred{
+  @extend %homework;
+  background-color: darkred;  
+  background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("darkred-ferrari.jpg") no-repeat;
+}
+
+hr.primary-darkred {
+  @extend %hr.primary-shared;
+  border-color:darkred;
+}
+
+//YELLOW - CHEERFUL
+#homework-yellow{
+  @extend %homework;
+  background-color:yellow;  
+  background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("yellow-cheerful.jpg") no-repeat;
+}
+
+hr.primary-yellow {
+  @extend %hr.primary-shared;
+  border-color:yellow;
+}
+
+//GREEN - FOOTBALL
+#homework-darkgreen{
+  @extend %homework;
+  background-color:darkgreen;  
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("green-football.jpg") no-repeat;
+}
+
+hr.primary-darkgreen {
+  @extend %hr.primary-shared;
+  border-color:darkgreen;
+}
+
+//ORANGE - CLIMBING
+#homework-orange{
+  @extend %homework;
+  background-color:orange;  
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("orange-climbing.jpg") no-repeat;
+}
+
+hr.primary-orange {
+  @extend %hr.primary-shared;
+  border-color:orange;
+}
+
+//DARK BLUE - HIKING
+#homework-darkblue{
+  background-color:darkblue;  
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("darkblue-hiking.jpg") no-repeat;
+  @extend %homework;
+}
+
+hr.primary-darkblue {
+  @extend %hr.primary-shared;
+  border-color:darkblue;
+}
 
 #newQuiz{
   background-color: white;
-  padding-top: 6.25rem;
 }
 
 .subject-carousel-item-text {

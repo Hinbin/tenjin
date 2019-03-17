@@ -12,7 +12,7 @@ class Quiz::CreateQuiz
   def call
     initialise_quiz
     initialise_questions
-    @quiz.save
+    @quiz.save!
     @quiz
   end
 
@@ -24,6 +24,7 @@ class Quiz::CreateQuiz
     @quiz.num_questions_asked = 0
     @quiz.subject = @subject_id
     @quiz.active = true
+    @quiz.topic = @lucky_dip ? nil : @topic
   end
 
   def initialise_questions

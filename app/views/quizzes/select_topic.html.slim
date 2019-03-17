@@ -3,7 +3,7 @@ section.page-section.text-center#newQuiz
   .container
     h1.page-section-header.text-uppercase Select Topic
     p.lead=@subject.name
-    hr.primary.small.mb-5
+    hr class=(render_small_separator)
 
     = simple_form_for(Quiz.new) do |f|
         = f.input :picked_topic, label: 'Pick a topic:',as: :select, collection: @topics, include_blank: false

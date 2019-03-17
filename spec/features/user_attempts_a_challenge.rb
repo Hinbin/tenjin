@@ -35,7 +35,7 @@ RSpec.describe 'User attempts a challenge', type: :feature, js: true do
       expect(page).to have_text('Next Question')
     end
 
-    it 'lets me complete a number of points required challenge', :focus do
+    it 'lets me complete a number of points required challenge' do
       visit(dashboard_path)
       find(:css, '#challenge-table tbody tr:nth-child(1)').click
       first(class: 'question-button').click

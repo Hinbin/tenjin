@@ -1,4 +1,4 @@
-RSpec.describe 'User visits dashboard', type: :feature, js: true do
+RSpec.describe 'User visits the dashboard', type: :feature, js: true do
   include_context 'default_creates'
 
   before do
@@ -6,12 +6,37 @@ RSpec.describe 'User visits dashboard', type: :feature, js: true do
     sign_in student
   end
 
-  context 'when looking at the dashboard' do
-    it 'shows how many points I have'
-  end
+  context 'when changing the dashboard style' do
 
-  context 'when using the quiz section' do
-    it 'can start a quiz'
+    it 'shows the darkgred ferrari style' do
+      student.update_attribute(:dashboard_style, 'darkred')
+      visit(dashboard_path)
+      expect(page).to have_css('section#homework-darkred').and have_css('hr.primary-darkred')
+    end
+
+    it 'shows the darkblue hiking style' do
+      student.update_attribute(:dashboard_style, 'darkblue')
+      visit(dashboard_path)
+      expect(page).to have_css('section#homework-darkblue').and have_css('hr.primary-darkblue')
+    end
+
+    it 'shows the green football style' do
+      student.update_attribute(:dashboard_style, 'darkgreen')
+      visit(dashboard_path)
+      expect(page).to have_css('section#homework-darkgreen').and have_css('hr.primary-darkgreen')
+    end
+
+    it 'shows the orange climbing style' do
+      student.update_attribute(:dashboard_style, 'orange')
+      visit(dashboard_path)
+      expect(page).to have_css('section#homework-orange').and have_css('hr.primary-orange')
+    end
+
+    it 'shows the yellow cheerful style' do
+      student.update_attribute(:dashboard_style, 'yellow')
+      visit(dashboard_path)
+      expect(page).to have_css('section#homework-yellow').and have_css('hr.primary-yellow')
+    end
   end
 
   context 'when looking at the challenges' do
@@ -63,13 +88,18 @@ RSpec.describe 'User visits dashboard', type: :feature, js: true do
       expect(page).to have_css('p', exact_text: challenge_one.topic.name)
     end
 
-    it 'allows me to answer a question after creating a quiz from a challenge' do # turbolinks bug 
+    it 'allows me to answer a question after creating a quiz from a challenge' do # turbolinks bug
       visit(dashboard_path)
       find(:css, '#challenge-table tbody tr:nth-child(1)').click
       first(class: 'question-button').click
       expect(page).to have_text('Next Question')
     end
 
-    it 'allows me to select '
+    it 'shows the number of challenge points I have received in the nav bar' do
+      User.first.challenge_points = 25
+      User.first.save!
+      visit(dashboard_path)
+      expect(page).to have_css('p', exact_text: 25)
+    end
   end
 end
