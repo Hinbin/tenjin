@@ -4,8 +4,9 @@ class DashboardController < ApplicationController
   def show
     authorize current_user # make it so that it checks if the school is permitted?
     @subjects = current_user.subjects
-    @challenges = Challenge.includes(:topic).where(topics: { subject_id: [@subjects.pluck(:id)] })
-    @challenge_progress = ChallengeProgress.where(user: current_user)
+    @challenges = Challenge.includes(:topic)
+                           .where(topics: { subject_id: [@subjects.pluck(:id)] })
+                           .includes(:challenge_progresses).where(challenge_progresses: {user_id: [current_user, nil]})
     @css_flavour = current_user.dashboard_style
   end
 end

@@ -66,7 +66,8 @@ Rails.application.configure do
       config.color = :red
       config.log_headers = true
     end
-    
+        
   end
   
 end
+

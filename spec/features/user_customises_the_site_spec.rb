@@ -27,12 +27,26 @@ RSpec.describe 'User customises the site', type: :feature, js: true do
   end
 
   context 'when looking at available dashboard styles' do
-    let(:dashboard_orange) { create(:customisation) }
+    let(:dashboard_customisation) { create(:customisation, cost: 6) }
+    let(:student) { create(:user, school: school, challenge_points: 10) }
+
+    before do
+      dashboard_customisation
+      visit(customise_path)
+    end
 
     it 'shows available dashboard customisations' do
-      dashboard_orange
-      visit(customise_path)
-      expect(page).to have_content(dashboard_orange.name)
+      expect(page).to have_content(dashboard_customisation.name.upcase)
+    end
+
+    it 'allows you to buy a dashbord style' do
+      find('button#buy-dashboard-' + dashboard_customisation.value).click
+      expect(student.reload.dashboard_style).to eq(dashboard_customisation.value)
+    end
+
+    it 'deducts the required amount of challenge points' do
+      find('button#buy-dashboard-' + dashboard_customisation.value).click
+      expect{student.reload}.to change(student, :challenge_points).by(-dashboard_customisation.cost)
     end
   end
 end

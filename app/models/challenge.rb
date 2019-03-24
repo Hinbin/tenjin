@@ -1,5 +1,8 @@
 class Challenge < ApplicationRecord
   belongs_to :topic
+  has_many :challenge_progresses
+
+  scope :by_user, ->(user) { joins(:challenge_progresses).where('challenge_progresses.user_id = ?', user) }
 
   enum challenge_type: %i[number_correct streak number_of_points]
 

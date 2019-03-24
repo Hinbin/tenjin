@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'
   get 'customise/', to: 'customise#show'
+  post 'customise/', to: 'customise#update'
   get "/pages/*id" => 'pages#show', as: :page, format: false
 
   authenticated :user do

@@ -17,76 +17,27 @@
   color: white;
 }
 
-// DEFAULT
-#homework-default{
-  @extend %homework;
-  background-color: #ef4035;  
-  background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("athletics.jpg") no-repeat;
-}
+$dashboard_styles: ('red': 'athletics.jpg', 'darkred': 'darkred-ferrari.jpg', 'darkblue': 'darkblue-hiking.jpg',
+                    'orange': 'orange-climbing.jpg', 'yellow' : 'yellow-cheerful.jpg', 'darkgreen' : 'darkgreen-football.jpg');
 
-hr.primary-default {
-  @extend %hr.primary-shared;
-  border-color: #ef4035;
-}
+@each $name, $image in $dashboard_styles {
+  
+  #homework-#{$name}{
+    @extend %homework;
+    background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), image-url(#{$image}) no-repeat;
+  }
 
-//DARK RED - FERRARI
-#homework-darkred{
-  @extend %homework;
-  background-color: darkred;  
-  background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("darkred-ferrari.jpg") no-repeat;
-}
+  hr.primary-#{$name}{
+    @extend %hr.primary-shared;
+    border-color: unquote($name);
+  }
 
-hr.primary-darkred {
-  @extend %hr.primary-shared;
-  border-color:darkred;
-}
+  div.card.#{$name}{
+    background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), image-url(#{$image}) no-repeat;
+    background-size: cover !important;
+    background-position: center !important; 
+  }
 
-//YELLOW - CHEERFUL
-#homework-yellow{
-  @extend %homework;
-  background-color:yellow;  
-  background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("yellow-cheerful.jpg") no-repeat;
-}
-
-hr.primary-yellow {
-  @extend %hr.primary-shared;
-  border-color:yellow;
-}
-
-//GREEN - FOOTBALL
-#homework-darkgreen{
-  @extend %homework;
-  background-color:darkgreen;  
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("green-football.jpg") no-repeat;
-}
-
-hr.primary-darkgreen {
-  @extend %hr.primary-shared;
-  border-color:darkgreen;
-}
-
-//ORANGE - CLIMBING
-#homework-orange{
-  @extend %homework;
-  background-color:orange;  
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("orange-climbing.jpg") no-repeat;
-}
-
-hr.primary-orange {
-  @extend %hr.primary-shared;
-  border-color:orange;
-}
-
-//DARK BLUE - HIKING
-#homework-darkblue{
-  background-color:darkblue;  
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), image-url("darkblue-hiking.jpg") no-repeat;
-  @extend %homework;
-}
-
-hr.primary-darkblue {
-  @extend %hr.primary-shared;
-  border-color:darkblue;
 }
 
 #newQuiz{

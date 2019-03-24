@@ -9,7 +9,7 @@ FactoryBot.define do
     upi { SecureRandom.hex }
     association :school, factory: :school
     challenge_points { 0 }
-    dashboard_style { 'default' }
+    dashboard_style { 'red' }
 
     factory :student do
       role { 'student' }
