@@ -6,11 +6,16 @@ require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'webdrivers'
+
 require 'webmock/rspec'
 require 'vcr'
 
 require 'action_cable/testing/rspec'
 require 'action_cable/testing/rspec/features'
+
+require 'best_in_place'
+require 'best_in_place/test_helpers'
 
 WebMock.disable_net_connect!(allow_localhost: true)
 # WebMock.allow_net_connect!
@@ -20,6 +25,7 @@ VCR.configure do |config|
   config.hook_into :webmock
   config.ignore_localhost = true # allows oAuth testing
   config.configure_rspec_metadata!
+  config.ignore_hosts 'chromedriver.storage.googleapis.com'
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -79,6 +85,7 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :feature
+  config.include BestInPlace::TestHelpers
 
   # Required to use database cleaner with action cable
   # or feature testing will not work
@@ -113,11 +120,9 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-Capybara.server = :puma
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
+Capybara.default_driver = :selenium_chrome
+Capybara.javascript_driver = :selenium_chrome
 
-Capybara.javascript_driver = :chrome
+Webdrivers.logger.level = :DEBUG
 
 class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end; # TEMPORARY.  REMOVE WITH NEW VERSION OF SHOULDAMATCHERS

@@ -16,22 +16,22 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def new?
-    true
+    @user.super?
   end
 
   def show?
-    true
+    @user.school.permitted?
   end
 
   def create?
-    true
+    @user.super?
   end
 
   def update?
-    true
+    @user.super?
   end
 
   def destroy?
-    true
+    @user.super?
   end
 end

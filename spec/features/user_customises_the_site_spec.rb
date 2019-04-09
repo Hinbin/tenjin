@@ -41,6 +41,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true do
 
     it 'allows you to buy a dashbord style' do
       find('button#buy-dashboard-' + dashboard_customisation.value).click
+      find('section#homework-' + dashboard_customisation.value)
       expect(student.reload.dashboard_style).to eq(dashboard_customisation.value)
     end
 

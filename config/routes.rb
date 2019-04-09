@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   resources :quizzes, :schools
   resources :subject_maps, only: [:update]
   resources :leaderboard, only:[:show, :index]
+  resources :questions
+  resources :answers
+  resources :topics
+
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'
   get 'customise/', to: 'customise#show'

@@ -1,0 +1,24 @@
+=render('shared/admin_navigation')
+.container
+  .row.col.mt-3
+    .display-4 =best_in_place @topic, :name, as: :input
+  .row.col.mt-3
+    =link_to 'Add Question', new_question_path(topic: { topic_id: @topic }), class:'btn btn-primary btn-block'
+  .row.col.mt-3
+    table.table
+      thead
+        tr
+          th Question
+          th Times Asked
+          th % Correct
+      tbody
+        -@questions.each do |q|
+          tr
+            td = link_to q.question_text.blank? ? 'Click here to edit' : q.question_text, q
+            td = q.asked_questions.count
+            td = number_to_percentage( (q.asked_questions.where(correct: true).count.to_f / q.asked_questions.count.to_f) * 100, precision: 0)  if q.asked_questions.count > 0
+  .row-col.mt-5
+    -if @topic.questions.count.zero?
+      =link_to 'Delete Topic', topic_path(@topic), method: :delete, class: 'btn btn-danger btn-block'
+
+

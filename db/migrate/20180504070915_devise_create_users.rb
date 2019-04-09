@@ -37,7 +37,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
 
       # End of devise default fields
       t.belongs_to :school, index: true
-      t.integer :role
+      t.integer :role, null: false
 
       #Omniauth fields
       t.string :provider

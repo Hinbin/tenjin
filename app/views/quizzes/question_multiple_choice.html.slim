@@ -1,6 +1,6 @@
 =render 'question_top'
 .container
-  p.lead.text-center = @question.text
+  div.lead.text-center ==@question.question_text
   -@question.answers.each do |a|
     .btn.container-fluid.m-2.question-button.multiple-choice-button id="#{ 'response-' + a.id.to_s}" =a.text
   button.btn.container-fluid.m-2.next-button.invisible#nextButton onclick='location.reload()' Next Question

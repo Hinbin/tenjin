@@ -10,23 +10,21 @@ class SubjectPolicy < ApplicationPolicy
     end
   end
 
-  def new?
-    true
-  end
-
-  def show?
-    true
+  def update?
+    must_be_super_or_author
   end
 
   def create?
-    true
-  end
-
-  def update?
-    true
+    must_be_super_or_author
   end
 
   def destroy?
-    true
+    must_be_super_or_author
+  end
+
+  def must_be_super_or_author
+    return false unless @user.present?
+
+    @user.author? || @user.super?
   end
 end

@@ -1,0 +1,148 @@
+RSpec.describe 'User edits a question', type: :feature, js: true do
+  include_context 'default_creates'
+
+  let(:author) { create(:author) }
+  let(:question) { create(:question, topic: topic) }
+
+  before do
+    setup_subject_database
+    sign_in author
+  end
+
+  context 'when visiting the topic index page' do
+    let(:new_topic_name) { FFaker::Lorem.word }
+
+    before do
+      question
+      visit(questions_path)
+      click_link(question.topic.name)
+    end
+
+    it 'shows the quesitons for a topic' do
+      expect(page).to have_content(question.question_text.to_plain_text)
+    end
+
+    it 'allows you to edit a question' do
+      click_link(question.question_text.to_plain_text)
+      expect(page).to have_current_path(question_path(question))
+    end
+
+    it 'allows you to edit a topic name' do
+      bip_text(question.topic, :name, new_topic_name)
+      question.topic.reload
+      expect(question.topic.name).to eq(new_topic_name)
+    end
+
+  end
+
+  context 'when visiting the subject index page' do
+
+    before do
+      question
+      visit(questions_path)
+    end
+
+    it 'shows each subject' do
+      expect(page).to have_content(question.topic.subject.name)
+    end
+
+    it 'shows the links for a topic' do
+      expect(page).to have_link(question.topic.name)
+    end
+
+  end
+
+  context 'when editing a question' do
+    let(:answer_text) { FFaker::Lorem.word }
+    let(:answer) { create(:answer, question: question) }
+    let(:answer_id) { 'best_in_place_answer_' + Answer.last.id.to_s + '_text' }
+
+    it 'shows the content of the question' do
+      visit(question_path(question))
+      expect(page).to have_content(question.question_text.to_plain_text)
+    end
+
+    it 'allows you to delete the question' do
+      visit(question_path(question))
+      expect { click_link('Delete Question') }.to change(Question, :count).by(-1)
+    end
+
+    context 'when showing to a multiple choice question' do
+      before do
+        answer
+        visit(question_path(question))
+        find_by_id('questionTypeSelect').click
+        find('option', text: 'Multiple').click
+      end
+
+      it 'allows you to set an answer as correct' do
+        find('table', id: 'table-multiple')
+        find('span', id: 'best_in_place_answer_' + Answer.first.id.to_s + '_correct').click
+        find('i', class: 'fa-check')
+        expect(Answer.first.correct).to eq(true)
+      end
+    end
+
+    context 'when showing a single word answer' do
+      before do
+        answer
+        visit(question_path(question))
+        find_by_id('questionTypeSelect').click
+        find('option', text: 'Short answer').click
+        find('table', id: 'table-short_answer')
+      end
+
+      it 'does not let you modify if the answer is correct' do
+        expect(page).to have_no_content('Correct?')
+      end
+
+      it 'changes any existing answers for the question to be correct' do
+        expect(Answer.first.correct).to eq(true)
+      end
+    end
+
+    context 'when showing to a boolean question' do
+      before do
+        visit(question_path(question))
+        find_by_id('questionTypeSelect').click
+        find('option', text: 'Boolean').click
+        find('table', id: 'table-boolean')
+      end
+
+      it 'creates two answers, true and false' do
+        expect(page).to have_content('True').and have_content('False')
+      end
+
+      it 'allows you to set an answer as correct' do
+        find('span', id: 'best_in_place_answer_' + Answer.first.id.to_s + '_correct').click
+        find('i', class: 'fa-check')
+        expect(Answer.first.correct).to eq(true)
+      end
+
+      it 'does not allow you to remove an answer' do
+        expect(page).to have_no_link('Remove')
+      end
+    end
+
+    it 'allows you to add an answer' do
+      visit(question_path(question))
+      click_link('Add Answer')
+      find('span', text: 'Click here to edit answer').click
+      bip_text(Answer.first, :text, answer_text)
+      expect(question.answers.first.text).to eq(answer_text)
+    end
+
+    it 'allows you to edit an existing answer' do
+      answer
+      visit(question_path(question))
+      bip_text(Answer.first, :text, answer_text)
+      expect(Answer.first.text).to eq(answer_text)
+    end
+
+    it 'allows you to delete an existing answer' do
+      answer
+      visit(question_path(question))
+      expect { click_link('Remove') }.to change(Answer, :count).by(-1)
+    end
+  end
+end

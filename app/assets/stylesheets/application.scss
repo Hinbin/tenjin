@@ -15,8 +15,21 @@
 @import "font-awesome-sprockets";
 @import "font-awesome";
 @import 'slick';
+@import 'trix/dist/trix';
 @import 'pages.scss';
 @import 'dashboard.scss';
+@import 'actiontext.scss';
+
+
+a {
+  color: #212529;
+  text-decoration: none
+}
+
+a:hover {
+  color: grey;
+  text-decoration: none
+}
 
 .spinner {
   width: 40px;

@@ -11,7 +11,7 @@ class Customisation::BuyCustomisation
 
     purchase
     @user.save
-    return OpenStruct.new(success?: true, user: @user, errors: nil)
+    OpenStruct.new(success?: true, user: @user, errors: nil)
   end
 
   def funds_present?

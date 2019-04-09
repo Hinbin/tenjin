@@ -43,4 +43,8 @@ class SchoolsController < ApplicationController
   def school_params
     params.require(:school).permit(:client_id, :token)
   end
+
+  def pundit_user
+    current_admin
+  end
 end

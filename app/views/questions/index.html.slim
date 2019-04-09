@@ -1,0 +1,16 @@
+=render('shared/admin_navigation')
+.container
+  -@subjects.each do |s|
+    .display-3.my-3 =s.name
+    =link_to 'Add Topic', new_topic_path(subject: {subject_id: s.id}), class: 'btn btn-primary btn-block'
+    table.table
+      thead
+        tr
+          th Topic Name
+          th Question # 
+      -s.topics.each do |t|
+        tr    
+          td =link_to t.name, controller: "questions", topic_id: t.id
+          td =t.questions.count
+
+        

@@ -1,4 +1,4 @@
-id,topic_id,text,image,question_type
+id,topic_id,question_text,image,question_type
 0,0,The ALU inside the CPU stands for Arithmetic Logic Unit.,,multiple
 1,0,CPUs can understand low and high level languages in their current format,,multiple
 2,0,Complete the cycle of the CPU. Fetch,,short_answer

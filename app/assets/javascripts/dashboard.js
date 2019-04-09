@@ -1,4 +1,4 @@
-$(document).on('ready turbolinks:load', () => {
+$(document).on('turbolinks:load', () => {
 
   $('#challenge-table tr').click(function () {
     let pickedSubject = $(this).data('subject')

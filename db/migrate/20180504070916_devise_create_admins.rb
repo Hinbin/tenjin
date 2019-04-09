@@ -34,6 +34,9 @@ class DeviseCreateAdmins < ActiveRecord::Migration[5.2]
 
 
       t.timestamps null: false
+
+      # Custom stuff
+      t.integer :role, null: false
     end
 
     add_index :admins, :email,                unique: true

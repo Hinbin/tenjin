@@ -18,6 +18,9 @@
 //= require popper
 //= require bootstrap-sprockets
 //= require jquery.slick
+
+//= require best_in_place
+
 //= require_tree .
 
 var Page; var bind = function (fn, me) { return function () { return fn.apply(me, arguments) } }
@@ -35,3 +38,8 @@ Page = (function () {
   return Page
 })()
 this.page = new Page()
+
+$(document).on('turbolinks:load', () => {
+  /* Activating Best In Place */
+  jQuery('.best_in_place').best_in_place()
+})

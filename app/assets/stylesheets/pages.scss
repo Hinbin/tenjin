@@ -24,10 +24,6 @@ body {
   justify-content: center;
 }
 
-a:hover { 
-  background-color: transparent !important;
-}
-
 .masthead {
   position: relative;
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0.7))), image-url("bg-masthead.jpg");

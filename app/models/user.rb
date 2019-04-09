@@ -13,8 +13,9 @@ class User < ApplicationRecord
 
   belongs_to :school
 
-  enum role: %i[student employee contact admin_school admin_mat admin]
+  enum role: %i[student employee contact school_admin]
   validates :upi, presence: true
+  validates :role, presence: true
 
   # Disable the requirements for a password and e-mail as we're getting our
   # users from Wonde, which will provide neither.
@@ -74,7 +75,7 @@ class User < ApplicationRecord
       u.forename = user.forename
       u.surname = user.surname
       u.challenge_points = 0
-      u.dashboard_style = 'default'
+      u.dashboard_style = 'red'
       u.save
     end
   end

@@ -49,6 +49,7 @@ RSpec.describe 'User visits the dashboard', type: :feature, js: true do
     let(:progressed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 70) }
     let(:completed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 100, completed: true) }
     let(:quiz) { create(:new_quiz) }
+    let(:challenge_css_selector) { '#challenge-table tr[data-topic="' + topic.id.to_s + '"]' }
 
     before do
       challenge_one
@@ -84,13 +85,13 @@ RSpec.describe 'User visits the dashboard', type: :feature, js: true do
 
     it 'links you to the correct quiz when clicked' do
       visit(dashboard_path)
-      find(:css, '#challenge-table tbody tr:nth-child(1)').click
+      find(:css, challenge_css_selector ).click
       expect(page).to have_css('p', exact_text: challenge_one.topic.name)
     end
 
     it 'allows me to answer a question after creating a quiz from a challenge' do # turbolinks bug
       visit(dashboard_path)
-      find(:css, '#challenge-table tbody tr:nth-child(1)').click
+      find(:css, challenge_css_selector ).click
       first(class: 'question-button').click
       expect(page).to have_text('Next Question')
     end
