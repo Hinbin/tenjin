@@ -118,6 +118,12 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
         click_button('Save and return')
         expect(page).to have_content(question.topic.name)
       end
+
+      it 'flags any new answers entered as correct' do
+        click_link('Add Answer')
+        bip_text(Answer.last, :text, answer_text)
+        expect(Answer.last.correct).to eq(true)
+      end
     end
 
     context 'when showing to a boolean question' do

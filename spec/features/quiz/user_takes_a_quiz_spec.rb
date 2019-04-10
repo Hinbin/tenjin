@@ -4,9 +4,6 @@ require 'support/api_data'
 RSpec.describe 'User takes a quiz', type: :feature, js: true do
   include_context 'default_creates'
 
-  it 'displays images for a question'
-  it 'allows multiple answers for a single word question'
-
   context 'when answering a multiple choice question' do
     let(:question) { create(:question, topic: topic) }
     let(:correct_response) { Answer.where(correct: true).first }
@@ -63,12 +60,15 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true do
       find(id: incorrect_response_selector).click
       expect(page).to have_css('i.fa-times')
     end
+
+    it 'displays images for a question'
   end
 
   context 'when answering a short answer question' do
     let(:question) { create(:short_answer_question, topic: topic) }
     let(:incorrect_response) { FFaker::Lorem.word }
     let(:correct_response) { Answer.first.text }
+    let(:second_correct_answer) { create(:answer, question: question, correct: true)}
 
     before do
       setup_subject_database
@@ -104,6 +104,18 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true do
     it 'gives the correct answer if I responded incorrectly' do
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
       expect(find_field('shortAnswerText', disabled: true).value).to eq(correct_response)
+    end
+
+    it 'gives the correct answers if I responded incorrectly to a question that has multiple answers' do
+      second_correct_answer
+      fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
+      expect(find_field('shortAnswerText', disabled: true).value).to include(correct_response).and include(second_correct_answer.text)
+    end
+
+    it 'allows multiple answers for a single word question' do
+      second_correct_answer
+      fill_in('shortAnswerText', with: second_correct_answer.text).native.send_keys(:return)
+      expect(page).to have_css('#shortAnswerButton.correct-answer')
     end
 
     it 'uses icons to show when I am right' do

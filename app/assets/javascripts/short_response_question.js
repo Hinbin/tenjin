@@ -15,7 +15,13 @@ function processShortResponse (results, guess) {
     $('#shortAnswerButton').append('<i class="fas fa-times fa-lg float-right my-1"></i>')
 
     $('#shortAnswerText').addClass('correct-answer')
-    $('#shortAnswerText').val(results[0].text)
+    if (results.length === 1) {
+      $('#shortAnswerText').val(results[0].text)
+    } else {
+      const correctAnswerText = results.map(r => r.text ).join(' or ')
+      console.log(correctAnswerText)
+      $('#shortAnswerText').val(correctAnswerText)
+    }
   }
 
   $('#nextButton').removeClass('invisible')
