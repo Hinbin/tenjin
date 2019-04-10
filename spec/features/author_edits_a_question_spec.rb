@@ -67,7 +67,7 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
       expect { click_link('Delete Question') }.to change(Question, :count).by(-1)
     end
 
-    context 'when showing to a multiple choice question' do
+    context 'when showing a multiple choice question' do
       before do
         answer
         visit(question_path(question))
@@ -81,9 +81,23 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
         find('i', class: 'fa-check')
         expect(Answer.first.correct).to eq(true)
       end
+
+      it 'only saves if I have selected a correct answer' do
+        find('table', id: 'table-multiple')
+        click_button('Save and return')
+        expect(page).to have_content('Please select at least one correct answer')
+      end
+
+      it 'only creates a new question if I have selected a correct answer' do
+        find('table', id: 'table-multiple')
+        click_button('Create another question')
+        expect(page).to have_content('Please select at least one correct answer')
+      end
+
     end
 
-    context 'when showing a single word answer' do
+
+    context 'when showing a short answer question' do
       before do
         answer
         visit(question_path(question))
@@ -98,6 +112,11 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
 
       it 'changes any existing answers for the question to be correct' do
         expect(Answer.first.correct).to eq(true)
+      end
+
+      it 'allows me to save without saying I need to select a correct answer' do
+        click_button('Save and return')
+        expect(page).to have_content(question.topic.name)
       end
     end
 
@@ -122,6 +141,7 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
       it 'does not allow you to remove an answer' do
         expect(page).to have_no_link('Remove')
       end
+
     end
 
     it 'allows you to add an answer' do

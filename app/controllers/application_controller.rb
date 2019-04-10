@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
     if resource.class == User
       dashboard_path
     elsif resource.class == Admin
-      schools_path
+      questions_path
     end
   end
 end

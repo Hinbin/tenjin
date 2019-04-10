@@ -14,30 +14,37 @@ $(document).on('turbolinks:load', () => {
     })
 
     $('trix-editor').on('trix-blur', (event) => {
-      const questionText = $(event.target).val()
-
-      $.ajax({
-        type: 'put',
-        url: window.location.pathname,
-        data: { question: { question_text: questionText } },
-        success: function (data) {
-          console.log('Saved')
-        }
-      })
+      saveQuestionText(() => {})
     })
 
-    $('#saveAndReturn').click((event) => {
-      const questionText = $('#question_question_text').val()
+    $('.check-and-save').click((event) => {
       const questionTopicIndexLocation = $(event.target).data()
 
-      $.ajax({
-        type: 'put',
-        url: window.location.pathname,
-        data: { question: { question_text: questionText } },
-        success: function (data) {
-          Turbolinks.visit(questionTopicIndexLocation['topic'])
-        }
-      })
+      validateAndSave(() => { Turbolinks.visit(questionTopicIndexLocation['link']) })
     })
   }
 })
+
+function validateAndSave (successCallback) {
+  const correctAnswers = $('i.fa-check')
+
+  // If not answers have been selected as correct, and we're trying to save...
+  if (correctAnswers.length === 0 && $('#questionTypeSelect').val() !== 'short_answer') {
+    // Alert the user and do not save.
+    $('#noCorrectAnswerModal').modal()
+  } else {
+    // Else save the question text and return
+    saveQuestionText(successCallback)
+  }
+}
+
+function saveQuestionText (successCallback) {
+  const questionText = $('#question_question_text').val()
+
+  $.ajax({
+    type: 'put',
+    url: window.location.pathname,
+    data: { question: { question_text: questionText } },
+    success: successCallback()
+  })
+}

@@ -29,10 +29,17 @@
     -unless @question.question_type == 'boolean'
       =link_to 'Add Answer', new_answer_path( question: {question_id: @question} ), class: 'btn btn-primary btn-block'
   .row.col.mt-3
-    button.btn.btn-block.btn-success#saveAndReturn data-topic=questions_path(topic_id: @question.topic_id) Save and return
+    button.btn.btn-block.btn-success.check-and-save data-link=questions_path(topic_id: @question.topic_id) Save and return
   .row.col.mt-3
-    =link_to 'Create another question', new_question_path(topic: { topic_id: @question.topic }), class: 'btn btn-block btn-primary'
+    button.btn.btn-block.btn-primary.check-and-save data-link=new_question_path(topic: { topic_id: @question.topic }) Create another question
   .row.col.mt-5
     =link_to 'Delete Question', question_path(@question), method: :delete, class: 'btn btn-danger btn-block'
+.modal.fade#noCorrectAnswerModal
+  .modal-dialog.modal-dialog-centered role="document"
+    .modal-content
+      .modal-body Please select at least one correct answer
+      .modal-footer
+        button.btn.btn-secondary data-dismiss="modal" Close
+
 
 
