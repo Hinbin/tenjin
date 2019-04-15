@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_144849) do
+ActiveRecord::Schema.define(version: 2019_04_10_172631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -152,6 +152,28 @@ ActiveRecord::Schema.define(version: 2019_03_27_144849) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
+  create_table "homework_progresses", force: :cascade do |t|
+    t.bigint "homework_id"
+    t.bigint "user_id"
+    t.integer "progress"
+    t.boolean "completed"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["homework_id"], name: "index_homework_progresses_on_homework_id"
+    t.index ["user_id"], name: "index_homework_progresses_on_user_id"
+  end
+
+  create_table "homeworks", force: :cascade do |t|
+    t.bigint "classroom_id"
+    t.bigint "topic_id"
+    t.datetime "due_date"
+    t.integer "required"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["classroom_id"], name: "index_homeworks_on_classroom_id"
+    t.index ["topic_id"], name: "index_homeworks_on_topic_id"
+  end
+
   create_table "multipliers", force: :cascade do |t|
     t.integer "score"
     t.integer "multiplier"
@@ -277,6 +299,10 @@ ActiveRecord::Schema.define(version: 2019_03_27_144849) do
   add_foreign_key "default_subject_maps", "subjects"
   add_foreign_key "enrollments", "classrooms"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "homework_progresses", "homeworks"
+  add_foreign_key "homework_progresses", "users"
+  add_foreign_key "homeworks", "classrooms"
+  add_foreign_key "homeworks", "topics"
   add_foreign_key "questions", "topics"
   add_foreign_key "quizzes", "topics"
   add_foreign_key "quizzes", "users"

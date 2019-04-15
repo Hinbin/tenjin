@@ -1,8 +1,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User takes a quiz', type: :feature, js: true do
-  include_context 'default_creates'
+RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: :true do
 
   context 'when answering a multiple choice question' do
     let(:question) { create(:question, topic: topic) }
@@ -103,6 +102,7 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true do
 
     it 'gives the correct answer if I responded incorrectly' do
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
+      binding.pry
       expect(find_field('shortAnswerText', disabled: true).value).to eq(correct_response)
     end
 

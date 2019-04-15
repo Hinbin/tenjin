@@ -35,6 +35,13 @@ module SessionHelpers
     click_button('Create Quiz')
   end
 
+  def create_homework
+    find('input#homework_due_date').click
+    find(flatpickr_one_week_from_now).click
+    select '70', from: 'Required %'
+    select topic.name, from: 'Topic'
+  end
+
   def initialize_name( user )
     return user.forename + ' ' + user.surname[0] 
   end

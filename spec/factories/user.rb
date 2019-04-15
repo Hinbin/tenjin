@@ -15,7 +15,7 @@ FactoryBot.define do
       role { 'student' }
     end
 
-    factory :employee do
+    factory :teacher do
       role { 'employee' }
     end
   end

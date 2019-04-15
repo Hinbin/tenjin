@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :classrooms, through: :enrollments
   has_many :subjects, through: :classrooms
   has_many :topic_scores
+  has_many :homeworks, through: :classrooms
 
   belongs_to :school
 

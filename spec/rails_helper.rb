@@ -87,6 +87,8 @@ RSpec.configure do |config|
   config.include SessionHelpers, type: :feature
   config.include BestInPlace::TestHelpers
 
+  config.include_context "default_creates", default_creates: :true
+
   # Required to use database cleaner with action cable
   # or feature testing will not work
   config.before(:suite) do
@@ -105,7 +107,7 @@ RSpec.configure do |config|
     DatabaseCleaner.start
   end
 
-  config.after do
+  config.append_after do
     DatabaseCleaner.clean
   end
 end
@@ -122,7 +124,5 @@ end
 
 Capybara.default_driver = :selenium_chrome
 Capybara.javascript_driver = :selenium_chrome
-
-Webdrivers.logger.level = :DEBUG
 
 class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end; # TEMPORARY.  REMOVE WITH NEW VERSION OF SHOULDAMATCHERS

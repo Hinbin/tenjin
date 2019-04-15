@@ -3,6 +3,7 @@ class Classroom < ApplicationRecord
   belongs_to :school
   has_many :enrollments
   has_many :users, through: :enrollments
+  has_many :homeworks
 
   validates :client_id, presence: true, uniqueness: true
   validates :name, presence: true

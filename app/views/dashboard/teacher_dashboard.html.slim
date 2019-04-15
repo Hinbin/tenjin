@@ -1,0 +1,6 @@
+=render('shared/user_navigation')
+h1.display-1 Teacher dashboard!
+ul
+  - @enrollments.each do |e|
+    li=link_to e.classroom.name, classroom_path(e.classroom)
+=render('shared/notice_modal')

@@ -96,7 +96,7 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
     before do
       school = create(:school, client_id: school_id)
       classroom = create(:classroom, client_id: classroom_client_id, school: school)
-      employee = create(:employee)
+      employee = create(:user, role: 'employee')
       create(:enrollment, classroom: classroom, user: employee)
       sync_school_with_wonde
     end
@@ -109,7 +109,7 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
 
   context 'with updated employee data' do
     it 'updates employee details' do
-      create(:employee, upi: employee_upi)
+      create(:teacher, upi: employee_upi)
       sync_school_with_wonde
       expect(User.where(upi: employee_upi).first.forename).to eq(employee_name)
     end

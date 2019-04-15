@@ -1,13 +1,35 @@
-h1 Classroom Members
-table
-  tr
-   th E-Mail
-   th Questions
-   th Accuracy
-  -@classroom.users.each do |u|
-    - @total_questions = u.quizzes.where('classroom_id = ?', @classroom.id).sum(:num_questions_asked)
-    - @total_correct = u.quizzes.where('classroom_id = ?', @classroom.id).sum(:answered_correct)
-    tr
-      td =u.email
-      td =@total_questions
-      td =number_to_percentage( (@total_correct.to_f/@total_questions.to_f) * 100, precision: 0 )
+=render('shared/user_navigation')
+section.page-section.text-center.pt-2#homework
+  .container
+    h1.h1.mt-3 =@classroom.name
+    h1.page-section-header.text-uppercase Homework
+    hr class=("small mb-5 primary-red")
+    .row.justify-content-center
+      =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: @classroom.id}), class: 'btn btn-block btn-primary'
+      .col.mx-auto
+        table.table.table-hover#homework-table
+          thead
+            tr
+              th Topic
+              th Completion
+              th Due
+          tbody
+          -@homeworks.each do |h|        
+            tr data-homework=h.id
+              td =h.topic.name
+              td =report_progress(h.homework_progresses)
+              td =h.due_date.strftime("%d/%m/%y %H:%M")
+  .container
+    h1.page-section-header.text-uppercase Students
+    hr class=("small mb-5 primary-red")
+    .row.justify-content-center
+      table.table.table-hover#challenge-table
+        thead
+          th First Name
+          th Last Name
+        tbody
+          -@students.each do |s| 
+            tr
+              td =s.forename
+              td =s.surname
+=javascript_pack_tag('classroom')
