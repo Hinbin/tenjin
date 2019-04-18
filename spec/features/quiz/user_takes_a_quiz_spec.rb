@@ -102,7 +102,6 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: :
 
     it 'gives the correct answer if I responded incorrectly' do
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      binding.pry
       expect(find_field('shortAnswerText', disabled: true).value).to eq(correct_response)
     end
 

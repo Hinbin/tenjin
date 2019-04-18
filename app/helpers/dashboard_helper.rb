@@ -11,4 +11,10 @@ module DashboardHelper
 
     progress_string
   end
+
+  def check_overdue(homework_progress)
+    return icon('fas', 'exclamation', style: 'color:yellow') if homework_progress.homework.due_date < DateTime.now && homework_progress.completed == false
+
+    return boolean_icon(homework_progress.completed?)
+  end
 end

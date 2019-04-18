@@ -42,7 +42,7 @@ class QuizzesController < ApplicationController
   # POST /quizzes
   # POST /quizzes.json
   def create
-    topic = quiz_params.dig(:picked_topic)
+    topic = quiz_params.dig(:topic_id)
     subject = Subject.find(quiz_params.dig(:subject))
     quiz = Quiz.new(subject: subject)
     authorize quiz, :new?
@@ -80,7 +80,7 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:picked_topic, :subject)
+    params.require(:quiz).permit(:topic_id, :subject)
   end
 
   def quiz_not_authorized(exception)
@@ -92,11 +92,10 @@ class QuizzesController < ApplicationController
                         'Subject does not exist'
                       end
     when 'show?'
-      flash[:alert] = if exception.record.active?
-                        'Quiz does not belong to you'
-                      else
-                        'This quiz has finished'
-                      end
+      return flash[:alert] = 'Quiz does not belong to you' if exception.record.active?
+                       
+      flash[:notice] = 'The quiz has finished'
+
     end
     redirect_to dashboard_path
   end

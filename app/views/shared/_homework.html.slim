@@ -3,16 +3,21 @@ section.page-section.text-center id=('homework-' + @css_flavour)
     h1.page-section-header.text-uppercase Homework
     hr class=("small mb-5 primary-" + @css_flavour)
     .row
-      .col.align-self-center
-        table.table.table-hover.text-white
+      .col
+        table.table.table-hover.text-white.homework-table
           thead
-            tr  
-              th Topic
-              th Due
+            tr
+              th.d-none.d-sm-table-cell Subject
+              th.d-none.d-sm-table-cell Topic
+              th %
+              th Due Date
               th Complete?   
-            tbody
-              tr
-                td.text-left Placeholder text
-                td Soon
-                td No
+          tbody
+            -@homework_progress.each do |h|
+              tr.homework-row data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id
+                td.d-none.d-sm-table-cell =h.homework.topic.subject.name
+                td.d-none.d-sm-table-cell =h.homework.topic.name
+                td =number_to_percentage(h.homework.required, precision:0)
+                td =h.homework.due_date.strftime('%a, %e %b')
+                td =check_overdue(h)
       

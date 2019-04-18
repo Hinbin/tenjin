@@ -10,12 +10,17 @@ nav class="navbar navbar-expand-md navbar-dark justify-content-between bg-black"
     ul class='navbar-nav mr-auto'  
       li class="nav-item active"
         a.nav-link href=leaderboard_index_path Leaderboard  
-      li class="nav-item active"
-        a.nav-link href=customise_path Customise
-    a href=customise_path
-      table 
-        td =icon('fas', 'star', class: 'fa', style: 'color: yellow')      
-        td.text-white#challenge-points =current_user.challenge_points          
+      -if current_user.student?
+        li class="nav-item active"
+          a.nav-link href=customise_path Customise
+      -if current_user.employee?
+        li class="nav-item active"
+          a.nav-link href=dashboard_path Classrooms
+    -if current_user.student?
+      a href=customise_path
+        table 
+          td =icon('fas', 'star', class: 'fa', style: 'color: yellow')      
+          td.text-white#challenge-points =current_user.challenge_points          
     p.m-2.text-white = current_user.forename + ' ' + current_user.surname
     =link_to(destroy_admin_session_path, method: :delete) do
       button class='btn btn-light' Logout

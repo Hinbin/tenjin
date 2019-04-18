@@ -1,5 +1,4 @@
-RSpec.describe 'User attempts a challenge', type: :feature, js: true do
-  include_context 'default_creates'
+RSpec.describe 'User attempts a challenge',  type: :feature, js: true, default_creates: :true do
 
   before do
     setup_subject_database
@@ -25,7 +24,7 @@ RSpec.describe 'User attempts a challenge', type: :feature, js: true do
     it 'links you to the correct quiz when clicked' do
       visit(dashboard_path)
       find(:css, '#challenge-table tbody tr:nth-child(1)').click
-      expect(page).to have_css('p', exact_text: challenge_one.topic.name)
+      expect(page).to have_css('p', exact_text: challenge_single_question.topic.name)
     end
 
     it 'allows me to answer a question after creating a quiz from a challenge' do # turbolinks bug 
@@ -40,6 +39,7 @@ RSpec.describe 'User attempts a challenge', type: :feature, js: true do
       find(:css, '#challenge-table tbody tr:nth-child(1)').click
       first(class: 'question-button').click
       first(class: 'next-button').click
+      expect(page).to have_css('#challenge-points', exact_text: challenge_single_question.points)
     end
   end
 end

@@ -6,6 +6,7 @@
     "@rails/webpacker": "^4.0.2",
     "babel-preset-react": "^6.24.1",
     "flatpickr": "^4.5.7",
+    "jquery": "^3.4.0",
     "postcss-cssnext": "^3.1.0",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",

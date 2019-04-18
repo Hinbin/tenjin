@@ -74,7 +74,7 @@ RSpec.describe 'using a quiz', type: :request do
       it 'prevents me from looking at a finished quiz' do
         quiz = create(:quiz, active: false)
         get quiz_path(id: quiz.id)
-        expect(flash[:alert]).to match(/This quiz has finished/)
+        expect(flash[:notice]).to match(/The quiz has finished/)
       end
     end
 
@@ -94,7 +94,7 @@ RSpec.describe 'using a quiz', type: :request do
       it 'allows me to create a quiz' do
         create(:enrollment, school: school, classroom: classroom, user: student)
         create(:question, topic: topic)
-        post quizzes_path params: { quiz: { picked_topic: topic, subject: a_subject } }
+        post quizzes_path params: { quiz: { topic_id: topic, subject: a_subject } }
         follow_redirect!
         expect(response).to render_template('quizzes/_question_top')
       end

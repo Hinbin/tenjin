@@ -7,5 +7,5 @@ class Quiz < ApplicationRecord
 
   has_many :asked_questions
   has_many :questions, through: :asked_questions
-  attr_accessor :picked_topic, :picked_subject
+  attr_accessor :topic_id, :picked_subject
 end

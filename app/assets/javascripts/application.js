@@ -17,7 +17,6 @@
 //= require jquery_ujs
 //= require popper
 //= require bootstrap-sprockets
-//= require jquery.slick
 
 //= require best_in_place
 

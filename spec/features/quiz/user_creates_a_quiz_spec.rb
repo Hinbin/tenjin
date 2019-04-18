@@ -42,7 +42,7 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     it 'allows me to select a topic' do
       visit(new_quiz_path(params: { subject: subject.name }))
       find(:xpath, '//select/option[1]')
-      expect(page).to have_select('quiz_picked_topic', options: ['Lucky Dip', Topic.first.name])
+      expect(page).to have_select('quiz_topic_id', options: ['Lucky Dip', Topic.first.name])
     end
 
     it 'creates a quiz on the correct topic' do

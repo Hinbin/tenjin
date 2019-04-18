@@ -7,16 +7,21 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
 
     create(:enrollment, classroom: classroom, user: teacher)
     sign_in teacher
+    visit(dashboard_path)
   end
 
   context 'when logging in as a teacher' do
     it 'shows which classes they are currently assigned to' do
-      visit(dashboard_path)
       expect(page).to have_content(classroom.name)
     end
 
-    it 'shows a link to homework in the nav bar' do
-      expect(page).to have_css('a[href=' + homeworks_path + ']')
+    it 'allows you to go to a selected classroom' do
+      find('tr[data-classroom="' + classroom.id.to_s + '"]').click
+      expect(current_path).to eq(classroom_path(classroom))
+    end
+
+    it 'shows a link to the classrooms in the nav bar' do
+      expect(page).to have_link('Classrooms', href: dashboard_path)
     end
 
     it 'does not show challenge points' do

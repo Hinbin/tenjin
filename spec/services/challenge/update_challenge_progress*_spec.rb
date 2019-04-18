@@ -10,11 +10,11 @@ RSpec.describe Challenge::UpdateChallengeProgress do
 
     let(:quiz_full_marks) do
       create(:quiz, subject: subject, topic: topic, num_questions_asked: 10,
-                    answered_correct: 10, active: false)
+                    answered_correct: 10, active: false, user: student)
     end
 
-    let(:quiz_7_out_of_10) { create(:quiz, subject: subject, topic: topic, num_questions_asked: 10, answered_correct: 7, active: false) }
-    let(:quiz_1_out_of_3) { create(:quiz, subject: subject, topic: topic, num_questions_asked: 3, answered_correct: 1, active: false) }
+    let(:quiz_7_out_of_10) { create(:quiz, subject: subject, topic: topic, num_questions_asked: 10, answered_correct: 7, active: false, user: student) }
+    let(:quiz_1_out_of_3) { create(:quiz, subject: subject, topic: topic, num_questions_asked: 3, answered_correct: 1, active: false, user: student) }
     let(:challenge_full_marks) do
       create(:challenge, topic: topic, challenge_type: 'number_correct',
                          number_required: 10, end_date: DateTime.now + 1.hour)

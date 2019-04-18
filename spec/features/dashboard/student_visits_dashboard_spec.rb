@@ -1,5 +1,4 @@
-RSpec.describe 'User visits the dashboard', type: :feature, js: true do
-  include_context 'default_creates'
+RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default_creates: :true do
 
   before do
     setup_subject_database
@@ -44,8 +43,6 @@ RSpec.describe 'User visits the dashboard', type: :feature, js: true do
     let(:second_subject) { create(:subject) }
     let(:second_topic) { create(:topic, subject: second_subject) }
     let(:challenge_two) { create(:challenge, topic: create(:topic, subject: subject)) }
-    let(:question) { create(:question, topic: topic) }
-    let(:answer) { create(:answer, question: question, correct: true) }
     let(:progressed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 70) }
     let(:completed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 100, completed: true) }
     let(:quiz) { create(:new_quiz) }
@@ -102,5 +99,72 @@ RSpec.describe 'User visits the dashboard', type: :feature, js: true do
       visit(dashboard_path)
       expect(page).to have_css('p', exact_text: 25)
     end
+  end
+
+  context 'when looking at homeworks' do
+    let (:homework_future ) { create(:homework, due_date: DateTime.now + 8.days, classroom: classroom )} 
+    before do
+      homework
+    end
+
+    it 'shows the homeworks I currnently have' do
+      visit(dashboard_path)
+      expect(page).to have_content(homework.topic.name).and have_content(homework.required)
+    end
+
+    it 'limits homeworks owing to the last 15' do
+      create_list(:homework_progress, 14, user: student, completed: false)
+      visit(dashboard_path)
+      expect(page).to have_css('tr.homework-row', count: 15)
+    end
+
+    it 'shows completed homeworks with a cross (times) icon' do
+      visit(dashboard_path)
+      expect(page).to have_css('.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > i.fa-times')
+    end
+
+    it 'shows completed homeworks with a tick icon' do
+      HomeworkProgress.where(homework: homework, user:student).first.update_attribute(:completed, true)
+      visit(dashboard_path)
+      expect(page).to have_css('.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > i.fa-check')
+    end
+
+    it 'shows overdue homeworks with an exclamation icon' do
+      homework.update_attribute(:due_date,  DateTime.now - 1.day )
+      visit(dashboard_path)
+      expect(page).to have_css('.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > i.fa-exclamation')
+    end
+
+    it 'shows homeworks completed in the last week only' do
+      HomeworkProgress.where(homework: homework, user:student).first.update_attribute(:completed, true)
+      homework.update_attribute(:due_date, DateTime.now - 2.weeks)
+      visit(dashboard_path)
+      expect(page).to have_no_css('.homework-row[data-homework="' + homework.id.to_s + '"]')
+    end 
+
+    it 'shows the homeworks in date order' do
+      homework_future
+      visit(dashboard_path)
+      expect(page).to have_css('.homework-row:first-child[data-homework="' + homework.id.to_s + '"]')
+    end
+  
+    it 'links you to the correct quiz when clicked' do
+      answer
+      visit(dashboard_path)
+      find('.homework-row').click
+      expect(page).to have_css('p', exact_text: homework.topic.name)
+    end
+
+    it 'only shows my homeworks' do
+      create(:homework)
+      visit(dashboard_path)
+      expect(page).to have_css('tr.homework-row', count: 1)      
+    end
+  end
+
+  context 'when viewing notices' do
+    it 'displays notices at the top under the nav bar'
+
+    it 'allows me to close the notice'
   end
 end

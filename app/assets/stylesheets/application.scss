@@ -14,12 +14,10 @@
 @import "bootstrap";
 @import "font-awesome-sprockets";
 @import "font-awesome";
-@import 'slick';
 @import 'trix/dist/trix';
-@import 'pages.scss';
-@import 'dashboard.scss';
-@import 'actiontext.scss';
-
+@import 'pages';
+@import 'dashboard';
+@import 'actiontext';
 
 a {
   color: #212529;

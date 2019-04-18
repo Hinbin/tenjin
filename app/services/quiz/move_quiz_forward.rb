@@ -23,6 +23,7 @@ class Quiz::MoveQuizForward
 
     @quiz.active = false
     Challenge::UpdateChallengeProgress.new(@quiz, 'number_correct').call
+    Homework::UpdateHomeworkProgress.new(@quiz).call
 
     @quiz.save
   end

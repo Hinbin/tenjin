@@ -1,6 +1,23 @@
 =render('shared/user_navigation')
-h1.display-1 Teacher dashboard!
-ul
-  - @enrollments.each do |e|
-    li=link_to e.classroom.name, classroom_path(e.classroom)
+=javascript_pack_tag('teacher_dashboard')
+section.page-section.text-center#challenges
+  .container
+    h1.page-section-header.text-uppercase Classrooms
+    hr class=("small mb-5 primary-red")
+    .row.justify-content-center
+      .col-lg-10.col.mx-auto
+        table.table.table-hover#classroom-table
+          thead
+            tr
+              th Classroom Name
+              th Description
+              th Subject
+              th # Students
+          tbody
+            - @enrollments.each do |e|
+              tr data-classroom = e.classroom.id
+                td =e.classroom.name
+                td =e.classroom.description
+                td =e.subject.name
+                td =e.classroom.enrollments.count
 =render('shared/notice_modal')

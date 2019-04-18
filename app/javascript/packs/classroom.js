@@ -1,5 +1,7 @@
 $(document).on('turbolinks:load', () => {
 
+  $('tr[data-homework]').off('click')
+
   $('tr[data-homework]').click( (event) => {
     const pickedHomework = $(event.target.parentNode).data('homework')
     Turbolinks.visit('/homeworks/' + pickedHomework)
