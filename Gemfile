@@ -78,6 +78,7 @@ group :development do
 
   # All them rules for development
   gem 'rubocop'
+  gem 'rubocop-performance'
   gem 'rubocop-rspec'
 
 end

@@ -1,12 +1,10 @@
-RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default_creates: :true do
-
+RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default_creates: true do
   before do
     setup_subject_database
     sign_in student
   end
 
   context 'when changing the dashboard style' do
-
     it 'shows the darkgred ferrari style' do
       student.update_attribute(:dashboard_style, 'darkred')
       visit(dashboard_path)
@@ -44,7 +42,10 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
     let(:second_topic) { create(:topic, subject: second_subject) }
     let(:challenge_two) { create(:challenge, topic: create(:topic, subject: subject)) }
     let(:progressed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 70) }
-    let(:completed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 100, completed: true) }
+    let(:completed_challenge) do
+      create(:challenge_progress, user: student,
+                                  challenge: challenge_one, progress: 100, completed: true)
+    end
     let(:quiz) { create(:new_quiz) }
     let(:challenge_css_selector) { '#challenge-table tr[data-topic="' + topic.id.to_s + '"]' }
 
@@ -78,17 +79,15 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
       expect(page).not_to have_content(Challenge.stringify(c))
     end
 
-    it 'has a live countdown'
-
     it 'links you to the correct quiz when clicked' do
       visit(dashboard_path)
-      find(:css, challenge_css_selector ).click
+      find(:css, challenge_css_selector).click
       expect(page).to have_css('p', exact_text: challenge_one.topic.name)
     end
 
     it 'allows me to answer a question after creating a quiz from a challenge' do # turbolinks bug
       visit(dashboard_path)
-      find(:css, challenge_css_selector ).click
+      find(:css, challenge_css_selector).click
       first(class: 'question-button').click
       expect(page).to have_text('Next Question')
     end
@@ -102,7 +101,8 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
   end
 
   context 'when looking at homeworks' do
-    let (:homework_future ) { create(:homework, due_date: DateTime.now + 8.days, classroom: classroom )} 
+    let(:homework_future) { create(:homework, due_date: DateTime.now + 8.days, classroom: classroom) }
+
     before do
       homework
     end
@@ -124,30 +124,32 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
     end
 
     it 'shows completed homeworks with a tick icon' do
-      HomeworkProgress.where(homework: homework, user:student).first.update_attribute(:completed, true)
+      HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
       visit(dashboard_path)
       expect(page).to have_css('.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > i.fa-check')
     end
 
     it 'shows overdue homeworks with an exclamation icon' do
-      homework.update_attribute(:due_date,  DateTime.now - 1.day )
+      homework.update_attribute(:due_date, DateTime.now - 1.day)
       visit(dashboard_path)
-      expect(page).to have_css('.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > i.fa-exclamation')
+      expect(page).to have_css(
+        '.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > i.fa-exclamation'
+      )
     end
 
     it 'shows homeworks completed in the last week only' do
-      HomeworkProgress.where(homework: homework, user:student).first.update_attribute(:completed, true)
+      HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
       homework.update_attribute(:due_date, DateTime.now - 2.weeks)
       visit(dashboard_path)
       expect(page).to have_no_css('.homework-row[data-homework="' + homework.id.to_s + '"]')
-    end 
+    end
 
     it 'shows the homeworks in date order' do
       homework_future
       visit(dashboard_path)
       expect(page).to have_css('.homework-row:first-child[data-homework="' + homework.id.to_s + '"]')
     end
-  
+
     it 'links you to the correct quiz when clicked' do
       answer
       visit(dashboard_path)
@@ -158,13 +160,7 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
     it 'only shows my homeworks' do
       create(:homework)
       visit(dashboard_path)
-      expect(page).to have_css('tr.homework-row', count: 1)      
+      expect(page).to have_css('tr.homework-row', count: 1)
     end
-  end
-
-  context 'when viewing notices' do
-    it 'displays notices at the top under the nav bar'
-
-    it 'allows me to close the notice'
   end
 end

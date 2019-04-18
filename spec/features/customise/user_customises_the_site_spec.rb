@@ -1,5 +1,4 @@
 RSpec.describe 'User customises the site', type: :feature, js: true, default_creates: true do
-
   before do
     setup_subject_database
     sign_in student
@@ -27,6 +26,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
 
   context 'when looking at available dashboard styles' do
     let(:dashboard_customisation) { create(:customisation, cost: 6) }
+    let(:dashboard_customisation_expensive) { create(:customisation, cost: 20) }
     let(:student) { create(:user, school: school, challenge_points: 10) }
 
     before do
@@ -46,7 +46,14 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
 
     it 'deducts the required amount of challenge points' do
       find('button#buy-dashboard-' + dashboard_customisation.value).click
-      expect{student.reload}.to change(student, :challenge_points).by(-dashboard_customisation.cost)
+      expect { student.reload }.to change(student, :challenge_points).by(-dashboard_customisation.cost)
+    end
+
+    it 'gives a notice if you do not have the required number of points' do
+      dashboard_customisation_expensive
+      visit(customise_path)
+      find('button#buy-dashboard-' + dashboard_customisation_expensive.value).click
+      expect(page).to have_css('.alert', text:'hmm')
     end
   end
 end

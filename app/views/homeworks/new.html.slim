@@ -1,4 +1,4 @@
-=render('shared/user_navigation')
+=javascript_pack_tag('homework')
 section.page-section.text-center.pt-2#set_homework
   .container
     h1.page-section-header.text-uppercase Set Homework
@@ -10,4 +10,3 @@ section.page-section.text-center.pt-2#set_homework
       =f.association :topic, collection: @classroom.subject.topics,  input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
       =f.association :classroom, as: :hidden
       =f.submit "Set Homework", class: 'btn btn-primary'
-=javascript_pack_tag('homework')

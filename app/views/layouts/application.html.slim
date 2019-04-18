@@ -15,9 +15,10 @@ html
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
     
-    //= javascript_include_tag params[:controller], 'data-turbolinks-track': 'reload' if controller_name != 'sessions'
   = content_tag :body, data: { action: action_name, controller: controller_name } do
-    - if current_user.class == 'Admin'
-      =render('layouts/navigation')
+    = render('shared/user_navigation') if current_user.present?  
+    = render('shared/admin_navigation') if current_admin.present?
+    = render('shared/notice_notification') if flash[:notice].present?
     = yield
+    = render('shared/alert_modal')
 

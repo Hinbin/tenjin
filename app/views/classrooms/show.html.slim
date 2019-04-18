@@ -1,4 +1,5 @@
-=render('shared/user_navigation')
+
+=javascript_pack_tag('classroom')
 section.page-section.text-center.pt-2#homework
   .container
     h1.h1.mt-3 =@classroom.name
@@ -32,4 +33,3 @@ section.page-section.text-center.pt-2#homework
             tr.student-data
               td =s.forename
               td =s.surname
-=javascript_pack_tag('classroom')
