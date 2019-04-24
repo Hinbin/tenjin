@@ -12,9 +12,14 @@ module Users
       bearer_token = request.env['omniauth.auth'].credentials['token']
 
       body = run_graphql_query(query, bearer_token)
+
+      return fail_sign_in unless body.present?
+
       # Now we have a response with useful user information, send this to
       # our user object.  Standard boiler plate code below
       query_data = extract_query_data(body)
+
+      return fail_sign_in unless query_data.present?
 
       # You need to implement the method below in your model (e.g. app/models/user.rb)
       user = User.from_omniauth(query_data)
@@ -23,17 +28,20 @@ module Users
 
     def attempt_user_sign_in(user)
       if user.blank?
-        flash[:notice] = 'Your account has not been found'
-        redirect_to '/'
+        fail_sign_in
       # persisted? means if the record already existed (or hasn't been deleted)
       # So this effectively prevents a new record from being created if an
       # e-mail has not been found.
       elsif user.persisted?
         sign_in_and_redirect user, event: :authentication
       else
-        flash[:notice] = 'Your account has not been found'
-        redirect_to '/'
+        fail_sign_in
       end
+    end
+
+    def fail_sign_in
+      flash[:alert] = 'Your account has not been found'
+      redirect_to '/'
     end
 
     def run_graphql_query(query, bearer_token)
@@ -53,6 +61,8 @@ module Users
     end
 
     def extract_query_data(body)
+      return unless body.present? && body['data'].present?
+
       query_data = body['data']['Me']['Person']
       query_data['provider'] = 'Wonde'
       query_data

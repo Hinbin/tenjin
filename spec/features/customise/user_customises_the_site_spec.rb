@@ -53,7 +53,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
       dashboard_customisation_expensive
       visit(customise_path)
       find('button#buy-dashboard-' + dashboard_customisation_expensive.value).click
-      expect(page).to have_css('.alert', text:'hmm')
+      expect(page).to have_css('.alert', text: 'You do not have enough points')
     end
   end
 end

@@ -28,8 +28,6 @@ RSpec.describe Challenge, type: :model do
     it 'allows me to specify a challenge type' do
       expect(challenge_full_marks.challenge_type).to eq('number_correct')
     end
-
-    it 'throws an error if there are no topics for the subject'
   end
 
   describe '#stringify' do

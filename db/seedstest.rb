@@ -22,8 +22,8 @@ CSV.foreach('db/CSV Output - unit_export.csv', headers: true) do |row|
   p row["name"]
 end
 
-CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
-  p row
+CSV.foreach('db/CSV Output - question_export_test.csv', headers: true) do |row|
+
   if row['image'].nil?
     Question.create!(id: row['id'], topic_id: row['topic_id'], question_text: row['question_text'], question_type: row['question_type'] )
   else
@@ -35,7 +35,7 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
     end 
     response = http_conn.get google_location
 
-    filename = google_location.from(31) + '.png'
+    filename = google_location.from(31) + '.jpg'
 
     new_google_loc = /HREF=".*"/.match(response.body)[0].from(6).chop
     p new_google_loc
@@ -51,27 +51,3 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
   end
 
 end
-
-CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
-  Answer.create!(row.to_hash)
-end
-
-Multiplier.create([ {score: 0, multiplier: 1}, {score: 4, multiplier: 2}, {score: 7, multiplier: 4}, {score: 10, multiplier: 10} ] )
-
-Customisation.create([ 
-  {customisation_type: 0, cost: 10, name: 'Race Red', value: 'red'},
-  {customisation_type: 0, cost: 10, name: 'Climber Orange', value: 'orange'},
-  {customisation_type: 0, cost: 10, name: 'Ferrari Dark Red', value: 'darkred'},
-  {customisation_type: 0, cost: 10, name: 'Hiking Dark Blue', value: 'darkblue'},
-  {customisation_type: 0, cost: 10, name: 'Football Dark Green', value: 'darkgreen'},
-  {customisation_type: 0, cost: 10, name: 'Music Yellow', value: 'yellow'}  
-])
-
-case Rails.env
-  when "development"
-    Admin.create(email: 'n.houlton@grange.outwood.com', password: 'password', password_confirmation: 'password', role: 'super')
-    subject = Subject.where(name:'Computer Science').first
-    DefaultSubjectMap.create(name: 'Sociology', subject: subject)
-end
-
-

@@ -50,9 +50,35 @@ RSpec.describe Enrollment, type: :model do
         expect(Enrollment.count).to eq(1)
       end
 
+      it 'enables classroom with enrollments' do
+        classroom_api_data[0].employees = user_api_data
+        Enrollment.from_wonde(school_api_data, classroom_api_data)
+        expect(Classroom.first.disabled).to eq(false)
+      end
+
       it 'handles null student and employee data' do
         Enrollment.from_wonde(school_api_data, classroom_api_data)
         expect(Enrollment.count).to eq(0)
+      end
+    end
+
+    context 'when dealing with older data' do
+      before do
+        classroom_api_data[0].students = user_api_data
+        School.from_wonde(school_api_data, classroom_api_data)
+        Enrollment.from_wonde(school_api_data, classroom_api_data)
+      end
+
+      it 'removes old enrollments' do
+        classroom_api_data[0].students = alt_user_api_data
+        Enrollment.from_wonde(school_api_data, classroom_api_data)
+        expect(Enrollment.count).to eq(0)
+      end
+
+      it 'disables classrooms with no enrollments' do
+        classroom_api_data[0].students = alt_user_api_data
+        Enrollment.from_wonde(school_api_data, classroom_api_data)
+        expect(Classroom.first.disabled).to eq(true)
       end
     end
   end

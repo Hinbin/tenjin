@@ -20,7 +20,7 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def show?
-    @user.school.permitted?
+    @user.super?
   end
 
   def create?

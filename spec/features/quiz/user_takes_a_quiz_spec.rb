@@ -1,8 +1,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: :true do
-
+RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: true do
   context 'when answering a multiple choice question' do
     let(:question) { create(:question, topic: topic) }
     let(:correct_response) { Answer.where(correct: true).first }
@@ -59,15 +58,30 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: :
       find(id: incorrect_response_selector).click
       expect(page).to have_css('i.fa-times')
     end
+  end
 
-    it 'displays images for a question'
+  context 'when dealing with images' do
+    before do
+      image = create_file_blob(filename: 'computer-science.jpg', content_type: 'image/jpg')
+      html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>Test message</p>)
+      question = create(:question, topic: topic, question_text: html)
+
+      setup_subject_database
+      create(:answer, question: question, correct: true)
+      sign_in student
+      navigate_to_quiz
+    end
+
+    it 'displays images for a question' do
+      expect(page).to have_css('img[src$="computer-science.jpg"]')
+    end
   end
 
   context 'when answering a short answer question' do
     let(:question) { create(:short_answer_question, topic: topic) }
     let(:incorrect_response) { FFaker::Lorem.word }
     let(:correct_response) { Answer.first.text }
-    let(:second_correct_answer) { create(:answer, question: question, correct: true)}
+    let(:second_correct_answer) { create(:answer, question: question, correct: true) }
 
     before do
       setup_subject_database
@@ -102,13 +116,16 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: :
 
     it 'gives the correct answer if I responded incorrectly' do
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
+      find('.incorrect-answer')
       expect(find_field('shortAnswerText', disabled: true).value).to eq(correct_response)
     end
 
     it 'gives the correct answers if I responded incorrectly to a question that has multiple answers' do
       second_correct_answer
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      expect(find_field('shortAnswerText', disabled: true).value).to include(correct_response).and include(second_correct_answer.text)
+      find('.incorrect-answer')
+      expect(find_field('shortAnswerText', disabled: true).value).to include(correct_response)
+        .and include(second_correct_answer.text)
     end
 
     it 'allows multiple answers for a single word question' do

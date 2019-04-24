@@ -1,17 +1,18 @@
 =javascript_pack_tag('teacher_dashboard')
 section.page-section.text-center#challenges
   .container
-    h1.page-section-header.text-uppercase Classrooms
+    h1.page-section-header.text-uppercase My Classes
     hr class=("small mb-5 primary-red")
     .row.justify-content-center
       .col-lg-10.col.mx-auto
         table.table.table-hover#classroom-table
           thead
             tr
-              th Classroom Name
+              th Name
               th Description
               th Subject
               th # Students
+              th
           tbody
             - @enrollments.each do |e|
               tr data-classroom = e.classroom.id
@@ -19,3 +20,4 @@ section.page-section.text-center#challenges
                 td =e.classroom.description
                 td =e.subject.name
                 td =e.classroom.enrollments.count
+                td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'btn btn-dark'

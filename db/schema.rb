@@ -183,8 +183,6 @@ ActiveRecord::Schema.define(version: 2019_04_10_172631) do
 
   create_table "questions", force: :cascade do |t|
     t.bigint "topic_id"
-    t.string "image"
-    t.integer "answers_count"
     t.integer "question_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

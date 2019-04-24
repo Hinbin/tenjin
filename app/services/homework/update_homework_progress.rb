@@ -21,7 +21,7 @@ class Homework::UpdateHomeworkProgress
   def check_progress_percentage(percentage, h)
     percentage *= 100
     h.progress = percentage if percentage > h.progress
-    h.completed = true if h.progress >= 100 && h.completed == false
+    h.completed = true if h.progress >= h.homework.required && h.completed == false
     h.save if h.changed?
   end
 

@@ -24,18 +24,6 @@ RSpec.describe School, type: :model do
     end
   end
 
-  describe 'from_wonde_sync_start' do
-    it 'removes old enrollments' do
-      classroom_api_data[0].students = user_api_data
-      School.from_wonde(school_api_data, classroom_api_data)
-      classroom_api_data[0].students = alt_user_api_data
-      Enrollment.from_wonde(school_api_data, classroom_api_data)
-      expect(Enrollment.count).to eq(0)
-    end
-
-    it 'disables old classrooms'
-  end
-
   describe '#school_from_client_id' do
     context 'with a school client id'
     it 'retrieves a school record' do

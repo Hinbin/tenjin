@@ -31,8 +31,12 @@ RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
       visit('/')
       expect(page).to have_content('START A QUIZ')
     end
+  end
 
-    it 'displays log in error messages'
-    
+  it 'displays log in error messages' do
+    visit root_path
+    stub_omniauth
+    click_link 'Log In'
+    expect(page).to have_text('Your account has not been found')
   end
 end

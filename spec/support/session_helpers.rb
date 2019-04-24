@@ -42,7 +42,12 @@ module SessionHelpers
     select topic.name, from: 'Topic'
   end
 
-  def initialize_name( user )
-    return user.forename + ' ' + user.surname[0] 
+  def initialize_name(user)
+    user.forename + ' ' + user.surname[0]
+  end
+
+  def create_file_blob(filename:, content_type:, metadata: nil)
+    ActiveStorage::Blob.create_after_upload! io: file_fixture(filename).open, filename: filename,
+                                             content_type: content_type, metadata: metadata
   end
 end

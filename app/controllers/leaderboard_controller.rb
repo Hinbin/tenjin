@@ -12,7 +12,7 @@ class LeaderboardController < ApplicationController
     set_subject_and_topic
     set_leaderboard_variables
     set_javascript_variables
-    authorize @current_user.school
+    authorize @current_user
 
     return render 'subject_select' if @subject.blank?
 

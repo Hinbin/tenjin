@@ -4,14 +4,14 @@ class Question < ApplicationRecord
   has_many :quizzes, through: :asked_questions
   belongs_to :topic
 
-  has_one_attached :question_image
-
   has_rich_text :question_text
 
   enum question_type: %i[short_answer boolean multiple]
 
-  before_update :check_multiple_choice
+  before_update :check_boolean
   before_update :check_short_answer
+
+  before_destroy :destroy_answers
 
   def self.clean_empty_questions(topic)
     questions = Question.where(topic_id: topic).includes(:answers, :asked_questions)
@@ -30,7 +30,7 @@ class Question < ApplicationRecord
 
   private
 
-  def check_multiple_choice
+  def check_boolean
     return unless question_type_changed? && question_type == 'boolean'
 
     # Setup boolean question.  Only true and false allowed.
@@ -42,9 +42,11 @@ class Question < ApplicationRecord
   def check_short_answer
     return unless question_type_changed? && question_type == 'short_answer'
 
-    # Setup short answer.  Only true and false allowed.
+    # Setup short answer.  Change all answers to correct
     answers.update_all(correct: true)
   end
 
-  
+  def destroy_answers
+    answers.destroy_all
+  end
 end
