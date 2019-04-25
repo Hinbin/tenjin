@@ -23,12 +23,10 @@ CSV.foreach('db/CSV Output - unit_export.csv', headers: true) do |row|
 end
 
 CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
-  p row
   if row['image'].nil?
     Question.create!(id: row['id'], topic_id: row['topic_id'], question_text: row['question_text'], question_type: row['question_type'] )
   else
     google_location = row['image'].gsub(/open?/, 'uc')
-    p google_location
 
     http_conn = Faraday.new do |builder|
       builder.adapter Faraday.default_adapter
@@ -37,9 +35,12 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
 
     filename = google_location.from(31) + '.png'
 
+    unless defined? /HREF=".*"/.match(response.body)[0]
+      p "ERROR WITH: " + filename
+      next
+    end
+
     new_google_loc = /HREF=".*"/.match(response.body)[0].from(6).chop
-    p new_google_loc
-    p filename
 
     response = http_conn.get new_google_loc
 
