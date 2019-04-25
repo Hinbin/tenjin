@@ -257,10 +257,10 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  callback_url = 'http://localhost:3000/users/auth/wonde/callback'
+  callback_url = 'https://localhost:3000/users/auth/wonde/callback'
 
   if Rails.env == 'production'
-    callback_url = 'http://tenjin.herokuapp.com/users/auth/wonde/callback'
+    callback_url = 'https://tenjin.herokuapp.com/users/auth/wonde/callback'
   end
 
   config.omniauth :wonde, 
