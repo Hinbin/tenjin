@@ -133,3 +133,6 @@ gem 'image_processing'
 
 # In place editing for answers
 gem 'best_in_place'
+
+# Use Amazon S3 for Active Storage
+gem 'aws-sdk-s3'
