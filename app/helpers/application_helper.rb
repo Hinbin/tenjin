@@ -8,7 +8,7 @@ module ApplicationHelper
   end
 
   def print_subject_image(url)
-    url = Rails.application.assets.find_asset(url).nil? ? nil : url
+    url = (Rails.application.assets || ::Sprockets::Railtie.build_environment(Rails.application)).find_asset(url).nil? ? nil : url
     image_url url || 'default-subject.jpg'
   end
 
