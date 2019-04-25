@@ -260,7 +260,7 @@ Devise.setup do |config|
   callback_url = 'http://localhost:3000/users/auth/wonde/callback'
 
   if Rails.env == 'production'
-    callback_url = 'https://protected-meadow-45841.herokuapp.com/users/auth/wonde/callback'
+    callback_url = 'https://tenjin.herokuapp.com/users/auth/wonde/callback'
   end
 
   config.omniauth :wonde, 
