@@ -7,8 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 require 'csv'
 
-def create_file_blob(filename:, content_type:, metadata: nil)
-  ActiveStorage::Blob.create_after_upload! io: File.open(Pathname.new(File.join(Pathname.getwd, 'db', 'downloads', filename))), filename: filename,
+def create_file_blob(data:, filename:, content_type:, metadata: nil)
+  ActiveStorage::Blob.create_after_upload! io: data, filename: filename,
                                            content_type: content_type, metadata: metadata
 end
 
@@ -43,9 +43,7 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
 
     response = http_conn.get new_google_loc
 
-    File.open( File.join(Pathname.getwd, 'db', 'downloads', filename), 'wb' ) { |fp| fp.write(response.body) }
-
-    image = create_file_blob(filename: filename, content_type: 'image/jpg')
+    image = create_file_blob(data: StringIO.new(response.body), filename: filename, content_type: 'image/jpg')
     html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
     Question.create!(id: row['id'], topic_id: row['topic_id'], question_text: html , question_type: row['question_type'] )
   end
