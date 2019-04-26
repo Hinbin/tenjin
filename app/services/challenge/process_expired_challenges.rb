@@ -11,7 +11,7 @@ class Challenge::ProcessExpiredChallenges
   def award_points
     @expired_challenges.each do |c|
       completed_challenges = ChallengeProgress.where('challenge_id = ? AND completed = ?', c, true)
-      p 'Removing...' + Challenge.stringify(c)
+      p 'Removing...' + c.stringify
       completed_challenges.delete_all
     end
   end

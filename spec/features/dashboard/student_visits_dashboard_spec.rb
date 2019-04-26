@@ -1,4 +1,4 @@
-RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default_creates: true do
+RSpec.describe 'Student visits the dashboard', :focus, type: :feature, js: true, default_creates: true do
   before do
     setup_subject_database
     sign_in student
@@ -57,7 +57,7 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
 
     it 'shows challenges for subjects' do
       visit(dashboard_path)
-      expect(page).to have_content(Challenge.stringify(challenge_one))
+      expect(page).to have_content(challenge_one.stringify)
     end
 
     it 'shows progress for full marks challenges' do
@@ -76,7 +76,7 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
       second_topic
       c = Challenge.create_challenge(second_subject)
       visit(dashboard_path)
-      expect(page).not_to have_content(Challenge.stringify(c))
+      expect(page).not_to have_content(c.stringify)
     end
 
     it 'links you to the correct quiz when clicked' do
