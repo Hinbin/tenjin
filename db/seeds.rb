@@ -58,12 +58,12 @@ end
 Multiplier.create([ {score: 0, multiplier: 1}, {score: 4, multiplier: 2}, {score: 7, multiplier: 4}, {score: 10, multiplier: 10} ] )
 
 Customisation.create([ 
-  {customisation_type: 0, cost: 10, name: 'Race Red', value: 'red'},
-  {customisation_type: 0, cost: 10, name: 'Climber Orange', value: 'orange'},
-  {customisation_type: 0, cost: 10, name: 'Ferrari Dark Red', value: 'darkred'},
-  {customisation_type: 0, cost: 10, name: 'Hiking Dark Blue', value: 'darkblue'},
-  {customisation_type: 0, cost: 10, name: 'Football Dark Green', value: 'darkgreen'},
-  {customisation_type: 0, cost: 10, name: 'Music Yellow', value: 'yellow'}  
+  {customisation_type: 0, cost: 100, name: 'Race Red', value: 'red'},
+  {customisation_type: 0, cost: 100, name: 'Climber Orange', value: 'orange'},
+  {customisation_type: 0, cost: 100, name: 'Ferrari Dark Red', value: 'darkred'},
+  {customisation_type: 0, cost: 100, name: 'Hiking Dark Blue', value: 'darkblue'},
+  {customisation_type: 0, cost: 100, name: 'Football Dark Green', value: 'darkgreen'},
+  {customisation_type: 0, cost: 100, name: 'Sunshine Yellow', value: 'yellow'}  
 ])
 
 case Rails.env

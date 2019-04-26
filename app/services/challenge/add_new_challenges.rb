@@ -1,6 +1,8 @@
 class Challenge::AddNewChallenges
-  def initialize
+  def initialize(multiplier: 1, duration: 7.days)
     @subjects = Subject.all
+    @multiplier = multiplier
+    @duration = duration
   end
 
   def call
@@ -9,7 +11,7 @@ class Challenge::AddNewChallenges
 
   def add_new_challenges
     @subjects.each do |s|
-      Challenge.create_challenge(s)
+      Challenge.create_challenge(s, multiplier: @multiplier, duration: @duration)
     end
   end
 end
