@@ -6,7 +6,10 @@ namespace :challenges do
 
   desc 'Add new challenges'
   task add_challenges: :environment do
+    # Should be checked hourly
     today = Date.today
-    Challenge::AddNewChallenges.new.call if today.monday? || today.wednesday? || today.saturday?
+    hour = Time.now.hour
+    Challenge::AddNewChallenges.new.call if (today.monday? || today.wednesday?) && hour == 8
+    Challenge::AddNewChallenges.new(duration: 66.hours, multiplier: 2).call if today.friday? && hour == 14
   end
 end

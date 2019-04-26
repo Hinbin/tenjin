@@ -11,7 +11,7 @@ RSpec.describe Challenge, type: :model do
                        number_required: 10, end_date: DateTime.now + 1.hour)
   end
 
-  describe '#create_challenge' do
+  describe '#create_challenge', :focus do
     it 'creates a new challenge for a given subject' do
       expect(Challenge.create_challenge(topic.subject).topic.subject).to eq(subject)
     end
@@ -27,6 +27,26 @@ RSpec.describe Challenge, type: :model do
 
     it 'allows me to specify a challenge type' do
       expect(challenge_full_marks.challenge_type).to eq('number_correct')
+    end
+
+    it 'allows me to specify a point multiplier' do
+      srand(1)
+      expect(Challenge.create_challenge(topic.subject, multiplier: 2).points).to eq(20)
+    end
+
+    it 'allows me to specify a duration' do
+      srand(1)
+      expect(Challenge.create_challenge(topic.subject, duration: 3.days).end_date).to be_within(1.second).of (DateTime.now + 3.days)
+    end
+
+    it 'allows me to specify a duration in hours' do
+      srand(1)
+      expect(Challenge.create_challenge(topic.subject, duration: 36.hours).end_date).to be_within(1.second).of (DateTime.now + 36.hours)
+    end
+
+    it 'defaults to a multiplier of x1' do
+      srand(1)
+      expect(Challenge.create_challenge(topic.subject).points).to eq(10)
     end
   end
 

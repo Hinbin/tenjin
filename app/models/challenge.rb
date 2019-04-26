@@ -6,11 +6,11 @@ class Challenge < ApplicationRecord
 
   enum challenge_type: %i[number_correct streak number_of_points]
 
-  def self.create_challenge(subject, challenge_type = nil)
+  def self.create_challenge(subject, challenge_type = nil, multiplier: 1, duration: 7.days)
     @challenge = Challenge.new
     @challenge.start_date = DateTime.now
-    @challenge.end_date = DateTime.now + 1.week
-    @challenge.points = 10
+    @challenge.end_date = DateTime.now + duration
+    @challenge.points = 10 * multiplier 
     @challenge.topic = Topic.where(subject: subject).order(Arel.sql('RANDOM()')).first
     raise 'no topic available in subject when creating a challenge' if @challenge.topic.nil?
 
@@ -35,9 +35,9 @@ class Challenge < ApplicationRecord
 
   def self.stringify(challenge)
     challenge_strings = [
-      'Get ' + challenge.number_required.to_s + ' questions correct in a single quiz in',
-      'Obtain a streak of ' + challenge.number_required.to_s + ' correct answers for',
-      'Score ' + challenge.number_required.to_s + ' points in'
+      "Get #{challenge.number_required} questions correct in a single quiz in",
+      "Obtain a streak of #{challenge.number_required} correct answers for",
+      "Score #{challenge.number_required} points in"
     ]
 
     challenge_strings[Challenge.challenge_types[challenge.challenge_type]] + ' ' + challenge.topic.name
