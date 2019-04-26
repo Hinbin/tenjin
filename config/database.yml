@@ -83,6 +83,5 @@ test:
 #
 production:
   <<: *default
-  database: csquiz_production
-  username: csquiz
+  url: <%= ENV['HEROKU_POSTGRESQL_CHARCOAL_URL'] %>
   password: <%= ENV['CSQUIZ_DATABASE_PASSWORD'] %>
