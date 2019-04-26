@@ -20,5 +20,4 @@ class Quiz::AddLeaderboardPoint
 
     @topic_score.save
   end
-
 end

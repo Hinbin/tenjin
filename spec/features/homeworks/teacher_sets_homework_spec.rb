@@ -1,23 +1,21 @@
-
 RSpec.describe 'Teacher sets homework', type: :feature, js: true do
   include_context 'default_creates'
 
   let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
-  let(:flatpickr_one_week_from_now) { 'span.flatpickr-day[aria-label="' + (DateTime.now() + 1.week).strftime('%B %-e, %Y') + '"]'}
+  let(:flatpickr_one_week_from_now) { 'span.flatpickr-day[aria-label="' + (DateTime.now + 1.week).strftime('%B %-e, %Y') + '"]' }
 
   before do
     setup_subject_database
     create(:enrollment, classroom: classroom, user: teacher)
     topic
     sign_in teacher
-    visit(new_homework_path( classroom: { classroom_id: classroom.id} ) )
+    visit(new_homework_path(classroom: { classroom_id: classroom.id }))
   end
 
   context 'when creating a homework' do
-
     it 'allows you to create a homework' do
       create_homework
-      expect{ click_button('Set Homework') }.to change(Homework, :count).by(1)
+      expect { click_button('Set Homework') }.to change(Homework, :count).by(1)
     end
 
     it 'attaches the homework to the correct classroom' do
@@ -28,9 +26,8 @@ RSpec.describe 'Teacher sets homework', type: :feature, js: true do
 
     it 'alerts you if you have not got a classroom id' do
       visit(new_homework_path)
-      expect(current_path).to eq(dashboard_path)
+      expect(page).to have_current_path(dashboard_path)
     end
-
   end
 
   context 'when viewing a homework' do
@@ -54,12 +51,11 @@ RSpec.describe 'Teacher sets homework', type: :feature, js: true do
     it 'allows the teacher to delete the homework' do
       expect { click_link('Delete Homework') }.to change(Homework, :count).by(-1)
     end
-    
+
     it 'shows the progress towards completion' do
       HomeworkProgress.first.update_attribute(:progress, 50)
       visit(homework_path(homework))
       expect(page).to have_content('50%')
     end
   end
-
 end

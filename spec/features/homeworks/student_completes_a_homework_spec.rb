@@ -1,12 +1,11 @@
-RSpec.describe 'Student completes a homework', type: :feature, js: true, default_creates: :true do
-
+RSpec.describe 'Student completes a homework', type: :feature, js: true, default_creates: true do
   before do
     setup_subject_database
     sign_in student
   end
 
   context 'when looking at the challenges' do
-    let(:homework_ten_percent) { create(:homework, topic: topic, classroom: classroom, required: 10 ) }
+    let(:homework_ten_percent) { create(:homework, topic: topic, classroom: classroom, required: 10) }
     let(:quiz) { create(:new_quiz) }
 
     before do

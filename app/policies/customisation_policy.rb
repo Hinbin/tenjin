@@ -11,5 +11,4 @@ class CustomisationPolicy < ApplicationPolicy
   def update?
     true
   end
-  
 end

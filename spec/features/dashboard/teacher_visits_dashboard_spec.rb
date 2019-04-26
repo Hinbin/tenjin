@@ -1,5 +1,4 @@
-RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default_creates: :true do
-  
+RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default_creates: true do
   let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
 
   before do
@@ -17,7 +16,7 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
 
     it 'allows you to go to a selected classroom' do
       find('tr[data-classroom="' + classroom.id.to_s + '"]').click
-      expect(current_path).to eq(classroom_path(classroom))
+      expect(page).to have_current_path(classroom_path(classroom))
     end
 
     it 'shows a link to the classrooms in the nav bar' do
@@ -28,5 +27,4 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
       expect(page).to have_no_content('i.fa-star')
     end
   end
-
 end

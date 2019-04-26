@@ -93,7 +93,7 @@ class QuizzesController < ApplicationController
                       end
     when 'show?'
       return flash[:alert] = 'Quiz does not belong to you' if exception.record.active?
-                       
+
       flash[:notice] = 'The quiz has finished'
 
     end

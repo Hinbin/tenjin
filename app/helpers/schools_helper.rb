@@ -8,10 +8,9 @@ module SchoolsHelper
     when 'failed'
       icon('fas', 'times', style: 'color:red')
     when 'needed'
-      icon('fas', 'exclamation-triangle', style: 'color:red' )
+      icon('fas', 'exclamation-triangle', style: 'color:red')
     else
       icon('fas', 'question')
     end
   end
-
 end

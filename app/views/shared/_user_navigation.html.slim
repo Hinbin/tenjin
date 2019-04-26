@@ -23,7 +23,7 @@ nav class="navbar navbar-expand-md navbar-dark justify-content-between bg-black"
           td.text-white#challenge-points =current_user.challenge_points          
     p.m-2.text-white = current_user.forename + ' ' + current_user.surname
     =link_to(destroy_admin_session_path, method: :delete) do
-      button class='btn btn-light' Logout
+      button class='btn btn-light-outline' Logout
 
 
       

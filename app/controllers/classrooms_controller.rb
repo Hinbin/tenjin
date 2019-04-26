@@ -4,7 +4,7 @@ class ClassroomsController < ApplicationController
 
   def show
     authorize @classroom
-    @students = User.joins(enrollments: :classroom).where(role: 'student', enrollments:{ classroom: @classroom } )
+    @students = User.joins(enrollments: :classroom).where(role: 'student', enrollments: { classroom: @classroom })
     @homeworks = Homework.includes(:homework_progresses).where(classroom: @classroom)
   end
 

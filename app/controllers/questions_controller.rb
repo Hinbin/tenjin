@@ -70,5 +70,4 @@ class QuestionsController < ApplicationController
   def new_question_params
     params.require(:topic).permit(:topic_id)
   end
-
 end

@@ -32,7 +32,7 @@ class HomeworksController < ApplicationController
     @homework.destroy
   end
 
-  private 
+  private
 
   def set_classroom
     @classroom = Classroom.find(new_homework_params[:classroom_id])
@@ -54,5 +54,4 @@ class HomeworksController < ApplicationController
     flash[:alert] = 'Error! No classroom given when trying to create homework'
     redirect_to dashboard_path
   end
-
 end

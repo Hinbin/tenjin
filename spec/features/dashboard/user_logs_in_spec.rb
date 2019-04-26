@@ -10,7 +10,7 @@ RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
 
     before { visit root_path }
 
-    it { is_expected.to have_link('Log In') }
+    it { is_expected.to have_link('Login') }
     it { is_expected.to have_content('TENJIN') }
   end
 
@@ -19,7 +19,7 @@ RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
       stub_omniauth
       visit root_path
       student_wonde
-      click_link 'Log In'
+      click_link 'Login'
     end
 
     it 'logs me in' do
@@ -36,7 +36,7 @@ RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
   it 'displays log in error messages' do
     visit root_path
     stub_omniauth
-    click_link 'Log In'
+    click_link 'Login'
     expect(page).to have_text('Your account has not been found')
   end
 end

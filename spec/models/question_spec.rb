@@ -49,7 +49,7 @@ RSpec.describe Question, type: :model, default_creates: true do
 
   describe '.check_short_answer' do
     let(:question) { create(:question, question_type: 'multiple') }
-    let(:answer) { create(:answer, question: question, correct: false)}
+    let(:answer) { create(:answer, question: question, correct: false) }
 
     context 'when switching a question to a short answer question' do
       it 'changes all existing answers to be correct' do

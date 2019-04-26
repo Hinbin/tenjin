@@ -53,7 +53,8 @@ class Challenge::UpdateChallengeProgress
   end
 
   def find_challenge_progress(challenge)
-    ChallengeProgress.where('user_id = ? AND challenge_id = ?', @quiz.user, challenge).first_or_create! do |challenge_progress|
+    ChallengeProgress.where('user_id = ? AND challenge_id = ?', @quiz.user, challenge)
+                     .first_or_create! do |challenge_progress|
       challenge_progress.challenge = challenge
       challenge_progress.user = @quiz.user
       challenge_progress.progress = 0

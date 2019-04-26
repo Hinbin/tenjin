@@ -21,7 +21,8 @@ RSpec.describe Enrollment, type: :model do
     end
 
     it 'validates uniqueness of user scoped to classroom' do
-      expect { create(:enrollment, classroom: classrooms[0], user: student) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { create(:enrollment, classroom: classrooms[0], user: student) }
+        .to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 

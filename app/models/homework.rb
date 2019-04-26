@@ -15,11 +15,9 @@ class Homework < ApplicationRecord
   private
 
   def due_date_cannot_be_in_the_past
-    if due_date.present? && due_date < DateTime.now
-      errors.add(:due_date, "can't be in the past")
-    end
-  end  
-  
+    errors.add(:due_date, "can't be in the past") if due_date.present? && due_date < DateTime.now
+  end
+
   def create_homework_progresses
     users.where(role: 'student').each do |u|
       HomeworkProgress.create(user: u, homework: self, progress: 0, completed: false)
@@ -29,5 +27,4 @@ class Homework < ApplicationRecord
   def destroy_homework_progresses
     HomeworkProgress.where(homework: self).destroy_all
   end
-
 end

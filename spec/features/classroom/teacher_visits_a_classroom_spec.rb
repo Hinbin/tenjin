@@ -1,4 +1,4 @@
-RSpec.describe 'User visits a classroom', type: :feature, js: true, default_creates: :true do
+RSpec.describe 'User visits a classroom', type: :feature, js: true, default_creates: true do
   let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
   let(:homework) { create(:homework, classroom: classroom) }
 

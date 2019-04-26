@@ -32,11 +32,9 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
       question.topic.reload
       expect(question.topic.name).to eq(new_topic_name)
     end
-
   end
 
   context 'when visiting the subject index page' do
-
     before do
       question
       visit(questions_path)
@@ -49,7 +47,6 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
     it 'shows the links for a topic' do
       expect(page).to have_link(question.topic.name)
     end
-
   end
 
   context 'when editing a question' do
@@ -93,9 +90,7 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
         click_button('Create another question')
         expect(page).to have_content('Please select at least one correct answer')
       end
-
     end
-
 
     context 'when showing a short answer question' do
       before do
@@ -147,7 +142,6 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
       it 'does not allow you to remove an answer' do
         expect(page).to have_no_link('Remove')
       end
-
     end
 
     it 'allows you to add an answer' do

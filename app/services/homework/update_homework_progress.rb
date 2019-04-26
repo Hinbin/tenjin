@@ -6,23 +6,22 @@ class Homework::UpdateHomeworkProgress
 
   def call
     completed_homework = false
-    @homework_progresses.each do |h|
-      check_percentage_correct(h)
+    @homework_progresses.each do |progress|
+      check_percentage_correct(progress)
     end
-    return OpenStruct.new(success?: true, completed?: completed_homework, errors: nil)
+    OpenStruct.new(success?: true, completed?: completed_homework, errors: nil)
   end
 
-  def check_percentage_correct(h)
-    return unless @quiz.topic == h.homework.topic
+  def check_percentage_correct(progress)
+    return unless @quiz.topic == progress.homework.topic
 
-    check_progress_percentage(@quiz.answered_correct.to_f / @quiz.num_questions_asked.to_f, h)
+    check_progress_percentage(@quiz.answered_correct.to_f / @quiz.num_questions_asked.to_f, progress)
   end
 
-  def check_progress_percentage(percentage, h)
+  def check_progress_percentage(percentage, progress)
     percentage *= 100
-    h.progress = percentage if percentage > h.progress
-    h.completed = true if h.progress >= h.homework.required && h.completed == false
-    h.save if h.changed?
+    progress.progress = percentage if percentage > progress.progress
+    progress.completed = true if progress.progress >= progress.homework.required && progress.completed == false
+    progress.save if progress.changed?
   end
-
 end

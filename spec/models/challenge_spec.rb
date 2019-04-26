@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Challenge, :focus, type: :model do
+RSpec.describe Challenge, type: :model do
   let(:subject) { create(:subject) }
   let(:topic) { create(:topic, subject: subject) }
   let(:different_subject_topic) { create(:topic) }
@@ -17,7 +17,7 @@ RSpec.describe Challenge, :focus, type: :model do
     end
 
     it 'has the default length of a week' do
-      expect(Challenge.create_challenge(topic.subject).end_date).to be_within(1.second).of (DateTime.now + 1.week)
+      expect(Challenge.create_challenge(topic.subject).end_date).to be_within(1.second).of(DateTime.now + 1.week)
     end
 
     it 'is created with a random type when one not given' do
@@ -36,12 +36,14 @@ RSpec.describe Challenge, :focus, type: :model do
 
     it 'allows me to specify a duration' do
       srand(1)
-      expect(Challenge.create_challenge(topic.subject, duration: 3.days).end_date).to be_within(1.second).of (DateTime.now + 3.days)
+      expect(Challenge.create_challenge(topic.subject, duration: 3.days).end_date)
+        .to be_within(1.second).of(DateTime.now + 3.days)
     end
 
     it 'allows me to specify a duration in hours' do
       srand(1)
-      expect(Challenge.create_challenge(topic.subject, duration: 36.hours).end_date).to be_within(1.second).of (DateTime.now + 36.hours)
+      expect(Challenge.create_challenge(topic.subject, duration: 36.hours).end_date)
+        .to be_within(1.second).of(DateTime.now + 36.hours)
     end
 
     it 'defaults to a multiplier of x1' do

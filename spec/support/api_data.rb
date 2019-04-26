@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.shared_context 'api_data', shared_context: :metadata do
-  let(:school_api_data) { School.from_wonde(OpenStruct.new(id: SecureRandom.hex, name: FFaker::Education.school), SecureRandom.hex) }
+  let(:school_api_data) do
+    School.from_wonde(OpenStruct.new(id: SecureRandom.hex, name: FFaker::Education.school), SecureRandom.hex)
+  end
   let(:user_api_data) do
     OpenStruct.new(data: [OpenStruct.new(id: SecureRandom.hex, upi: SecureRandom.hex,
                                          forename: FFaker::Name.first_name, surname: FFaker::Name.last_name)])
@@ -23,7 +25,10 @@ RSpec.shared_context 'wonde_test_data', shared_context: :metadata do
   let(:school_id) { 'A852030759' }
   let(:school_name) { 'Outwood Grange Academy 1532082212' }
   let(:school_params) { ActionController::Parameters.new(token: school_token, client_id: school_id) }
-  let(:school) { create(:school, client_id: school_id, name: school_name, token: school_token, sync_status: 'successful', permitted: true) }
+  let(:school) do
+    create(:school, client_id: school_id, name: school_name,
+                    token: school_token, sync_status: 'successful', permitted: true)
+  end
 
   let(:subject_to_map) { 'Sociology' }
   let(:default_subject_map) { create(:default_subject_map, name: subject_to_map) }

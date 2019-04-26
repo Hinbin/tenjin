@@ -13,7 +13,6 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
       create(:enrollment, classroom: classroom_cs, user: student)
       log_in
       expect(page).to have_css('img[src*=computer-science]')
-
     end
 
     it 'shows a default subject image if there is not a specific one' do
@@ -56,5 +55,4 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
       expect(page).to have_css('hr.primary-orange')
     end
   end
-
 end

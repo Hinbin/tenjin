@@ -11,7 +11,6 @@ class SubjectMapsController < ApplicationController
     subject_map.school.sync_status = 'needed'
     subject_map.school.save
     subject_map.save
-
   end
 
   private

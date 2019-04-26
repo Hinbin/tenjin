@@ -33,13 +33,13 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
 
     it 'flashes an update if someone else has a score' do
       Leaderboard::BroadcastLeaderboardPoint.new(TopicScore.where(user_id: User.second).first).call
-      expect(page).to have_css('tr#row-' + User.second.id.to_s + '.score-changed')
+      expect(page).to have_css("tr#row-#{User.second.id}.score-changed")
     end
 
     it 'receives two scores at the same time for different users' do
       Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score).call
       Leaderboard::BroadcastLeaderboardPoint.new(TopicScore.where(user_id: User.second).first).call
-      expect(page).to have_css('tr#row-' + student.id.to_s + '.score-changed').and have_css('tr#row-' + User.second.id.to_s + '.score-changed')
+      expect(page).to have_css("tr#row-#{student.id}.score-changed").and have_css("tr#row-#{User.second.id}.score-changed")
     end
 
     it 'only displays 10 users after adding a new person' do
@@ -102,12 +102,12 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
 
     it 'updates if someone from the same schools has a score' do
       Leaderboard::BroadcastLeaderboardPoint.new(TopicScore.second).call
-      expect(page).to have_css('tr#row-' + TopicScore.second.user.id.to_s + '.score-changed')
+      expect(page).to have_css("tr#row-#{TopicScore.second.user.id}.score-changed")
     end
 
     it 'updates me when I have a score' do
       Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score).call
-      expect(page).to have_css('tr#row-' + student.id.to_s + '.score-changed')
+      expect(page).to have_css("tr#row-#{student.id}.score-changed")
     end
   end
 
@@ -152,6 +152,5 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       Leaderboard::BroadcastLeaderboardPoint.new(different_topic_score).call
       expect(page).to have_no_css('tr.score-changed')
     end
-
   end
 end

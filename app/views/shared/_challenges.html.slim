@@ -17,5 +17,5 @@ section.page-section.text-center#challenges
                   td.text-left =c.stringify
                   td =write_challenge_progress(c.challenge_progresses.first)
                   td.d-none.d-sm-table-cell =c.points
-                  td =distance_of_time_in_words(DateTime.now, c.end_date) 
+                  td =challenge_time_left(c)
       
