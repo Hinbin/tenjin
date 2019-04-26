@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Challenge, type: :model do
+RSpec.describe Challenge, :focus, type: :model do
   let(:subject) { create(:subject) }
   let(:topic) { create(:topic, subject: subject) }
   let(:different_subject_topic) { create(:topic) }
@@ -11,7 +11,7 @@ RSpec.describe Challenge, type: :model do
                        number_required: 10, end_date: DateTime.now + 1.hour)
   end
 
-  describe '#create_challenge', :focus do
+  describe '#create_challenge' do
     it 'creates a new challenge for a given subject' do
       expect(Challenge.create_challenge(topic.subject).topic.subject).to eq(subject)
     end
