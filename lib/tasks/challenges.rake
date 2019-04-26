@@ -6,6 +6,7 @@ namespace :challenges do
 
   desc 'Add new challenges'
   task add_challenges: :environment do
-    Challenge::AddNewChallenges.new.call
+    today = Date.today
+    Challenge::AddNewChallenges.new.call if today.monday? || today.wednesday? || today.saturday?
   end
 end
