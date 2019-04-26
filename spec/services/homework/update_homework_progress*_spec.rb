@@ -15,11 +15,17 @@ RSpec.describe Homework::UpdateHomeworkProgress do
                     answered_correct: 10, active: false, user: student)
     end
 
-    let(:quiz_7_out_of_10) { create(:quiz, subject: subject, topic: topic, num_questions_asked: 10, answered_correct: 7, active: false, user: student) }
-    let(:quiz_1_out_of_3) { create(:quiz, subject: subject, topic: topic, num_questions_asked: 3, answered_correct: 1, active: false, user: student) }
+    let(:quiz_7_out_of_10) do
+      create(:quiz, subject: subject, topic: topic, num_questions_asked: 10,
+                    answered_correct: 7, active: false, user: student)
+    end
+    let(:quiz_1_out_of_3) do
+      create(:quiz, subject: subject, topic: topic, num_questions_asked: 3,
+                    answered_correct: 1, active: false, user: student)
+    end
     let(:homework_full_marks) { create(:homework, topic: topic, classroom: classroom, required: 100) }
     let(:homework_three_marks) { create(:homework, topic: topic, classroom: classroom, required: 30) }
-    let(:homework_different_topic) { create(:hoemwork, topic: create(:topic), classroom: classroom, required: 100 ) }
+    let(:homework_different_topic) { create(:hoemwork, topic: create(:topic), classroom: classroom, required: 100) }
 
     it 'flags homework as complete if the required number of questions have been answered correctly' do
       described_class.new(quiz_full_marks).call

@@ -39,7 +39,8 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     it 'receives two scores at the same time for different users' do
       Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score).call
       Leaderboard::BroadcastLeaderboardPoint.new(TopicScore.where(user_id: User.second).first).call
-      expect(page).to have_css("tr#row-#{student.id}.score-changed").and have_css("tr#row-#{User.second.id}.score-changed")
+      expect(page).to have_css("tr#row-#{student.id}.score-changed")
+        .and have_css("tr#row-#{User.second.id}.score-changed")
     end
 
     it 'only displays 10 users after adding a new person' do

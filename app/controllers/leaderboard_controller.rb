@@ -40,11 +40,10 @@ class LeaderboardController < ApplicationController
   def set_javascript_variables
     gon.subject = @subject
     gon.school = @school
-    gon.school_group = @school.school_group if @school.school_group.present?
+    gon.school_group = @school.school_group
     gon.user = current_user.id
     gon.params = leaderboard_params
     gon.path = leaderboard_path(id: @subject.name)
-
   end
 
   def set_topic_name

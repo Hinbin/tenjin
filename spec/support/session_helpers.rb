@@ -5,7 +5,7 @@ module SessionHelpers
     expect(page).to have_content('START A QUIZ')
   end
 
-  def stub_omniauth
+  def stub_omniauth # rubocop:disable Metrics/MethodLength
     OmniAuth.config.test_mode = true
     OmniAuth.config.mock_auth[:wonde] =
       OmniAuth::AuthHash.new(

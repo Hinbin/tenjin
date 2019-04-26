@@ -16,6 +16,5 @@ FactoryBot.define do
         asked_question.quiz.user = evaluator.user
       end
     end
-
   end
 end

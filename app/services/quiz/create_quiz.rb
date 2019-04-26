@@ -27,7 +27,7 @@ class Quiz::CreateQuiz
     @quiz.topic = @lucky_dip ? nil : @topic
   end
 
-  def initialise_questions
+  def initialise_questions # rubocop:disable Metrics/MethodLength
     questions = if @lucky_dip
                   # We want an even distribution of topics where possible
                   question_array = []

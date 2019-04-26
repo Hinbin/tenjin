@@ -8,7 +8,11 @@ module ApplicationHelper
   end
 
   def print_subject_image(url)
-    url = (Rails.application.assets || ::Sprockets::Railtie.build_environment(Rails.application)).find_asset(url).nil? ? nil : url
+    # Find if we have an image for this subject, if not return the default image
+    if (Rails.application.assets || ::Sprockets::Railtie.build_environment(Rails.application)).find_asset(url).nil?
+      url = nil
+    end
+
     image_url url || 'default-subject.jpg'
   end
 

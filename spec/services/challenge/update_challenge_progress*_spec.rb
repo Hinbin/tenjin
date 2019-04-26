@@ -13,8 +13,14 @@ RSpec.describe Challenge::UpdateChallengeProgress do
                     answered_correct: 10, active: false, user: student)
     end
 
-    let(:quiz_7_out_of_10) { create(:quiz, subject: subject, topic: topic, num_questions_asked: 10, answered_correct: 7, active: false, user: student) }
-    let(:quiz_1_out_of_3) { create(:quiz, subject: subject, topic: topic, num_questions_asked: 3, answered_correct: 1, active: false, user: student) }
+    let(:quiz_7_out_of_10) do
+      create(:quiz, subject: subject, topic: topic, num_questions_asked: 10,
+                    answered_correct: 7, active: false, user: student)
+    end
+    let(:quiz_1_out_of_3) do
+      create(:quiz, subject: subject, topic: topic, num_questions_asked: 3,
+                    answered_correct: 1, active: false, user: student)
+    end
     let(:challenge_full_marks) do
       create(:challenge, topic: topic, challenge_type: 'number_correct',
                          number_required: 10, end_date: DateTime.now + 1.hour)
@@ -68,7 +74,9 @@ RSpec.describe Challenge::UpdateChallengeProgress do
     let(:challenge_streak_of_five) do
       create(:challenge, topic: topic, challenge_type: 'streak', number_required: 5, end_date: DateTime.now + 1.hour)
     end
-    let(:completed_challenge_progress) { create(:challenge_progress, challenge: challenge_streak_of_five, completed: true) }
+    let(:completed_challenge_progress) do
+      create(:challenge_progress, challenge: challenge_streak_of_five, completed: true)
+    end
 
     before do
       challenge_streak_of_five
@@ -98,9 +106,12 @@ RSpec.describe Challenge::UpdateChallengeProgress do
 
   context 'when updating a number of points challenge' do
     let(:challenge_get_fifty_points) do
-      create(:challenge, topic: topic, challenge_type: 'number_of_points', number_required: 50, end_date: DateTime.now + 1.hour)
+      create(:challenge, topic: topic, challenge_type: 'number_of_points',
+                         number_required: 50, end_date: DateTime.now + 1.hour)
     end
-    let(:nearly_complete_fifty_point_progress) { create(:challenge_progress, progress: 45, challenge: challenge_get_fifty_points, user: student) }
+    let(:nearly_complete_fifty_point_progress) do
+      create(:challenge_progress, progress: 45, challenge: challenge_get_fifty_points, user: student)
+    end
     let(:quiz_five_points) { create(:quiz, subject: subject, topic: topic, user: student) }
 
     before do

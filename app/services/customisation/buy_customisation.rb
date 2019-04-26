@@ -5,8 +5,8 @@ class Customisation::BuyCustomisation
   end
 
   def call
-    return OpenStruct.new(success?: false, user: @user, errors: 'Customisation not found') unless @customisation.present?
-    return OpenStruct.new(success?: false, user: @user, errors: 'You do not have enough points') unless funds_present?
+    return error_openstruct('Customisation not found') unless @customisation.present?
+    return error_openstruct('You do not have enough points') unless funds_present?
     return unless @user.present?
 
     purchase
@@ -26,5 +26,9 @@ class Customisation::BuyCustomisation
 
   def purchase_dashboard_style
     @user.dashboard_style = @customisation.value
+  end
+
+  def error_openstruct(error)
+    OpenStruct.new(success?: false, user: @user, errors: error)
   end
 end

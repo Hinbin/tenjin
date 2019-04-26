@@ -2,7 +2,7 @@ class SubjectMap < ApplicationRecord
   belongs_to :subject, optional: true
   belongs_to :school
 
-  validates :client_id, presence: true, uniqueness: true 
+  validates :client_id, presence: true, uniqueness: true
   validates :client_subject_name, presence: true
 
   def self.from_wonde(school, subject_data)

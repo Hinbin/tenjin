@@ -19,13 +19,13 @@ class QuizzesController < ApplicationController
     authorize @quiz
     gon.quiz_id = @quiz.id
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
-    @percent_complete = (@quiz.num_questions_asked.to_f / @quiz.questions.length.to_f) * 100.to_f
+    calculate_percent_completed
     render Quiz::RenderQuestionType.new(question: @question).call
   end
 
   # GET /quizzes/new
   def new
-    @subject = Subject.where('name = ?', params.permit(:subject).dig(:subject)).first
+    set_subject
     authorize Quiz.new(subject: @subject)
 
     if @subject.blank?
@@ -61,9 +61,12 @@ class QuizzesController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_quiz
     @quiz = Quiz.find(params[:id])
+  end
+
+  def set_subject
+    @subject = Subject.where('name = ?', params.permit(:subject).dig(:subject)).first
   end
 
   def set_question
@@ -98,5 +101,9 @@ class QuizzesController < ApplicationController
 
     end
     redirect_to dashboard_path
+  end
+
+  def calculate_percent_completed
+    @percent_complete = (@quiz.num_questions_asked.to_f / @quiz.questions.length.to_f) * 100.to_f
   end
 end

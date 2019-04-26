@@ -4,7 +4,6 @@ RSpec.describe Quiz::CreateQuiz, '#call' do
   include_context 'default_creates'
 
   context 'when creating a lucky dip' do
-
     let(:quiz) { Quiz::CreateQuiz.new(user: student, topic: 'Lucky Dip', subject: subject).call }
     let(:quiz_with_topic) { Quiz::CreateQuiz.new(user: student, topic: topic.id, subject: subject).call }
     let(:topics) { create_list(:topic, 10, subject: subject) }

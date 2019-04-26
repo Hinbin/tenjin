@@ -21,7 +21,6 @@ RSpec.describe School::AddSchool, '#call' do
     it 'creates a school', :vcr do
       expect(school_in_db.name).to eq 'Outwood Grange Academy 1532082212'
     end
-
   end
 
   context 'when given updated school data' do

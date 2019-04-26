@@ -51,5 +51,5 @@ class Enrollment < ApplicationRecord
       e.classroom = classroom
       e.save
     end
-end
+  end
 end

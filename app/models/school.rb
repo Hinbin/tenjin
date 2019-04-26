@@ -38,5 +38,4 @@ class School < ApplicationRecord
   def valid_subject_count
     subject_maps.where.not(subject_id: nil).count
   end
-
 end

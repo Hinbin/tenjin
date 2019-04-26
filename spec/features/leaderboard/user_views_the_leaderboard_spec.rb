@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'support/api_data'
 require 'pry'
 
-RSpec.describe 'User views the leaderboard',   type: :feature, js: true do
+RSpec.describe 'User views the leaderboard', type: :feature, js: true do
   include_context 'default_creates'
 
   before do

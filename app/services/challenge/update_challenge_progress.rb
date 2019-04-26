@@ -18,47 +18,47 @@ class Challenge::UpdateChallengeProgress
     end
   end
 
-  def check_number_correct(challenge, challenge_progress)
+  def check_number_correct(challenge, progress)
     return unless @quiz.topic == challenge.topic
 
-    check_progress_percentage(@quiz.answered_correct.to_f / challenge.number_required.to_f, challenge_progress)
+    check_progress_percentage(@quiz.answered_correct.to_f / challenge.number_required.to_f, progress)
   end
 
-  def check_streak(challenge, challenge_progress)
+  def check_streak(challenge, progress)
     return unless @quiz.topic == challenge.topic
 
-    check_progress_percentage(@quiz.streak.to_f / challenge.number_required.to_f, challenge_progress)
+    check_progress_percentage(@quiz.streak.to_f / challenge.number_required.to_f, progress)
   end
 
-  def check_number_of_points(challenge, challenge_progress)
+  def check_number_of_points(challenge, progress)
     return unless @question_topic == challenge.topic
 
-    challenge_progress.progress += @number_to_add
-    complete_challenge(challenge_progress) if challenge_progress.progress >= challenge.number_required
-    challenge_progress.save if challenge_progress.changed?
+    progress.progress += @number_to_add
+    complete_challenge(progress) if progress.progress >= challenge.number_required
+    progress.save if progress.changed?
   end
 
-  def check_progress_percentage(percentage, challenge_progress)
+  def check_progress_percentage(percentage, progress)
     percentage *= 100
-    challenge_progress.progress = percentage if percentage > challenge_progress.progress
-    complete_challenge(challenge_progress) if challenge_progress.progress >= 100 && challenge_progress.completed == false
-    challenge_progress.save if challenge_progress.changed?
+    progress.progress = percentage if percentage > progress.progress
+    complete_challenge(progress) if progress.progress >= 100 && progress.completed == false
+    progress.save if progress.changed?
   end
 
-  def complete_challenge(challenge_progress)
-    challenge_progress.completed = true
-    challenge_progress.user.challenge_points = 0 if challenge_progress.user.challenge_points.nil?
-    challenge_progress.user.challenge_points += challenge_progress.challenge.points
-    challenge_progress.user.save
+  def complete_challenge(progress)
+    progress.completed = true
+    progress.user.challenge_points = 0 if progress.user.challenge_points.nil?
+    progress.user.challenge_points += progress.challenge.points
+    progress.user.save
   end
 
   def find_challenge_progress(challenge)
     ChallengeProgress.where('user_id = ? AND challenge_id = ?', @quiz.user, challenge)
-                     .first_or_create! do |challenge_progress|
-      challenge_progress.challenge = challenge
-      challenge_progress.user = @quiz.user
-      challenge_progress.progress = 0
-      challenge_progress.completed = false
+                     .first_or_create! do |progress|
+      progress.challenge = challenge
+      progress.user = @quiz.user
+      progress.progress = 0
+      progress.completed = false
     end
   end
 end

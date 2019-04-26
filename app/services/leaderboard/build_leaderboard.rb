@@ -31,7 +31,7 @@ class Leaderboard::BuildLeaderboard
     Arel::Nodes::NamedFunction.new('LEFT', [users[:surname], 1]).as('surname')
   end
 
-  def base_query(topic_table)
+  def base_query(topic_table) # rubocop:disable Metrics/AbcSize
     @query = users.project(users[:id],
                            users[:forename],
                            surname_initial,
