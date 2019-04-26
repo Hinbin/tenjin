@@ -1,6 +1,6 @@
 class Challenge::ProcessExpiredChallenges
   def initialize
-    @expired_challenges = Challenge.where('end_date > ?', DateTime.now)
+    @expired_challenges = Challenge.where('end_date < ?', DateTime.now)
   end
 
   def call
