@@ -36,17 +36,17 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
 
     it 'indicates if the answer I gave was right' do
       find(id: correct_response_selector).click
-      expect(page).to have_css('div#' + correct_response_selector + '.correct-answer')
+      expect(page).to have_css('button#' + correct_response_selector + '.correct-answer')
     end
 
     it 'indicates if the answer I gave was wrong' do
       find(id: incorrect_response_selector).click
-      expect(page).to have_css('div#' + incorrect_response_selector + '.incorrect-answer')
+      expect(page).to have_css('button#' + incorrect_response_selector + '.incorrect-answer')
     end
 
     it 'indicates the correct answer if the answer I gave was wrong' do
       find(id: incorrect_response_selector).click
-      expect(page).to have_css('div#' + correct_response_selector + '.correct-answer')
+      expect(page).to have_css('button#' + correct_response_selector + '.correct-answer')
     end
 
     it 'uses icons to show which questions are right' do
@@ -156,14 +156,20 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       end
 
       it 'shows the current multiplier' do
-        expect(page).to have_text('Multiplier: 1x')
+        expect(page).to have_css('#multiplier', text: 1)
       end
 
       it 'moves multipliers if I have enough questions right' do
         create(:multiplier, score: 1, multiplier: 2)
         fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
         first(class: 'next-button').click
-        expect(page).to have_text('Multiplier: 2x')
+        expect(page).to have_css('#multiplier', text: 2)
+      end
+
+      it 'updates my multiplier straight after answering' do
+        create(:multiplier, score: 1, multiplier: 2)
+        fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
+        expect(page).to have_css('#multiplier', text: 2)
       end
     end
 
@@ -186,14 +192,29 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       it 'increases my streak if I am right' do
         fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
         first(class: 'next-button').click
-        expect(page).to have_text('Streak: 4')
+        expect(page).to have_css('#streak', text: 4)
       end
 
       it 'reset my streak to 0 if I am wrong' do
         fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
         first(class: 'next-button').click
+        expect(page).to have_css('#streak', text: 0)
+      end
 
-        expect(page).to have_text('Streak: 0')
+      it 'updates my streak straight away after answering' do
+        fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
+        expect(page).to have_css('#streak', text: 4)
+      end
+
+      it 'shows the number correct I have so far' do
+        fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
+        first(class: 'next-button').click
+        expect(page).to have_css('#answeredCorrect', text: 1)
+      end
+
+      it 'updates my number correct straight after answering' do
+        fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
+        expect(page).to have_css('#answeredCorrect', text: 1)
       end
     end
   end

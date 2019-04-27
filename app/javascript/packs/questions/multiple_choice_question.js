@@ -1,7 +1,10 @@
-function processMultipleChoiceResponse (results, guess) {
-  const guessDiv = '#' + guess
+import updateQuizStatistics from 'packs/questions/questions_shared'
 
-  var correct = false
+function processMultipleChoiceResponse (serverResponse, guess) {
+  const guessDiv = '#' + guess
+  const results = serverResponse.answer
+  let correct = false
+
   for (var result of results) {
     const resultID = '#response-' + result.id
 
@@ -17,11 +20,13 @@ function processMultipleChoiceResponse (results, guess) {
     $(guessDiv).append('<i class="fas fa-times fa-lg float-right my-1"></i>')
   }
 
+  updateQuizStatistics(serverResponse)
+
   $('#nextButton').removeClass('invisible')
   $('#nextButton').focus()
 }
 
-$(document).on('turbolinks:load', function () {
+$(document).on('ready turbolinks:load', function () {
   $('.multiple-choice-button').click((click) => {
     if ($(click.target).hasClass('disabled')) {
       return
@@ -42,3 +47,9 @@ $(document).on('turbolinks:load', function () {
     })
   })
 })
+
+if (!Turbolinks) {
+  location.reload()
+}
+
+Turbolinks.dispatch('turbolinks:load')

@@ -2,11 +2,16 @@
   .progress.mb-3
     .progress-bar role="progressbar" style="width:#{@percent_complete.to_s}%" aria-valuenow="#{@percent_complete.to_s}" aria-valuemin="0" aria-valuemax="100"
   .row.justify-content-around
-    .col-3
-      p=icon('fas', 'level-up-alt', style: 'color:black') + ": #{@quiz.streak}"
-    .col-3
-      p=icon('fas', 'check', style: 'color:green') + ": #{@quiz.answered_correct}"
-    .col-3
-      p=="#{@multiplier.multiplier} " + \
-        icon('fas', 'times', style: 'color:black')
+    .col-3.text-center
+      ul.list-inline
+        li.list-inline-item=icon('fas', 'level-up-alt', style: 'color:black') + ": "
+        li.list-inline-item#streak="#{@quiz.streak}"
+    .col-3.text-center
+      ul.list-inline
+        li.list-inline-item=icon('fas', 'check', style: 'color:green') + ": "
+        li.list-inline-item#answeredCorrect ="#{@quiz.answered_correct}"
+    .col-3.text-center
+      ul.list-inline
+        li.list-inline-item#multiplier ="#{@multiplier.multiplier}"
+        li.list-inline-item=icon('fas', 'times', style: 'color:black')
   

@@ -10,7 +10,9 @@ class Quiz::CheckAnswer
     check_answer_correct unless already_answered?
 
     Quiz::MoveQuizForward.new(quiz: @quiz).call
-    Answer.where(question: @question).where(correct: true)
+    { answer: Answer.where(question: @question).where(correct: true), streak: @quiz.streak,
+      answeredCorrect: @quiz.answered_correct,
+      multiplier: Multiplier.where('score <= ?', @quiz.streak).last.multiplier }
   end
 
   def already_answered?

@@ -1,5 +1,9 @@
-function processShortResponse (results, guess) {
-  var correct = false
+import updateQuizStatistics from 'packs/questions/questions_shared'
+
+function processShortResponse (serverResponse, guess) {
+  const results = serverResponse.answer
+  let correct = false
+
   for (var result of results) {
     if (result.text.toUpperCase() === guess.toUpperCase()) {
       $('#shortAnswerButton').addClass('correct-answer')
@@ -24,11 +28,13 @@ function processShortResponse (results, guess) {
     }
   }
 
+  updateQuizStatistics(serverResponse)
+
   $('#nextButton').removeClass('invisible')
   $('#nextButton').focus()
 }
 
-$(document).on('turbolinks:load', function () {
+$(document).on('ready turbolinks:load', function () {
   // If someone presses enter, cause the submit answer button to be pressed
   $('#shortAnswerText').keypress((e) => {
     if (e.keyCode === 13) {
@@ -52,3 +58,9 @@ $(document).on('turbolinks:load', function () {
     })
   })
 })
+
+if (!Turbolinks) {
+  location.reload()
+}
+
+Turbolinks.dispatch('turbolinks:load')

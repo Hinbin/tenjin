@@ -6,15 +6,11 @@ class QuizzesController < ApplicationController
   before_action :set_css_flavour, only: %i[new]
   rescue_from Pundit::NotAuthorizedError, with: :quiz_not_authorized
 
-  # GET /quizzes
-  # GET /quizzes.json
   def index
     quizzes = policy_scope(Quiz)
     redirect_to Quiz::SelectCorrectQuiz.new(quizzes: quizzes).call
   end
 
-  # GET /quizzes/1
-  # GET /quizzes/1.json
   def show
     authorize @quiz
     gon.quiz_id = @quiz.id
@@ -23,7 +19,6 @@ class QuizzesController < ApplicationController
     render Quiz::RenderQuestionType.new(question: @question).call
   end
 
-  # GET /quizzes/new
   def new
     set_subject
     authorize Quiz.new(subject: @subject)
@@ -39,8 +34,6 @@ class QuizzesController < ApplicationController
     end
   end
 
-  # POST /quizzes
-  # POST /quizzes.json
   def create
     topic = quiz_params.dig(:topic_id)
     subject = Subject.find(quiz_params.dig(:subject))
@@ -52,8 +45,6 @@ class QuizzesController < ApplicationController
     redirect_to quiz
   end
 
-  # PATCH/PUT /quizzes/1
-  # PATCH/PUT /quizzes/1.json
   def update
     authorize @quiz
     render(json: Quiz::CheckAnswer.new(quiz: @quiz, question: @question, answer_given: answer_params).call)
@@ -70,7 +61,7 @@ class QuizzesController < ApplicationController
   end
 
   def set_question
-    @question = @quiz.questions.limit(1).offset(@quiz.num_questions_asked).first
+    @question = @quiz.questions[@quiz.num_questions_asked]
   end
 
   def set_css_flavour
