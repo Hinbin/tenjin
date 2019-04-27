@@ -29,6 +29,24 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     end
   end
 
+  context 'when creating two quizzes in quick succession' do
+    it 'allows you to take a quiz if 40 seconds have passed'
+    it 'says how long they need to wait to create another quiz'
+  end
+
+  pending 'when creating a quiz for the same topic multiple times' do
+    it 'allows you to score points for the first attempt'
+    it 'allows you to score points for the third attempt'
+    it 'does not allow you to score points for the fourth attempt'
+    it 'informs the user they cannot currently score leaderboard points for this quiz'
+  end
+
+  pending 'the leaderboard job' do
+    it 'moves points to the all time point score'
+    it 'moves clears out the current leaderboard'
+  end
+
+
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }
 

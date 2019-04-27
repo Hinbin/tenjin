@@ -6,6 +6,7 @@ FactoryBot.define do
     answered_correct { rand(streak..num_questions_asked) }
     active { true }
     topic { nil }
+    question_order { (0..num_questions_asked).to_a.shuffle }
 
     user
     subject

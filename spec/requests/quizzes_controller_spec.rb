@@ -1,9 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'using a quiz', type: :request do
-  let(:school) { create(:school) }
-  let(:student) { create(:student, school: school) }
-
+RSpec.describe 'using a quiz', default_creates: true, type: :request do
   before do
     sign_in student
   end
@@ -66,26 +63,22 @@ RSpec.describe 'using a quiz', type: :request do
     context 'when trying to access a quiz' do
       it 'only lets me see a quiz that belongs to me' do
         diff_user = create(:student)
-        quiz = create(:quiz, user: diff_user)
+        quiz = create(:new_quiz, user: diff_user, question_order: [question.id])
         get quiz_path(id: quiz.id)
         expect(flash[:alert]).to match(/Quiz does not belong to you/)
       end
 
       it 'prevents me from looking at a finished quiz' do
-        quiz = create(:quiz, active: false)
+        quiz = create(:new_quiz, active: false, question_order: [question.id])
         get quiz_path(id: quiz.id)
         expect(flash[:notice]).to match(/The quiz has finished/)
       end
     end
 
     context 'when displaying a question' do
-      let(:question) { create(:question) }
       let(:multiplier) { create(:multiplier) }
-      let(:quiz) { create(:quiz, num_questions_asked: 0, user: student) }
-      let(:asked_question) { create(:asked_question, question: question, user: student, quiz: quiz) }
-      let(:a_subject) { create(:subject) }
-      let(:topic) { create(:topic, subject: a_subject) }
-      let(:classroom) { create(:classroom, subject: a_subject) }
+      let(:quiz) { create(:new_quiz, user: student, question_order: [question.id]) }
+      let(:classroom) { create(:classroom, subject: subject) }
 
       before do
         multiplier
@@ -94,21 +87,20 @@ RSpec.describe 'using a quiz', type: :request do
       it 'allows me to create a quiz' do
         create(:enrollment, school: school, classroom: classroom, user: student)
         create(:question, topic: topic)
-        post quizzes_path params: { quiz: { topic_id: topic, subject: a_subject } }
+        post quizzes_path params: { quiz: { topic_id: topic, subject: subject } }
         follow_redirect!
         expect(response).to render_template('quizzes/_question_top')
       end
 
       it 'renders a multiple choice quiz question' do
-        get quiz_path(id: asked_question.quiz.id)
+        get quiz_path(id: quiz.id)
         expect(response).to render_template('quizzes/question_multiple_choice')
       end
 
       it 'renders a single word answer question' do
-        asked_question = create(:asked_question,
-                                question: create(:question, question_type: 'short_answer'),
-                                user: student, quiz: quiz)
-        get quiz_path(id: asked_question.quiz.id)
+        question = create(:question, question_type: 'short_answer')
+        quiz.update_attribute(:question_order, [question.id])
+        get quiz_path(id: quiz.id)
         expect(response).to render_template('quizzes/question_short_response')
       end
     end

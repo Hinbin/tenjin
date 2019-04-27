@@ -61,7 +61,7 @@ class QuizzesController < ApplicationController
   end
 
   def set_question
-    @question = @quiz.questions[@quiz.num_questions_asked]
+    @question = Question.find(@quiz.question_order[@quiz.num_questions_asked - 1])
   end
 
   def set_css_flavour

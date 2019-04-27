@@ -14,7 +14,7 @@ class SubjectMapsController < ApplicationController
 
   private
 
-  def update_school
+  def update_school(subject_map)
     subject_map.school.sync_status = 'needed'
     subject_map.school.save
   end

@@ -35,10 +35,19 @@ class Quiz::CreateQuiz
                   # Keep getting random questions, one from each topic until we have at
                   # least 10 questions
 
-                  while question_array.length < 10
-                    question_array += Question.find_by_sql(["
+                  question_array += Question.find_by_sql(["
                     SELECT
                       DISTINCT ON (questions.topic_id)
+                      questions.topic_id, questions.*
+                    FROM questions
+                    INNER JOIN topics ON questions.topic_id = topics.id
+                    LEFT JOIN subjects ON subjects.id = topics.id
+                    WHERE subject_id = ?
+                    ORDER by questions.topic_id, random()", @subject_id])
+
+                  if question_array.length < 10
+                    # There are not 10 or more topics so try without getting one from each topic
+                    question_array += Question.find_by_sql(["SELECT
                       questions.topic_id, questions.*
                     FROM questions
                     INNER JOIN topics ON questions.topic_id = topics.id
@@ -55,5 +64,6 @@ class Quiz::CreateQuiz
                 end
 
     @quiz.questions = questions
+    @quiz.question_order = @quiz.questions.shuffle.pluck(:id)
   end
 end
