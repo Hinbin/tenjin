@@ -8,7 +8,7 @@ section.page-section.text-center#dashboard-styles
           h2.page-section-header.text-uppercase.text-white =style.name
           hr class=("small mb-5 primary-" + style.value)
           p.text-white =icon('fas', 'star', class: 'fa', style: 'color: yellow') + (' ' + style.cost.to_s)          
-          button.btn.btn-light.float-right.dashboard-buy-btn type='submit' data-customisation-type='dashboard_style' data-value=style.value id=('buy-dashboard-' + style.value) Buy
+          button.btn.btn-light-outline.float-right.dashboard-buy-btn type='submit' data-customisation-type='dashboard_style' data-value=style.value id=('buy-dashboard-' + style.value) Buy
 form#customisation name='customisation' method='post'
   = hidden_field_tag :authenticity_token, form_authenticity_token
   input#customisation-value name='customisation[value]' type="hidden"
