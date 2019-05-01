@@ -15,19 +15,29 @@ RSpec.describe Quiz::CreateQuiz, '#call' do
     end
 
     it 'has 10 questions' do
-      expect(quiz.questions.count).to eq(10)
+      expect(quiz.quiz.questions.count).to eq(10)
     end
 
     it 'creates a lucky dip' do
-      expect(quiz.questions.first.topic).not_to eq(quiz.questions.second.topic)
+      expect(quiz.quiz.questions.first.topic).not_to eq(quiz.quiz.questions.second.topic)
     end
 
     it 'does not have a topic for a lucky dip quiz' do
-      expect(quiz.topic).to eq(nil)
+      expect(quiz.quiz.topic).to eq(nil)
     end
 
     it 'sets the topic id for a non-lucky dip quiz' do
-      expect(quiz_with_topic.topic).to eq(topic)
+      expect(quiz_with_topic.quiz.topic).to eq(topic)
+    end
+
+    it 'logs the current date and time' do
+      quiz
+      expect(User.first.time_of_last_quiz).to be_within(1.second).of(Time.now)
+    end
+
+    it 'returns an error if cooldown has not elapsed' do
+      student.update_attribute(:time_of_last_quiz, Time.now)
+      expect(quiz.errors).to match(/You need to wait/)
     end
   end
 end

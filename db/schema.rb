@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_27_095950) do
+ActiveRecord::Schema.define(version: 2019_04_29_141144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,6 +284,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_095950) do
     t.string "type"
     t.integer "challenge_points"
     t.string "dashboard_style"
+    t.datetime "time_of_last_quiz"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
   end

@@ -23,15 +23,15 @@ RSpec.describe Challenge::UpdateChallengeProgress do
     end
     let(:challenge_full_marks) do
       create(:challenge, topic: topic, challenge_type: 'number_correct',
-                         number_required: 10, end_date: DateTime.now + 1.hour)
+                         number_required: 10, end_date: Time.now + 1.hour)
     end
     let(:challenge_three_marks) do
       create(:challenge, topic: topic, challenge_type: 'number_correct',
-                         number_required: 3, end_date: DateTime.now + 1.hour)
+                         number_required: 3, end_date: Time.now + 1.hour)
     end
     let(:challenge_different_topic) do
       create(:challenge, topic: create(:topic, subject: subject), challenge_type: 'number_correct',
-                         number_required: 3, end_date: DateTime.now + 1.hour)
+                         number_required: 3, end_date: Time.now + 1.hour)
     end
 
     it 'flags challenge as complete if the required number of questions have been answered correctly' do
@@ -72,7 +72,7 @@ RSpec.describe Challenge::UpdateChallengeProgress do
     let(:quiz_streak_of_five) { create(:quiz, subject: subject, topic: topic, streak: 5) }
     let(:quiz_streak_of_three) { create(:quiz, subject: subject, topic: topic, streak: 3) }
     let(:challenge_streak_of_five) do
-      create(:challenge, topic: topic, challenge_type: 'streak', number_required: 5, end_date: DateTime.now + 1.hour)
+      create(:challenge, topic: topic, challenge_type: 'streak', number_required: 5, end_date: Time.now + 1.hour)
     end
     let(:completed_challenge_progress) do
       create(:challenge_progress, challenge: challenge_streak_of_five, completed: true)
@@ -107,7 +107,7 @@ RSpec.describe Challenge::UpdateChallengeProgress do
   context 'when updating a number of points challenge' do
     let(:challenge_get_fifty_points) do
       create(:challenge, topic: topic, challenge_type: 'number_of_points',
-                         number_required: 50, end_date: DateTime.now + 1.hour)
+                         number_required: 50, end_date: Time.now + 1.hour)
     end
     let(:nearly_complete_fifty_point_progress) do
       create(:challenge_progress, progress: 45, challenge: challenge_get_fifty_points, user: student)

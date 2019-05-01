@@ -7,7 +7,7 @@ RSpec.describe 'User attempts a challenge', type: :feature, js: true, default_cr
   context 'when looking at the challenges' do
     let(:challenge_single_question) do
       create(:challenge, topic: topic, challenge_type: 'number_correct',
-                         number_required: 1, end_date: DateTime.now + 1.hour)
+                         number_required: 1, end_date: Time.now + 1.hour)
     end
     let(:second_subject) { create(:subject) }
     let(:second_topic) { create(:topic, subject: second_subject) }

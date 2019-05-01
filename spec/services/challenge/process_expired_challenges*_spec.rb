@@ -4,8 +4,8 @@ RSpec.describe Challenge::ProcessExpiredChallenges do
   include_context 'default_creates'
 
   context 'when finding expired challenges' do
-    let(:current) { create(:challenge, end_date: DateTime.now + 1.hour) }
-    let(:expired) { create(:challenge, end_date: DateTime.now - 1.hour) }
+    let(:current) { create(:challenge, end_date: Time.now + 1.hour) }
+    let(:expired) { create(:challenge, end_date: Time.now - 1.hour) }
 
     let(:completed) { create(:challenge_progress, challenge: expired, user: student, completed: true) }
 

@@ -3,7 +3,7 @@ RSpec.describe 'Teacher sets homework', type: :feature, js: true do
 
   let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
   let(:flatpickr_one_week_from_now) do
-    "span.flatpickr-day[aria-label=\"#{(DateTime.now + 1.week).strftime('%B %-e, %Y')}\"]"
+    "span.flatpickr-day[aria-label=\"#{(Time.now + 1.week).strftime('%B %-e, %Y')}\"]"
   end
 
   before do

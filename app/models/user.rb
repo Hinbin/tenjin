@@ -18,6 +18,8 @@ class User < ApplicationRecord
   validates :upi, presence: true
   validates :role, presence: true
 
+  QUIZ_COOLDOWN_PERIOD = 40
+
   # Disable the requirements for a password and e-mail as we're getting our
   # users from Wonde, which will provide neither.
 
@@ -44,6 +46,10 @@ class User < ApplicationRecord
       create_student_users(classroom, school)
       create_employee_users(classroom, school)
     end
+  end
+
+  def seconds_left_on_cooldown
+    (QUIZ_COOLDOWN_PERIOD - (Time.now - Time.parse(time_of_last_quiz.to_s))).round
   end
 
   class << self

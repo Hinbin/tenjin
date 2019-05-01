@@ -37,7 +37,7 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
   end
 
   context 'when looking at the challenges' do
-    let(:challenge_one) { create(:challenge, topic: topic, end_date: DateTime.now + 1.hour) }
+    let(:challenge_one) { create(:challenge, topic: topic, end_date: Time.now + 1.hour) }
     let(:second_subject) { create(:subject) }
     let(:second_topic) { create(:topic, subject: second_subject) }
     let(:challenge_two) { create(:challenge, topic: create(:topic, subject: subject)) }
@@ -101,7 +101,7 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
   end
 
   context 'when looking at homeworks' do
-    let(:homework_future) { create(:homework, due_date: DateTime.now + 8.days, classroom: classroom) }
+    let(:homework_future) { create(:homework, due_date: Time.now + 8.days, classroom: classroom) }
 
     before do
       homework
@@ -130,7 +130,7 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
     end
 
     it 'shows overdue homeworks with an exclamation icon' do
-      homework.update_attribute(:due_date, DateTime.now - 1.day)
+      homework.update_attribute(:due_date, Time.now - 1.day)
       visit(dashboard_path)
       expect(page).to have_css(
         '.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > i.fa-exclamation'
@@ -139,7 +139,7 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
 
     it 'shows homeworks completed in the last week only' do
       HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
-      homework.update_attribute(:due_date, DateTime.now - 2.weeks)
+      homework.update_attribute(:due_date, Time.now - 2.weeks)
       visit(dashboard_path)
       expect(page).to have_no_css('.homework-row[data-homework="' + homework.id.to_s + '"]')
     end

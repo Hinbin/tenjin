@@ -3,7 +3,7 @@ require 'support/session_helpers'
 
 RSpec.describe Homework, type: :model do
   let(:homework) { create(:homework, classroom: classroom) }
-  let(:homework_old) { build(:homework, classroom: classroom, topic: topic, due_date: DateTime.now - 1.day) }
+  let(:homework_old) { build(:homework, classroom: classroom, topic: topic, due_date: Time.now - 1.day) }
 
   before do
     create(:enrollment, classroom: classroom, user: student)

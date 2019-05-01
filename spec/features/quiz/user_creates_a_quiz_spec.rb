@@ -30,8 +30,23 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
   end
 
   context 'when creating two quizzes in quick succession' do
-    it 'allows you to take a quiz if 40 seconds have passed'
-    it 'says how long they need to wait to create another quiz'
+    before do
+      setup_subject_database
+      create_list(:answer, 3, question: question)
+      create(:answer, question: question, correct: true)
+      sign_in student
+      navigate_to_quiz
+      visit(dashboard_path)
+      navigate_to_quiz
+    end
+
+    it 'prevents you from taking a quiz if 40 seconds have not passed' do
+      expect(page).to have_current_path(dashboard_path)
+    end
+
+    it 'says how long they need to wait to create another quiz' do
+      expect(page).to have_content('You need to wait')
+    end
   end
 
   pending 'when creating a quiz for the same topic multiple times' do
@@ -45,7 +60,6 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     it 'moves points to the all time point score'
     it 'moves clears out the current leaderboard'
   end
-
 
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }

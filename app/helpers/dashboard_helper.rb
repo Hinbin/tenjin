@@ -13,7 +13,7 @@ module DashboardHelper
   end
 
   def check_overdue(homework_progress)
-    if homework_progress.homework.due_date < DateTime.now && homework_progress.completed == false
+    if homework_progress.homework.due_date < Time.now && homework_progress.completed == false
       return icon('fas', 'exclamation', style: 'color:yellow')
     end
 
@@ -21,8 +21,8 @@ module DashboardHelper
   end
 
   def challenge_time_left(challenge)
-    return 'Soon' if DateTime.now > challenge.end_date
+    return 'Soon' if Time.now > challenge.end_date
 
-    distance_of_time_in_words(DateTime.now, challenge.end_date)
+    distance_of_time_in_words(Time.now, challenge.end_date)
   end
 end

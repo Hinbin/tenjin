@@ -4,6 +4,7 @@ class QuizzesController < ApplicationController
   before_action :set_quiz, only: %i[show update]
   before_action :set_question, only: %i[show update]
   before_action :set_css_flavour, only: %i[new]
+  before_action :set_subject_and_topic, only: %i[create]
   rescue_from Pundit::NotAuthorizedError, with: :quiz_not_authorized
 
   def index
@@ -35,14 +36,15 @@ class QuizzesController < ApplicationController
   end
 
   def create
-    topic = quiz_params.dig(:topic_id)
-    subject = Subject.find(quiz_params.dig(:subject))
-    quiz = Quiz.new(subject: subject)
-    authorize quiz, :new?
-    return redirect_to new_quiz_path(subject: subject) if topic.blank?
+    return select_quiz_topic if @topic.blank?
 
-    quiz = Quiz::CreateQuiz.new(user: current_user, topic: topic, subject: subject).call
-    redirect_to quiz
+    result = Quiz::CreateQuiz.new(user: current_user, topic: @topic, subject: @subject).call
+    result.success? ? authorize(result.quiz) : authorize(current_user, :show?, policy_class: UserPolicy)
+    return fail_quiz_creation(result) unless result.success?
+
+    @quiz = result.quiz
+
+    redirect_to @quiz
   end
 
   def update
@@ -51,6 +53,17 @@ class QuizzesController < ApplicationController
   end
 
   private
+
+  def fail_quiz_creation(result)
+    flash[:alert] = result.errors
+    redirect_to dashboard_path
+  end
+
+  def select_quiz_topic
+    quiz = Quiz.new(subject: subject)
+    authorize quiz, :new?
+    redirect_to new_quiz_path(subject: subject)
+  end
 
   def set_quiz
     @quiz = Quiz.find(params[:id])
@@ -66,6 +79,11 @@ class QuizzesController < ApplicationController
 
   def set_css_flavour
     @css_flavour = current_user.dashboard_style
+  end
+
+  def set_subject_and_topic
+    @topic = quiz_params.dig(:topic_id)
+    @subject = Subject.find(quiz_params.dig(:subject))
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

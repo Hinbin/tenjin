@@ -10,10 +10,19 @@ class Quiz::CreateQuiz
   end
 
   def call
+    return OpenStruct.new(success?: false, user: @user, errors: 'User not found') unless @user.present?
+
     initialise_quiz
+
+    unless quiz_cooldown_expired?
+      return OpenStruct.new(success?: false, cooldown: @seconds_left,
+                            errors: "You need to wait #{@seconds_left} seconds to start another quiz")
+    end
     initialise_questions
     @quiz.save!
-    @quiz
+    @user.time_of_last_quiz = Time.now
+    @user.save!
+    OpenStruct.new(success?: true, quiz: @quiz, errors: nil)
   end
 
   def initialise_quiz
@@ -25,6 +34,7 @@ class Quiz::CreateQuiz
     @quiz.subject = @subject_id
     @quiz.active = true
     @quiz.topic = @lucky_dip ? nil : @topic
+
   end
 
   def initialise_questions # rubocop:disable Metrics/MethodLength
@@ -65,5 +75,10 @@ class Quiz::CreateQuiz
 
     @quiz.questions = questions
     @quiz.question_order = @quiz.questions.shuffle.pluck(:id)
+  end
+
+  def quiz_cooldown_expired?
+    @seconds_left = @user.seconds_left_on_cooldown
+    @seconds_left <= 0
   end
 end
