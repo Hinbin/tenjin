@@ -6,8 +6,10 @@ RSpec.describe Challenge::ProcessExpiredChallenges do
   context 'when finding expired challenges' do
     let(:current) { create(:challenge, end_date: Time.now + 1.hour) }
     let(:expired) { create(:challenge, end_date: Time.now - 1.hour) }
+    let(:not_completed_expired) { create(:challenge, end_date: Time.now - 1.hour) }
 
     let(:completed) { create(:challenge_progress, challenge: expired, user: student, completed: true) }
+    let(:not_completed) { create(:challenge_progress, challenge: not_completed_expired, user: student, completed: false) }
 
     it 'deletes old challenges' do
       expired
@@ -16,7 +18,8 @@ RSpec.describe Challenge::ProcessExpiredChallenges do
 
     it 'deletes old challenge progress' do
       completed
-      expect { described_class.new.call }.to change(ChallengeProgress, :count).by(-1)
+      not_completed
+      expect { described_class.new.call }.to change(ChallengeProgress, :count).by(-2)
     end
 
     it 'keeps_current_challenges' do
