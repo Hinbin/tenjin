@@ -18,7 +18,9 @@ class Quiz::CreateQuiz
       return OpenStruct.new(success?: false, cooldown: @seconds_left,
                             errors: "You need to wait #{@seconds_left} seconds to start another quiz")
     end
+
     initialise_questions
+    check_if_quiz_counts_for_leaderboard
     @quiz.save!
     @user.time_of_last_quiz = Time.now
     @user.save!
@@ -34,7 +36,7 @@ class Quiz::CreateQuiz
     @quiz.subject = @subject_id
     @quiz.active = true
     @quiz.topic = @lucky_dip ? nil : @topic
-
+    @quiz.counts_for_leaderboard = check_if_quiz_counts_for_leaderboard
   end
 
   def initialise_questions # rubocop:disable Metrics/MethodLength
@@ -80,5 +82,15 @@ class Quiz::CreateQuiz
   def quiz_cooldown_expired?
     @seconds_left = @user.seconds_left_on_cooldown
     @seconds_left <= 0
+  end
+
+  def check_if_quiz_counts_for_leaderboard
+    return false if @quiz.topic.nil?
+
+    stats_today = UsageStatistic.where(user: @user, topic: @quiz.topic, date: Date.today.all_day).first
+
+    return false if stats_today.present? && (stats_today.quizzes_started + 1) >= 4
+
+    true
   end
 end

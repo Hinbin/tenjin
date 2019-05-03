@@ -39,5 +39,10 @@ RSpec.describe Quiz::CreateQuiz, '#call' do
       student.update_attribute(:time_of_last_quiz, Time.now)
       expect(quiz.errors).to match(/You need to wait/)
     end
+
+    it 'creates a quiz if there is currently no time of last quiz' do
+      student.update_attribute(:time_of_last_quiz, nil)
+      expect(quiz.success?).to eq(true)
+    end
   end
 end

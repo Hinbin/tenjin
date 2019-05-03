@@ -55,8 +55,8 @@ RSpec.describe Challenge, type: :model do
   describe '#stringify' do
     it 'turns a challenge into a string describing the challenge' do
       srand(1)
-      expect(challenge_one.stringify).to eq('Obtain a streak of ' +
-        challenge_one.number_required.to_s + ' correct answers for ' + topic.name)
+      expect(challenge_one.stringify).to eq("Obtain a streak of #{challenge_one.number_required} correct answers in \
+#{topic.name} for #{topic.subject.name}")
     end
   end
 end

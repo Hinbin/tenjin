@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User creates a quiz', :focus,  type: :feature, js: true do
+RSpec.describe 'User creates a quiz', type: :feature, js: true do
   include_context 'default_creates'
 
   context 'when picking a subject' do
@@ -49,11 +49,50 @@ RSpec.describe 'User creates a quiz', :focus,  type: :feature, js: true do
     end
   end
 
-  pending 'when creating a quiz for the same topic multiple times' do
-    pending 'allows you to score points for the first attempt'
-    pending 'allows you to score points for the third attempt'
-    pending 'does not allow you to score points for the fourth attempt'
-    pending 'informs the user they cannot currently score leaderboard points for this quiz'
+  context 'when creating a quiz for the same topic multiple times' do
+    let(:user_topic_score) { TopicScore.where(user: student, topic: topic).first.score }
+    let(:two_quizzes_started) { create(:usage_statistic, user: student, topic: topic, quizzes_started: 2) }
+    let(:three_quizzes_started) { create(:usage_statistic, user: student, topic: topic, quizzes_started: 3) }
+
+    before do
+      setup_subject_database
+      create_list(:answer, 3, question: question)
+      create(:answer, question: question, correct: true)
+      sign_in student
+    end
+
+    it 'allows you to score points for the first attempt' do
+      navigate_to_quiz
+      first(class: 'question-button').click
+      find('.correct-answer')
+      expect(user_topic_score).to eq(1)
+    end
+
+    it 'allows you to score points for the third attempt' do
+      two_quizzes_started
+      navigate_to_quiz
+      first(class: 'question-button').click
+      find('.correct-answer')
+      expect(user_topic_score).to eq(1)
+    end
+
+    context 'when you should not be allowed to score' do
+      before do
+        three_quizzes_started
+        navigate_to_quiz
+      end
+
+      it 'does not allow you to score points for the fourth attempt' do
+        create(:topic_score, user: student, topic: topic, score: 3)
+        first(class: 'question-button').click
+        find('.correct-answer')
+        expect(user_topic_score).to eq(3)
+      end
+
+      it 'informs the user they cannot currently score leaderboard points for this quiz' do
+        expect(page).to have_content('not counting')
+      end
+    end
   end
 
   pending 'the leaderboard job' do

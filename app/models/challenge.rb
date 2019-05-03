@@ -22,12 +22,12 @@ class Challenge < ApplicationRecord
 
   def stringify
     challenge_strings = [
-      "Get #{number_required} questions correct in a single quiz in",
-      "Obtain a streak of #{number_required} correct answers for",
-      "Score #{number_required} points in"
+      "Get #{number_required} questions correct in a single quiz",
+      "Obtain a streak of #{number_required} correct answers",
+      "Score #{number_required} points"
     ]
 
-    challenge_strings[Challenge.challenge_types[challenge_type]] + ' ' + topic.name
+    "#{challenge_strings[Challenge.challenge_types[challenge_type]]} in #{topic.name} for #{topic.subject.name}"
   end
 
   class << self

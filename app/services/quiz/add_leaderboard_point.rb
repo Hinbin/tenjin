@@ -7,6 +7,8 @@ class Quiz::AddLeaderboardPoint
   end
 
   def call
+    return unless @quiz.counts_for_leaderboard
+
     add_points
     Leaderboard::BroadcastLeaderboardPoint.new(@topic_score).call
   end

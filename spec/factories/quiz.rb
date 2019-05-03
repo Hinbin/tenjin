@@ -7,6 +7,7 @@ FactoryBot.define do
     active { true }
     topic { nil }
     question_order { (0..num_questions_asked).to_a.shuffle }
+    counts_for_leaderboard { true }
 
     user
     subject

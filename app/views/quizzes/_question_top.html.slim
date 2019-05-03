@@ -4,11 +4,11 @@
   .row.justify-content-around
     .col-3.text-center
       ul.list-inline
-        li.list-inline-item=icon('fas', 'level-up-alt', style: 'color:black') + ": "
+        li.list-inline-item=icon('fas', 'level-up-alt', style: 'color:black')
         li.list-inline-item#streak="#{@quiz.streak}"
     .col-3.text-center
       ul.list-inline
-        li.list-inline-item=icon('fas', 'check', style: 'color:green') + ": "
+        li.list-inline-item=icon('fas', 'check', style: 'color:green')
         li.list-inline-item#answeredCorrect ="#{@quiz.answered_correct}"
     .col-3.text-center
       ul.list-inline
