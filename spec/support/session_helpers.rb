@@ -35,6 +35,13 @@ module SessionHelpers
     click_button('Create Quiz')
   end
 
+  def navigate_to_lucky_dip
+    visit(new_quiz_path(subject: subject.name))
+    find(:xpath, '//select').click
+    find(:xpath, '//select/option[1]').click
+    click_button('Create Quiz')
+  end
+
   def create_homework
     find('input#homework_due_date').click
     find(flatpickr_one_week_from_now).click

@@ -85,7 +85,7 @@ class Quiz::CreateQuiz
   end
 
   def check_if_quiz_counts_for_leaderboard
-    return false if @quiz.topic.nil?
+    return true if @quiz.topic.nil?
 
     stats_today = UsageStatistic.where(user: @user, topic: @quiz.topic, date: Date.today.all_day).first
 

@@ -76,7 +76,15 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
       expect(user_topic_score).to eq(1)
     end
 
+    it 'always allows you to score with a lucky dip' do
+      three_quizzes_started
+      navigate_to_lucky_dip
+      expect(page).to have_no_content('not counting')
+    end
+
     context 'when you should not be allowed to score' do
+      let(:three_quizzes_started) { create(:usage_statistic, user: student, topic: topic, quizzes_started: 3) }
+
       before do
         three_quizzes_started
         navigate_to_quiz
@@ -95,10 +103,10 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     end
   end
 
-  pending 'the leaderboard job' do
-    pending 'moves points to the all time point score'
-    pending 'moves clears out the current leaderboard'
-  end
+  pending 'the last question button is sometimes incorrect'
+
+  pending 'moves points to the all time point score'
+  pending 'moves clears out the current leaderboard'
 
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }
