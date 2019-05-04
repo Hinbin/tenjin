@@ -51,9 +51,27 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
 
 end
 
+# Answers from the Google spreadsheets come in a set order, with correct answer first.
+# Randomise these answers
+question_id = 0
+answer_array = []
 CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
-  Answer.create!(row.to_hash)
+  if question_id == row['question_id']
+    answer_array.push(row)
+  else
+    answer_array.shuffle.each do |r|
+      Answer.create!(r.to_hash)
+    end
+
+    answer_array = []
+    answer_array.push(row)
+  end
+
+  question_id = row['question_id']
+
 end
+
+Answer.create!(row.to_hash)
 
 Multiplier.create([ {score: 0, multiplier: 1}, {score: 4, multiplier: 2}, {score: 7, multiplier: 4}, {score: 10, multiplier: 10} ] )
 
