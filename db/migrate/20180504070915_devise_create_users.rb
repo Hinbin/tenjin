@@ -50,8 +50,9 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
       #Additional custom fields
       t.integer :challenge_points
       t.string  :dashboard_style
+      t.datetime :time_of_last_quiz
+  end
 
-    end
     
     # add_index :users, :email,                unique: true
     # add_index :users, :reset_password_token, unique: true

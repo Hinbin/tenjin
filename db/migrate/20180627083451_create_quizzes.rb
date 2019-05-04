@@ -11,6 +11,8 @@ class CreateQuizzes < ActiveRecord::Migration[5.2]
       t.references :subject, foreign_Key: true
       t.references :topic, foreign_key: true
       t.boolean :active
+      t.integer :question_order, array: true
+      t.boolean :counts_for_leaderboard
 
       t.timestamps
     end

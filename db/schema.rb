@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_03_124723) do
+ActiveRecord::Schema.define(version: 2019_05_02_080539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -198,10 +198,10 @@ ActiveRecord::Schema.define(version: 2019_05_03_124723) do
     t.bigint "subject_id"
     t.bigint "topic_id"
     t.boolean "active"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.integer "question_order", array: true
     t.boolean "counts_for_leaderboard"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["subject_id"], name: "index_quizzes_on_subject_id"
     t.index ["topic_id"], name: "index_quizzes_on_topic_id"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
