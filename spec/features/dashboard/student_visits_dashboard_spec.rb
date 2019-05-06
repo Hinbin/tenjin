@@ -5,32 +5,37 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
   end
 
   context 'when changing the dashboard style' do
+    let(:customisation) { create(:customisation, customisation_type: 'dashboard_style', value: 'darkred') }
+
+    before do
+      create(:customisation_unlock, user: student, customisation: customisation, active: true)
+    end
+
     it 'shows the darkgred ferrari style' do
-      student.update_attribute(:dashboard_style, 'darkred')
       visit(dashboard_path)
       expect(page).to have_css('section#homework-darkred').and have_css('hr.primary-darkred')
     end
 
     it 'shows the darkblue hiking style' do
-      student.update_attribute(:dashboard_style, 'darkblue')
+      customisation.update_attribute(:value, 'darkblue')
       visit(dashboard_path)
       expect(page).to have_css('section#homework-darkblue').and have_css('hr.primary-darkblue')
     end
 
     it 'shows the green football style' do
-      student.update_attribute(:dashboard_style, 'darkgreen')
+      customisation.update_attribute(:value, 'darkgreen')
       visit(dashboard_path)
       expect(page).to have_css('section#homework-darkgreen').and have_css('hr.primary-darkgreen')
     end
 
     it 'shows the orange climbing style' do
-      student.update_attribute(:dashboard_style, 'orange')
+      customisation.update_attribute(:value, 'orange')
       visit(dashboard_path)
       expect(page).to have_css('section#homework-orange').and have_css('hr.primary-orange')
     end
 
     it 'shows the yellow cheerful style' do
-      student.update_attribute(:dashboard_style, 'yellow')
+      customisation.update_attribute(:value, 'yellow')
       visit(dashboard_path)
       expect(page).to have_css('section#homework-yellow').and have_css('hr.primary-yellow')
     end

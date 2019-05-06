@@ -71,12 +71,10 @@ CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
 
 end
 
-Answer.create!(row.to_hash)
-
 Multiplier.create([ {score: 0, multiplier: 1}, {score: 4, multiplier: 2}, {score: 7, multiplier: 4}, {score: 10, multiplier: 10} ] )
 
 Customisation.create([ 
-  {customisation_type: 0, cost: 100, name: 'Race Red', value: 'red'},
+  {customisation_type: 0, cost: 0, name: 'Race Red', value: 'red'},
   {customisation_type: 0, cost: 100, name: 'Climber Orange', value: 'orange'},
   {customisation_type: 0, cost: 100, name: 'Ferrari Dark Red', value: 'darkred'},
   {customisation_type: 0, cost: 100, name: 'Hiking Dark Blue', value: 'darkblue'},
