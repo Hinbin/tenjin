@@ -56,6 +56,10 @@ group :development, :test do
   gem 'vcr'
 
   gem 'ffaker'
+
+  # Allow console debugging
+  gem 'ruby-debug-ide'
+  gem 'debase'
 end
 
 group :development do

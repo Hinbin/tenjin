@@ -102,11 +102,6 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     end
   end
 
-  pending 'the last question button is sometimes incorrect'
-
-  pending 'moves points to the all time point score'
-  pending 'moves clears out the current leaderboard'
-
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }
 
