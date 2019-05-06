@@ -9,7 +9,6 @@ FactoryBot.define do
     upi { SecureRandom.hex }
     association :school, factory: :school
     challenge_points { 0 }
-    dashboard_style { 'red' }
     time_of_last_quiz { rand((Time.now - 1.day)..(Time.now - 1.hour)) }
 
     factory :student do

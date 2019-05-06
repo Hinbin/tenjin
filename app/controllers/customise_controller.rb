@@ -4,8 +4,9 @@ class CustomiseController < ApplicationController
   def show
     authorize current_user # make it so that it checks if the school is permitted?
     @subjects = current_user.subjects
-    @css_flavour = current_user.dashboard_style
+    @css_flavour = find_dashboard_style
     @dashboard_styles = Customisation.where(customisation_type: 0)
+    @bought_customisations = CustomisationUnlock.where(user: current_user).pluck(:customisation_id)
   end
 
   def update

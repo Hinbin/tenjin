@@ -27,6 +27,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
   context 'when looking at available dashboard styles' do
     let(:dashboard_customisation) { create(:customisation, cost: 6) }
     let(:dashboard_customisation_expensive) { create(:customisation, cost: 20) }
+    let(:second_customisation) { create(:customisation, cost: 2) }
     let(:student) { create(:user, school: school, challenge_points: 10) }
 
     before do
@@ -40,8 +41,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
 
     it 'allows you to buy a dashbord style' do
       find('button#buy-dashboard-' + dashboard_customisation.value).click
-      find('section#homework-' + dashboard_customisation.value)
-      expect(student.reload.dashboard_style).to eq(dashboard_customisation.value)
+      expect(page).to have_css('section#homework-' + dashboard_customisation.value)
     end
 
     it 'deducts the required amount of challenge points' do
@@ -54,6 +54,32 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
       visit(customise_path)
       find('button#buy-dashboard-' + dashboard_customisation_expensive.value).click
       expect(page).to have_css('.alert', text: 'You do not have enough points')
+    end
+
+    it 'shows the cost of the customisation' do
+      expect(page).to have_css('#cost', text: dashboard_customisation.cost)
+    end
+
+    context 'when repurchasing a customisation already unlocked' do
+      before do
+        find('button#buy-dashboard-' + dashboard_customisation.value).click
+        second_customisation
+        visit(customise_path)
+        find('button#buy-dashboard-' + second_customisation.value).click
+        student.reload
+      end
+
+      it 'allows you to buy a previously bought customisation at no cost' do
+        visit(customise_path)
+        find('button#buy-dashboard-' + dashboard_customisation.value).click
+        expect { student.reload }.to change(student, :challenge_points).by(0)
+      end
+
+      it 'sets the price of unlocked customisations to zero' do
+        visit(customise_path)
+        expect(page).to have_css('#cost', text: '0')
+      end
+
     end
   end
 end

@@ -26,4 +26,11 @@ class ApplicationController < ActionController::Base
     flash[:alert] = 'You are not authorized to perform this action.'
     redirect_to(request.referrer || root_path)
   end
+
+  def find_dashboard_style
+    style = CustomisationUnlock.joins(:customisation)
+                               .where(user: current_user, active: true,
+                                      customisations: { customisation_type: 'dashboard_style' }).first
+    style.present? ? style.customisation.value : 'red'
+  end
 end

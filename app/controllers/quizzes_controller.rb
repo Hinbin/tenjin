@@ -28,7 +28,7 @@ class QuizzesController < ApplicationController
       @subjects = current_user.subjects
       render 'new'
     else
-      @css_flavour = current_user.dashboard_style
+      @css_flavour = find_dashboard_style
       @topics = @subject.topics.pluck(:name, :id)
       @topics.prepend(['Lucky Dip', 'Lucky Dip'])
       render 'select_topic'
@@ -78,7 +78,7 @@ class QuizzesController < ApplicationController
   end
 
   def set_css_flavour
-    @css_flavour = current_user.dashboard_style
+    @css_flavour = find_dashboard_style
   end
 
   def set_subject_and_topic

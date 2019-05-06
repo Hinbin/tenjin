@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_02_080539) do
+ActiveRecord::Schema.define(version: 2019_05_05_135305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -123,6 +123,16 @@ ActiveRecord::Schema.define(version: 2019_05_02_080539) do
     t.datetime "updated_at", null: false
     t.index ["school_id"], name: "index_classrooms_on_school_id"
     t.index ["subject_id"], name: "index_classrooms_on_subject_id"
+  end
+
+  create_table "customisation_unlocks", force: :cascade do |t|
+    t.bigint "customisation_id", null: false
+    t.bigint "user_id", null: false
+    t.boolean "active"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["customisation_id"], name: "index_customisation_unlocks_on_customisation_id"
+    t.index ["user_id"], name: "index_customisation_unlocks_on_user_id"
   end
 
   create_table "customisations", force: :cascade do |t|
@@ -297,7 +307,6 @@ ActiveRecord::Schema.define(version: 2019_05_02_080539) do
     t.string "photo"
     t.string "type"
     t.integer "challenge_points"
-    t.string "dashboard_style"
     t.datetime "time_of_last_quiz"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
@@ -310,6 +319,8 @@ ActiveRecord::Schema.define(version: 2019_05_02_080539) do
   add_foreign_key "challenge_progresses", "challenges"
   add_foreign_key "challenge_progresses", "users"
   add_foreign_key "challenges", "topics"
+  add_foreign_key "customisation_unlocks", "customisations"
+  add_foreign_key "customisation_unlocks", "users"
   add_foreign_key "default_subject_maps", "subjects"
   add_foreign_key "enrollments", "classrooms"
   add_foreign_key "enrollments", "users"
