@@ -6,7 +6,7 @@ class DashboardController < ApplicationController
     @subjects = current_user.subjects
 
     if current_user.student?
-      @css_flavour = current_user.dashboard_style
+      @css_flavour = find_dashboard_style
       student_homework_progress
       student_challenges
       render 'student_dashboard'
