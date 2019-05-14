@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :customisation_unlock do
+  factory :active_customisation do
     customisation
     user
   end

@@ -9,7 +9,7 @@ class LeaderboardController < ApplicationController
   end
 
   def show
-    set_subject_and_topic
+    set_subject
     set_leaderboard_variables
     set_javascript_variables
     authorize @current_user
@@ -17,8 +17,6 @@ class LeaderboardController < ApplicationController
     return render 'subject_select' if @subject.blank?
 
     @entries = Leaderboard::BuildLeaderboard.new(current_user,
-                                                 @subject,
-                                                 @topic,
                                                  leaderboard_params).call
     set_topic_name
     render 'show'
@@ -26,9 +24,8 @@ class LeaderboardController < ApplicationController
 
   private
 
-  def set_subject_and_topic
-    @subject = Subject.where(name: leaderboard_params.dig(:id)).first
-    @topic = Topic.where('id = ?', leaderboard_params.dig(:topic)).first
+  def set_subject
+    @subject = Subject.where(name: leaderboard_params[:id]).first
   end
 
   def set_leaderboard_variables

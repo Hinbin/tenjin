@@ -1,3 +1,4 @@
+=javascript_pack_tag('leaderboard')
 div id='leaderboard'
 .container-fluid#tableContainer
   .d-flex#optionFlex name="Toggle Options" data-toggle="collapse" data-target="#leaderboardOptions"
@@ -21,6 +22,7 @@ div id='leaderboard'
       tr
         th#rankColumn data-sort="int" data-sort-default="asc" Rank
         th#nameColumn data-sort="string" data-sort-default="asc" Name 
+        th#iconColumn
         th.d-none.d-sm-table-cell School
         th#scoreColumn data-sort="int" data-sort-default="desc" data-sort-multicolumn="rankColumn" Score
     tbody#tableData

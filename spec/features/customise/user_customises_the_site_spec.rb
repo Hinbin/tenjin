@@ -79,7 +79,6 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
         visit(customise_path)
         expect(page).to have_css('#cost', text: '0')
       end
-
     end
   end
 end

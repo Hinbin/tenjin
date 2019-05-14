@@ -28,8 +28,8 @@ class ApplicationController < ActionController::Base
   end
 
   def find_dashboard_style
-    style = CustomisationUnlock.joins(:customisation)
-                               .where(user: current_user, active: true,
+    style = ActiveCustomisation.joins(:customisation)
+                               .where(user: current_user,
                                       customisations: { customisation_type: 'dashboard_style' }).first
     style.present? ? style.customisation.value : 'red'
   end

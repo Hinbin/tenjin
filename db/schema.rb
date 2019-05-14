@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_05_135305) do
+ActiveRecord::Schema.define(version: 2019_05_13_141201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,16 @@ ActiveRecord::Schema.define(version: 2019_05_05_135305) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
+
+  create_table "active_customisations", force: :cascade do |t|
+    t.bigint "customisation_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["customisation_id", "user_id"], name: "index_active_customisations_on_customisation_id_and_user_id", unique: true
+    t.index ["customisation_id"], name: "index_active_customisations_on_customisation_id"
+    t.index ["user_id"], name: "index_active_customisations_on_user_id"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -128,7 +138,6 @@ ActiveRecord::Schema.define(version: 2019_05_05_135305) do
   create_table "customisation_unlocks", force: :cascade do |t|
     t.bigint "customisation_id", null: false
     t.bigint "user_id", null: false
-    t.boolean "active"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["customisation_id"], name: "index_customisation_unlocks_on_customisation_id"
@@ -307,11 +316,14 @@ ActiveRecord::Schema.define(version: 2019_05_05_135305) do
     t.string "photo"
     t.string "type"
     t.integer "challenge_points"
+    t.string "dashboard_style"
     t.datetime "time_of_last_quiz"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
   end
 
+  add_foreign_key "active_customisations", "customisations"
+  add_foreign_key "active_customisations", "users"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "all_time_topic_scores", "topics"
   add_foreign_key "all_time_topic_scores", "users"

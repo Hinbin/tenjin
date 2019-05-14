@@ -8,7 +8,7 @@ $(document).on('turbolinks:load', function () {
 })
 
 class Leaderboard {
-  constructor() {
+  constructor () {
     this.allLeaderboardData = []
     this.top50 = false
     this.maxUsersToDisplay = 10
@@ -36,6 +36,7 @@ class Leaderboard {
       this.getData(id)
     }
   }
+
   disableOptionButtons () {
     $('.option-label').addClass('disabled')
     $('.option-label').off('click')
@@ -106,8 +107,8 @@ class Leaderboard {
         return scoreComp
       } else {
         // If scores are the same, sort alphabetically by first name
-        if (a.forename < b.forename) { return -1 }
-        if (a.forename > b.forename) { return 1 }
+        if (a.name < b.name) { return -1 }
+        if (a.name > b.name) { return 1 }
         return 0
       }
     })
@@ -136,14 +137,23 @@ class Leaderboard {
 
   buildRow (row, hasScoreFlash) {
     let tr
+
     if (hasScoreFlash === true) {
       tr = $('<tr>').attr('id', 'row-' + row.id).addClass('score-changed')
     } else {
       tr = $('<tr>').attr('id', 'row-' + row.id)
     }
     tr.append($('<td>').text(row.rank))
-      .append($('<td>').text(row.forename + ' ' + row.surname))
-      .append($('<td>').attr('class', 'd-none d-sm-table-cell').text(row.school_name))
+      .append($('<td>').text(row.name))
+
+    if (row.icon && row.icon !== 'none') {
+      let iconArray = row.icon.split(',')
+      tr.append($('<td>').html(`<i class="fas fa-${iconArray[1]} fa" style="color: ${iconArray[0]}"></i>`))
+    } else {
+      tr.append($('<td>'))
+    }
+
+    tr.append($('<td>').attr('class', 'd-none d-sm-table-cell').text(row.school_name))
       .append($('<td>').text(Math.round(row.score)))
 
     return tr
@@ -189,8 +199,7 @@ class Leaderboard {
     if (found === false) {
       this.allLeaderboardData.push({
         id: data.id,
-        forename: data.forename,
-        surname: data.surname,
+        name: data.name,
         rank: 0,
         school_name: data.school_name,
         score: scoreType === 'TOPIC' ? data.topic_score : data.subject_score
@@ -215,3 +224,4 @@ class Leaderboard {
     }, 1010)
   }
 }
+

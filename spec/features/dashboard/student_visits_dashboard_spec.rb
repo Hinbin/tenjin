@@ -8,7 +8,7 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
     let(:customisation) { create(:customisation, customisation_type: 'dashboard_style', value: 'darkred') }
 
     before do
-      create(:customisation_unlock, user: student, customisation: customisation, active: true)
+      create(:active_customisation, user: student, customisation: customisation)
     end
 
     it 'shows the darkgred ferrari style' do

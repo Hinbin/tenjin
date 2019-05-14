@@ -15,8 +15,8 @@ class Customisation::BuyCustomisation
       unlock.user = @user
       deduct_challenge_points
     end
-    set_old_customisations_to_inactive
-    unlock.active = true
+    destroy_old_active_customisation
+    create_new_active_customisation
     unlock.save!
     OpenStruct.new(success?: true, user: @user, errors: nil)
   end
@@ -30,11 +30,15 @@ class Customisation::BuyCustomisation
     @user.challenge_points >= @customisation.cost
   end
 
-  def set_old_customisations_to_inactive
-    CustomisationUnlock.joins(:customisation)
+  def destroy_old_active_customisation
+    ActiveCustomisation.joins(:customisation)
                        .where(customisations: { customisation_type: @customisation.customisation_type })
-                       .where(user: @user, active: true)
-                       .update_all(active: false)
+                       .where(user: @user)
+                       .destroy_all
+  end
+
+  def create_new_active_customisation
+    ActiveCustomisation.create(user: @user, customisation: @customisation)
   end
 
   def error_openstruct(error)

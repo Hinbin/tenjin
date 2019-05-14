@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rspec/rspec-core.git
-  revision: 7727a078e01df1677fe8ce787e3a751111364e00
+  revision: 589971d798856b9c50e5ca7bc002edf6ee5cd003
   branch: master
   specs:
     rspec-core (3.9.0.pre)
@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: https://github.com/rspec/rspec-rails.git
-  revision: e6fe572a9bda9a8d9c5cd1660b6cb62167caaecc
+  revision: f227983ba2ec8c666d073f40f5a5f517510bd058
   branch: master
   specs:
     rspec-rails (3.9.0.pre)
@@ -115,8 +115,8 @@ GEM
     autoprefixer-rails (9.5.1.1)
       execjs
     aws-eventstream (1.0.3)
-    aws-partitions (1.158.0)
-    aws-sdk-core (3.49.0)
+    aws-partitions (1.161.0)
+    aws-sdk-core (3.51.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.1)
@@ -149,7 +149,7 @@ GEM
       sassc-rails (>= 2.0.0)
     builder (3.2.3)
     byebug (11.0.1)
-    capybara (3.18.0)
+    capybara (3.19.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -204,7 +204,7 @@ GEM
       request_store (>= 1.0)
     hashdiff (0.3.9)
     hashie (3.6.0)
-    high_voltage (3.1.0)
+    high_voltage (3.1.1)
     httplog (1.2.2)
       rack (>= 1.0)
       rainbow (>= 2.0.0)
@@ -214,9 +214,8 @@ GEM
       mini_magick (>= 4.9.3, < 5)
       ruby-vips (>= 2.0.13, < 3)
     jaro_winkler (1.5.2)
-    jbuilder (2.8.0)
+    jbuilder (2.9.1)
       activesupport (>= 4.2.0)
-      multi_json (>= 1.2)
     jmespath (1.4.0)
     jquery-rails (4.3.3)
       rails-dom-testing (>= 1, < 3)
@@ -245,7 +244,8 @@ GEM
     msgpack (1.2.10)
     multi_json (1.13.1)
     multi_xml (0.6.0)
-    multipart-post (2.0.0)
+    multipart-post (2.1.1)
+    newrelic_rpm (6.3.0.355)
     nio4r (2.3.1)
     nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
@@ -266,6 +266,8 @@ GEM
     parser (2.6.3.0)
       ast (~> 2.4.0)
     pg (1.1.4)
+    pghero (2.2.0)
+      activerecord
     popper_js (1.14.5)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -323,16 +325,16 @@ GEM
       railties (>= 4.2.0, < 6.0)
     rest-client (1.6.9)
       mime-types (~> 1.16)
-    rubocop (0.68.1)
+    rubocop (0.69.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5, != 2.5.1.1)
+      parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 1.6)
-    rubocop-performance (1.2.0)
+      unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-performance (1.3.0)
       rubocop (>= 0.68.0)
-    rubocop-rspec (1.32.0)
+    rubocop-rspec (1.33.0)
       rubocop (>= 0.60.0)
     ruby-debug-ide (0.6.1)
       rake (>= 0.8.1)
@@ -351,7 +353,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    selenium-webdriver (3.142.0)
+    selenium-webdriver (3.142.2)
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
     shoulda-matchers (4.0.0.rc1)
@@ -385,7 +387,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
-    unicode-display_width (1.5.0)
+    unicode-display_width (1.6.0)
     unirest (1.1.2)
       addressable (~> 2.3.5)
       json (~> 1.8.1)
@@ -398,7 +400,7 @@ GEM
       activemodel (>= 6.0.0.a)
       bindex (>= 0.4.0)
       railties (>= 6.0.0.a)
-    webdrivers (3.8.0)
+    webdrivers (3.9.2)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (~> 3.0)
@@ -446,10 +448,12 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   listen (>= 3.0.5, < 3.2)
+  newrelic_rpm
   omniauth
   omniauth-oauth2
   omniauth-wonde!
   pg (>= 0.18, < 2.0)
+  pghero
   pry-rails
   puma (~> 3.11)
   pundit

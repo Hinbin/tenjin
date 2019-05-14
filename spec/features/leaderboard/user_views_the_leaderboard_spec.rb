@@ -78,7 +78,7 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
     TopicScore.first.update(score: 0)
     one_to_ten
     visit(leaderboard_path(subject.name))
-    expect(page).to have_css('tr:nth-child(10) td:nth-child(4)', text: TopicScore.first.score)
+    expect(page).to have_css('tr:nth-child(10) td:nth-child(5)', text: TopicScore.first.score)
   end
 
   it 'shows others when I am near the bottom of the table' do # bug
@@ -94,6 +94,40 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
     page.driver.browser.manage.window.resize_to(375, 667)
     expect(page).to have_no_css('td', exact_text: school.name)
     page.driver.browser.manage.window.resize_to(size.width, size.height)
+  end
+
+  context 'when viewing leaderboard icons' do
+    let(:red_star) do
+      create(:customisation, customisation_type: 'leaderboard_icon',
+                             value: 'red,star', name: 'Red Star')
+    end
+
+    let(:gold_star) do
+      create(:customisation, customisation_type: 'leaderboard_icon',
+                             value: 'gold,star', name: 'Gold Star')
+    end
+
+    before do
+      create(:active_customisation, user: student, customisation: red_star)
+      one_to_ten
+    end
+
+    it 'shows the leaderboard icon for a person' do
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: red')
+    end
+
+    it 'shows a blank space if there is no leaderboard icon' do
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td')
+    end
+
+    it 'shows different colours of leaderboard icons' do
+      ActiveCustomisation.destroy_all
+      create(:active_customisation, user: student, customisation: gold_star)
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: gold')
+    end
   end
 
   context 'when viewing a subjects overall score' do

@@ -105,7 +105,7 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }
     let(:customisation) { create(:customisation, customisation_type: 'dashboard_style', value: 'orange') }
-    let(:customisation_unlock) { create(:customisation_unlock, user: student, customisation: customisation, active: true) }
+    let(:active_customisation) { create(:active_customisation, user: student, customisation: customisation) }
 
     before do
       setup_subject_database
@@ -125,7 +125,7 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     end
 
     it 'has a separator of the correct colour' do
-      customisation_unlock
+      active_customisation
       visit(new_quiz_path(params: { subject: subject.name }))
       expect(page).to have_css('hr.primary-orange')
     end
