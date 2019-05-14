@@ -141,6 +141,7 @@ gem 'best_in_place'
 # Use Amazon S3 for Active Storage
 gem 'aws-sdk-s3'
 
-# Gems to track usage and perfromance
+# Gems to track usage and performance
 gem 'newrelic_rpm'
 gem 'pghero'
+gem 'pg_query', '>= 0.9.0'
