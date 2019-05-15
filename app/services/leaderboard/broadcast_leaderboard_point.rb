@@ -27,8 +27,7 @@ class Leaderboard::BroadcastLeaderboardPoint
 
   def build_json_data
     @message = { id: @user.id,
-                 forename: @user.forename,
-                 surname: @user.surname[0],
+                 name: "#{@user.forename} #{@user.surname[0]}",
                  school_name: @user.school.name,
                  topic: @topic_score.topic.id,
                  topic_score: @topic_score.score,

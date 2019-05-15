@@ -9,6 +9,10 @@ section.page-section.text-center#dashboard-styles
           hr class=("small mb-5 primary-" + style.value)
           p.text-white#cost =icon('fas', 'star', class: 'fa', style: 'color: yellow') + customisation_cost(style)          
           button.btn.btn-light-outline.float-right.dashboard-buy-btn type='submit' data-customisation-type='dashboard_style' data-value=style.value id=('buy-dashboard-' + style.value) Buy
+  .container
+    h1.page-section-header.text-uppercase Leaderboard Icons
+    hr class=("hr small mb-5 primary-" + @css_flavour)
+
 form#customisation name='customisation' method='post'
   = hidden_field_tag :authenticity_token, form_authenticity_token
   input#customisation-value name='customisation[value]' type="hidden"

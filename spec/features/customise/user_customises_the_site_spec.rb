@@ -25,9 +25,9 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
   end
 
   context 'when looking at available dashboard styles' do
-    let(:dashboard_customisation) { create(:customisation, cost: 6) }
-    let(:dashboard_customisation_expensive) { create(:customisation, cost: 20) }
-    let(:second_customisation) { create(:customisation, cost: 2) }
+    let(:dashboard_customisation) { create(:customisation, customisation_type: 'dashboard_style', cost: 6) }
+    let(:dashboard_customisation_expensive) { create(:customisation, customisation_type: 'dashboard_style', cost: 20) }
+    let(:second_customisation) { create(:customisation, customisation_type: 'dashboard_style', cost: 2) }
     let(:student) { create(:user, school: school, challenge_points: 10) }
 
     before do
@@ -80,5 +80,32 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
         expect(page).to have_css('#cost', text: '0')
       end
     end
+  end
+
+  context 'when purchasing a leaderboard icon' do
+    let(:icon_customisation) { create(:customisation, customisation_type: 'leaderboard_icon', cost: 10) }
+
+    before do
+      icon_customisation
+      visit(customise_path)
+    end
+
+    it 'shows what icons are available to purchase' do
+      expect(page).to have_content(icon_customisation.name.upcase)
+    end
+
+    it 'allows you to buy an icon' do
+      find('button#buy-icon-' + icon_customisation.value).click
+      visit(leaderboard_path(subject))
+      expect(page).to have_css('section#iconCustomisation-' + dashboard_customisation.value)
+    end
+    it 'shows the icon on the leaderboard'
+  end
+
+  context 'when purchasing a leaderboard icon colour' do
+    it 'shows what icons are available to purchase'
+    it 'allows you to buy an icon'
+    it 'only lets you buy a colour if you have an icon already'
+    it 'changes the icon to the correct colour'
   end
 end

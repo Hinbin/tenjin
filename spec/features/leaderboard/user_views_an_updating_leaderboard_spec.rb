@@ -62,6 +62,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       Leaderboard::BroadcastLeaderboardPoint.new(new_entry).call
       expect(page).to have_css('tr:nth-child(2)#row-' + student.id.to_s)
     end
+
   end
 
   context 'with a school group' do
@@ -83,6 +84,11 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     it 'displays a new student with a score in the correct window' do
       Leaderboard::BroadcastLeaderboardPoint.new(new_entry).call
       expect(page).to have_css('tr#row-' + new_entry.user_id.to_s + '.score-changed')
+    end
+
+    it 'displays the name of a new student with a score ' do
+      Leaderboard::BroadcastLeaderboardPoint.new(new_entry).call
+      expect(page).to have_css('tr#row-' + new_entry.user_id.to_s, text: new_entry.user.forename)
     end
 
     it 'updates if score is from the same school group' do

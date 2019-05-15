@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Customisation::BuyCustomisation do
   include_context 'default_creates'
 
-  let(:customisation) { create(:customisation, cost: 5, customisation_type: 0) }
-  let(:old_customisation) { create(:customisation, cost: 2, customisation_type: 0) }
+  let(:customisation) { create(:customisation, cost: 5, customisation_type: 'dashboard_style') }
+  let(:old_customisation) { create(:customisation, cost: 2, customisation_type: 'dashboard_style') }
   let(:old_customisation_unlock) do
     create(:customisation_unlock, customisation: old_customisation, user: student)
   end
@@ -34,6 +34,26 @@ RSpec.describe Customisation::BuyCustomisation do
       described_class.new(student, customisation).call
       expect(student.challenge_points).to eq(5)
     end
+  end
+
+  context 'when buying a leaderboard icon' do
+    let(:customisation) { create(:customisation, cost: 5, customisation_type: 'leaderboard_icon') }
+
+    it 'sets the new icon to being active' do
+      described_class.new(student, customisation).call
+      expect(ActiveCustomisation.where(customisation: customisation).count).to eq(1)
+    end
+
+    it 'sets the old icon to being inactive' do
+      described_class.new(student, customisation).call
+      expect(ActiveCustomisation.where(customisation: old_customisation).count).to eq(0)
+    end
+
+    it 'creates the correct customisation unlock' do
+      described_class.new(student, customisation).call
+      expect(CustomisationUnlock.where(customisation: customisation).count).to eq(1)
+    end
+
   end
 
   context 'when moving from the default customisation' do

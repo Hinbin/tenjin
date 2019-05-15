@@ -21,7 +21,7 @@ http_interactions:
       message: Internal Server Error
     headers:
       Date:
-      - Sun, 21 Apr 2019 15:35:14 GMT
+      - Wed, 15 May 2019 13:40:31 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -50,5 +50,5 @@ http_interactions:
       string: '{"error":"internal_server_error","error_description":"Something went
         wrong our side."}'
     http_version: 
-  recorded_at: Sun, 21 Apr 2019 15:35:14 GMT
+  recorded_at: Wed, 15 May 2019 13:40:31 GMT
 recorded_with: VCR 4.0.0

@@ -121,7 +121,7 @@ gem 'pundit'
 gem 'gon'
 
 # Wonde client to easily access Wonde data
-gem 'wondeclient'
+gem 'wondeclient', github: 'wondeltd/ruby-client'
 
 # Pretty things!
 # Bootstrap and JQuery for Bootstrap!

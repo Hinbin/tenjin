@@ -5,7 +5,8 @@ class CustomiseController < ApplicationController
     authorize current_user # make it so that it checks if the school is permitted?
     @subjects = current_user.subjects
     @css_flavour = find_dashboard_style
-    @dashboard_styles = Customisation.where(customisation_type: 0)
+    @dashboard_styles = Customisation.where(customisation_type: 'dashboard_style')
+    @leaderboard_icons = Customisation.where(customisation_type: 'leaderboard_icon')
     @bought_customisations = CustomisationUnlock.where(user: current_user).pluck(:customisation_id)
   end
 
