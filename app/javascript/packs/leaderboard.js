@@ -1,14 +1,15 @@
 // Load leaderboard with initial data
 $(document).on('turbolinks:load', function () {
   if (page.controller() === 'leaderboard' && page.action() === 'show') {
-    let leaderboard = new Leaderboard()
+    let leaderboard
+    window.lb ? leaderboard = window.lb : leaderboard = new Leaderboard()
+    window.lb = leaderboard
     leaderboard.optionSelected(null)
-    window.leaderboard = leaderboard
   }
 })
 
 class Leaderboard {
-  constructor() {
+  constructor () {
     this.allLeaderboardData = []
     this.top50 = false
     this.maxUsersToDisplay = 10

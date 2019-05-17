@@ -9,23 +9,32 @@ class LeaderboardController < ApplicationController
   end
 
   def show
-    set_subject
-    set_leaderboard_variables
-    set_javascript_variables
-    authorize @current_user
+    authorize current_user
 
-    return render 'subject_select' if @subject.blank?
+    if request.xhr?
+      build_leaderboard
+    else
+      set_subject_and_topic
+      set_leaderboard_variables
+      set_javascript_variables
+      return render 'subject_select' if @subject.blank?
 
-    @entries = Leaderboard::BuildLeaderboard.new(current_user,
-                                                 leaderboard_params).call
-    set_topic_name
+      set_topic_name
+    end
+
     render 'show'
   end
 
   private
 
-  def set_subject
+  def build_leaderboard
+    @entries = Leaderboard::BuildLeaderboard.new(current_user,
+                                                 leaderboard_params).call
+  end
+
+  def set_subject_and_topic
     @subject = Subject.where(name: leaderboard_params[:id]).first
+    @topic = Topic.find(leaderboard_params[:topic]) if leaderboard_params[:topic].present?
   end
 
   def set_leaderboard_variables
@@ -40,7 +49,15 @@ class LeaderboardController < ApplicationController
     gon.school_group = @school.school_group
     gon.user = current_user.id
     gon.params = leaderboard_params
-    gon.path = leaderboard_path(id: @subject.name)
+    set_path
+  end
+
+  def set_path
+    gon.path = if @topic.present?
+                 leaderboard_path(id: @subject.name, topic: @topic.id)
+               else
+                 leaderboard_path(id: @subject.name)
+               end
   end
 
   def set_topic_name

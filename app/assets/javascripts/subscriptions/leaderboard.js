@@ -14,9 +14,9 @@ $(document).on('turbolinks:load', function () {
         console.log(data)
         // If this isn't for the topic being shown, return and do nothing   
         if (window.gon.topic === undefined) {
-          window.leaderboard.scoreChanged(data, 'ALL')
+          window.lb.scoreChanged(data, 'ALL')
         } else if (data.topic === window.gon.topic) {
-          window.leaderboard.scoreChanged(data, 'TOPIC')
+          window.lb.scoreChanged(data, 'TOPIC')
         }        
       }
     })
