@@ -74,12 +74,22 @@ end
 Multiplier.create([ {score: 0, multiplier: 1}, {score: 4, multiplier: 2}, {score: 7, multiplier: 4}, {score: 10, multiplier: 10} ] )
 
 Customisation.create([ 
-  {customisation_type: 0, cost: 0, name: 'Race Red', value: 'red'},
-  {customisation_type: 0, cost: 100, name: 'Climber Orange', value: 'orange'},
-  {customisation_type: 0, cost: 100, name: 'Ferrari Dark Red', value: 'darkred'},
-  {customisation_type: 0, cost: 100, name: 'Hiking Dark Blue', value: 'darkblue'},
-  {customisation_type: 0, cost: 100, name: 'Football Dark Green', value: 'darkgreen'},
-  {customisation_type: 0, cost: 100, name: 'Sunshine Yellow', value: 'yellow'}  
+  {customisation_type: 'dashboard_style', cost: 0, name: 'Race Red', value: 'red'},
+  {customisation_type: 'dashboard_style', cost: 100, name: 'Climber Orange', value: 'orange'},
+  {customisation_type: 'dashboard_style', cost: 100, name: 'Ferrari Dark Red', value: 'darkred'},
+  {customisation_type: 'dashboard_style', cost: 100, name: 'Hiking Dark Blue', value: 'darkblue'},
+  {customisation_type: 'dashboard_style', cost: 100, name: 'Football Dark Green', value: 'darkgreen'},
+  {customisation_type: 'dashboard_style', cost: 100, name: 'Sunshine Yellow', value: 'yellow'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Force', value: 'black,jedi'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Cat', value: 'black,cat'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Jet', value: 'black,fighter-jet'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Wizard', value: 'black,hat-wizard'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Dog', value: 'black,dog'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Candy', value: 'black,candy-cane'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Emoji', value: 'black,grin'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Frog', value: 'black,frog'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Gelato', value: 'black,ice-cream'},
+  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Pizza', value: 'black,pizza-slice'}
 ])
 
 case Rails.env
