@@ -11,8 +11,11 @@ nav class="navbar navbar-expand-md navbar-dark justify-content-between bg-black"
       li class="nav-item active"
         a.nav-link href=leaderboard_index_path Leaderboard  
       -if current_user.student?
-        li class="nav-item active"
-          a.nav-link href=customise_path Customise
+        li.nav-item.dropdown.active
+          a.nav-link.dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" Customise
+          .dropdown-menu aria-labelledby='navbarDropdown'
+            a.dropdown-item href=customise_path(anchor: 'dashboard-styles') Styles
+            a.dropdown-item href=customise_path(anchor: 'icons') Leaderboard Icons 
       -if current_user.employee?
         li class="nav-item active"
           a.nav-link href=dashboard_path Classrooms

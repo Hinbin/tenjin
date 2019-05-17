@@ -8,6 +8,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
     it 'visits from the customise link' do
       visit(dashboard_path)
       find('a', text: 'Customise').click
+      find('a', text: 'Styles').click
       expect(page).to have_current_path(customise_path)
     end
 
@@ -83,29 +84,28 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
   end
 
   context 'when purchasing a leaderboard icon' do
-    let(:icon_customisation) { create(:customisation, customisation_type: 'leaderboard_icon', cost: 10) }
+    let(:icon_customisation) { create(:customisation, customisation_type: 'leaderboard_icon', value: 'black,star', cost: 10) }
 
     before do
       icon_customisation
+      student.update_attribute(:challenge_points, 1000)
       visit(customise_path)
+
     end
 
     it 'shows what icons are available to purchase' do
-      expect(page).to have_content(icon_customisation.name.upcase)
+      expect(page).to have_content(icon_customisation.name)
     end
 
     it 'allows you to buy an icon' do
-      find('button#buy-icon-' + icon_customisation.value).click
-      visit(leaderboard_path(subject))
-      expect(page).to have_css('section#iconCustomisation-' + dashboard_customisation.value)
+      expect(page).to have_css("[data-value='#{icon_customisation.value}']")
     end
-    it 'shows the icon on the leaderboard'
+    it 'shows the icon on the leaderboard' do
+      create(:topic_score, user: student, topic: topic)
+      find("[data-value='#{icon_customisation.value}']").click
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: black')
+    end
   end
 
-  context 'when purchasing a leaderboard icon colour' do
-    it 'shows what icons are available to purchase'
-    it 'allows you to buy an icon'
-    it 'only lets you buy a colour if you have an icon already'
-    it 'changes the icon to the correct colour'
-  end
 end

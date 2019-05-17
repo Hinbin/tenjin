@@ -8,7 +8,7 @@ $(document).on('turbolinks:load', function () {
 })
 
 class Leaderboard {
-  constructor () {
+  constructor() {
     this.allLeaderboardData = []
     this.top50 = false
     this.maxUsersToDisplay = 10
@@ -96,7 +96,7 @@ class Leaderboard {
 
   highlightUser () {
     const myRow = 'tr#row-' + window.gon.user
-    $(myRow).addClass('bg-dark text-light')
+    $(myRow).addClass('current-user')
   }
 
   sortLeaderboardTable () {
@@ -177,8 +177,6 @@ class Leaderboard {
       // Otherwise snip the 5 around the user
     } else if ((userRowIndex + (this.maxUsersToDisplay / 2)) > tableSize) {
       // If the user is too close to the bottom - display from the bottom of the table up
-      let distanceFromBottom = tableData.length - userRowIndex
-      console.debug('user close to bottom to display all distance:', distanceFromBottom, 'ts:', tableSize, ' mu:', this.maxUsersToDisplay)
       return tableData.slice(tableSize - this.maxUsersToDisplay)
     } else {
       let lower = Math.max(0, userRowIndex - (this.maxUsersToDisplay / 2) + 1)
@@ -224,4 +222,3 @@ class Leaderboard {
     }, 1010)
   }
 }
-

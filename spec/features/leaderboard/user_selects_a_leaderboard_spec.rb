@@ -49,7 +49,7 @@ RSpec.describe 'User selects a leaderboard', type: :feature, js: true do
     it 'highlights the current user' do # javascript/turbolinks bug
       click_link(subject.name)
       click_link('All')
-      expect(page).to have_css('tr.bg-dark')
+      expect(page).to have_css('tr.current-user')
     end
   end
 end

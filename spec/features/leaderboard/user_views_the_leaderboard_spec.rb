@@ -138,13 +138,13 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
     it 'adds up scores from different topics' do
       second_topic_score
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('tr.bg-dark td:nth-child(4)', exact_text: overall_total)
+      expect(page).to have_css('tr.current-user td:nth-child(4)', exact_text: overall_total)
     end
 
     it 'ignores scores from topics of a different subject' do
       second_subject_score
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('tr.bg-dark td:nth-child(4)', exact_text: TopicScore.first.score)
+      expect(page).to have_css('tr.current-user td:nth-child(4)', exact_text: TopicScore.first.score)
     end
   end
 end
