@@ -10,14 +10,12 @@ $(document).on('turbolinks:load', function () {
       // Called when the subscription has been terminated by the server
 
       received (data) {
-
-        console.log(data)
-        // If this isn't for the topic being shown, return and do nothing   
+        // If this isn't for the topic being shown, return and do nothing
         if (window.gon.topic === undefined) {
           window.lb.scoreChanged(data, 'ALL')
         } else if (data.topic === window.gon.topic) {
           window.lb.scoreChanged(data, 'TOPIC')
-        }        
+        }
       }
     })
   }
