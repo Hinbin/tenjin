@@ -12,8 +12,8 @@ class Challenge < ApplicationRecord
     raise 'no topic available in subject when creating a challenge' if @challenge.topic.nil?
 
     setup_challenge_type(challenge_type)
-    @challenge.start_date = Time.now
-    @challenge.end_date = Time.now + duration
+    @challenge.start_date = Time.current
+    @challenge.end_date = Time.current + duration
     setup_point_value(multiplier: multiplier)
 
     @challenge.save
