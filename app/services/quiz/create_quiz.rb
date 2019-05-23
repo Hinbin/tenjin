@@ -22,7 +22,7 @@ class Quiz::CreateQuiz
     initialise_questions
     check_if_quiz_counts_for_leaderboard
     @quiz.save!
-    @user.time_of_last_quiz = Time.now
+    @user.time_of_last_quiz = Time.current
     @user.save!
     OpenStruct.new(success?: true, quiz: @quiz, errors: nil)
   end

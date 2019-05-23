@@ -51,7 +51,7 @@ class User < ApplicationRecord
   def seconds_left_on_cooldown
     return -1 if time_of_last_quiz.nil?
 
-    (QUIZ_COOLDOWN_PERIOD - (Time.now - Time.parse(time_of_last_quiz.to_s))).round
+    (QUIZ_COOLDOWN_PERIOD - (Time.current - Time.parse(time_of_last_quiz.to_s))).round
   end
 
   class << self
