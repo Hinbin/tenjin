@@ -3,6 +3,8 @@ rvm:
   - 2.5.1
 services:
   - postgresql
+addons:
+  postgresql: "9.5"
 before_script:
   - cp config/database.yml.travis config/database.yml
   - bundle exec rake db:create --all
