@@ -1,51 +1,4 @@
 GIT
-  remote: https://github.com/rspec/rspec-core.git
-  revision: b5b096738d87d867902f3e871c3e1f9b9e8b6339
-  branch: master
-  specs:
-    rspec-core (3.9.0.pre)
-      rspec-support (= 3.9.0.pre)
-
-GIT
-  remote: https://github.com/rspec/rspec-expectations.git
-  revision: 12bca283fc60fc1da3851de704bb5ce6fe416d85
-  branch: master
-  specs:
-    rspec-expectations (3.9.0.pre)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (= 3.9.0.pre)
-
-GIT
-  remote: https://github.com/rspec/rspec-mocks.git
-  revision: 55f0b116dc8c15a7acef9e7619bb0a3925bd18fa
-  branch: master
-  specs:
-    rspec-mocks (3.9.0.pre)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (= 3.9.0.pre)
-
-GIT
-  remote: https://github.com/rspec/rspec-rails.git
-  revision: f227983ba2ec8c666d073f40f5a5f517510bd058
-  branch: master
-  specs:
-    rspec-rails (3.9.0.pre)
-      actionpack (>= 3.0)
-      activesupport (>= 3.0)
-      railties (>= 3.0)
-      rspec-core (= 3.9.0.pre)
-      rspec-expectations (= 3.9.0.pre)
-      rspec-mocks (= 3.9.0.pre)
-      rspec-support (= 3.9.0.pre)
-
-GIT
-  remote: https://github.com/rspec/rspec-support.git
-  revision: 4579133922b6fb2a615a0dac0ae8d0b4f6fabfff
-  branch: master
-  specs:
-    rspec-support (3.9.0.pre)
-
-GIT
   remote: https://github.com/wondeltd/ruby-client.git
   revision: e69c47021e35a0b9783fedefea33b99e3ff02904
   specs:
@@ -343,6 +296,23 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    rspec-core (3.8.0)
+      rspec-support (~> 3.8.0)
+    rspec-expectations (3.8.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.8.0)
+    rspec-mocks (3.8.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.8.0)
+    rspec-rails (3.8.2)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 3.8.0)
+      rspec-expectations (~> 3.8.0)
+      rspec-mocks (~> 3.8.0)
+      rspec-support (~> 3.8.0)
+    rspec-support (3.8.0)
     rubocop (0.69.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
@@ -475,11 +445,7 @@ DEPENDENCIES
   pundit
   rails (~> 6.0.0.beta3)
   rails-controller-testing
-  rspec-core!
-  rspec-expectations!
-  rspec-mocks!
-  rspec-rails!
-  rspec-support!
+  rspec-rails (~> 3.8)
   rubocop
   rubocop-performance
   rubocop-rspec

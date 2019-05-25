@@ -12,7 +12,7 @@
           th % Correct
       tbody
         -@questions.each do |q|
-          tr
+          tr.topic-row
             td = link_to q.question_text.blank? ? 'Click here to edit' : q.question_text, q
             td = q.asked_questions.count
             td = number_to_percentage( (q.asked_questions.where(correct: true).count.to_f / q.asked_questions.count.to_f) * 100, precision: 0)  if q.asked_questions.count > 0

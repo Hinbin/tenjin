@@ -1,21 +1,69 @@
-RSpec.describe 'User edits a question', type: :feature, js: true do
+RSpec.describe 'Author edits a question', type: :feature, js: true do
   include_context 'default_creates'
 
   let(:author) { create(:author) }
   let(:question) { create(:question, topic: topic) }
+  let(:new_topic_name) { FFaker::Lorem.word }
 
   before do
     setup_subject_database
     sign_in author
   end
 
-  context 'when visiting the topic index page' do
-    let(:new_topic_name) { FFaker::Lorem.word }
-
+  context 'when adding or removing questions' do
     before do
       question
       visit(questions_path)
       click_link(question.topic.name)
+    end
+
+    it 'allows you to create a question' do
+      click_link('Add Question')
+      expect(page).to have_css('#questionEditor')
+    end
+
+    it 'allows you to delete a question' do
+      visit(question_path(question))
+      click_link('Delete Question')
+      expect(page).to have_no_css('.question-row')
+    end
+  end
+
+  context 'when adding or removing topics' do
+    before do
+      visit(questions_path)
+    end
+
+    it 'allows you to create a topic' do
+      click_link('Add Topic')
+      expect(page).to have_content('Delete Topic')
+    end
+
+    it 'allows you to delete a topic' do
+      click_link('Add Topic')
+      click_link('Delete Topic')
+      expect(page).to have_no_css('.topic-row')
+    end
+
+    it 'only allows you to delete a topic with no questions' do
+      question
+      visit(questions_path)
+      click_link(Topic.first.name)
+      expect(page).to have_no_content('Delete Topic')
+    end
+  end
+
+  context 'when visiting the topic index page' do
+    before do
+      question
+      visit(questions_path)
+      click_link(question.topic.name)
+    end
+
+    it 'allows you to edit a topic name' do
+      bip_text(question.topic, :name, new_topic_name)
+      question.topic.reload
+      expect(question.topic.name).to eq(new_topic_name)
     end
 
     it 'shows the quesitons for a topic' do
@@ -27,13 +75,6 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
       expect(page).to have_current_path(question_path(question))
     end
 
-    it 'allows you to edit a topic name' do
-      bip_text(question.topic, :name, new_topic_name)
-      question.topic.reload
-      expect(question.topic.name).to eq(new_topic_name)
-    end
-
-    it 'allows you to create a question'
   end
 
   context 'when visiting the subject index page' do

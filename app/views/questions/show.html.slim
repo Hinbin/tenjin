@@ -1,4 +1,4 @@
-.container
+.container#questionEditor
   .row.col.mt-3    
     label for='questionTypeSelect' Question Type:
     select.form-control#questionTypeSelect
@@ -19,7 +19,7 @@
         th 
       tbody
       -@question.answers.reverse.each do |a|
-        tr
+        tr.question-row
           td =best_in_place a, :text, as: :input
           -unless @question.question_type == 'short_answer'
             td =best_in_place a, :correct, as: :checkbox, collection: [boolean_icon(false), boolean_icon(true)]
