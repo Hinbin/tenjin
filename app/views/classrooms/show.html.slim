@@ -1,8 +1,8 @@
 
 =javascript_pack_tag('classroom')
-section.page-section.text-center.pt-2#homework
-  .container
-    h1.h1.mt-3 =@classroom.name
+.container
+  h1.h1.mt-3.text-center =@classroom.name
+  section.page-section.text-center.pt-2#homework  
     h1.page-section-header.text-uppercase Homework
     hr class=("small mb-5 primary-red")
     .row.justify-content-center
@@ -15,12 +15,12 @@ section.page-section.text-center.pt-2#homework
               th Completion
               th Due
           tbody
-          -@homeworks.each do |h|        
-            tr data-homework=h.id
-              td =h.topic.name
-              td =report_progress(h.homework_progresses)
-              td =h.due_date.strftime("%d/%m/%y %H:%M")
-  .container
+            -@homeworks.each do |h|        
+              tr.homework-data data-controller='homeworks' data-id=h.id
+                td =h.topic.name
+                td =report_progress(h.homework_progresses)
+                td =h.due_date.strftime("%d/%m/%y %H:%M")
+  section.page-section.text-center.pt-2#students                            
     h1.page-section-header.text-uppercase Students
     hr class=("small mb-5 primary-red")
     .row.justify-content-center
@@ -28,8 +28,10 @@ section.page-section.text-center.pt-2#homework
         thead
           th First Name
           th Last Name
+          th Homeworks
         tbody
           -@students.each do |s| 
-            tr.student-data
+            tr.student-data data-controller='users' data-id=s.id
               td =s.forename
               td =s.surname
+              td ==student_homeworks(s, @homework_progress)

@@ -1,5 +1,5 @@
 class ClassroomPolicy < ApplicationPolicy
   def show?
-    user.role == 'employee'
+    user.employee?
   end
 end

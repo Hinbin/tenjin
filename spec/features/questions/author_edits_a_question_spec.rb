@@ -32,6 +32,8 @@ RSpec.describe 'User edits a question', type: :feature, js: true do
       question.topic.reload
       expect(question.topic.name).to eq(new_topic_name)
     end
+
+    it 'allows you to create a question'
   end
 
   context 'when visiting the subject index page' do

@@ -11,6 +11,8 @@ class UserPolicy
   end
 
   def show?
+    return @current_user.school == @user.school if @current_user.employee?
+
     @current_user == @user && @user.school.permitted
   end
 

@@ -1,4 +1,15 @@
 class HomeworkPolicy < ApplicationPolicy
+
+  class Scope < Scope
+    def resolve
+      if user.school_admin?
+        scope.all
+      else
+        scope.where(classroom_id: user.classrooms)
+      end
+    end
+  end
+
   def new?
     @user.employee?
   end

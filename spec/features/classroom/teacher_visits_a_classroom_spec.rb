@@ -7,10 +7,13 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
     setup_subject_database
     create(:enrollment, classroom: classroom, user: teacher)
     sign_in teacher
-    visit(classroom_path(classroom))
   end
 
   context 'when looking at the classroom information' do
+    before do
+      visit(classroom_path(classroom))
+    end
+
     it 'shows the name of the classroom' do
       expect(page).to have_content(classroom.name)
     end
@@ -27,8 +30,57 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
     it 'takes me to a homework that I have clicked on' do
       homework
       visit(classroom_path(classroom))
-      find(:css, 'tr[data-homework="' + homework.id.to_s + '"]').click
+      find(:css, "tr[data-controller='homeworks'][data-id='#{homework.id}']").click
       expect(page).to have_current_path(homework_path(homework))
+    end
+
+    it 'takes me to a student record that I have clicked on' do
+      find(:css, "tr[data-id='#{student.id}']").click
+      expect(page).to have_current_path(user_path(student))
+    end
+
+    context 'when looking at the student table' do
+      let(:second_homework) { HomeworkProgress.joins(:homework).order('homeworks.due_date desc').second }
+      let(:different_classroom) { create(:classroom, school: school) }
+
+      it 'shows the last 5 homeworks for the classroom' do
+        create_list(:enrollment, 10, classroom: classroom)
+        create_list(:homework, 10, classroom: classroom)
+        visit(classroom_path(classroom))
+        expect(page).to have_css("tr[data-id='#{student.id}'] i.fa-times", count: 5)
+      end
+
+      it 'allows the user to search the student table' do
+        create_list(:enrollment, 32, classroom: classroom)
+        visit(classroom_path(classroom))
+        find('#students-table_filter input').set("#{student.forename} #{student.surname}")
+        expect(page).to have_css('.student-data', count: 1)
+      end
+
+      it 'shows a completed homework in the correct place' do
+        create_list(:homework, 5, classroom: classroom)
+        second_homework.update_attribute(:completed, true)
+        visit(classroom_path(classroom))
+        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(3) i:nth-child(2).fa-check")
+      end
+
+      it 'does not show homeworks for another classroom' do
+        create(:homework, classroom: different_classroom)
+        expect(page).to have_no_css('i.fa-times')
+      end
+
+      it 'only loads the data table once after going back in the browser' do
+        visit(classroom_path(classroom))
+        click_link('Set Homework')
+        page.go_back
+        expect{ page.accept_alert }.to raise_error(Capybara::ModalNotFound)
+      end
+
+      it 'paginates the number of homeworks, 5 per page' do
+        create_list(:homework, 20, classroom: classroom)
+        visit(classroom_path(classroom))
+        expect(page).to have_css('.homework-data', count: 5)
+      end
     end
   end
 
