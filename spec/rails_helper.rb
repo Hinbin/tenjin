@@ -122,8 +122,20 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-Capybara.default_driver = :selenium_chrome
-Capybara.javascript_driver = :selenium_chrome
+if ENV['travis']
+  Capybara.register_driver :travis_chrome do |app|
+    options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu])
+
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+  end
+
+  Capybara.javascript_driver = :travis_chrome
+  Capybara.default_driver = :travis_chrome
+else
+
+  Capybara.default_driver = :selenium_chrome
+  Capybara.javascript_driver = :selenium_chrome
+end
 
 # REMOVE WITH NEW VERSION OF SHOULDAMATCHERS
 class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end

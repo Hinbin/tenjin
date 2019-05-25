@@ -3,8 +3,11 @@ rvm:
   - 2.5.1
 services:
   - postgresql
+env:
+  - travis=true
 addons:
   postgresql: "9.5"
+  chrome: stable
 before_script:
   - cp config/database.yml.travis config/database.yml
   - bundle exec rake db:create --all
