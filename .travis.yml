@@ -10,5 +10,5 @@ services:
   - postgresql
 notifications:
   email: false
-  before_script:
+before_script:
   - cp config/database.yml.travis config/database.yml
