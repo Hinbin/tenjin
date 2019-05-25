@@ -2,7 +2,7 @@ class Challenge::UpdateChallengeProgress
   def initialize(quiz, challenge_type, number_to_add = 0, question_topic = nil)
     @quiz = quiz
     @challenges = Challenge.joins(:topic).where('topics.subject_id = ? AND end_date > ? AND challenge_type = ?',
-                                                @quiz.subject, Time.now, Challenge.challenge_types[challenge_type])
+                                                @quiz.subject, Time.current, Challenge.challenge_types[challenge_type])
     @number_to_add = number_to_add
     @question_topic = question_topic
   end
