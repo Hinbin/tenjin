@@ -6,6 +6,9 @@ env:
 addons:
   postgresql: "9.5"
   chrome: stable
+before_install:
+  - gem update --system
+  - gem install bundler -v '~> 1.17'
 before_script:
   - cp config/database.yml.travis config/database.yml
   - RAILS_ENV=test bundle exec rails webpacker:compile
