@@ -122,7 +122,7 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-if ENV['travis']
+if ENV['TRAVIS']
   Capybara.register_driver :travis_chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu])
 
@@ -130,9 +130,7 @@ if ENV['travis']
   end
 
   Capybara.javascript_driver = :travis_chrome
-  Capybara.default_driver = :travis_chrome
 else
-
   Capybara.default_driver = :selenium_chrome
   Capybara.javascript_driver = :selenium_chrome
 end

@@ -20,8 +20,6 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: tenjin
-  password: Outwood01
   host: localhost
 
 development:
@@ -83,5 +81,3 @@ test:
 #
 production:
   <<: *default
-  url: <%= ENV['HEROKU_POSTGRESQL_CHARCOAL_URL'] %>
-  password: <%= ENV['CSQUIZ_DATABASE_PASSWORD'] %>
