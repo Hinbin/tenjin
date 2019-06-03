@@ -25,6 +25,7 @@ before_script:
   - bin/rails db:create
   - bin/rails db:schema:load
 script:
+  - bundle exec rails webpacker:compile
   - bundle exec rspec
 notifications:
   email: false
