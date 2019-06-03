@@ -1,4 +1,6 @@
 language: ruby
+rvm:
+  - 2.5.5
 services:
   - postgresql
 env:
@@ -20,7 +22,13 @@ before_script:
   - RAILS_ENV=test bundle exec rails webpacker:compile
   - bundle exec rake db:create --all
   - bundle exec rake db:migrate
+cache:
+  bundler: true
+  directories:
+    - node_modules
+  yarn: true  
 script:
+  - bundle exec rails webpacker:compile
   - bundle exec rspec
 notifications:
   email: false
