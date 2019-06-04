@@ -1,10 +1,13 @@
+---
+sudo: false
 language: ruby
-rvm:
-  - 2.5.5
+cache:
+  bundler: true
+  yarn: true
+  directories:
+    - node_modules
 services:
   - postgresql
-env:
-  - travis=true
 addons:
   postgresql: "9.5"
   chrome: stable
@@ -18,15 +21,9 @@ install:
   - npm i -g yarn
   - yarn
 before_script:
-  - cp config/database.yml.travis config/database.yml
-  - RAILS_ENV=test bundle exec rails webpacker:compile
-  - bundle exec rake db:create --all
-  - bundle exec rake db:migrate
-cache:
-  bundler: true
-  directories:
-    - node_modules
-  yarn: true  
+  - bin/rails webpacker:compile
+  - bin/rails db:create
+  - bin/rails db:schema:load
 script:
   - bundle exec rails webpacker:compile
   - bundle exec rspec
