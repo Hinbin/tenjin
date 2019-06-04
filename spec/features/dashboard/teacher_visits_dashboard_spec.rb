@@ -8,7 +8,7 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
     sign_in teacher
   end
 
-  context 'when logging in as a teacher', :focus do
+  context 'when logging in as a teacher' do
     it 'shows which classes they are currently assigned to' do
       visit(dashboard_path)
       expect(page).to have_content(classroom.name)
