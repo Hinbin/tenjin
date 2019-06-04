@@ -6,6 +6,7 @@ module SessionHelpers
   end
 
   def stub_omniauth # rubocop:disable Metrics/MethodLength
+    OmniAuth.config.logger = Rails.logger
     OmniAuth.config.test_mode = true
     OmniAuth.config.mock_auth[:wonde] =
       OmniAuth::AuthHash.new(

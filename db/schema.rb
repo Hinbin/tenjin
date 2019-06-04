@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_13_141201) do
+ActiveRecord::Schema.define(version: 2019_06_04_182815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 2019_05_13_141201) do
     t.boolean "correct"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "external_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
   end
 
@@ -205,6 +206,7 @@ ActiveRecord::Schema.define(version: 2019_05_13_141201) do
     t.integer "question_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "external_id"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
 

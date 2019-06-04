@@ -24,7 +24,7 @@ end
 
 CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
   if row['image'].nil?
-    Question.create!(id: row['id'], topic_id: row['topic_id'], question_text: row['question_text'], question_type: row['question_type'] )
+    Question.create!(external_id: row['id'], topic_id: row['topic_id'], question_text: row['question_text'], question_type: row['question_type'] )
   else
     google_location = row['image'].gsub(/open?/, 'uc')
 
@@ -46,7 +46,7 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
 
     image = create_file_blob(data: StringIO.new(response.body), filename: filename, content_type: 'image/jpg')
     html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
-    Question.create!(id: row['id'], topic_id: row['topic_id'], question_text: html , question_type: row['question_type'] )
+    Question.create!(external_id: row['id'], topic_id: row['topic_id'], question_text: html , question_type: row['question_type'] )
   end
 
 end
@@ -60,7 +60,9 @@ CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
     answer_array.push(row)
   else
     answer_array.shuffle.each do |r|
-      Answer.create!(r.to_hash)
+
+      q = Question.where(external_id: r['question_id']).first
+      Answer.create!(external_id: r['id'], question: q, text: r['text'], correct: r['correct'] )
     end
 
     answer_array = []
@@ -91,9 +93,6 @@ Customisation.create([
   {customisation_type: 'leaderboard_icon', cost: 200, name: 'Gelato', value: 'black,ice-cream'},
   {customisation_type: 'leaderboard_icon', cost: 200, name: 'Pizza', value: 'black,pizza-slice'}
 ])
-
-ActiveRecord::Base.connection.reset_pk_sequence!('questions')
-ActiveRecord::Base.connection.reset_pk_sequence!('answers')
 
 case Rails.env
   when "development"
