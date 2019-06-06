@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 15 May 2019 13:32:25 GMT
+      - Thu, 06 Jun 2019 11:18:43 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -54,5 +54,5 @@ http_interactions:
         1AA","address_country":{"code":"GBR","name":"United Kingdom"}},"extended":{"allows_writeback":true,"has_timetables":false,"has_lesson_attendance":false,"audit_approved_at":{"date":"2018-07-20
         10:24:14","timezone_type":3,"timezone":"UTC"}},"region":{"code":"GBR","domain":"api.wonde.com","school_url":"https:\/\/api.wonde.com\/v1.0\/schools\/A852030759","identifiers":{"la_code":"970","establishment_number":3430,"urn":848187}}}}'
     http_version: 
-  recorded_at: Wed, 15 May 2019 13:32:25 GMT
+  recorded_at: Thu, 06 Jun 2019 11:18:43 GMT
 recorded_with: VCR 4.0.0

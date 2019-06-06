@@ -7,10 +7,6 @@
         middle_names
         surname
         upi
-        Photo {
-          id
-          content
-        }
         School {
           id
           name

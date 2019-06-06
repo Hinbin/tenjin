@@ -19,7 +19,12 @@ RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
       stub_omniauth
       visit root_path
       student_wonde
-      click_link 'Login'
+
+    end
+
+    it 'pops up the student login when needed' do
+      click_link 'Student Login'
+      expect(page).to have_content('Username').and have_content('Password')
     end
 
     it 'logs me in' do

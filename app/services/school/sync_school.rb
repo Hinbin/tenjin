@@ -4,7 +4,7 @@ class School::SyncSchool
     @school = school
     @client = Wonde::Client.new(school.token)
     @school_from_client = @client.schools.get(school.client_id)
-    @data_from_client = @client.school(school.client_id)
+    @school_api = @client.school(school.client_id)
   end
 
   def call
@@ -18,15 +18,15 @@ class School::SyncSchool
 
   def fetch_api_data
     # To limit API calls and improve performance - get all classroom and student data here
-    @subject_data = @data_from_client.subjects.all
-    @sync_data = @data_from_client.classes.all(%w[subject students employees])
-    @deletion_data = @data_from_client.deletions.all
+    @subject_data = @school_api.subjects.all
+    @sync_data = @school_api.classes.all(%w[subject students employees])
+    @deletion_data = @school_api.deletions.all
   end
 
   def sync_all_data
     SubjectMap.from_wonde(@school, @subject_data)
     Classroom.from_wonde(@school, @sync_data)
-    User.from_wonde(@school, @sync_data)
+    User.from_wonde(@school, @sync_data, @school_api)
     Enrollment.from_wonde(@school, @sync_data)
   end
 end
