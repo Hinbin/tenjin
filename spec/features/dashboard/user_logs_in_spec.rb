@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User visits the home page' :vcr, type: :feature, js: true do
+RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
   include_context 'api_data'
   include_context 'wonde_test_data'
   include_context 'default_creates'
