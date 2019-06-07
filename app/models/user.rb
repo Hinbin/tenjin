@@ -2,8 +2,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # Note - removed :registerable so new accounts cannot be created
-  devise :rememberable, :trackable,
-         :omniauthable, omniauth_providers: [:wonde]
+  devise :database_authenticatable, :rememberable, :trackable,
+         :omniauthable, omniauth_providers: [:wonde], authentication_keys: [:login]
 
   has_many :quizzes
   has_many :enrollments
@@ -20,8 +20,23 @@ class User < ApplicationRecord
 
   QUIZ_COOLDOWN_PERIOD = 40
 
-  # Disable the requirements for a password and e-mail as we're getting our
-  # users from Wonde, which will provide neither.
+  # Virtual attribute for authenticating by either username or email
+  # This is in addition to a real persisted field like 'username'
+  # Needed to allow users to sign in with either a username or an email
+  attr_writer :login
+
+  def login
+    @login || self.username || self.email
+  end
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login)
+      where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
+    elsif conditions.has_key?(:username) || conditions.has_key?(:email)
+      where(conditions.to_h).first
+    end
+  end
 
   def set_default_role
     self.role ||= :student
@@ -63,8 +78,10 @@ class User < ApplicationRecord
 
       classroom.students.data.each do |student|
         u = initialize_user(student, 'student', school)
-        u.username = u.forename[0].downcase + u.surname.downcase + u.upi[0..3]
-        u.username = u.username + '1' while User.where(username: u.username).count.positive?
+        if u.new_record?
+          u.username = u.forename[0].downcase + u.surname.downcase + u.upi[0..3]
+          u.username = u.username + '1' while User.where(username: u.username).count.positive?
+        end
         u.save
       end
     end

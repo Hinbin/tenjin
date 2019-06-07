@@ -59,7 +59,7 @@ RSpec.shared_context 'wonde_test_data', shared_context: :metadata do
 
   let(:student_upi) { '1479cf1d289684f08600c9ad1f6406fc' }
   let(:student_forename) { 'Leo' }
-  let(:student_wonde) { create(:user, forename: student_forename, surname: 'Ward', upi: student_upi, school: school) }
+  let(:student_wonde) { create(:user, forename: 'Leo', surname: 'Ward', upi: student_upi, school: school) }
 
   let(:employee_upi) { 'caea4baa5b7adac73ab1259987d2bcc0' }
   let(:employee_name) { 'Emma' }

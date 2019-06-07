@@ -28,7 +28,7 @@ RSpec.describe User, type: :model do
 
     context 'with student api data' do
       it 'does not allow students missing a upi' do
-        expect { create(:student, upi: nil) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { create(:student, upi: '') }.to raise_error(ActiveRecord::RecordInvalid)
       end
       it 'creates students who have a classroom for a mapped subject' do
         classroom_api_data[0].students = user_api_data
@@ -84,6 +84,14 @@ RSpec.describe User, type: :model do
         allow(school_api).to receive_message_chain(:employees, :get).and_return(contact_details_no_email_api_data)
         User.from_wonde(school_api_data, classroom_api_data, school_api)
         expect(User.count).to eq(0)
+      end
+
+      it 'does not update a username if the record already exists' do
+        User.create(upi: user_api_data.upi, username: 'test')
+        classroom_api_data[0].employees = user_api_data
+        allow(school_api).to receive_message_chain(:employees, :get).and_return(contact_details_api_data)
+        User.from_wonde(school_api_data, classroom_api_data, school_api)
+        User.first.username = 'test'
       end
     end
   end
