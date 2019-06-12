@@ -1,4 +1,4 @@
 
-=javascript_pack_tag('user')
+=javascript_pack_tag('users')
 .container
-=render('shared/homework')
+  =render('user_password') if @current_user.role == 'school_admin' || @current_user.role == 'teacher'

@@ -3,12 +3,14 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
 
   before do
     setup_subject_database
-
-    create(:enrollment, classroom: classroom, user: teacher)
-    sign_in teacher
   end
 
   context 'when logging in as a teacher' do
+    before do
+      create(:enrollment, classroom: classroom, user: teacher)
+      sign_in teacher
+    end
+
     it 'shows which classes they are currently assigned to' do
       visit(dashboard_path)
       expect(page).to have_content(classroom.name)
@@ -28,6 +30,23 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
     it 'does not show challenge points' do
       visit(dashboard_path)
       expect(page).to have_no_content('i.fa-star')
+    end
+  end
+
+  context 'when logging in as a school admin' do
+    before do
+      create(:enrollment, classroom: classroom, user: school_admin)
+      sign_in school_admin
+    end
+
+    it 'shows a link to the classrooms in the nav bar' do
+      visit(dashboard_path)
+      expect(page).to have_link('Classrooms', href: dashboard_path)
+    end
+
+    it 'shows a link to school admin in the nav bar' do
+      visit(dashboard_path)
+      expect(page).to have_link('School Admin', href: users_path)
     end
   end
 end

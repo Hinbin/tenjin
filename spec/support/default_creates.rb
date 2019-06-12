@@ -5,6 +5,7 @@ RSpec.shared_context 'default_creates', shared_context: :metadata do
 
   let(:student) { create(:student, school: school) }
   let(:teacher) { create(:teacher, school: school) }
+  let(:school_admin) { create(:school_admin, school: school) }
   let(:classroom) { create(:classroom, school: school, subject: subject) }
   let(:homework) { create(:homework, classroom: classroom, topic: topic) }
 

@@ -1,5 +1,16 @@
-class UserPolicy
+class UserPolicy < ApplicationPolicy
   attr_reader :current_user, :model
+
+  class Scope < Scope
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    def resolve
+      @scope.where(school: @user.school)
+    end
+  end
 
   def initialize(current_user, model)
     @current_user = current_user
@@ -7,7 +18,7 @@ class UserPolicy
   end
 
   def index?
-    @current_user.admin_school?
+    @current_user.school_admin?
   end
 
   def show?

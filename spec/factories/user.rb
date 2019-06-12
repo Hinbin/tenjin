@@ -21,5 +21,10 @@ FactoryBot.define do
       role { 'employee' }
       email { FFaker::Internet.email }
     end
+
+    factory :school_admin do
+      role { 'school_admin' }
+      email { FFaker::Internet.email }
+    end
   end
 end

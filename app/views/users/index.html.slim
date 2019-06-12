@@ -1,0 +1,16 @@
+=javascript_pack_tag('users')
+section.page-section.text-center.pt-2#Users
+  .container
+    h1.page-section-header.text-uppercase Students
+    .col
+      table.table#students-table
+        thead
+          th Name
+          th Username
+          th Reset Password?
+        tbody
+          - @students.each do |s|
+            tr.student-row data-user=s.id
+              td =s.forename + " " + s.surname
+              td =s.username
+              td =link_to('Reset Password', user_path(id: s.id), class: 'btn btn-dark')

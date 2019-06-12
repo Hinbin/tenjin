@@ -1,6 +1,11 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
 
+  def index
+    authorize current_user
+    @students = policy_scope(User).where(role: 'student')
+  end
+
   def show
     authorize current_user
     @css_flavour = find_dashboard_style
