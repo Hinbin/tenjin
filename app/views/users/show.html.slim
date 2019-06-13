@@ -1,4 +1,8 @@
 
-=javascript_pack_tag('users')
-.container
-  =render('user_password') if @current_user.role == 'school_admin' || @current_user.role == 'teacher'
+=javascript_pack_tag('user')
+section.page-section.text-center
+  .container    
+    h1.page-section-header.text-uppercase ="#{@user.forename} #{@user.surname}"
+    hr class=("small mb-5 primary-" + @css_flavour)
+  =render('user_password') if @current_user.school_employee?
+=render('shared/homework')

@@ -54,6 +54,15 @@ module SessionHelpers
     user.forename + ' ' + user.surname[0]
   end
 
+  def log_in_through_front_page(username, password)
+    visit(root_path)
+    click_button 'Login'
+    fill_in('user_login', with: username)
+    fill_in('user_password', with: password)
+    click_button 'loginModal'
+  end
+
+
   def create_file_blob(filename:, content_type:, metadata: nil)
     ActiveStorage::Blob.create_after_upload! io: file_fixture(filename).open, filename: filename,
                                              content_type: content_type, metadata: metadata

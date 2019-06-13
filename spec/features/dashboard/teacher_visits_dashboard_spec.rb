@@ -22,6 +22,12 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
       expect(page).to have_current_path(classroom_path(classroom))
     end
 
+    it 'allows you to go to set homework for the classroom' do
+      visit(dashboard_path)
+      click_link('Set Homework')
+      expect(page).to have_current_path(new_homework_path(classroom: { classroom_id: classroom.id }))
+    end
+
     it 'shows a link to the classrooms in the nav bar' do
       visit(dashboard_path)
       expect(page).to have_link('Classrooms', href: dashboard_path)

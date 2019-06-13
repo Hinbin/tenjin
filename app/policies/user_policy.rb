@@ -1,5 +1,5 @@
 class UserPolicy < ApplicationPolicy
-  attr_reader :current_user, :model
+  attr_reader :current_user, :model, :record
 
   class Scope < Scope
     def initialize(user, scope)
@@ -28,7 +28,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    @current_user.admin_school?
+    @current_user.school_employee? && @user.school == @current_user.school
   end
 
   def destroy?

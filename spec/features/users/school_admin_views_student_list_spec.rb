@@ -20,7 +20,9 @@ RSpec.describe 'School admin views student list', type: :feature, js: true do
     expect(page).to have_text('You are not authorized to perform this action.')
   end
 
-  it 'allows an admin to request a re-sync of the school'
+  it 'allows an admin to request a re-sync of the school' do
+
+  end
 
   it 'shows a list of students belonging to the school' do
     create(:enrollment, classroom: classroom, user: teacher)

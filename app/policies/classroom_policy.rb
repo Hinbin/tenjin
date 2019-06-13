@@ -1,5 +1,5 @@
 class ClassroomPolicy < ApplicationPolicy
   def show?
-    user.employee?
+    user.employee? || user.school_admin?
   end
 end

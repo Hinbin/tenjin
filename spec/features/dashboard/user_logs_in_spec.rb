@@ -27,18 +27,12 @@ RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
     end
 
     it 'logs in a student using an username' do
-      click_button 'Login'
-      fill_in('user_login', with: student.username)
-      fill_in('user_password', with: student.password)
-      click_button 'loginModal'
+      log_in_through_front_page(student.username, student.password)
       expect(page).to have_content(student.forename).and have_content(student.surname)
     end
 
     it 'logs in a teacher using an email' do
-      click_button 'Login'
-      fill_in('user_login', with: teacher.email)
-      fill_in('user_password', with: teacher.password)
-      click_button 'loginModal'
+      log_in_through_front_page(teacher.username, teacher.password)
       expect(page).to have_content(teacher.forename).and have_content(teacher.surname)
     end
 
