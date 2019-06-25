@@ -9,6 +9,7 @@ gem 'dotenv-rails', groups: %i[development test]
 
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
+gem 'rack-timeout'
 
 # Templates & asset handling
 gem 'coffee-rails', '~> 5.0'
