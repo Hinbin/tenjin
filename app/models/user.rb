@@ -2,7 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # Note - removed :registerable so new accounts cannot be created
-  devise :database_authenticatable, :rememberable, :trackable,
+  devise :database_authenticatable, :rememberable, :trackable, :recoverable,
          :omniauthable, omniauth_providers: [:wonde], authentication_keys: [:login]
 
   has_many :quizzes

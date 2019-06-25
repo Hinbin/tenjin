@@ -2,6 +2,7 @@
 section.page-section.text-center.pt-2#Users
   .container
     h1.page-section-header.text-uppercase Students
+    hr class=("small mb-5 primary-red")
     .col
       table.table#students-table
         thead
@@ -14,3 +15,23 @@ section.page-section.text-center.pt-2#Users
               td =s.forename + " " + s.surname
               td =s.username
               td =link_to('Reset Password', user_path(id: s.id), class: 'btn btn-dark')
+    h1.page-section-header.text-uppercase.pt-5 Danger Zone
+    hr class=("small mb-5 primary-red")
+    button.btn.btn-danger.text-white#resetPrintModalButton data-toggle="modal" data-target='#resetAllPasswordsModal' Reset and print all passwords
+div.modal.fade#resetAllPasswordsModal
+  div.modal-dialog role="document"
+    div.modal-content 
+      div.modal-body
+        p.alert.alert-danger.text-center This action cannot be undone.
+        p It will reset all username and passwords for your school.  Users will not be able to log in again until you give them their new password, which will be random.
+        p It should only be used when setting up your school to use Tenjin for the first time.
+        p 
+          | To confirm this action, type the name of your school, 
+          strong.font-weight-bold#schoolName #{current_user.school.name}
+          |  in the box below and click confirm.
+        .row.justify-content-center
+          input.px-2#confirmAllPasswordResetTextbox
+          =link_to 'Confirm', users_path(reset_all: true), class: 'btn btn-danger disabled', id: 'confirmAllPasswordResetButton', method: :post
+
+      div.modal-footer
+        button.btn.btn-secondary type="button" data-dismiss="modal" Close

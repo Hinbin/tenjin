@@ -12,4 +12,16 @@ $(document).on('turbolinks:load', () => {
     })
   }
 
+  $('#confirmAllPasswordResetTextbox').off('input')
+
+  $('#confirmAllPasswordResetTextbox').on('input', () => {
+    const textBoxContents = $('#confirmAllPasswordResetTextbox').val()
+    const schoolName = $('#schoolName').text()
+
+    if (textBoxContents === schoolName) {
+      $('#confirmAllPasswordResetButton').removeClass('disabled')
+    } else {
+      $('#confirmAllPasswordResetButton').addClass('disabled')
+    }
+  })
 })

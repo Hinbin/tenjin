@@ -22,6 +22,16 @@ class UsersController < ApplicationController
     redirect_to user_record, notice: 'Password successfully updated'
   end
 
+  def create
+    # Only used to reset passwords
+    authorize current_user
+    @result = Users::ResetUserPasswords.new(admin: current_user).call
+    return render new_passwords if @result.success?
+
+    flash[:alert] = 'You are not authorized to perform this action.'
+    redirect_to index
+  end
+
   private
 
   def find_homework_progress
@@ -32,4 +42,5 @@ class UsersController < ApplicationController
   def update_password_params
     params.require(:user).permit(:password)
   end
+
 end

@@ -42,6 +42,5 @@ RSpec.describe 'School admin views a student record', type: :feature, js: true d
     sign_in student
     visit(user_path(student))
     expect(page).to have_no_button('Update Password')
-
   end
 end

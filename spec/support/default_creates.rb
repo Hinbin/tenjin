@@ -13,7 +13,7 @@ RSpec.shared_context 'default_creates', shared_context: :metadata do
   let(:answer) { create(:answer, question: question, correct: true) }
 
   let(:second_school) { create(:school, school_group: School.first.school_group) }
-  let(:second_school_student) { User.where(school: second_school).first }
+  let(:second_school_student) { create(:student, school: second_school) }
   let(:second_school_student_name) { initialize_name second_school_student }
 
   let(:student_different_school_group) { create(:student) }

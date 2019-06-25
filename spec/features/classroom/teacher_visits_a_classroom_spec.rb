@@ -89,4 +89,12 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
     visit(classroom_path(classroom))
     expect(page).to have_current_path(root_path)
   end
+
+  it 'allows a teacher to add or change the classroom description'
+
+  it 'uses favoured names?'
+
+  it 'does not show the search box twice after going back'
+
+
 end
