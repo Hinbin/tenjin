@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_04_182815) do
+ActiveRecord::Schema.define(version: 2019_06_25_085521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -263,6 +263,7 @@ ActiveRecord::Schema.define(version: 2019_06_04_182815) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "external_id"
   end
 
   create_table "topic_scores", force: :cascade do |t|
@@ -280,6 +281,7 @@ ActiveRecord::Schema.define(version: 2019_06_04_182815) do
     t.bigint "subject_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "external_id"
     t.index ["subject_id"], name: "index_topics_on_subject_id"
   end
 
@@ -320,8 +322,10 @@ ActiveRecord::Schema.define(version: 2019_06_04_182815) do
     t.integer "challenge_points"
     t.string "dashboard_style"
     t.datetime "time_of_last_quiz"
+    t.string "username"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "active_customisations", "customisations"

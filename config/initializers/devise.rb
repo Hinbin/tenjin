@@ -257,20 +257,15 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  callback_url = 'http://localhost:3000/users/auth/wonde/callback'
-
-  if Rails.env == 'production'
-    callback_url = ENV['CALLBACK_URL']
-  end
 
   config.omniauth :wonde, 
-    Rails.application.credentials.wonde_client_id, 
-    Rails.application.credentials.wonde_secret, 
+    ENV['WONDE_CLIENT_ID'], 
+    ENV['WONDE_SECRET'], 
     :provider_ignores_state => true,
-    :redirect_uri => callback_url,
+    :redirect_uri => ENV['WONDE_CALLBACK_URL'],
     setup: (lambda do |env|
       request = Rack::Request.new(env)
-      env['omniauth.strategy'].options['token_params'] = {:redirect_uri => callback_url}
+      env['omniauth.strategy'].options['token_params'] = {:redirect_uri => ENV['WONDE_CALLBACK_URL']}
     end)
   
   # ==> Warden configuration
