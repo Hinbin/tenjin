@@ -49,3 +49,5 @@ yarn-debug.log*
 
 # Ignore the image downloads directory
 /db/downloads
+
+.env
