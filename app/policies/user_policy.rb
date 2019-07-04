@@ -38,6 +38,6 @@ class UserPolicy < ApplicationPolicy
   def destroy?
     return false if @current_user == @user
 
-    @current_user.admin_school?
+    @current_user.school_admin?
   end
 end

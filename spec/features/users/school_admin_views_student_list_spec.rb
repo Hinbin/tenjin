@@ -21,7 +21,6 @@ RSpec.describe 'School admin views student list', type: :feature, js: true do
   end
 
   it 'allows an admin to request a re-sync of the school' do
-
   end
 
   it 'gives a clear warning when an admin resets all passwords that this is dangerous' do
@@ -44,7 +43,7 @@ RSpec.describe 'School admin views student list', type: :feature, js: true do
     expect(page).to have_link('Confirm')
   end
 
-  it 'allows an admin to reset all passwords and save a list of username and passwords', :focus do
+  it 'allows an admin to reset all passwords and save a list of username and passwords'do
     visit(users_path)
     click_button('Reset and print all passwords')
     find('#confirmAllPasswordResetTextbox').set(school.name)
@@ -84,5 +83,4 @@ RSpec.describe 'School admin views student list', type: :feature, js: true do
     click_link('Reset Password')
     expect(page).to have_current_path(user_path(student))
   end
-  
 end

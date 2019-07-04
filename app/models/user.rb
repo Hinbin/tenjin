@@ -54,7 +54,7 @@ class User < ApplicationRecord
     where(provider: auth['provider'], upi: auth['upi']).first
   end
 
-  def self.from_wonde(school, sync_data, school_api)
+  def self.from_wonde(school, sync_data, _school_api)
     mapped_subjects = SubjectMap.subject_maps_for_school(school)
     # We only want entries for students that are completing subjects
     # covered by the quiz platform
@@ -63,7 +63,7 @@ class User < ApplicationRecord
       next unless subject.present?
 
       create_student_users(classroom, school)
-      create_employee_users(classroom, school, school_api)
+      create_employee_users(classroom, school)
     end
   end
 
@@ -82,26 +82,23 @@ class User < ApplicationRecord
 
       classroom.students.data.each do |student|
         u = initialize_user(student, 'student', school)
-        if u.new_record?
-          u.username = u.forename[0].downcase + u.surname.downcase + u.upi[0..3]
-          u.username = u.username + '1' while User.where(username: u.username).count.positive?
-        end
         u.save
       end
     end
 
-    def create_employee_users(classroom, school, school_api)
+    def create_employee_users(classroom, school)
       return unless classroom.employees.present?
       return unless classroom.employees.data.present?
 
       classroom.employees.data.each do |employee|
         u = initialize_user(employee, 'employee', school)
-        e = school_api.employees.get('/' + employee.id + '?include=contact_details')
-        break unless e.contact_details.data.emails.email.present?
-
-        u.email = e.contact_details.data.emails.email
         u.save
       end
+    end
+
+    def generate_username(u)
+      u.username = u.forename[0].downcase + u.surname.downcase + u.upi[0..3]
+      u.username = u.username + '1' while User.where(username: u.username).count.positive?
     end
 
     def initialize_user(user, role, school)
@@ -113,6 +110,7 @@ class User < ApplicationRecord
       u.forename = user.forename
       u.surname = user.surname
       u.challenge_points = 0
+      generate_username(u) if u.new_record?
       u
     end
   end

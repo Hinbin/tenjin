@@ -23,8 +23,15 @@ class SchoolsController < ApplicationController
   end
 
   def update
-    authorize @school
-    School::SyncSchool.new(@school).call
+    if update_school_params[:reset_all].present? && update_school_params[:reset_all] == 'true'
+      authorize @current_admin, policy_class: SchoolPolicy
+      @result = User::ResetUserPasswords.new(@current_admin, @school).call
+      @students = User.where(school: @school)
+      render 'users/new_passwords'
+    else
+      authorize @school
+      School::SyncSchool.new(@school).call
+    end
   end
 
   def show
@@ -46,5 +53,9 @@ class SchoolsController < ApplicationController
 
   def pundit_user
     current_admin
+  end
+
+  def update_school_params
+    params.permit(:reset_all)
   end
 end

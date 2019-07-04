@@ -1,7 +1,8 @@
 # Resets the passwords for a group of users, and returns their new passwords
 class User::ResetUserPasswords
-  def initialize(admin)
+  def initialize(admin, school = nil)
     @admin = admin
+    @school = school
     @user_data = {}
     @users = []
   end
@@ -20,7 +21,8 @@ class User::ResetUserPasswords
   private
 
   def find_users
-    @users = UserPolicy::Scope.new(@admin, User).resolve.where(role: 'student')
+    @users = UserPolicy::Scope.new(@admin, User).resolve.where(role: 'student') if @admin.class.name == 'User'
+    @users = User.where(school: @school) if @admin.class.name == 'Admin'
   end
 
   def reset_user_list_passwords
