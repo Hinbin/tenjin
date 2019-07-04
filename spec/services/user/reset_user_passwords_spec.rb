@@ -1,4 +1,4 @@
-RSpec.describe User::ResetPasswords do
+RSpec.describe User::ResetUserPasswords do
   context 'when resetting the passwords for the whole school', default_creates: true do
     let(:reset_password) { Quiz::CreateQuiz.new(admin: school_admin).call }
 
@@ -56,7 +56,16 @@ RSpec.describe User::ResetPasswords do
       expect(second_school_student.encrypted_password).to eq(old_password)
     end
 
-    it 'reports success if all passwords have been changed'
-    it 'returns a list of usernames and passwords'
+    it 'reports success if all passwords have been changed' do
+      create_list(:student, 19, school: school)
+      result = described_class.new(school_admin).call
+      expect(result.success?).to eq(true)
+    end
+
+    it 'returns a list of usernames and passwords' do
+      create_list(:student, 19, school: school)
+      result = described_class.new(school_admin).call
+      expect(result.user_data).to be_present
+    end
   end
 end

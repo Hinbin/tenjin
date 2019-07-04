@@ -38,7 +38,7 @@ RSpec.describe 'School admin views a student record', type: :feature, js: true d
     expect(page).to have_button('Update Password')
   end
 
-  it 'does not show the user passwsord reset option for a student' do
+  it 'does not show the user password reset option for a student' do
     sign_in student
     visit(user_path(student))
     expect(page).to have_no_button('Update Password')

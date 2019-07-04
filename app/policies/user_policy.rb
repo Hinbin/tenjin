@@ -27,6 +27,10 @@ class UserPolicy < ApplicationPolicy
     @current_user == @user && @user.school.permitted
   end
 
+  def create?
+    @current_user.school_admin?
+  end
+
   def update?
     @current_user.school_employee? && @user.school == @current_user.school
   end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
+RSpec.describe 'User logs in', :vcr, type: :feature, js: true do
   include_context 'api_data'
   include_context 'wonde_test_data'
   include_context 'default_creates'
@@ -58,4 +58,6 @@ RSpec.describe 'User visits the home page', :vcr, type: :feature, js: true do
     click_link 'Sign in with Wonde'
     expect(page).to have_text('Your account has not been found')
   end
+
+  it 'allows teachers to login via the devise login page'
 end

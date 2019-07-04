@@ -25,11 +25,14 @@ class UsersController < ApplicationController
   def create
     # Only used to reset passwords
     authorize current_user
-    @result = Users::ResetUserPasswords.new(admin: current_user).call
-    return render new_passwords if @result.success?
-
-    flash[:alert] = 'You are not authorized to perform this action.'
-    redirect_to index
+    @result = User::ResetUserPasswords.new(current_user).call
+    if @result.success?
+      @students = policy_scope(User).where(role: 'student')
+      return render 'users/new_passwords' 
+    else
+      flash[:alert] = @result.errors
+      redirect_to index
+    end
   end
 
   private
@@ -42,5 +45,4 @@ class UsersController < ApplicationController
   def update_password_params
     params.require(:user).permit(:password)
   end
-
 end

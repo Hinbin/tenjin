@@ -1,5 +1,5 @@
 # Resets the passwords for a group of users, and returns their new passwords
-class User::ResetPasswords
+class User::ResetUserPasswords
   def initialize(admin)
     @admin = admin
     @user_data = {}
