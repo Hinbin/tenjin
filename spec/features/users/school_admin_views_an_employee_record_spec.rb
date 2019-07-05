@@ -1,5 +1,4 @@
-RSpec.describe 'School admin views a teacher record', type: :feature, js: true do
-  include_context 'default_creates'
+RSpec.describe 'School admin views a teacher record', type: :feature, js: true, default_creates: true do
 
   let(:new_password) { FFaker::Internet.password }
 

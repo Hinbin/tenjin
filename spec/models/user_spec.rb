@@ -72,20 +72,6 @@ RSpec.describe User, type: :model do
         expect(User.second.username).to eq(u.forename[0].downcase + u.surname.downcase + u.upi[0..3] + '1')
       end
 
-      it 'saves an employee e-mail' do
-        classroom_api_data[0].employees = user_api_data
-        allow(school_api).to receive_message_chain(:employees, :get).and_return(contact_details_api_data)
-        User.from_wonde(school_api_data, classroom_api_data, school_api)
-        expect(User.first.email).to eq(employee_email)
-      end
-
-      it 'does not create an employee record if no e-mail is supplied' do
-        classroom_api_data[0].employees = user_api_data
-        allow(school_api).to receive_message_chain(:employees, :get).and_return(contact_details_no_email_api_data)
-        User.from_wonde(school_api_data, classroom_api_data, school_api)
-        expect(User.count).to eq(0)
-      end
-
       it 'does not update a username if the record already exists' do
         User.create(upi: user_api_data.upi, username: 'test')
         classroom_api_data[0].employees = user_api_data

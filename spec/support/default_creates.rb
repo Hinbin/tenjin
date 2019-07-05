@@ -18,4 +18,6 @@ RSpec.shared_context 'default_creates', shared_context: :metadata do
 
   let(:student_different_school_group) { create(:student) }
   let(:school_without_school_group) { create(:school, school_group: nil) }
+
+  let(:new_password) { FFaker::Internet.password }
 end

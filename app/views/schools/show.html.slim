@@ -14,6 +14,25 @@ div class="container"
     tr
       td Questions Asked
       td =@asked_questions
+  h1.pt-5 Manage School Admins
+  -if @school_admins.count.zero?    
+    p No current admins
+  -else
+    table.table
+      thead
+        tr
+          th Username
+          th Change Role
+          th Login As
+      tbody
+        -@school_admins.each do |sa|
+          tr.school-admin-data
+            td =sa.username
+            td =sa.role.humanize          
+            td =button_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary'
+  .d-flex.justify-content-center
+    =link_to 'Manage User Roles', school_path(@school, params: {show_employees: 'true'}), class: 'btn btn-dark'
+
   h1.pt-5 Subject Maps
   table class="table"
     tr 
@@ -27,5 +46,6 @@ div class="container"
   .row
     h1.text-center Generate Username & Password Table.
     .alert.alert-danger This will reset all username and passwords for this school.  Only do this if this school has just been added!
+  .row
     .d-flex.justify-content-center
       =button_to( 'Reset All Passwords', school_path(@school), method: :patch, class: 'btn btn-danger', disable_with: 'Submitting...', params: { reset_all: true }, data: {confirm: 'Are you really sure?  This will reset ALL the schools passwords'} )

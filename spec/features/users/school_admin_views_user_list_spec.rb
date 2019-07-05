@@ -1,5 +1,4 @@
-RSpec.describe 'School admin views student list', type: :feature, js: true do
-  include_context 'default_creates'
+RSpec.describe 'School admin views user list', type: :feature, js: true, default_creates: true do
 
   before do
     setup_subject_database
@@ -80,7 +79,23 @@ RSpec.describe 'School admin views student list', type: :feature, js: true do
   it 'navigates to the correct user for the reset password button' do
     create(:enrollment, user: student, school: second_school)
     visit(users_path)
-    click_link('Reset Password')
+    first('#students-table').click_link('Reset Password')
     expect(page).to have_current_path(user_path(student))
   end
+
+  it 'shows employees if I am a school admin' do
+    create(:teacher, school: school)
+    visit(users_path)
+    expect(page).to have_css('.employee-row', count: 2)
+  end
+
+  it 'shows other school admins if I am a school admin' do
+    create(:school_admin, school: school)
+    visit(users_path)
+    expect(page).to have_css('.employee-row', count: 2)
+  end
+
+  it 'does not show employees if I am an employee'
+
+  it 'lets me reset passwords for employees if I am a school admin'
 end

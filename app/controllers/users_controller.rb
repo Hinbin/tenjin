@@ -4,12 +4,13 @@ class UsersController < ApplicationController
   def index
     authorize current_user
     @students = policy_scope(User).where(role: 'student')
+    @employees = policy_scope(User).where(role: 'employee').or(policy_scope(User).where(role: 'school_admin')) if @current_user.school_admin?
   end
 
-  def show
-    authorize current_user
+  def show    
     @css_flavour = find_dashboard_style
     @user = User.find(params[:id])
+    authorize @user
     @homeworks = policy_scope(Homework)
     find_homework_progress
   end

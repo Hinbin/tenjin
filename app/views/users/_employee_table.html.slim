@@ -1,0 +1,16 @@
+h1.page-section-header.text-uppercase Employees
+hr class=("small mb-5 primary-red")
+.col
+  table.table#employees-table
+    thead
+      th Name
+      th Username
+      th Role
+      th Reset Password?
+    tbody
+      - @employees.each do |e|
+        tr.employee-row data-user=e.id
+          td =e.forename + " " + e.surname
+          td =e.username
+          td =e.role.humanize
+          td =link_to 'Reset Password', user_path(id: e.id), class: 'btn btn-dark reset-password-employee'

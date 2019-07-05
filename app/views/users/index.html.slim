@@ -14,7 +14,9 @@ section.page-section.text-center.pt-2#Users
             tr.student-row data-user=s.id
               td =s.forename + " " + s.surname
               td =s.username
-              td =link_to('Reset Password', user_path(id: s.id), class: 'btn btn-dark')
+              td =link_to('Reset Password', user_path(id: s.id), class: 'btn btn-dark reset-password-student')
+    -if current_user.school_admin?
+      =render('users/employee_table')
     h1.page-section-header.text-uppercase.pt-5 Danger Zone
     hr class=("small mb-5 primary-red")
     button.btn.btn-danger.text-white#resetPrintModalButton data-toggle="modal" data-target='#resetAllPasswordsModal' Reset and print all passwords

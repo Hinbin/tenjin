@@ -62,6 +62,11 @@ module SessionHelpers
     click_button 'loginModal'
   end
 
+  def update_password(new_password)
+    find('#user_password').set(new_password)
+    click_button('Update Password')
+  end
+
 
   def create_file_blob(filename:, content_type:, metadata: nil)
     ActiveStorage::Blob.create_after_upload! io: file_fixture(filename).open, filename: filename,

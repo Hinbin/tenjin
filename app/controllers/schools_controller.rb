@@ -27,7 +27,10 @@ class SchoolsController < ApplicationController
       authorize @current_admin, policy_class: SchoolPolicy
       @result = User::ResetUserPasswords.new(@current_admin, @school).call
       @students = User.where(school: @school)
-      render 'users/new_passwords'
+      return render 'users/new_passwords'
+    elsif update_school_params[:role].present? && update_school_params[:user_id].present?
+      authorize @current_admin, policy_class: SchoolPolicy
+      User.find(update_school_params[:user_id]).update_attribute('role', update_school_params[:role])
     else
       authorize @school
       School::SyncSchool.new(@school).call
@@ -39,6 +42,11 @@ class SchoolsController < ApplicationController
     @asked_questions =
       AskedQuestion.joins(quiz: [{ user: :school }])
                    .where('asked_questions.correct IS NOT NULL AND schools.id = ?', @school.id).count
+    @school_admins = User.where(school: @school, role: 'school_admin')
+    return unless school_show_params[:show_employees] == 'true'
+
+    @employees = User.where(school: @school, role: 'employee').or @school_admins
+    render 'school_employees'
   end
 
   private
@@ -56,6 +64,10 @@ class SchoolsController < ApplicationController
   end
 
   def update_school_params
-    params.permit(:reset_all)
+    params.permit(:id, :reset_all, :role, :user_id)
+  end
+
+  def school_show_params
+    params.permit(:id, :show_employees)
   end
 end

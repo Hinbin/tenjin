@@ -104,7 +104,7 @@ class User < ApplicationRecord
     def initialize_user(user, role, school)
       u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
       u.school = school
-      u.role = role
+      u.role = role unless u.role == 'school_admin'
       u.provider = 'Wonde'
       u.upi = user.upi
       u.forename = user.forename
@@ -112,6 +112,6 @@ class User < ApplicationRecord
       u.challenge_points = 0
       generate_username(u) if u.new_record?
       u
-    end
+    end    
   end
 end
