@@ -20,6 +20,7 @@ $(document).on('turbolinks:load', () => {
 
   if (!$.fn.dataTable.isDataTable('#homework-table')) {
     $('#homework-table').DataTable({
+      dom: 'rtp',
       'pageLength': 5,
       'language': {
         'emptyTable': 'No homeworks have been found'

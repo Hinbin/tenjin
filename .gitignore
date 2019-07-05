@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore environment variable file
+.env
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
@@ -46,3 +49,5 @@ yarn-debug.log*
 
 # Ignore the image downloads directory
 /db/downloads
+
+.env

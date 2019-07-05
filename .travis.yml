@@ -13,7 +13,7 @@ addons:
   chrome: stable
 before_install:
   - gem update --system
-  - gem install bundler -v '~> 1.17'
+  - gem install bundler
 install:
   - bundle install
   - nvm install node

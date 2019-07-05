@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_05_103159) do
+
+ActiveRecord::Schema.define(version: 2019_06_25_085521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -263,6 +264,7 @@ ActiveRecord::Schema.define(version: 2019_06_05_103159) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "external_id"
   end
 
   create_table "topic_scores", force: :cascade do |t|
@@ -280,6 +282,7 @@ ActiveRecord::Schema.define(version: 2019_06_05_103159) do
     t.bigint "subject_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "external_id"
     t.index ["subject_id"], name: "index_topics_on_subject_id"
   end
 

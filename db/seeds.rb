@@ -13,18 +13,23 @@ def create_file_blob(data:, filename:, content_type:, metadata: nil)
 end
 
 CSV.foreach('db/CSV Output - subject_export.csv', headers: true) do |row|
-  Subject.create!(row.to_hash)
-  p row["subject"]
+  Subject.create!(external_id: row['id'], name: row['name'])
+  p row["name"]
 end
 
 CSV.foreach('db/CSV Output - unit_export.csv', headers: true) do |row|
-  Topic.create!(row.to_hash)
+  subject = Subject.where(external_id: row['subject_id']).first
+  Topic.create!(external_id: row['id'], name: row['name'], subject: subject )
   p row["name"]
 end
 
 CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
+  p row
+  topic = Topic.where(external_id: row['topic_id']).first
+  p topic
+
   if row['image'].nil?
-    Question.create!(external_id: row['id'], topic_id: row['topic_id'], question_text: row['question_text'], question_type: row['question_type'] )
+    Question.create!(external_id: row['id'], topic: topic, question_text: row['question_text'], question_type: row['question_type'] )
   else
     google_location = row['image'].gsub(/open?/, 'uc')
 
@@ -46,7 +51,7 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
 
     image = create_file_blob(data: StringIO.new(response.body), filename: filename, content_type: 'image/jpg')
     html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
-    Question.create!(external_id: row['id'], topic_id: row['topic_id'], question_text: html , question_type: row['question_type'] )
+    Question.create!(external_id: row['id'], topic: topic, question_text: html , question_type: row['question_type'] )
   end
 
 end
