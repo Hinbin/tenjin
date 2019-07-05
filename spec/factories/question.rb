@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :question do
-    sequence(:question_text) { FFaker::Lorem.sentence }
+    sequence(:question_text) { |n| FFaker::Lorem.sentence + n.to_s }
     question_type { 'multiple' }
     association :topic, factory: :topic
 

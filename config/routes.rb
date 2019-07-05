@@ -10,7 +10,12 @@ Rails.application.routes.draw do
   resources :answers
   resources :topics
   resources :homeworks
-  resources :users, only:[:show]
+  resources :users, only:[:show, :index, :update, :create]
+  resources :admins, only:[:show]  do
+    member do
+      post 'become'
+    end
+  end
 
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'

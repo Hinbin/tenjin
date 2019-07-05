@@ -24,7 +24,7 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
 
     it 'allows me to create a homework' do
       click_link('Set Homework')
-      expect(page).to have_content('SET HOMEWORK')
+      expect(page).to have_current_path(new_homework_path(classroom: {classroom_id: classroom.id}))
     end
 
     it 'takes me to a homework that I have clicked on' do
@@ -89,4 +89,12 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
     visit(classroom_path(classroom))
     expect(page).to have_current_path(root_path)
   end
+
+  it 'allows a teacher to add or change the classroom description'
+
+  it 'uses favoured names?'
+
+  it 'does not show the search box twice after going back'
+
+
 end

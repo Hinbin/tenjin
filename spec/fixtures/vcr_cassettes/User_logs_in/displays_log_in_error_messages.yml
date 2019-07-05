@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.wonde.com/graphql/me?query=%7B%0A%20%20Me%20%7B%0A%20%20%20%20Person%20%7B%0A%20%20%20%20%20%20...%20on%20Student%20%7B%0A%20%20%20%20%20%20%20%20type%0A%20%20%20%20%20%20%20%20forename%0A%20%20%20%20%20%20%20%20middle_names%0A%20%20%20%20%20%20%20%20surname%0A%20%20%20%20%20%20%20%20upi%0A%20%20%20%20%20%20%20%20School%20%7B%0A%20%20%20%20%20%20%20%20%20%20id%0A%20%20%20%20%20%20%20%20%20%20name%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20...%20on%20Employee%20%7B%0A%20%20%20%20%20%20%20%20type%0A%20%20%20%20%20%20%20%20forename%0A%20%20%20%20%20%20%20%20middle_names%0A%20%20%20%20%20%20%20%20surname%0A%20%20%20%20%20%20%20%20upi%0A%20%20%20%20%20%20%20%20School%20%7B%0A%20%20%20%20%20%20%20%20%20%20id%0A%20%20%20%20%20%20%20%20%20%20name%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20...%20on%20Contact%20%7B%0A%20%20%20%20%20%20%20%20type%0A%20%20%20%20%20%20%20%20forename%0A%20%20%20%20%20%20%20%20middle_names%0A%20%20%20%20%20%20%20%20surname%0A%20%20%20%20%20%20%20%20upi%0A%20%20%20%20%20%20%20%20School%20%7B%0A%20%20%20%20%20%20%20%20%20%20id%0A%20%20%20%20%20%20%20%20%20%20name%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjYyODRlNjc5NjdjZWJkMjc5YzE1MzIyMWY4MzYwYjJhMDkyYmVjMDBmYzM5OTE2MDY3ZjI5M2NhZjhjN2JkYjUwN2M0NTcyOTJmOGZkNWEzIn0.eyJhdWQiOiI2NzAxODUiLCJqdGkiOiI2Mjg0ZTY3OTY3Y2ViZDI3OWMxNTMyMjFmODM2MGIyYTA5MmJlYzAwZmMzOTkxNjA2N2YyOTNjYWY4YzdiZGI1MDdjNDU3MjkyZjhmZDVhMyIsImlhdCI6MTU0NDk1MDk3MCwibmJmIjoxNTQ0OTUwOTcwLCJleHAiOjE1NDYxNjA1NzAsInN1YiI6IjE4ODQ0Iiwic2NvcGVzIjpbXX0.i0--LjjetHyvxGfTU1nHliJwhhOWVvz0Mwj6xCQ1zeEVab9_GJkBDkY8rzautCfoF3Phwy8T36h2VBiTe38limO_anJCFOPlGYt5ajtMxdWRyQP3h5_zABzWfD7uLZGlyO6uM5BjbZG_BCKYeaQsg1ARuMx0nCcZhgiFJwa3x3NAdxLAfSoEMIGAQGxsy84JyRZW5d8exNvkM34OVgYmrc5bvYqiLYJeF9kNTBHqu9-flgx5LhmaInjJndR4U34UfmDqa308uzejelfuPHp7V2ZR6jW1iZ8kyN9pnZOXzDTLuTvV07ld3q00rQYZXpD76c0CUEouOXOUmtYVh1Z7GIAXfY6mVa6PDJUCkPH_OdkK9faz8NGx5bhHlf6rut5rp3uXDxhDxb6PpxjH935NCY2lwgsyaEmvJPGt8aU2_znBOd97fYmJ7rf6-7F79lAPG_PONLIvE4p6WCAtLZXpHaRCt_2F1yWZIchXMUIPbZi5HJp-YWZ0cjtn2FtpiDPEe0jgTvOWDK8C_rgXhjH4M3c1GR5I3kUc5oM4lZdz1l_2iHh7pmBjxqnWxmxNXtdMEK6ZCmIQgSQ-QmX6KmvJGkTgvosXN9dZimQqBf3pcplYi2jURwl288oJp5yLe_VavuK__Ey1Ta6QOaFZOzq0GZ4d3bL1KE9Xtm6F-NK_VLE
+      User-Agent:
+      - Faraday v0.15.4
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 500
+      message: Internal Server Error
+    headers:
+      Date:
+      - Fri, 05 Jul 2019 14:14:22 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '86'
+      Connection:
+      - keep-alive
+      Server:
+      - Apache/2.4.25 (Debian)
+      Vary:
+      - Authorization
+      X-Powered-By:
+      - PHP/7.1.26
+      Cache-Control:
+      - no-cache, private
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin,
+        Authorization
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: '{"error":"internal_server_error","error_description":"Something went
+        wrong our side."}'
+    http_version: 
+  recorded_at: Fri, 05 Jul 2019 14:14:22 GMT
+recorded_with: VCR 5.0.0

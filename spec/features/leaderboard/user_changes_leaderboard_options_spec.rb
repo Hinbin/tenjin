@@ -1,5 +1,4 @@
-RSpec.describe 'User changes leaderboard options', type: :feature, js: true do
-  include_context 'default_creates'
+RSpec.describe 'User changes leaderboard options', type: :feature, js: true, default_creates: true do
 
   before do
     setup_subject_database

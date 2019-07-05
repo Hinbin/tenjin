@@ -4,6 +4,11 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
     sign_in student
   end
 
+  context 'when showing subjects' do
+    it 'only shows subjects that the user takes'
+    it 'does not duplicate subjects'
+  end
+
   context 'when changing the dashboard style' do
     let(:customisation) { create(:customisation, customisation_type: 'dashboard_style', value: 'darkred') }
 

@@ -2,8 +2,7 @@ nav class="navbar navbar-expand-sm navbar-dark justify-content-between fixed-top
   a class="navbar-brand" href='/'
     =icon('fas', 'vihara', class: 'fa-2x', style: 'color: White d-inline-block align-top')
     h1 style="color:white" class="navbar-text text-uppercase" id="branding-text" Tenjin
-  form class="form-inline py-2 my-lg-0"
-    a [class='btn btn-light-outline' id='navbar-btn' href=url_for(user_wonde_omniauth_authorize_path)] Login
+  button.btn.btn-light-outline.my-1 data-toggle="modal" data-target="#studentLoginModal" Login
   
 
 

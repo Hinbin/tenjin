@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :answer do
-    sequence(:text) { FFaker::Lorem.sentence }
+    sequence(:text) { |n| FFaker::Lorem.sentence + n.to_s }
     question
     correct { 'false' }
   end

@@ -1,4 +1,7 @@
-
-=javascript_pack_tag('user')
-.container
-=render('shared/homework')
+section.page-section.text-center
+  .container    
+    h1.page-section-header.text-uppercase ="#{@user.forename} #{@user.surname}"
+    hr class=("small mb-5 primary-" + @css_flavour)
+  =render('user_password') if @current_user.school_employee?
+-if @user.student?
+  =render('shared/homework')

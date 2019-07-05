@@ -2,7 +2,7 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   def show
-    authorize current_user # make it so that it checks if the school is permitted?
+    authorize current_user, policy_class: DashboardPolicy # make it so that it checks if the school is permitted?
     @subjects = current_user.subjects
 
     if current_user.student?

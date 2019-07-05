@@ -2,8 +2,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # Note - removed :registerable so new accounts cannot be created
-  devise :rememberable, :trackable,
-         :omniauthable, omniauth_providers: [:wonde]
+  devise :database_authenticatable, :rememberable, :trackable, :recoverable,
+         :omniauthable, omniauth_providers: [:wonde], authentication_keys: [:login]
 
   has_many :quizzes
   has_many :enrollments
@@ -20,8 +20,27 @@ class User < ApplicationRecord
 
   QUIZ_COOLDOWN_PERIOD = 40
 
-  # Disable the requirements for a password and e-mail as we're getting our
-  # users from Wonde, which will provide neither.
+  # Virtual attribute for authenticating by either username or email
+  # This is in addition to a real persisted field like 'username'
+  # Needed to allow users to sign in with either a username or an email
+  attr_writer :login
+
+  def login
+    @login || username || email
+  end
+
+  def school_employee?
+    school_admin? || employee?
+  end
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login)
+      where(conditions.to_h).where(['lower(username) = :value OR lower(email) = :value', { value: login.downcase }]).first
+    elsif conditions.key?(:username) || conditions.key?(:email)
+      where(conditions.to_h).first
+    end
+  end
 
   def set_default_role
     self.role ||= :student
@@ -35,7 +54,7 @@ class User < ApplicationRecord
     where(provider: auth['provider'], upi: auth['upi']).first
   end
 
-  def self.from_wonde(school, sync_data)
+  def self.from_wonde(school, sync_data, _school_api)
     mapped_subjects = SubjectMap.subject_maps_for_school(school)
     # We only want entries for students that are completing subjects
     # covered by the quiz platform
@@ -62,7 +81,8 @@ class User < ApplicationRecord
       return unless classroom.students.data.present?
 
       classroom.students.data.each do |student|
-        create_user(student, 'student', school)
+        u = initialize_user(student, 'student', school)
+        u.save
       end
     end
 
@@ -70,21 +90,28 @@ class User < ApplicationRecord
       return unless classroom.employees.present?
       return unless classroom.employees.data.present?
 
-      classroom.employees.data.each do |student|
-        create_user(student, 'employee', school)
+      classroom.employees.data.each do |employee|
+        u = initialize_user(employee, 'employee', school)
+        u.save
       end
     end
 
-    def create_user(user, role, school)
+    def generate_username(u)
+      u.username = u.forename[0].downcase + u.surname.downcase + u.upi[0..3]
+      u.username = u.username + '1' while User.where(username: u.username).count.positive?
+    end
+
+    def initialize_user(user, role, school)
       u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
       u.school = school
-      u.role = role
+      u.role = role unless u.role == 'school_admin'
       u.provider = 'Wonde'
       u.upi = user.upi
       u.forename = user.forename
       u.surname = user.surname
       u.challenge_points = 0
-      u.save
-    end
+      generate_username(u) if u.new_record?
+      u
+    end    
   end
 end

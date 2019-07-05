@@ -1,5 +1,16 @@
-class UserPolicy
-  attr_reader :current_user, :model
+class UserPolicy < ApplicationPolicy
+  attr_reader :current_user, :model, :record
+
+  class Scope < Scope
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    def resolve
+      @scope.where(school: @user.school)
+    end
+  end
 
   def initialize(current_user, model)
     @current_user = current_user
@@ -7,22 +18,30 @@ class UserPolicy
   end
 
   def index?
-    @current_user.admin_school?
+    @current_user.school_admin?
   end
 
   def show?
-    return @current_user.school == @user.school if @current_user.employee?
+    if @current_user.school_admin?
+      @current_user.school == @user.school 
+    elsif @current_user.employee?
+      (@current_user.school == @user.school) && (@user.student? || @current_user == @user) 
+    else
+      @current_user == @user
+    end
+  end
 
-    @current_user == @user && @user.school.permitted
+  def create?
+    @current_user.school_admin?
   end
 
   def update?
-    @current_user.admin_school?
+    @current_user.school_employee? && @user.school == @current_user.school
   end
 
   def destroy?
     return false if @current_user == @user
 
-    @current_user.admin_school?
+    @current_user.school_admin?
   end
 end

@@ -4,10 +4,22 @@ RSpec.shared_context 'api_data', shared_context: :metadata do
   let(:school_api_data) do
     School.from_wonde(OpenStruct.new(id: SecureRandom.hex, name: FFaker::Education.school), SecureRandom.hex)
   end
-  let(:user_api_data) do
-    OpenStruct.new(data: [OpenStruct.new(id: SecureRandom.hex, upi: SecureRandom.hex,
-                                         forename: FFaker::Name.first_name, surname: FFaker::Name.last_name)])
+
+  let(:user_openstruct_data) do
+    OpenStruct.new(id: SecureRandom.hex, upi: SecureRandom.hex,
+                   forename: FFaker::Name.first_name, surname: FFaker::Name.last_name)
   end
+
+  let(:user_api_data) do
+    OpenStruct.new(data: [user_openstruct_data])
+  end
+
+  let(:duplicate_user_api_data) do
+    OpenStruct.new(data: [user_openstruct_data,
+                          OpenStruct.new(id: SecureRandom.hex, upi: user_openstruct_data.upi.slice(0..4),
+                                         forename: user_openstruct_data.forename, surname: user_openstruct_data.surname)])
+  end
+
   let(:alt_user_api_data) do
     OpenStruct.new(data: [OpenStruct.new(id: SecureRandom.hex, upi: SecureRandom.hex,
                                          forename: FFaker::Name.first_name, surname: FFaker::Name.last_name)])
@@ -17,6 +29,15 @@ RSpec.shared_context 'api_data', shared_context: :metadata do
   end
   let(:classroom_api_data) do
     [OpenStruct.new(id: SecureRandom.hex, subject: subject_api_data, code: FFaker::Lorem.word)]
+  end
+
+  let(:school_api) { instance_double(Wonde::Schools) }
+  let(:employee_email) { FFaker::Internet.email }
+  let(:contact_details_api_data) do
+    OpenStruct.new(contact_details: OpenStruct.new(data: OpenStruct.new(emails: OpenStruct.new(email: employee_email))))
+  end
+  let(:contact_details_no_email_api_data) do
+    OpenStruct.new(contact_details: OpenStruct.new(data: OpenStruct.new(emails: OpenStruct.new)))
   end
 end
 
@@ -38,7 +59,7 @@ RSpec.shared_context 'wonde_test_data', shared_context: :metadata do
 
   let(:student_upi) { '1479cf1d289684f08600c9ad1f6406fc' }
   let(:student_forename) { 'Leo' }
-  let(:student_wonde) { create(:user, forename: student_forename, surname: 'Ward', upi: student_upi, school: school) }
+  let(:student_wonde) { create(:user, forename: 'Leo', surname: 'Ward', upi: student_upi, school: school) }
 
   let(:employee_upi) { 'caea4baa5b7adac73ab1259987d2bcc0' }
   let(:employee_name) { 'Emma' }
