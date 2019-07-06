@@ -65,6 +65,7 @@ module SessionHelpers
   def update_password(new_password)
     find('#user_password').set(new_password)
     click_button('Update Password')
+    find('.alert')
   end
 
 
