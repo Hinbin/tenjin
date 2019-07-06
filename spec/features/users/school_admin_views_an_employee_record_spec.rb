@@ -1,5 +1,4 @@
 RSpec.describe 'School admin views a teacher record', type: :feature, js: true, default_creates: true do
-
   let(:new_password) { FFaker::Internet.password }
 
   before do
@@ -30,5 +29,4 @@ RSpec.describe 'School admin views a teacher record', type: :feature, js: true, 
     visit(user_path(teacher))
     expect(page).to have_button('Update Password')
   end
-
 end

@@ -25,5 +25,4 @@ RSpec.describe 'School admin manages school users', type: :feature, js: true do
     click_button('Become User')
     expect(page).to have_content(school_admin.forename).and have_content(school_admin.surname)
   end
-
 end

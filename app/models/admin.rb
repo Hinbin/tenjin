@@ -8,5 +8,4 @@ class Admin < ApplicationRecord
   validates :role, presence: true
 
   enum role: %i[super author]
-  
 end

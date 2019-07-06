@@ -4,5 +4,4 @@ class DashboardPolicy < ApplicationPolicy
   def show?
     record == @user
   end
-
 end

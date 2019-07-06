@@ -23,9 +23,9 @@ class UserPolicy < ApplicationPolicy
 
   def show?
     if @current_user.school_admin?
-      @current_user.school == @user.school 
+      @current_user.school == @user.school
     elsif @current_user.employee?
-      (@current_user.school == @user.school) && (@user.student? || @current_user == @user) 
+      (@current_user.school == @user.school) && (@user.student? || @current_user == @user)
     else
       @current_user == @user
     end

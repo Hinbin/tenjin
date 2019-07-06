@@ -27,7 +27,7 @@ class SchoolsController < ApplicationController
       authorize @current_admin, policy_class: SchoolPolicy
       @result = User::ResetUserPasswords.new(@current_admin, @school).call
       @students = User.where(school: @school)
-      return render 'users/new_passwords'
+      render 'users/new_passwords'
     elsif update_school_params[:role].present? && update_school_params[:user_id].present?
       authorize @current_admin, policy_class: SchoolPolicy
       User.find(update_school_params[:user_id]).update_attribute('role', update_school_params[:role])
