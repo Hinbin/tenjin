@@ -10,6 +10,9 @@
 # Ignore environment variable file
 .env
 
+# Ignore code coverage directory
+coverage
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
