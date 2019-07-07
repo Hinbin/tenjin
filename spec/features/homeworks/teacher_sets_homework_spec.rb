@@ -1,14 +1,14 @@
-RSpec.describe 'Teacher sets homework', type: :feature, js: true, default_creates: true do
+RSpec.describe 'Teacher sets homework', :focus, type: :feature, js: true, default_creates: true do
   let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
   let(:flatpickr_one_week_from_now) do
     "span.flatpickr-day[aria-label=\"#{(Time.now + 1.week).strftime('%B %-e, %Y')}\"]"
   end
 
   before do
+    sign_in teacher
     setup_subject_database
     create(:enrollment, classroom: classroom, user: teacher)
     topic
-    sign_in teacher
     visit(new_homework_path(classroom: { classroom_id: classroom.id }))
   end
 

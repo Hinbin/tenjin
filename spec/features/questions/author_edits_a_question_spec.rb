@@ -119,7 +119,7 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
         find('table', id: 'table-multiple')
         find('span', id: 'best_in_place_answer_' + Answer.first.id.to_s + '_correct').click
         find('i', class: 'fa-check')
-        expect(Answer.first.correct).to eq(true)
+        expect(Answer.find(answer.id).correct).to eq(true)
       end
 
       it 'only saves if I have selected a correct answer' do

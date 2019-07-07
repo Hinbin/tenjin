@@ -10,15 +10,15 @@ class HomeworkPolicy < ApplicationPolicy
   end
 
   def new?
-    @user.employee? || @user.school_admin?
+    @user.school_employee? && @record.classroom.school == @user.school
   end
 
   def create?
-    @user.employee? || @user.school_admin?
+    @user.school_employee? && @record.classroom.school == @user.school
   end
 
   def destroy?
-    @user.employee? || @user.school_admin?
+    @user.school_employee? && @record.classroom.school == @user.school
   end
 
   def show?
