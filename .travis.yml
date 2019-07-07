@@ -37,3 +37,5 @@ notifications:
   email: false
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+after_failure:
+  - tail --lines=2000 log/test.log
