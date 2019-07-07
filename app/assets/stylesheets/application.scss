@@ -20,6 +20,10 @@
 @import 'trix/dist/trix.css';
 @import 'leaderboard';
 
+.navbar-dark .nav-item .nav-link {
+  color: theme-color("light");
+}
+
 a {
   color: #212529;
   text-decoration: none

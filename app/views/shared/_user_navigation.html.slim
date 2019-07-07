@@ -8,7 +8,7 @@ nav class="navbar navbar-expand-md navbar-dark justify-content-between bg-black"
 
   div class="collapse navbar-collapse" id="navbarSupportedContent" 
     ul class='navbar-nav mr-auto'  
-      li class="nav-item active"
+      li class="nav-item"
         a.nav-link href=leaderboard_index_path Leaderboard  
       -if current_user.student?
         li.nav-item.dropdown.active
@@ -17,18 +17,18 @@ nav class="navbar navbar-expand-md navbar-dark justify-content-between bg-black"
             a.dropdown-item href=customise_path(anchor: 'dashboard-styles') Styles
             a.dropdown-item href=customise_path(anchor: 'icons') Leaderboard Icons 
       -if current_user.employee? || current_user.school_admin?
-        li class="nav-item active"
+        li class="nav-item"
           a.nav-link href=dashboard_path Classrooms
       -if current_user.school_admin?
-        li class="nav-item active"
+        li class="nav-item"
           a.nav-link href=users_path School Admin
 
     -if current_user.student?
       a href=customise_path
         table 
           td =icon('fas', 'star', class: 'fa', style: 'color: yellow')      
-          td.text-white#challenge-points =current_user.challenge_points          
-    p.m-2.text-white =link_to(current_user.forename + ' ' + current_user.surname, user_path(@current_user) )
+          td#challenge-points =current_user.challenge_points          
+    p.m-2 =link_to(current_user.forename + ' ' + current_user.surname, user_path(@current_user), class: 'text-light' )
     =link_to(destroy_user_session_path, method: :delete) do
       button class='btn btn-light-outline' Logout
 

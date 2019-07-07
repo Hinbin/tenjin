@@ -16,8 +16,7 @@ RSpec.describe 'School admin views a teacher record', type: :feature, js: true, 
     end
 
     it 'updates the user password' do
-      find('#user_password').set(new_password)
-      click_button('Update Password')
+      update_password(new_password)
       sign_out school_admin
       log_in_through_front_page(teacher.username, new_password)
       expect(page).to have_content(teacher.forename).and have_content(teacher.surname)

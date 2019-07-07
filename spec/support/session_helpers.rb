@@ -60,6 +60,7 @@ module SessionHelpers
     fill_in('user_login', with: username)
     fill_in('user_password', with: password)
     click_button 'loginModal'
+    find('.alert', text: 'Signed in successfully')
   end
 
   def update_password(new_password)
