@@ -1,8 +1,8 @@
 # Tenjin
 
 [![Build Status](https://travis-ci.org/Hinbin/tenjin.svg?branch=master)](https://travis-ci.org/Hinbin/tenjin)
-[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5ae5ee384434b20e2789/maintainability)](https://codeclimate.com/github/Hinbin/tenjin/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5ae5ee384434b20e2789/test_coverage)](https://codeclimate.com/github/Hinbin/tenjin/test_coverage)
 
 
 Tenjin is an online quiz platform that allows students to answer questions, complete homework, earn rewards and compete against one another earning points on a leaderboard.  It offers he following:
