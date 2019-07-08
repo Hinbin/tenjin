@@ -14,12 +14,13 @@ html
     = stylesheet_pack_tag 'application', media: 'all'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
-    
-  = content_tag :body, data: { action: action_name, controller: controller_name } do
+    - unless Rails.env.test?
+      = render partial: 'layouts/cookie_consent'
+
+  body data-action=action_name data-controller=controller_name
     = render('shared/user_navigation') if current_user.present?  
     = render('shared/admin_navigation') if current_admin.present?
     = render('shared/logged_out_navigation') if current_user.nil? && current_admin.nil?
     = render('shared/notice_notification') if flash[:notice].present? && current_user.present?
     = yield
     = render('shared/alert_modal')
-
