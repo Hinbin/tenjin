@@ -1,26 +1,12 @@
-# README
+# Tenjin
 
 [![Build Status](https://travis-ci.org/Hinbin/tenjin.svg?branch=master)](https://travis-ci.org/Hinbin/tenjin)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+Tenjin is an online quiz platform that allows students to answer questions, complete homework, earn rewards and compete against one another earning points on a leaderboard.  It offers he following:
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+  - An online quiz platform that can be used students to increase the time students spend revising key subjects.
+  - A reduction in teacher workload through an option for the management of homework for these subjects.
+  - A low cost solution for schools
