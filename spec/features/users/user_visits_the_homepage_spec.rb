@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User logs in', :vcr, type: :feature, js: true do
+RSpec.describe 'User visits the homepage', :vcr, type: :feature, js: true do
   include_context 'api_data'
   include_context 'wonde_test_data'
   include_context 'default_creates'
@@ -13,6 +13,7 @@ RSpec.describe 'User logs in', :vcr, type: :feature, js: true do
 
     it { is_expected.to have_button('Login') }
     it { is_expected.to have_content('TENJIN') }
+    it { is_expected.to have_link('About') }
   end
 
   context 'when logging in' do
@@ -51,6 +52,11 @@ RSpec.describe 'User logs in', :vcr, type: :feature, js: true do
     end
   end
 
+  it 'has a fixed top nav bar on the home page' do
+    visit root_path
+    expect(page).to have_css('nav.fixed-top')
+  end
+
   it 'displays log in error messages' do
     visit root_path
     stub_omniauth
@@ -59,5 +65,31 @@ RSpec.describe 'User logs in', :vcr, type: :feature, js: true do
     expect(page).to have_text('Your account has not been found')
   end
 
-  it 'allows teachers to login via the devise login page'
+  context 'when looking at the about page' do
+    before do
+      hide_const('OGAT')
+      visit page_path('about')
+    end
+
+    it 'shows the about page' do
+      visit page_path('about')
+      expect(page).to have_css('#standardAbout')
+    end
+
+    it 'does not have a fixed top nav bar on the about page' do
+      visit page_path('about')
+      expect(page).to have_no_css('nav.fixed-top')
+    end
+  end
+
+  context 'with the OGAT environment variable set' do
+    before do
+      stub_const('ENV', 'OGAT' => 'true')
+    end
+
+    it 'shows the OGAT about page if the correct ENV is set' do
+      visit page_path('about')
+      expect(page).to have_css('#ogatAbout')
+    end
+  end
 end

@@ -1,9 +1,12 @@
+=javascript_pack_tag('pages')
 header.masthead.masthead-container.masthead-full.text-white  
   div.container.h-100
     div.row.h-100.align-items-center
       div.col.text-center
         h1.section-heading.text-uppercase#mastheadText Learn, Compete, Succeed
         hr.small.mb-5.primary-red
+footer.fixed-bottom.text-right.px-3.py-3.text-white 
+  =link_to 'About', page_path('about'), class: 'text-light'
 =render('student_login_modal')
 
 

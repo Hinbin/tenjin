@@ -1,0 +1,8 @@
+=javascript_pack_tag('pages')
+.section.py-4
+  h1.page-section-header.text-uppercase.text-center About
+  hr.small.mb-5.primary-red
+  -if ENV['OGAT']
+    =render('about_ogat')
+  -else
+    =render('about_standard')

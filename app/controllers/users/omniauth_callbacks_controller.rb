@@ -49,7 +49,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     # object
     conn = Faraday.new(url: 'https://api.wonde.com/graphql') do |faraday|
       faraday.request :url_encoded
-      faraday.response :logger
+      faraday.response :logger unless Rails.env.test?
       faraday.adapter Faraday.default_adapter
       faraday.authorization :Bearer, bearer_token
     end

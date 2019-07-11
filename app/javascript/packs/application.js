@@ -28,3 +28,13 @@ dt_extras.forEach(function (e) { e(window, $) })
 
 require('trix')
 require('@rails/actiontext')
+
+$(document).on('turbolinks:load', function () {
+  if ($('#notice').text().length) {
+    $('#noticeModal').modal()
+  }
+
+  if ($('#alert').text().length) {
+    $('#alertModal').modal()
+  }
+})
