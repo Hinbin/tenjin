@@ -5,7 +5,7 @@ class HomeworksController < ApplicationController
   rescue_from ActionController::ParameterMissing, with: :no_classroom_id
 
   def new
-    @homework = Homework.new(due_date: Time.current + 1.week, classroom: @classroom, required: 70)
+    @homework = Homework.new(due_date: 1.week.from_now, classroom: @classroom, required: 70)
     authorize @homework
   end
 
