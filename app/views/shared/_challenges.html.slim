@@ -1,7 +1,7 @@
-section.page-section.text-center#challenges
+section#challenges.page-section.text-center
   .container
     h1.page-section-header.text-uppercase Challenges
-    hr class=("small mb-5 primary-" + @css_flavour)
+    hr class="small mb-5 primary-#{@css_flavour}"
     .row.justify-content-center
       .col-lg-10.col.mx-auto
         table.table.table-hover#challenge-table
@@ -12,10 +12,9 @@ section.page-section.text-center#challenges
               th.d-none.d-sm-table-cell Points
               th Expires in
           tbody
-            -@challenges.each do |c|
+            - @challenges.each do |c|
                 tr.challenge-row data-challenge=c.id data-topic=c.topic.id data-subject=c.topic.subject_id
-                  td.text-left =c.stringify
-                  td =write_challenge_progress(c.challenge_progresses.first)
-                  td.d-none.d-sm-table-cell =c.points
-                  td =challenge_time_left(c)
-      
+                  td.text-left = c.stringify
+                  td = write_challenge_progress(c.challenge_progresses.first)
+                  td.d-none.d-sm-table-cell = c.points
+                  td = challenge_time_left(c)

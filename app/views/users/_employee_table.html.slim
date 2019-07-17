@@ -1,5 +1,5 @@
 h1.page-section-header.text-uppercase Employees
-hr class=("small mb-5 primary-red")
+hr.small.mb-5.primary-red
 .col
   table.table#employees-table
     thead
@@ -10,7 +10,11 @@ hr class=("small mb-5 primary-red")
     tbody
       - @employees.each do |e|
         tr.employee-row data-user=e.id
-          td =e.forename + " " + e.surname
-          td =e.username
-          td =e.role.humanize
-          td =link_to 'Reset Password', user_path(id: e.id), class: 'btn btn-dark reset-password-employee'
+          td
+            => e.forename
+            = e.surname
+          td = e.username
+          td = e.role.humanize
+          td
+            a.btn.btn-dark.reset-password-employee href=user_path(e)
+              | Reset Password
