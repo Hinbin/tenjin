@@ -58,6 +58,26 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       find(id: incorrect_response_selector).click
       expect(page).to have_css('i.fa-times')
     end
+
+  end
+
+  context 'with more than two quesitons in a quiz' do
+    let(:question) { create(:question, topic: topic) }
+    let(:next_question) { create(:question, topic: topic) }
+
+    before do
+      setup_subject_database
+      create(:answer, question: question, correct: true)
+      create(:answer, question: next_question, correct: true)
+      sign_in student
+      navigate_to_quiz
+    end
+
+    it 'allows a user to go forward to the next question' do
+      find(class: 'question-button').click
+      find(class: 'next-button').click
+      expect(page).to have_content(next_question.question_text.to_plain_text)
+    end
   end
 
   context 'when dealing with images' do

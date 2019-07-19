@@ -38,6 +38,7 @@ $(document).on('ready turbolinks:load', function () {
     $.ajax({
       type: 'PUT',
       url: '/quizzes/' + window.gon.quiz_id,
+      beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
       success: (result) => processMultipleChoiceResponse(result, click.target.id),
       data: {
         answer: {

@@ -22,8 +22,7 @@ function processShortResponse (serverResponse, guess) {
     if (results.length === 1) {
       $('#shortAnswerText').val(results[0].text)
     } else {
-      const correctAnswerText = results.map(r => r.text ).join(' or ')
-      console.log(correctAnswerText)
+      const correctAnswerText = results.map(r => r.text).join(' or ')
       $('#shortAnswerText').val(correctAnswerText)
     }
   }
@@ -49,6 +48,7 @@ $(document).on('ready turbolinks:load', function () {
     $.ajax({
       type: 'PUT',
       url: '/quizzes/' + gon.quiz_id,
+      beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
       success: (result) => processShortResponse(result, $('#shortAnswerText').val()),
       data: {
         answer: {

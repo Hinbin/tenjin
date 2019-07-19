@@ -126,6 +126,8 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+Capybara.server = :puma, { Silent: true }
+
 if ENV['TRAVIS']
   Capybara.register_driver :travis_chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu])
