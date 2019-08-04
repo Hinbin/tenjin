@@ -1,36 +1,43 @@
-nav class="navbar navbar-expand-md navbar-dark justify-content-between bg-black" id="navbar-main"
-  =link_to dashboard_path do
+nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-black
+  a href=dashboard_path
     .navbar-brand
-      =icon('fas', 'vihara', class: 'fa-2x d-inline-block align-middle', style: 'color: White')
-      h1 style="color:white" class="navbar-text text-uppercase align-middle" id="branding-text" Tenjin
+      = icon('fas', 'vihara', class: 'fa-2x d-inline-block align-middle', style: 'color: White')
+      h1#branding-text.navbar-text.text-uppercase.align-middle style="color:white"
+        | Tenjin
   button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-      span class="navbar-toggler-icon"
+      span.navbar-toggler-icon
 
-  div class="collapse navbar-collapse" id="navbarSupportedContent" 
-    ul class='navbar-nav mr-auto'  
-      li class="nav-item"
-        a.nav-link href=leaderboard_index_path Leaderboard  
-      -if current_user.student?
+  #navbarSupportedContent.collapse.navbar-collapse 
+    ul.navbar-nav.mr-auto
+      li.nav-item
+        a.nav-link href=leaderboard_index_path
+          | Leaderboard  
+      - if current_user.student?
         li.nav-item.dropdown.active
-          a.nav-link.dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" Customise
+          a.nav-link.dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            | Customise
           .dropdown-menu aria-labelledby='navbarDropdown'
-            a.dropdown-item href=customise_path(anchor: 'dashboard-styles') Styles
-            a.dropdown-item href=customise_path(anchor: 'icons') Leaderboard Icons 
-      -if current_user.employee? || current_user.school_admin?
-        li class="nav-item"
-          a.nav-link href=dashboard_path Classrooms
+            a.dropdown-item href=customise_path(anchor: 'dashboard-styles')
+              | Styles
+            a.dropdown-item href=customise_path(anchor: 'icons')
+              | Leaderboard Icons 
+      - if current_user.employee? || current_user.school_admin?
+        li.nav-item
+          a.nav-link href=dashboard_path
+            | Classrooms
       -if current_user.school_admin?
-        li class="nav-item"
-          a.nav-link href=users_path School Admin
+        li.nav-item
+          a.nav-link href=users_path
+            | School Admin
 
     -if current_user.student?
       a href=customise_path
-        table 
-          td =icon('fas', 'star', class: 'fa', style: 'color: yellow')      
-          td#challenge-points =current_user.challenge_points          
-    p.m-2 =link_to(current_user.forename + ' ' + current_user.surname, user_path(@current_user), class: 'text-light' )
-    =link_to(destroy_user_session_path, method: :delete) do
-      button class='btn btn-light-outline' Logout
-
-
-      
+        table
+          td = icon('fas', 'star', class: 'fa', style: 'color: yellow')      
+          td#challenge-points = current_user.challenge_points          
+    p.m-2
+      a.text-light href=user_path(@current_user)
+        => current_user.forename
+        = current_user.surname
+    = link_to(destroy_user_session_path, method: :delete) do
+      button.btn.btn-light-outline Logout

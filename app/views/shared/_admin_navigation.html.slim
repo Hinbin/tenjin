@@ -1,19 +1,19 @@
-nav class="navbar navbar-expand-sm navbar-dark justify-content-between bg-dark" id="navbar-main"
-  a class="navbar-brand" href='/schools'
-    =icon('fas', 'vihara', class: 'fa-2x', style: 'color: White d-inline-block align-top')
-    h1 style="color:white" class="navbar-text text-uppercase" id="branding-text" Tenjin
-  
-  button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-    span class="navbar-toggler-icon"
+nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-dark
+  a.navbar-brand href="/schools"
+    = icon('fas', 'vihara', class: 'fa-2x', style: 'color: White d-inline-block align-top')
+    h1#branding-text.navbar-text.text-uppercase style="color:white"
+      | Tenjin
 
-  div class="collapse navbar-collapse" id="navbarSupportedContent" 
-    ul class='navbar-nav mr-auto'  
-      -if current_admin.super?
-        li class="nav-item active"
-          a class='nav-link' href=schools_path Schools
-      -if current_admin.author? || current_admin.super?
-        li class="nav-item active"
-          a class='nav-link' href=questions_path Questions
-    =link_to(destroy_admin_session_path, method: :delete) do
-      button class='btn btn-light' Logout
-      
+  button.navbar-toggler type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+    span.navbar-toggler-icon
+
+  div#navbarSupportedContent.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto
+      - if current_admin.super?
+        li.nav-item.active
+          a.nav-link href=schools_path Schools
+      - if current_admin.author? || current_admin.super?
+        li.nav-item.active
+          a.nav-link href=questions_path Questions
+    = link_to(destroy_admin_session_path, method: :delete) do
+      button.btn.btn-light Logout
