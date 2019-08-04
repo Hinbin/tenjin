@@ -21,6 +21,8 @@ class CustomiseController < ApplicationController
     redirect_to dashboard_path
   end
 
+  private
+
   def flash_notice(result)
     flash[:notice] = result.errors unless result.success?
     flash[:notice] = 'Congratulations!  You have bought ' + @customisation.name if result.success?
