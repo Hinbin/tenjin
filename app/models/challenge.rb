@@ -7,17 +7,14 @@ class Challenge < ApplicationRecord
   enum challenge_type: %i[number_correct streak number_of_points]
 
   def self.create_challenge(subject, challenge_type = nil, multiplier: 1, duration: 7.days)
-    @challenge = Challenge.new
-    @challenge.topic = Topic.where(subject: subject).order(Arel.sql('RANDOM()')).first
-    raise 'no topic available in subject when creating a challenge' if @challenge.topic.nil?
+    challenge = Challenge.new start_date: Time.current, end_date: duration.from_now
+    challenge.topic = Topic.order(Arel.sql('RANDOM()')).find_by(subject: subject)
 
-    setup_challenge_type(challenge_type)
-    @challenge.start_date = Time.current
-    @challenge.end_date = Time.current + duration
-    setup_point_value(multiplier: multiplier)
+    setup_challenge_type(challenge, challenge_type)
+    setup_point_value(challenge, multiplier: multiplier)
 
-    @challenge.save
-    @challenge
+    challenge.save
+    challenge
   end
 
   def stringify
@@ -31,24 +28,25 @@ class Challenge < ApplicationRecord
   end
 
   class << self
-    def setup_challenge_type(challenge_type)
-      @challenge.challenge_type = challenge_type
-      generate_random_challenge_type if @challenge.challenge_type.nil?
+    def setup_challenge_type(challenge, challenge_type)
+      challenge.challenge_type = challenge_type.presence || random_challenge_type
 
-      case @challenge.challenge_type
-      when 'number_correct' then @challenge.number_required = rand(5..10)
-      when 'streak' then @challenge.number_required = rand(3..8)
-      when 'number_of_points' then @challenge.number_required = rand(2..6) * 10
+      case challenge.challenge_type
+      when 'number_correct' then challenge.number_required = rand(5..10)
+      when 'streak' then challenge.number_required = rand(3..8)
+      when 'number_of_points' then challenge.number_required = rand(20..60)
       end
     end
 
-    def generate_random_challenge_type
-      @challenge.challenge_type = Challenge.challenge_types.keys.sample
+    def random_challenge_type
+      Challenge.challenge_types.keys.sample
     end
 
-    def setup_point_value(multiplier: 1)
-      @challenge.points = 10 * multiplier
-      @challenge.points = (@challenge.points * 3) if @challenge.number_correct? && @challenge.number_required == 10
+    def setup_point_value(challenge, multiplier: 1)
+      point_value = 10 * multiplier
+      point_value *= 3 if challenge.number_correct? && challenge.number_required == 10
+
+      challenge.points = point_value
     end
   end
 end
