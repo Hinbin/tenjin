@@ -18,6 +18,6 @@ module ApplicationHelper
 
   def render_small_separator
     @css_flavour = 'default' if @css_flavour.nil?
-    'small mb-5 primary-' + @css_flavour
+    "small mb-5 primary-#{@css_flavour}"
   end
 end
