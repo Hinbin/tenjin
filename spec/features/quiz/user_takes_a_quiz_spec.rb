@@ -76,7 +76,9 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
     it 'allows a user to go forward to the next question' do
       find(class: 'question-button').click
       find(class: 'next-button').click
-      expect(page).to have_content(next_question.question_text.to_plain_text)
+      find(class: 'question-button').click
+      find(class: 'next-button').click
+      expect(page).to have_content('The quiz has finished')
     end
   end
 

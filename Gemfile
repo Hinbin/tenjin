@@ -7,7 +7,7 @@ ruby '~> 2.6.3'
 gem 'dotenv-rails', groups: [:development, :test]
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.0.beta3'
+gem 'rails', '~> 6.0.0'
 
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
