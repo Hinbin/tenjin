@@ -34,7 +34,7 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
       a href=customise_path
         table
           td = icon('fas', 'star', class: 'fa', style: 'color: yellow')      
-          td#challenge-points = current_user.challenge_points          
+          td#challenge-points.text-light = current_user.challenge_points          
     p.m-2
       a.text-light href=user_path(@current_user)
         => current_user.forename
