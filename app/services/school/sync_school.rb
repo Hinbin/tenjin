@@ -18,8 +18,9 @@ class School::SyncSchool
   end
 
   def fetch_subject_data
-    @subject_data = @school_api.subjects.all
-    SubjectMap.from_wonde(@school, @subject_data)
+    @school_api.subjects.all.each do |data|
+      SubjectMap.from_wonde(@school, data)
+    end
   end
 
   def fetch_class_data

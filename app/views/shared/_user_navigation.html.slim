@@ -36,7 +36,7 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
           td = icon('fas', 'star', class: 'fa', style: 'color: yellow')      
           td#challenge-points.text-light = current_user.challenge_points          
     p.m-2
-      a.text-light href=user_path(@current_user)
+      a.text-light href=user_path(current_user)
         => current_user.forename
         = current_user.surname
     = link_to(destroy_user_session_path, method: :delete) do

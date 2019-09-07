@@ -5,10 +5,8 @@ class SubjectMap < ApplicationRecord
   validates :client_id, presence: true, uniqueness: true
   validates :client_subject_name, presence: true
 
-  def self.from_wonde(school, subject_data)
-    subject_data.each do |client_subject|
-      create_subject_map(client_subject, school)
-    end
+  def self.from_wonde(school, client_subject)
+    create_subject_map(client_subject, school)
   end
 
   def self.create_subject_map(client_subject, school)
