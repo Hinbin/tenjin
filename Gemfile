@@ -13,6 +13,9 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 gem 'rack-timeout'
 
+
+gem 'delayed_job_active_record'
+
 # Templates & asset handling
 gem 'coffee-rails', '~> 5.0'
 gem 'jbuilder', '~> 2.5'
