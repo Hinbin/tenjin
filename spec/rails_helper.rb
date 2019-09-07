@@ -90,6 +90,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :feature
   config.include BestInPlace::TestHelpers
+  config.include ActiveJob::TestHelper
 
   config.include_context 'default_creates', default_creates: true
 
