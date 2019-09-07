@@ -143,6 +143,5 @@ gem 'best_in_place'
 gem 'aws-sdk-s3'
 
 # Gems to track usage and performance
-gem 'newrelic_rpm'
 gem 'pghero'
 gem 'pg_query', '>= 0.9.0'
