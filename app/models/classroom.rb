@@ -22,8 +22,8 @@ class Classroom < ApplicationRecord
     c.name = classroom.name
     c.description = classroom.description
     c.code = classroom.code
-    c.school = school
-    c.subject = subject.subject
+    c.school_id = school.id
+    c.subject_id = subject.subject.id
     c.disabled = false
     c.save
   end

@@ -81,6 +81,10 @@ group :development do
   gem 'rubocop'
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
+
+  # Help with n+1 queries
+  gem 'bullet'
+
 end
 
 group :test do

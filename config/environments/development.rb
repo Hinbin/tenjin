@@ -67,6 +67,14 @@ Rails.application.configure do
       config.log_headers = true
     end
         
+    
+    Bullet.enable = true
+    Bullet.sentry = true
+    Bullet.alert = true
+    Bullet.bullet_logger = true
+    Bullet.rails_logger = true
+    Bullet.raise = true
+
   end
   
 end

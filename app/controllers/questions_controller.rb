@@ -10,7 +10,7 @@ class QuestionsController < ApplicationController
       return render 'question_topic_index'
     end
 
-    @subjects = policy_scope(Subject)
+    @subjects = policy_scope(Subject).includes(:topics)
   end
 
   def new

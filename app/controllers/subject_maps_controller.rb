@@ -6,7 +6,8 @@ class SubjectMapsController < ApplicationController
     authorize subject_map
 
     subject_name = subject_map_params[:name]
-    subject_map.subject = Subject.where(name: subject_name).first
+    
+    subject_map.subject_id = subject_name.present? ? Subject.where(name: subject_name).first.id : nil
     head 403 unless subject_map.subject.present? || (subject_name == '')
     update_school(subject_map)
     subject_map.save

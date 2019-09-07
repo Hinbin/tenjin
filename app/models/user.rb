@@ -103,7 +103,7 @@ class User < ApplicationRecord
 
     def initialize_user(user, role, school)
       u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
-      u.school = school
+      u.school_id = school.id
       u.role = role unless u.role == 'school_admin'
       u.provider = 'Wonde'
       u.upi = user.upi

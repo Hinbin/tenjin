@@ -47,32 +47,24 @@ class Quiz::CreateQuiz
                   # Keep getting random questions, one from each topic until we have at
                   # least 10 questions
 
-                  question_array += Question.find_by_sql(["
-                    SELECT
-                      DISTINCT ON (questions.topic_id)
-                      questions.topic_id, questions.*
-                    FROM questions
-                    INNER JOIN topics ON questions.topic_id = topics.id
-                    LEFT JOIN subjects ON subjects.id = topics.id
-                    WHERE subject_id = ?
-                    ORDER by questions.topic_id, random()", @subject_id])
+                  question_array += Question.includes(:topic).references(:topic)
+                                            .select('DISTINCT ON(questions.topic_id) questions.topic_id, questions.*')
+                                            .where(topics: { subject_id: @subject_id })
+                                            .order('questions.topic_id, random()')
 
                   if question_array.length < 10
                     # There are not 10 or more topics so try without getting one from each topic
-                    question_array += Question.find_by_sql(["SELECT
-                      questions.topic_id, questions.*
-                    FROM questions
-                    INNER JOIN topics ON questions.topic_id = topics.id
-                    LEFT JOIN subjects ON subjects.id = topics.id
-                    WHERE subject_id = ?
-                    ORDER by questions.topic_id, random()", @subject_id])
+                    question_array += Question.includes(:topic).references(:topic)
+                                              .select('questions.topic_id, questions.*')
+                                              .where(topics: { subject_id: @subject_id })
+                                              .order('questions.topic_id, random()')
                   end
 
                   # Get maximum of 10 questions only
                   question_array.shuffle.sample(10)
 
                 else
-                  Question.where('topic_id = ?', @topic_id).order(Arel.sql('RANDOM()')).take(10)
+                  Question.where('topic_id = ?', @topic_id).includes(:topic).order(Arel.sql('RANDOM()')).take(10)
                 end
 
     @quiz.questions = questions
