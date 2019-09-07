@@ -178,8 +178,7 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
 
       it 'allows you to set an answer as correct' do
         find('span', id: 'best_in_place_answer_' + Answer.first.id.to_s + '_correct').click
-        find('i', class: 'fa-check')
-        expect(Answer.first.correct).to eq(true)
+        expect(page).to have_css('i.fa-check')
       end
 
       it 'does not allow you to remove an answer' do

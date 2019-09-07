@@ -10,6 +10,8 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
     School::SyncSchool.new(school).call
   end
 
+  it 'syncs if a sync has been going for more than 10 minutes'
+
   context 'with classroom data' do
     before do
       sync_school_with_wonde

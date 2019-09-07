@@ -64,7 +64,7 @@ class SchoolsController < ApplicationController
   end
 
   def update_school_params
-    params.permit(:id, :reset_all, :role, :user_id)
+    params.permit(:id, :reset_all, :role, :user_id, :authenticity_token)
   end
 
   def school_show_params

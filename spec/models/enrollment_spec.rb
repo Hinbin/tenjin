@@ -35,24 +35,24 @@ RSpec.describe Enrollment, type: :model do
       school_api_data
       create(:classroom, client_id: 'classroom_id', school: School.first, subject: subject_map.subject)
       create(:student, upi: user_api_data.data[0].upi, school: School.first)
-      classroom_api_data[0].id = 'classroom_id'
+      classroom_api_data.id = 'classroom_id'
     end
 
     context 'with api data' do
       it 'creates student enrollments' do
-        classroom_api_data[0].students = user_api_data
+        classroom_api_data.students = user_api_data
         Enrollment.from_wonde(school_api_data, classroom_api_data)
         expect(Enrollment.count).to eq(1)
       end
 
       it 'creates employee enrollments' do
-        classroom_api_data[0].employees = user_api_data
+        classroom_api_data.employees = user_api_data
         Enrollment.from_wonde(school_api_data, classroom_api_data)
         expect(Enrollment.count).to eq(1)
       end
 
       it 'enables classroom with enrollments' do
-        classroom_api_data[0].employees = user_api_data
+        classroom_api_data.employees = user_api_data
         Enrollment.from_wonde(school_api_data, classroom_api_data)
         expect(Classroom.first.disabled).to eq(false)
       end
@@ -65,19 +65,19 @@ RSpec.describe Enrollment, type: :model do
 
     context 'when dealing with older data' do
       before do
-        classroom_api_data[0].students = user_api_data
+        classroom_api_data.students = user_api_data
         School.from_wonde(school_api_data, classroom_api_data)
         Enrollment.from_wonde(school_api_data, classroom_api_data)
       end
 
       it 'removes old enrollments' do
-        classroom_api_data[0].students = alt_user_api_data
+        classroom_api_data.students = alt_user_api_data
         Enrollment.from_wonde(school_api_data, classroom_api_data)
         expect(Enrollment.count).to eq(0)
       end
 
       it 'disables classrooms with no enrollments' do
-        classroom_api_data[0].students = alt_user_api_data
+        classroom_api_data.students = alt_user_api_data
         Enrollment.from_wonde(school_api_data, classroom_api_data)
         expect(Classroom.first.disabled).to eq(true)
       end

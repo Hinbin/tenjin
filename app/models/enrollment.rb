@@ -6,17 +6,15 @@ class Enrollment < ApplicationRecord
 
   validates :user, uniqueness: { scope: [:classroom] }
 
-  def self.from_wonde(school, sync_data)
+  def self.from_wonde(school, classroom_api_data)
     mapped_subjects = SubjectMap.subject_maps_for_school(school)
 
-    sync_data.each do |classroom_api_data|
-      subject = mapped_subjects.where(client_subject_name: classroom_api_data.subject.data.name).first
-      next unless subject.present?
+    subject = mapped_subjects.where(client_subject_name: classroom_api_data.subject.data.name).first
+    return unless subject.present?
 
-      classroom = Classroom.classroom_from_client_id(classroom_api_data.id)
+    classroom = Classroom.classroom_from_client_id(classroom_api_data.id)
 
-      update_classrooms(classroom_api_data, classroom)
-    end
+    update_classrooms(classroom_api_data, classroom)
   end
 
   class << self

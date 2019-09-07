@@ -28,7 +28,7 @@ RSpec.shared_context 'api_data', shared_context: :metadata do
     OpenStruct.new(data: OpenStruct.new(id: SecureRandom.hex, name: FFaker::Lorem.word))
   end
   let(:classroom_api_data) do
-    [OpenStruct.new(id: SecureRandom.hex, subject: subject_api_data, code: FFaker::Lorem.word)]
+    OpenStruct.new(id: SecureRandom.hex, subject: subject_api_data, code: FFaker::Lorem.word)
   end
 
   let(:school_api) { instance_double(Wonde::Schools) }
