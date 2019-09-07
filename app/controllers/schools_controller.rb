@@ -16,7 +16,7 @@ class SchoolsController < ApplicationController
     if @school.persisted?
       authorize @school
       redirect_to @school
-      School::SyncSchool.new(@school).call
+      SyncSchoolJob.perform_later @school
     else
       render 'new'
     end
@@ -33,7 +33,7 @@ class SchoolsController < ApplicationController
       User.find(update_school_params[:user_id]).update_attribute('role', update_school_params[:role])
     else
       authorize @school
-      School::SyncSchool.new(@school).call
+      SyncSchoolJob.perform_later @school
     end
   end
 

@@ -7,7 +7,7 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
   def sync_school_with_wonde
     default_subject_map
     school = School::AddSchool.new(school_params).call
-    School::SyncSchool.new(school).call
+    SyncSchoolJob.perform_later school
   end
 
   it 'syncs if a sync has been going for more than 10 minutes'
