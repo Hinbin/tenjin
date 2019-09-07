@@ -12,7 +12,7 @@ RSpec.describe SubjectMap, type: :model do
   it { is_expected.to validate_uniqueness_of(:client_id) }
 
   describe '#from_wonde' do
-    let(:subject_map_record) { SubjectMap.from_wonde(create(:school), [subject_api_data.data]) }
+    let(:subject_map_record) { SubjectMap.from_wonde(create(:school), subject_api_data.data) }
 
     it 'creates subject maps from api data' do
       expect { subject_map_record }.to change(SubjectMap, :count)

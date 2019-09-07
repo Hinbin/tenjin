@@ -118,8 +118,7 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
       it 'allows you to set an answer as correct' do
         find('table', id: 'table-multiple')
         find('span', id: 'best_in_place_answer_' + Answer.first.id.to_s + '_correct').click
-        find('i', class: 'fa-check')
-        expect(Answer.find(answer.id).correct).to eq(true)
+        expect(page).to have_css('i.fa-check')
       end
 
       it 'only saves if I have selected a correct answer' do
