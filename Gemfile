@@ -148,3 +148,6 @@ gem 'aws-sdk-s3'
 # Gems to track usage and performance
 gem 'pghero'
 gem 'pg_query', '>= 0.9.0'
+
+# Heroku dyno management
+gem "hirefire-resource"
