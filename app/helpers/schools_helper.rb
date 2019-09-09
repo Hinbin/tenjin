@@ -1,6 +1,8 @@
 module SchoolsHelper
   def sync_status_icon(status)
     case status
+    when 'queued'
+      icon('fas', 'clock')
     when 'syncing'
       icon('fas', 'sync')
     when 'successful'

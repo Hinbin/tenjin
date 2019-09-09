@@ -33,7 +33,7 @@ class SchoolsController < ApplicationController
       User.find(update_school_params[:user_id]).update_attribute('role', update_school_params[:role])
     else
       authorize @school
-      @school.update_attribute('sync_status', 'syncing')
+      @school.update_attribute('sync_status', 'queued')
       SyncSchoolJob.perform_later @school
       redirect_to schools_path
     end

@@ -149,5 +149,7 @@ gem 'aws-sdk-s3'
 gem 'pghero'
 gem 'pg_query', '>= 0.9.0'
 
-# Heroku dyno management
+# Heroku dyno management & statistics
 gem "hirefire-resource"
+gem "barnes"
+#skylight for response metrics?

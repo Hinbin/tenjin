@@ -7,7 +7,7 @@ class School < ApplicationRecord
   validates :name, presence: true
   validates :token, presence: true
 
-  enum sync_status: %i[never syncing successful failed needed]
+  enum sync_status: %i[never queued syncing successful failed needed]
 
   def self.from_wonde(client_school, token)
     school = where(client_id: client_school.id).first_or_initialize
