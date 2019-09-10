@@ -21,14 +21,16 @@ class User::ResetUserPasswords
   private
 
   def find_users
-    @users = UserPolicy::Scope.new(@admin, User).resolve.where(role: 'student') if @admin.class.name == 'User'
-    @users = User.where(school: @school) if @admin.class.name == 'Admin'
+    @users = UserPolicy::Scope.new(@admin, User).resolve.where(role: 'student').includes(:school) if @admin.class.name == 'User'
+    @users = User.where(school: @school).includes(:school) if @admin.class.name == 'Admin'
   end
 
   def reset_user_list_passwords
+    Devise.stretches = 1
     @users.each do |u|
       new_password = Devise.friendly_token.first(6)
       @user_data[u.upi] = new_password if u.reset_password(new_password, new_password)
     end
+    Devise.stretches = 10
   end
 end
