@@ -26,7 +26,8 @@ class SchoolsController < ApplicationController
     if update_school_params[:reset_all].present? && update_school_params[:reset_all] == 'true'
       authorize @current_admin, policy_class: SchoolPolicy
       @result = User::ResetUserPasswords.new(@current_admin, @school).call
-      @students = User.where(school: @school)
+      @students = User.where(school: @school, role: 'student')
+      @employees = User.where(school: @school, role: 'employee')
       render 'users/new_passwords'
     elsif update_school_params[:role].present? && update_school_params[:user_id].present?
       authorize @current_admin, policy_class: SchoolPolicy

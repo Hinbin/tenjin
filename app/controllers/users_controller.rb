@@ -29,6 +29,7 @@ class UsersController < ApplicationController
     @result = User::ResetUserPasswords.new(current_user).call
     if @result.success?
       @students = policy_scope(User).where(role: 'student')
+      @employees = policy_scope(User).where(role: 'employee')
       return render 'users/new_passwords'
     else
       flash[:alert] = @result.errors

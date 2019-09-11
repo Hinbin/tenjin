@@ -21,7 +21,7 @@ class User::ResetUserPasswords
   private
 
   def find_users
-    @users = UserPolicy::Scope.new(@admin, User).resolve.where(role: 'student').includes(:school) if @admin.class.name == 'User'
+    @users = UserPolicy::Scope.new(@admin, User).resolve.where(role: ['student', 'employee']).includes(:school) if @admin.class.name == 'User'
     @users = User.where(school: @school).includes(:school) if @admin.class.name == 'Admin'
   end
 
