@@ -25,3 +25,10 @@ $(document).on('turbolinks:load', () => {
     }
   })
 })
+
+
+if (!Turbolinks) {
+  location.reload()
+}
+
+Turbolinks.dispatch('turbolinks:load')

@@ -223,3 +223,10 @@ class Leaderboard {
     }, 1010)
   }
 }
+
+
+if (!Turbolinks) {
+  location.reload()
+}
+
+Turbolinks.dispatch('turbolinks:load')
