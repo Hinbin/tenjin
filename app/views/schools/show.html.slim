@@ -43,9 +43,3 @@ div class="container"
           td = sm.client_subject_name
           td =simple_form_for sm, url:school_path do |f|
             = f.association :subject, label: false, input_html: {id: sm.id, class: 'select_input'}
-  .row
-    h1.text-center Generate Username & Password Table.
-    .alert.alert-danger This will reset all username and passwords for this school.  Only do this if this school has just been added!
-  .row
-    .d-flex.justify-content-center
-      =button_to( 'Reset All Passwords', school_path(@school), method: :patch, class: 'btn btn-danger', disable_with: 'Submitting...', params: { reset_all: true }, data: {confirm: 'Are you really sure?  This will reset ALL the schools passwords'} )

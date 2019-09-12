@@ -28,7 +28,7 @@ class UsersController < ApplicationController
     authorize current_user
     @result = User::ResetUserPasswords.new(current_user).call
     if @result.success?
-      @students = policy_scope(User).where(role: 'student')
+      @students = policy_scope(User).where(role: 'student').includes(enrollments: :classroom)
       @employees = policy_scope(User).where(role: 'employee')
       return render 'users/new_passwords'
     else

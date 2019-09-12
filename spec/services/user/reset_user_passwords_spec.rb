@@ -35,11 +35,11 @@ RSpec.describe User::ResetUserPasswords do
       expect(result.success?).to eq(false)
     end
 
-    it 'does not reset passwords for employees' do
+    it 'resets passwords for employees' do
       old_password = teacher.encrypted_password
       described_class.new(school_admin).call
       teacher.reload
-      expect(teacher.encrypted_password).to eq(old_password)
+      expect(teacher.encrypted_password).not_to eq(old_password)
     end
 
     it 'does not reset passwords for school admins' do
