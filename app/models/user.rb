@@ -54,9 +54,12 @@ class User < ApplicationRecord
     where(provider: auth['provider'], upi: auth['upi']).first
   end
 
-  def self.from_wonde(school, classroom, _school_api)
-    create_student_users(classroom, school)
+  def self.from_wonde(school, classroom, classroom_db)
     create_employee_users(classroom, school)
+
+    return unless classroom_db.subject.present?
+
+    create_student_users(classroom, school)
   end
 
   def seconds_left_on_cooldown

@@ -30,9 +30,11 @@ class School::SyncSchool
 
   def sync_all_data
     classroom = Classroom.from_wonde(@school, @sync_data)
+
+    User.from_wonde(@school, @sync_data, classroom)
+
     return unless classroom.subject.present?
 
-    User.from_wonde(@school, @sync_data, @school_api)
     Enrollment.from_wonde(@sync_data)
   end
 end
