@@ -33,7 +33,7 @@ div.modal.fade#resetAllPasswordsModal
           |  in the box below and click confirm.
         .row.justify-content-center
           input.px-2#confirmAllPasswordResetTextbox
-          =link_to 'Confirm', users_path(reset_all: true), class: 'btn btn-danger disabled', id: 'confirmAllPasswordResetButton', method: :post
+          =link_to 'Confirm', reset_all_passwords_school_path(current_user.school), class: 'btn btn-danger disabled', id: 'confirmAllPasswordResetButton', method: :patch
 
       div.modal-footer
         button.btn.btn-secondary type="button" data-dismiss="modal" Close

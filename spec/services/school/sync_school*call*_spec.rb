@@ -4,15 +4,14 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
   include_context 'api_data'
   include_context 'wonde_test_data'
 
+  let(:sociology_class) { Classroom.where(client_id: classroom_client_id).first }
+
   def sync_school_with_wonde
-    default_subject_map
     school = School::AddSchool.new(school_params).call
     perform_enqueued_jobs do
       SyncSchoolJob.perform_later school
     end
   end
-
-  it 'syncs if a sync has been going for more than 10 minutes'
 
   context 'with classroom data' do
     before do
@@ -24,22 +23,22 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
     end
 
     it 'creates classooms with the correct client id' do
-      expect(Classroom.first.client_id).to eq classroom_client_id
+      expect(Classroom.where(client_id: classroom_client_id, name: classroom_name).count).to eq 1
     end
 
     it 'creates classrooms for the correct school' do
-      expect(Classroom.first.school.client_id).to eq school_id
-    end
-
-    it 'creates the classrooms for subjects that have been mapped' do
-      expect(Classroom.first.subject.name).to eq default_subject_map.subject.name
+      expect(sociology_class.school.client_id).to eq school_id
     end
 
     it 'enrolls students into the classroom' do
-      expect(Enrollment.first.classroom.name).to eq classroom_name
+      sociology_class.update_attribute('subject', create(:subject))
+      sync_school_with_wonde
+      expect(sociology_class.enrollments.count).to be > 0
     end
 
     it 'does not duplicate enrollments' do
+      sociology_class.update_attribute('subject', create(:subject))
+      sync_school_with_wonde
       sync_school_with_wonde
       expect(Enrollment.where(user_id: User.first).count).to eq(1)
     end
@@ -73,6 +72,8 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
   context 'with student data' do
     before do
       sync_school_with_wonde
+      sociology_class.update_attribute('subject', create(:subject))
+      sync_school_with_wonde
     end
 
     it 'creates student entries' do
@@ -91,6 +92,8 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
   context 'when given updated student data' do
     it 'updates student details' do
       create(:student, forename: 'test', upi: student_upi)
+      sync_school_with_wonde
+      sociology_class.update_attribute('subject', create(:subject))
       sync_school_with_wonde
       expect(User.where(upi: student_upi).first.forename).to eq(student_forename)
     end
@@ -112,35 +115,16 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
   end
 
   context 'with updated employee data' do
-    it 'updates employee details' do
+    before do
       create(:teacher, upi: employee_upi)
       sync_school_with_wonde
+      sociology_class.update_attribute('subject', create(:subject))
+      sync_school_with_wonde
+    end
+
+    it 'updates employee details' do
+
       expect(User.where(upi: employee_upi).first.forename).to eq(employee_name)
-    end
-  end
-
-  context 'with subject data' do
-    before do
-      sync_school_with_wonde
-    end
-
-    it 'creates subject maps' do
-      expect(SubjectMap.count).to be > 1
-    end
-  end
-
-  context 'when given updated subject data' do
-    it 'updates a subject name' do
-      create(:school, name: school_name, client_id: school_id)
-      create(:subject_map, client_subject_name: 'Test', client_id: 'A1209580994', school: School.first)
-      sync_school_with_wonde
-      expect(SubjectMap.where(client_id: 'A1209580994').first.client_subject_name).to eq(subject_to_map)
-    end
-    it 'uses default subject maps' do
-      subject = create(:subject, name: 'Computer Science')
-      create(:default_subject_map, name: subject_to_map, subject: subject)
-      sync_school_with_wonde
-      expect(SubjectMap.where(client_subject_name: subject_to_map).first.subject.name).to eq('Computer Science')
     end
   end
 

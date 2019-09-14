@@ -9,11 +9,10 @@ section.page-section.text-center.pt-2#Users
           th Name
           th Username
           th Role
-          th Reset Password?
         tbody
           - @employees.each do |e|
             tr.employee-row data-user=e.id
               td =e.forename + " " + e.surname
               td =e.username
-              td =select_tag 'role', options_for_select(['employee', 'school_admin'], e.role), id: ('role-select-user-' + e.id.to_s),class: 'custom-select', data: { remote: 'true',  url: url_for(@school), method: 'put', params: ('user_id=' + e.id.to_s) }
+              td =select_tag 'role', options_for_select(['employee', 'school_admin'], e.role), id: ('role-select-user-' + e.id.to_s), class: 'custom-select', data: { remote: 'true',  url: set_role_user_path(e.id), method: 'patch' }
               

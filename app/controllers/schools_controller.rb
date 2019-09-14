@@ -1,6 +1,7 @@
 class SchoolsController < ApplicationController
-  before_action :authenticate_admin!
-  before_action :set_school, only: %i[show update]
+  before_action :authenticate_admin!, only: %i[index new create show]
+  before_action :authenticate_user!, only: %i[update]
+  before_action :set_school, only: %i[show update show_employees]
 
   def index
     @schools = policy_scope(School)
@@ -23,14 +24,22 @@ class SchoolsController < ApplicationController
   end
 
   def update
-    if update_school_params[:role].present? && update_school_params[:user_id].present?
-      authorize @current_admin, policy_class: SchoolPolicy
-      User.find(update_school_params[:user_id]).update_attribute('role', update_school_params[:role])
+    authorize @school
+    @school.update_attribute('sync_status', 'queued')
+    SyncSchoolJob.perform_later @school
+    redirect_to classrooms_path
+  end
+
+  def reset_all_passwords
+    authorize current_user.school
+    @result = User::ResetUserPasswords.new(current_user).call
+    if @result.success?
+      @students = policy_scope(User).where(role: 'student').includes(enrollments: :classroom)
+      @employees = policy_scope(User).where(role: 'employee')
+      return render 'users/new_passwords'
     else
-      authorize @school
-      @school.update_attribute('sync_status', 'queued')
-      SyncSchoolJob.perform_later @school
-      redirect_to schools_path
+      flash[:alert] = @result.errors
+      redirect_to index
     end
   end
 
@@ -40,8 +49,11 @@ class SchoolsController < ApplicationController
       AskedQuestion.joins(quiz: [{ user: :school }])
                    .where('asked_questions.correct IS NOT NULL AND schools.id = ?', @school.id).count
     @school_admins = User.where(school: @school, role: 'school_admin')
-    return unless school_show_params[:show_employees] == 'true'
+  end
 
+  def show_employees
+    authorize @school
+    @school_admins = User.where(school: @school, role: 'school_admin')
     @employees = User.where(school: @school, role: 'employee').or @school_admins
     render 'school_employees'
   end
@@ -56,15 +68,12 @@ class SchoolsController < ApplicationController
     params.require(:school).permit(:client_id, :token)
   end
 
-  def pundit_user
-    current_admin
-  end
-
   def update_school_params
-    params.permit(:id, :reset_all, :role, :user_id, :authenticity_token)
+    params.permit(:id, :role, :user_id, :authenticity_token)
   end
 
-  def school_show_params
-    params.permit(:id, :show_employees)
+  def reset_all_password_params
+    params.permit(:reset_all)
   end
+
 end

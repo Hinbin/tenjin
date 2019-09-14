@@ -18,6 +18,6 @@ section.page-section.text-center#challenges
               tr data-classroom = e.classroom.id
                 td =e.classroom.name
                 td =e.classroom.description
-                td =e.subject.name
+                td =e.subject.name if e.subject.present?
                 td =e.classroom.enrollments.count
                 td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'btn btn-dark'

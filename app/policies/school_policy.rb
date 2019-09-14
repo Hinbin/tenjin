@@ -1,4 +1,6 @@
 class SchoolPolicy < ApplicationPolicy
+  attr_reader :user, :record
+
   class Scope < Scope
     def initialize(user, scope)
       @user = user
@@ -10,28 +12,31 @@ class SchoolPolicy < ApplicationPolicy
     end
   end
 
-  def initialize(user, permitted_school)
-    @user = user
-    @permitted_school = permitted_school
+  def new?
+    user.super?
   end
 
-  def new?
-    @user.super?
+  def reset_all_passwords?
+    user.school_admin? && user.school == record
   end
 
   def show?
-    @user.super?
+    user.super?
   end
 
   def create?
-    @user.super?
+    user.super?
   end
 
   def update?
-    @user.super?
+    user.school_admin?
   end
 
   def destroy?
-    @user.super?
+    user.super?
+  end
+
+  def show_employees?
+    user.super?
   end
 end

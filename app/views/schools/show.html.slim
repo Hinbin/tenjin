@@ -3,9 +3,6 @@ div class="container"
   h1 class="display-4" =@school.name
   table class="table"
     tr
-      td Subjects
-      td =@school.valid_subject_count
-    tr
       td Students
       td =@school.users.where(role:'student').count
     tr
@@ -31,15 +28,4 @@ div class="container"
             td =sa.role.humanize          
             td =button_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary'
   .d-flex.justify-content-center
-    =link_to 'Manage User Roles', school_path(@school, params: {show_employees: 'true'}), class: 'btn btn-dark'
-
-  h1.pt-5 Subject Maps
-  table class="table"
-    tr 
-      th School Subject Name
-      th Tenjin Subject Name
-    -@school.subject_maps.order(:client_subject_name).each do |sm|
-        tr
-          td = sm.client_subject_name
-          td =simple_form_for sm, url:school_path do |f|
-            = f.association :subject, label: false, input_html: {id: sm.id, class: 'select_input'}
+    =link_to 'Manage User Roles', show_employees_school_path(@school), class: 'btn btn-dark'

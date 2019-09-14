@@ -2,9 +2,10 @@ class AdminsController < ApplicationController
   before_action :authenticate_admin!
 
   def become
-    authorize current_admin
+    user = User.find(become_admin_params)
+    authorize user
 
-    sign_in(:user, User.find(become_admin_params))
+    sign_in(:user, user)
     sign_out current_admin
     redirect_to root_url # or user_root_url
   end
@@ -14,4 +15,5 @@ class AdminsController < ApplicationController
   def become_admin_params
     params.require(:user_id)
   end
+
 end

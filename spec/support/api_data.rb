@@ -51,9 +51,6 @@ RSpec.shared_context 'wonde_test_data', shared_context: :metadata do
                     token: school_token, sync_status: 'successful', permitted: true)
   end
 
-  let(:subject_to_map) { 'Sociology' }
-  let(:default_subject_map) { create(:default_subject_map, name: subject_to_map) }
-
   let(:classroom_client_id) { 'A1906124304' }
   let(:classroom_name) { 'SOC 2' }
 

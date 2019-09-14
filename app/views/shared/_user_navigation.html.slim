@@ -28,7 +28,11 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
       -if current_user.school_admin?
         li.nav-item
           a.nav-link href=users_path
-            | School Admin
+            | User Admin
+      -if current_user.school_admin?
+        li.nav-item
+          a.nav-link href=classrooms_path
+            | Setup Classrooms         
 
     -if current_user.student?
       a href=customise_path

@@ -1,0 +1,25 @@
+=javascript_pack_tag('classroom')
+.container
+  section.page-section.text-center.pt-2#classrooms
+    p 
+      |Current school sync status: 
+      b.font-weight-bold#syncStatus #{@school.sync_status.humanize}
+    ==sync_status_button
+    h1.page-section-header.text-uppercase Classrooms
+    hr class=("small mb-5 primary-red")
+    .row.justify-content-center
+      .col.mx-auto
+        table.table.table-hover#classroom-table
+          thead
+            tr
+            th Name
+            th Number Students
+            th Subject
+          tbody
+            -@classrooms.each do |c|
+              tr
+                td =c.name
+                td =c.enrollments.count
+                td =select_tag :subject, options_from_collection_for_select(@subjects, :id, :name, c.subject_id), include_blank: '', id: ('classroom-' + c.id.to_s), class: 'custom-select', data: { remote: 'true',  url: classroom_path(c.id), method: 'patch' }
+        
+        

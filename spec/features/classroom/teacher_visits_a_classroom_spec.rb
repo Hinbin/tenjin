@@ -61,7 +61,7 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
         create_list(:homework, 5, classroom: classroom)
         second_homework.update_attribute(:completed, true)
         visit(classroom_path(classroom))
-        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(3) i:nth-child(2).fa-check")
+        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(4) i:nth-child(2).fa-check")
       end
 
       it 'does not show homeworks for another classroom' do

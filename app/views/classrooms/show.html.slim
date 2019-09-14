@@ -28,10 +28,12 @@
         thead
           th First Name
           th Last Name
+          th Username
           th Homeworks
         tbody
           -@students.each do |s| 
             tr.student-data data-controller='users' data-id=s.id
               td =s.forename
               td =s.surname
+              td =s.username
               td ==student_homeworks(s, @homework_progress)

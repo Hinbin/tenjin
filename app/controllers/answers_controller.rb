@@ -41,7 +41,4 @@ class AnswersController < ApplicationController
     params.require(:answer).permit(:text, :correct)
   end
 
-  def pundit_user
-    current_admin
-  end
 end

@@ -1,47 +1,42 @@
 class UserPolicy < ApplicationPolicy
-  attr_reader :current_user, :model, :record
+  attr_reader :user, :record
 
   class Scope < Scope
-    def initialize(user, scope)
-      @user = user
-      @scope = scope
-    end
-
     def resolve
-      @scope.where(school: @user.school)
+      scope.where(school: user.school, disabled: false)
     end
-  end
-
-  def initialize(current_user, model)
-    @current_user = current_user
-    @user = model
   end
 
   def index?
-    @current_user.school_admin?
+    user.school_admin?
   end
 
   def show?
-    if @current_user.school_admin?
-      @current_user.school == @user.school
-    elsif @current_user.employee?
-      (@current_user.school == @user.school) && (@user.student? || @current_user == @user)
+    if user.school_admin?
+      user.school == record.school
+    elsif user.employee?
+      (user.school == record.school) && (record.student? || user == record)
     else
-      @current_user == @user
+      user == record
     end
   end
 
-  def create?
-    @current_user.school_admin?
-  end
-
   def update?
-    @current_user.school_employee? && @user.school == @current_user.school
+    (user.school_employee? && record.school == user.school) || (record == user)
   end
 
   def destroy?
-    return false if @current_user == @user
+    return false if user == record
 
-    @current_user.school_admin?
+    user.school_admin?
   end
+
+  def become?
+    user.super?
+  end
+
+  def set_role?
+    user.super?
+  end
+
 end

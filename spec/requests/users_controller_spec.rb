@@ -6,7 +6,7 @@ RSpec.describe 'resetting all user passwords', default_creates: true, type: :req
   end
 
   def reset_all_link
-    post '/users', params: { reset_all: true }
+    patch reset_all_passwords_school_path(student.school)
   end
 
   context 'when submitting a password change for all' do

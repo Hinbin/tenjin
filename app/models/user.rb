@@ -54,16 +54,12 @@ class User < ApplicationRecord
     where(provider: auth['provider'], upi: auth['upi']).first
   end
 
-  def self.from_wonde(school, classroom, _school_api)
-    mapped_subjects = SubjectMap.subject_maps_for_school(school)
-    # We only want entries for students that are completing subjects
-    # covered by the quiz platform
+  def self.from_wonde(school, classroom, classroom_db)
+    create_employee_users(classroom, school)
 
-    subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
-    return unless subject.present?
+    return unless classroom_db.subject.present?
 
     create_student_users(classroom, school)
-    create_employee_users(classroom, school)
   end
 
   def seconds_left_on_cooldown
@@ -76,6 +72,7 @@ class User < ApplicationRecord
     private
 
     def create_student_users(classroom, school)
+      return unless classroom.subject.present?
       return unless classroom.students.present?
       return unless classroom.students.data.present?
 
@@ -86,6 +83,7 @@ class User < ApplicationRecord
     end
 
     def create_employee_users(classroom, school)
+      return unless classroom.subject.present?
       return unless classroom.employees.present?
       return unless classroom.employees.data.present?
 
@@ -109,6 +107,7 @@ class User < ApplicationRecord
       u.forename = user.forename
       u.surname = user.surname
       u.challenge_points = 0
+      u.disabled = false
       generate_username(u) if u.new_record?
       u
     end
