@@ -52,7 +52,7 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
 
     it 'shows a link to school admin in the nav bar' do
       visit(dashboard_path)
-      expect(page).to have_link('School Admin', href: users_path)
+      expect(page).to have_link('User Admin', href: users_path)
     end
   end
 end

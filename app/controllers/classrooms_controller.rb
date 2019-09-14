@@ -11,9 +11,27 @@ class ClassroomsController < ApplicationController
                                          .order('homeworks.due_date desc')
   end
 
+  def index
+    authorize current_user.school, :update?
+    @classrooms = policy_scope(Classroom).order(:name)
+    @school = current_user.school
+    @subjects = Subject.all
+  end
+
+  def update
+    authorize @classroom
+    @classroom.update(subject_id: update_classroom_params[:subject])
+    @classroom.school.update(sync_status: 'needed')
+  end
+
   private
 
   def set_classroom
     @classroom = Classroom.find(params[:id])
   end
+
+  def update_classroom_params
+    params.permit(:subject, :id)
+  end
+
 end

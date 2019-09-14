@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:set_role]
+  before_action :authenticate_admin!, only: [:set_role]
 
   def index
     authorize current_user
@@ -15,26 +16,20 @@ class UsersController < ApplicationController
     find_homework_progress
   end
 
+  def set_role
+    return unless update_user_role_params[:role].present? && update_user_role_params[:id].present?
+
+    user = User.find(update_user_role_params[:id])
+    authorize user, :set_role?
+    user.update_attribute('role', update_user_role_params[:role])
+  end
+
   def update
     user_record = User.find(params[:id])
     authorize user_record
     user_record.password = update_password_params[:password]
     user_record.save
     redirect_to user_record, notice: 'Password successfully updated'
-  end
-
-  def create
-    # Only used to reset passwords
-    authorize current_user
-    @result = User::ResetUserPasswords.new(current_user).call
-    if @result.success?
-      @students = policy_scope(User).where(role: 'student').includes(enrollments: :classroom)
-      @employees = policy_scope(User).where(role: 'employee')
-      return render 'users/new_passwords'
-    else
-      flash[:alert] = @result.errors
-      redirect_to index
-    end
   end
 
   private
@@ -47,4 +42,10 @@ class UsersController < ApplicationController
   def update_password_params
     params.require(:user).permit(:password)
   end
+
+  def update_user_role_params
+    params.permit(:role, :id)
+  end
+
+ 
 end

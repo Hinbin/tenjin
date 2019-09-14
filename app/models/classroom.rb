@@ -1,5 +1,5 @@
 class Classroom < ApplicationRecord
-  belongs_to :subject
+  belongs_to :subject, optional: true
   belongs_to :school
   has_many :enrollments
   has_many :users, through: :enrollments
@@ -9,21 +9,19 @@ class Classroom < ApplicationRecord
   validates :name, presence: true
 
   def self.from_wonde(school, classroom)
-    mapped_subjects = SubjectMap.subject_maps_for_school(school)
-    subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
-    create_classroom(classroom, school, subject) if subject.present?
+    create_classroom(classroom, school)
   end
 
-  def self.create_classroom(classroom, school, subject)
+  def self.create_classroom(classroom, school)
     c = Classroom.where(client_id: classroom.id).first_or_initialize
     c.client_id = classroom.id
     c.name = classroom.name
     c.description = classroom.description
     c.code = classroom.code
     c.school_id = school.id
-    c.subject_id = subject.subject.id
     c.disabled = false
     c.save
+    c
   end
 
   def self.classroom_from_client_id(client_id)

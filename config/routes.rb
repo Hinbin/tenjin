@@ -2,15 +2,25 @@ Rails.application.routes.draw do
   devise_for :admins
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   
-  resources :quizzes, :schools
+  resources :quizzes
+  resources :schools do
+    member do
+      patch 'reset_all_passwords'
+      get 'show_employees'
+    end
+  end
   resources :subject_maps, only: [:update]
   resources :leaderboard, only:[:show, :index]
-  resources :classrooms, only: [:show]
+  resources :classrooms, only: [:show, :index, :update]
   resources :questions
   resources :answers
   resources :topics
   resources :homeworks
-  resources :users, only:[:show, :index, :update, :create]
+  resources :users, only:[:show, :index, :update] do
+      member do
+        patch 'set_role'
+      end
+  end
   resources :admins, only:[:show]  do
     member do
       post 'become'

@@ -5,7 +5,6 @@ RSpec.describe Leaderboard::BuildLeaderboard do
   include_context 'default_creates'
 
   before do
-    create(:subject_map, school: school, subject: subject)
     create(:enrollment, classroom: classroom, user: student)
     create(:topic_score, topic: topic, user: student)
   end

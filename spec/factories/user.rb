@@ -12,6 +12,7 @@ FactoryBot.define do
     time_of_last_quiz { rand((Time.now - 1.day)..(Time.now - 1.hour)) }
     username { forename[0].downcase + surname.downcase + upi[0..3] }
     password { FFaker::Internet.password }
+    disabled { false }
 
     factory :student do
       role { 'student' }

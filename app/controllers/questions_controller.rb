@@ -59,10 +59,6 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:question_text, :question_type)
   end
 
-  def pundit_user
-    current_admin
-  end
-
   def set_question
     @question = Question.find(params[:id])
   end

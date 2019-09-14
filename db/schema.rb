@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_07_142936) do
+ActiveRecord::Schema.define(version: 2019_09_13_162110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,14 +154,6 @@ ActiveRecord::Schema.define(version: 2019_09_07_142936) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "default_subject_maps", force: :cascade do |t|
-    t.string "name", null: false
-    t.bigint "subject_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["subject_id"], name: "index_default_subject_maps_on_subject_id"
-  end
-
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
@@ -263,17 +255,6 @@ ActiveRecord::Schema.define(version: 2019_09_07_142936) do
     t.index ["school_group_id"], name: "index_schools_on_school_group_id"
   end
 
-  create_table "subject_maps", force: :cascade do |t|
-    t.bigint "school_id"
-    t.string "client_id", null: false
-    t.string "client_subject_name", null: false
-    t.bigint "subject_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["school_id"], name: "index_subject_maps_on_school_id"
-    t.index ["subject_id"], name: "index_subject_maps_on_subject_id"
-  end
-
   create_table "subjects", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -338,6 +319,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_142936) do
     t.string "dashboard_style"
     t.datetime "time_of_last_quiz"
     t.string "username"
+    t.boolean "disabled"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
     t.index ["username"], name: "index_users_on_username", unique: true
@@ -354,7 +336,6 @@ ActiveRecord::Schema.define(version: 2019_09_07_142936) do
   add_foreign_key "challenges", "topics"
   add_foreign_key "customisation_unlocks", "customisations"
   add_foreign_key "customisation_unlocks", "users"
-  add_foreign_key "default_subject_maps", "subjects"
   add_foreign_key "enrollments", "classrooms"
   add_foreign_key "enrollments", "users"
   add_foreign_key "homework_progresses", "homeworks"
@@ -365,8 +346,6 @@ ActiveRecord::Schema.define(version: 2019_09_07_142936) do
   add_foreign_key "quizzes", "topics"
   add_foreign_key "quizzes", "users"
   add_foreign_key "schools", "school_groups"
-  add_foreign_key "subject_maps", "schools"
-  add_foreign_key "subject_maps", "subjects"
   add_foreign_key "topic_scores", "topics"
   add_foreign_key "topic_scores", "users"
   add_foreign_key "topics", "subjects"

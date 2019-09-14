@@ -40,7 +40,4 @@ class TopicsController < ApplicationController
     params.require(:subject).permit(:subject_id)
   end
 
-  def pundit_user
-    current_admin
-  end
 end

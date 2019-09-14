@@ -35,4 +35,10 @@ class ApplicationController < ActionController::Base
                                       customisations: { customisation_type: 'dashboard_style' }).first
     style.present? ? style.customisation.value : 'red'
   end
+  
+  def pundit_user
+    return current_admin if current_admin.present?
+
+    current_user
+  end
 end

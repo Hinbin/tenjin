@@ -1,7 +1,5 @@
 class School < ApplicationRecord
   has_many :users
-  has_many :subject_maps
-  has_many :subjects, through: :subject_maps
   belongs_to :school_group, optional: true
   validates :client_id, presence: true, uniqueness: true
   validates :name, presence: true
@@ -22,6 +20,7 @@ class School < ApplicationRecord
     school.sync_status = 'syncing'
     school.save
 
+    User.where(school: school).where.not(role: 'school_admin').update_all(disabled: true)
     Enrollment.joins(:classroom).where('school_id = ?', school.id).destroy_all
     Classroom.where('school_id = ?', school.id).update_all(disabled: true)
   end
@@ -35,7 +34,4 @@ class School < ApplicationRecord
     School.where(client_id: client_id).first
   end
 
-  def valid_subject_count
-    subject_maps.where.not(subject_id: nil).count
-  end
 end

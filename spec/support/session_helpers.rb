@@ -24,7 +24,6 @@ module SessionHelpers
   end
 
   def setup_subject_database
-    create(:subject_map, school: school, subject: subject)
     create(:enrollment, classroom: classroom, user: student)
     create(:multiplier)
   end

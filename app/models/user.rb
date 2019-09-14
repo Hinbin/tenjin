@@ -55,13 +55,6 @@ class User < ApplicationRecord
   end
 
   def self.from_wonde(school, classroom, _school_api)
-    mapped_subjects = SubjectMap.subject_maps_for_school(school)
-    # We only want entries for students that are completing subjects
-    # covered by the quiz platform
-
-    subject = mapped_subjects.where(client_subject_name: classroom.subject.data.name).first
-    return unless subject.present?
-
     create_student_users(classroom, school)
     create_employee_users(classroom, school)
   end
@@ -76,6 +69,7 @@ class User < ApplicationRecord
     private
 
     def create_student_users(classroom, school)
+      return unless classroom.subject.present?
       return unless classroom.students.present?
       return unless classroom.students.data.present?
 
@@ -86,6 +80,7 @@ class User < ApplicationRecord
     end
 
     def create_employee_users(classroom, school)
+      return unless classroom.subject.present?
       return unless classroom.employees.present?
       return unless classroom.employees.data.present?
 
@@ -109,6 +104,7 @@ class User < ApplicationRecord
       u.forename = user.forename
       u.surname = user.surname
       u.challenge_points = 0
+      u.disabled = false
       generate_username(u) if u.new_record?
       u
     end

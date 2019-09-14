@@ -9,7 +9,6 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     let(:classroom_cs) { create(:classroom, subject: subject_cs, school: school) }
 
     it 'shows a subject image when there is one available' do
-      create(:subject_map, school: school, subject: subject_cs)
       create(:enrollment, classroom: classroom_cs, user: student)
       log_in
       expect(page).to have_css('img[src*=computer-science]')

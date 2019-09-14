@@ -12,11 +12,9 @@ RSpec.describe 'User selects a leaderboard', type: :feature, js: true do
   context 'when selecting a leaderboard to view' do
     let(:second_subject) { create(:subject) }
     let(:second_classroom) { create(:classroom, subject: second_subject, school: school) }
-    let(:second_subject_map) { create(:subject_map, school: school, subject: second_subject) }
 
     before do
       topic
-      second_subject_map
       create(:enrollment, classroom: second_classroom, user: student)
       visit leaderboard_index_path
     end

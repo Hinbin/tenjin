@@ -26,7 +26,6 @@ $(document).on('turbolinks:load', () => {
   })
 })
 
-
 if (!Turbolinks) {
   location.reload()
 }

@@ -4,6 +4,7 @@ FactoryBot.define do
     name { FFaker::Education.school }
     token { SecureRandom.hex }
     school_group
+    sync_status { 'successful' }
 
     permitted { true }
   end

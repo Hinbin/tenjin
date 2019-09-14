@@ -12,21 +12,13 @@ class School::SyncSchool
     return if @school.sync_status == 'syncing' && (Time.now - School.first.updated_at) < 120
 
     School.from_wonde_sync_start(@school)
-    fetch_subject_data
     fetch_class_data
     fetch_deletion_data
     School.from_wonde_sync_end(@school)
   end
 
-  def fetch_subject_data
-    @school_api.subjects.all.each do |data|
-      SubjectMap.from_wonde(@school, data)
-    end
-  end
-
   def fetch_class_data
-    # To limit API calls and improve performance - get all classroom and student data here
-    @school_api.classes.all(%w[subject students employees]).each do |data|
+    @school_api.classes.all(%w[students employees]).each do |data|
       @sync_data = data
       sync_all_data
     end
@@ -37,8 +29,10 @@ class School::SyncSchool
   end
 
   def sync_all_data
-    Classroom.from_wonde(@school, @sync_data)
+    classroom = Classroom.from_wonde(@school, @sync_data)
+    return unless classroom.subject.present?
+
     User.from_wonde(@school, @sync_data, @school_api)
-    Enrollment.from_wonde(@school, @sync_data)
+    Enrollment.from_wonde(@sync_data)
   end
 end

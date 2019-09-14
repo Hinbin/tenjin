@@ -23,7 +23,6 @@ RSpec.describe User, type: :model do
 
     before do
       school_api_data
-      create(:subject_map, client_subject_name: subject_api_data.data.name, school: School.first)
     end
 
     context 'with student api data' do
