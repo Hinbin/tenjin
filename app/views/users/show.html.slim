@@ -2,6 +2,6 @@ section.page-section.text-center
   .container    
     h1.page-section-header.text-uppercase ="#{@user.forename} #{@user.surname}"
     hr class=("small mb-5 primary-" + @css_flavour)
-  =render('user_password') if @current_user.school_employee?
+  =render('user_password') if policy(current_user).reset_password?
 -if @user.student?
   =render('shared/homework')

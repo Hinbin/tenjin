@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     @employees = policy_scope(User).where(role: 'employee').or(policy_scope(User).where(role: 'school_admin'))
   end
 
-  def show
+  def show  
     @css_flavour = find_dashboard_style
     authorize @user
     @homeworks = policy_scope(Homework)
@@ -36,7 +36,8 @@ class UsersController < ApplicationController
   def reset_password
     authorize @user
     new_password = Devise.friendly_token(6)
-    @user.password = new_password
+    @user.reset_password(new_password, new_password)
+    @user.save
     render json: { id: @user.id, password: new_password }
   end
 
