@@ -108,7 +108,7 @@ class User < ApplicationRecord
       u.surname = user.surname
       u.challenge_points = 0
       u.disabled = false
-      generate_username(u) if u.new_record?
+      generate_username(u) if u.new_record? || u.username.blank?
       u
     end
   end
