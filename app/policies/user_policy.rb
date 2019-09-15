@@ -21,6 +21,10 @@ class UserPolicy < ApplicationPolicy
     end
   end
 
+  def reset_password?
+    show?
+  end
+
   def update?
     (user.school_employee? && record.school == user.school) || (record == user)
   end

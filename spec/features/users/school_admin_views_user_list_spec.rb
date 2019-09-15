@@ -19,9 +19,6 @@ RSpec.describe 'School admin views user list', type: :feature, js: true, default
     expect(page).to have_text('You are not authorized to perform this action.')
   end
 
-  it 'allows an admin to request a re-sync of the school' do
-  end
-
   it 'gives a clear warning when an admin resets all passwords that this is dangerous' do
     visit(users_path)
     find('#resetPrintModalButton').click
@@ -76,13 +73,6 @@ RSpec.describe 'School admin views user list', type: :feature, js: true, default
     expect(page).to have_css('.student-row', count: 10)
   end
 
-  it 'navigates to the correct user for the reset password button' do
-    create(:enrollment, user: student, school: second_school)
-    visit(users_path)
-    first('#students-table').click_link('Reset Password')
-    expect(page).to have_current_path(user_path(student))
-  end
-
   it 'shows employees if I am a school admin' do
     create(:teacher, school: school)
     visit(users_path)
@@ -93,6 +83,14 @@ RSpec.describe 'School admin views user list', type: :feature, js: true, default
     create(:school_admin, school: school)
     visit(users_path)
     expect(page).to have_css('.employee-row', count: 2)
+  end
+
+  it 'resets a password and then shows the result' do
+    visit(users_path)
+    within '#students-table' do
+      click_link('Reset Password')
+      expect(page).to have_no_link('Reset Password').and have_css('.new-password')
+    end
   end
 
   it 'does not show employees if I am an employee'

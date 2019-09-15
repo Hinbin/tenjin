@@ -26,6 +26,10 @@ class School < ApplicationRecord
   end
 
   def self.from_wonde_sync_end(school)
+    User.where(school: school, role: 'employee').each do |e|
+      e.update_attribute('disabled', true) if e.enrollments.count.zero?
+    end
+
     school.sync_status = 'successful'
     school.save
   end

@@ -61,7 +61,7 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
         create_list(:homework, 5, classroom: classroom)
         second_homework.update_attribute(:completed, true)
         visit(classroom_path(classroom))
-        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(4) i:nth-child(2).fa-check")
+        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(5) i:nth-child(2).fa-check")
       end
 
       it 'does not show homeworks for another classroom' do
@@ -80,6 +80,26 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
         create_list(:homework, 20, classroom: classroom)
         visit(classroom_path(classroom))
         expect(page).to have_css('.homework-data', count: 5)
+      end
+
+      it 'allows me to reset a password' do
+        visit(classroom_path(classroom))
+        find(:css, '#resetPasswordCheck').set(true)
+        click_link('Reset Password')
+        expect(page).to have_no_link('Reset Password').and have_css('.new-password')
+      end
+
+      it 'hides reset password buttons by defulat' do
+        visit(classroom_path(classroom))
+        expect(page).to have_no_link('Reset Password')
+      end
+
+      it 'has a working reset password toggle' do
+        visit(classroom_path(classroom))
+        find(:css, '#resetPasswordCheck').set(true)
+        within '#students-table' do
+          expect(page).to have_link('Reset Password')
+        end
       end
     end
   end

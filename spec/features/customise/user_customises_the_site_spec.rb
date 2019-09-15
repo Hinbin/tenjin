@@ -72,6 +72,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
 
       it 'allows you to buy a previously bought customisation at no cost' do
         visit(customise_path)
+ 
         find('button#buy-dashboard-' + dashboard_customisation.value).click
         expect { student.reload }.to change(student, :challenge_points).by(0)
       end

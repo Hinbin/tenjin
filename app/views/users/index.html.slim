@@ -8,13 +8,15 @@ section.page-section.text-center.pt-2#Users
         thead
           th Name
           th Username
+          th Classes
           th Reset Password?
         tbody
           - @students.each do |s|
-            tr.student-row data-user=s.id
+            tr.student-row data-id=s.id
               td =s.forename + " " + s.surname
               td =s.username
-              td =link_to('Reset Password', user_path(id: s.id), class: 'btn btn-dark reset-password-student')
+              td =get_user_classes(s)
+              td =link_to('Reset Password', reset_password_user_path(id: s.id), class: 'btn btn-dark reset-password reset-password-student', remote: true, method: :patch)
     -if current_user.school_admin?
       =render('users/employee_table')
     h1.page-section-header.text-uppercase.pt-5 Danger Zone

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   resources :users, only:[:show, :index, :update] do
       member do
         patch 'set_role'
+        patch 'reset_password'
       end
   end
   resources :admins, only:[:show]  do

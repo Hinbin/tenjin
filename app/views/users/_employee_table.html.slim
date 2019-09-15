@@ -5,7 +5,7 @@ hr.small.mb-5.primary-red
     thead
       th Name
       th Username
-      th Role
+      th Classes
       th Reset Password?
     tbody
       - @employees.each do |e|
@@ -14,7 +14,5 @@ hr.small.mb-5.primary-red
             => e.forename
             = e.surname
           td = e.username
-          td = e.role.humanize
-          td
-            a.btn.btn-dark.reset-password-employee href=user_path(e)
-              | Reset Password
+          td = get_user_classes(e)
+          td =link_to('Reset Password', reset_password_user_path(id: e.id), class: 'btn btn-dark reset-password reset-password-student', remote: true, method: :patch)

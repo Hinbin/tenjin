@@ -20,4 +20,8 @@ module ApplicationHelper
     @css_flavour = 'default' if @css_flavour.nil?
     "small mb-5 primary-#{@css_flavour}"
   end
+
+  def get_user_classes(s)
+    s.enrollments.map { |e| e.classroom.name }.join(', ')
+  end
 end
