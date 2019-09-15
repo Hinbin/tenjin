@@ -9,7 +9,7 @@ $(document).on('turbolinks:load', function () {
 })
 
 class Leaderboard {
-  constructor () {
+  constructor() {
     this.allLeaderboardData = []
     this.top50 = false
     this.maxUsersToDisplay = 10
@@ -214,16 +214,17 @@ class Leaderboard {
   flashScore (userID) {
     let scoreRow = $('#row-' + userID)
 
-    // Updates the table and adds the score-changed class to cause
-    // the row to flash
-    $(scoreRow).addClass('score-changed')
+    if (scoreRow.length) {
+      // Updates the table and adds the score-changed class to cause
+      // the row to flash
+      $(scoreRow).addClass('score-changed')
 
-    setTimeout(() => {
-      $(scoreRow).removeClass('score-changed')
-    }, 1010)
+      setTimeout(() => {
+        $(scoreRow).removeClass('score-changed')
+      }, 1010)
+    }
   }
 }
-
 
 if (!Turbolinks) {
   location.reload()

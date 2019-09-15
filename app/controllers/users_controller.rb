@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     @employees = policy_scope(User).where(role: 'employee').or(policy_scope(User).where(role: 'school_admin'))
   end
 
-  def show  
+  def show
     @css_flavour = find_dashboard_style
     authorize @user
     @homeworks = policy_scope(Homework)

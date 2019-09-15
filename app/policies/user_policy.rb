@@ -42,5 +42,4 @@ class UserPolicy < ApplicationPolicy
   def set_role?
     user.super?
   end
-
 end
