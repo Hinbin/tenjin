@@ -4,20 +4,20 @@ section.page-section.text-center#challenges
     h1.page-section-header.text-uppercase My Classes
     hr class=("small mb-5 primary-red")
     .row.justify-content-center
-      .col-lg-10.col.mx-auto
+      .table-responsive
         table.table.table-hover#classroom-table
           thead
             tr
               th Name
-              th Description
+              th.d-none.d-lg-block Description
               th Subject
-              th # Students
+              th.d-none.d-lg-block # Students
               th
           tbody
             - @enrollments.each do |e|
               tr data-classroom = e.classroom.id
                 td =e.classroom.name
-                td =e.classroom.description
+                td.d-none.d-lg-block =e.classroom.description
                 td =e.subject.name if e.subject.present?
-                td =e.classroom.enrollments.count
+                td.d-none.d-lg-block =e.classroom.enrollments.count
                 td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'btn btn-dark'
