@@ -27,22 +27,27 @@ RSpec.describe 'Super manages a school', type: :feature, js: true, default_creat
     end
   end
 
-  context 'when assigning school admins to a school' do
+  context 'when assigning school admins' do
     before do
-      sign_in super_admin
       teacher
       school_admin
+      sign_in super_admin
+    end
+
+    it 'takes you to the employees role management screen' do
+      visit school_path(school)
+      click_link('Manage User Roles')
+      expect(page).to have_content('MANAGE ROLES')
     end
 
     it 'changes an employee to a school admin' do
-      visit school_path(school)
-      click_link 'Manage User Roles'
+      visit show_employees_school_path(school)
       select 'school_admin', from: "role-select-user-#{teacher.id}"
-      visit school_path(school)
       expect(page).to have_content(teacher.username)
     end
 
     it 'removes school admins' do
+      sign_in super_admin
       visit show_employees_school_path(school)
       select 'employee', from: "role-select-user-#{school_admin.id}"
       visit school_path(school)
