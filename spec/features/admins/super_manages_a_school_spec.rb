@@ -1,17 +1,17 @@
 RSpec.describe 'Super manages a school', type: :feature, js: true, default_creates: true do
-  let(:admin_password) { FFaker::Lorem.word }
 
-  before do
-    super_admin
-    super_admin.reset_password(admin_password, admin_password)
-  end
+  context 'when logging in' do
+    before do
+      super_admin
+    end
 
-  it 'allows an admin to log in' do
-    visit(new_admin_session_path)
-    fill_in 'Email', with: super_admin.email
-    fill_in 'Password', with: admin_password
-    click_button 'Log in'
-    expect(page).to have_content('Schools')
+    it 'allows an admin to log in' do
+      visit(new_admin_session_path)
+      fill_in 'Email', with: super_admin.email
+      fill_in 'Password', with: super_admin.password 
+      click_button 'Log in'
+      expect(page).to have_content('Schools')
+    end
   end
 
   context 'when becoming a school admin' do
