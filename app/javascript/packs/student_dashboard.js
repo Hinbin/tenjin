@@ -11,6 +11,7 @@ $(document).on('turbolinks:load', () => {
       type: 'post',
       url: '/quizzes',
       data: { quiz: { subject: pickedSubject, topic_id: pickedTopic } },
+      beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
       success: function (data) {
         Turbolinks.visit('/quizzes')
       }
