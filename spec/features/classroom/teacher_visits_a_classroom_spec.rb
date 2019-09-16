@@ -34,11 +34,6 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
       expect(page).to have_current_path(homework_path(homework))
     end
 
-    it 'takes me to a student record that I have clicked on' do
-      find(:css, "tr[data-id='#{student.id}']").click
-      expect(page).to have_current_path(user_path(student))
-    end
-
     context 'when looking at the student table' do
       let(:second_homework) { HomeworkProgress.joins(:homework).order('homeworks.due_date desc').second }
       let(:different_classroom) { create(:classroom, school: school) }
