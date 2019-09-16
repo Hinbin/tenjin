@@ -22,6 +22,6 @@ class HomeworkPolicy < ApplicationPolicy
   end
 
   def show?
-    @user.school.permitted? && @record.classroom.school == @user.school
+    @record.classroom.school == @user.school
   end
 end
