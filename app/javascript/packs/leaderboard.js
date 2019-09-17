@@ -9,10 +9,11 @@ $(document).on('turbolinks:load', function () {
 })
 
 class Leaderboard {
-  constructor() {
+  constructor () {
     this.allLeaderboardData = []
     this.top50 = false
     this.maxUsersToDisplay = 10
+    this.awardData = []
   }
 
   enableOptionButtons () {
@@ -88,6 +89,7 @@ class Leaderboard {
 
   processResponse (result) {
     this.allLeaderboardData = result['leaderboard']
+    this.awardData = result['awards']
     this.sortLeaderboardTable()
     this.showLeaderboardData()
     this.highlightUser()
@@ -144,7 +146,11 @@ class Leaderboard {
     } else {
       tr = $('<tr>').attr('id', 'row-' + row.id)
     }
+
+    let awardHTML = this.getAwards(row)
+    
     tr.append($('<td>').text(row.rank))
+      .append($('<td>').html(awardHTML))
       .append($('<td>').text(row.name))
 
     if (row.icon && row.icon !== 'none') {
@@ -158,6 +164,27 @@ class Leaderboard {
       .append($('<td>').text(Math.round(row.score)))
 
     return tr
+  }
+
+  getAwards (row) {
+    let numAwards = this.awardData[row.id]
+
+    let awardHTML = ''
+    while (numAwards >= 5) {
+      awardHTML = awardHTML + '<i class="fas fa-star fa" style="color: gold" alt="Five wins" title="Five wins" data-toggle="tooltip"></i>'
+      numAwards -= 5
+    }
+
+    while (numAwards >= 3) {
+      awardHTML = awardHTML + '<i class="fas fa-star fa" style="color: silver" alt="Three wins" title="Three wins" data-toggle="tooltip"></i>'
+      numAwards -= 5
+    }
+
+    while (numAwards >= 1) {
+      awardHTML = awardHTML + '<i class="fas fa-star fa" style="color: purple" alt="Came top of the leaderboard for this subject" title="Came top of the leaderboard for this subject" data-toggle="tooltip"></i>'
+      numAwards -= 1
+    }
+    return awardHTML
   }
 
   snipTableData () {

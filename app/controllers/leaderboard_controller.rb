@@ -47,8 +47,8 @@ class LeaderboardController < ApplicationController
 
   def set_javascript_variables
     gon.subject = @subject
-    gon.school = @school
-    gon.school_group = @school.school_group
+    gon.school = { id: @school.id, name: @school.name }
+    gon.school_group = { id: @school.school_group.id, name: @school.school_group.name } if @school.school_group.present?
     gon.user = current_user.id
     gon.params = leaderboard_params
     set_path

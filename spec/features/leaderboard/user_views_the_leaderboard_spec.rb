@@ -14,6 +14,11 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
       create(:topic_score, topic: topic, school: school, score: n)
     end
   end
+  let(:one_to_nine) do
+    (1..9).each do |n|
+      create(:topic_score, topic: topic, school: school, score: n)
+    end
+  end
 
   before do
     setup_subject_database
@@ -149,7 +154,14 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
     end
   end
 
-  context 'when viewing weekly awards', :focus do
+  context 'when viewing weekly awards' do
+    let(:second_award) do
+      create(:leaderboard_award,
+             user: TopicScore.all.second.user,
+             subject: TopicScore.all.second.subject,
+             school: TopicScore.all.second.user.school)
+    end
+
     before do
       create(:leaderboard_award, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
     end
@@ -158,8 +170,24 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
       visit(leaderboard_path(subject.name))
       expect(page).to have_css('td i.fa-star', style: 'color: purple')
     end
-    it 'shows a gold start for 3 or more wins'
-    it 'shows multiple stars for multiple awards'
-    it 'shows starts for more than one user'
+
+    it 'shows a gold star for 5 or more wins' do
+      create_list(:leaderboard_award, 5, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
+      visit(leaderboard_path(subject.name))
+      binding.pry
+      expect(page).to have_css('td i.fa-star', style: 'color: purple').and have_css('td i.fa-star', style: 'color: gold')
+    end
+    it 'shows a silver star for 3 or more wins' do
+      create_list(:leaderboard_award, 2, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: silver')
+    end
+
+    it 'shows starts for more than one user' do
+      one_to_nine
+      second_award
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: purple', count: 2)
+    end
   end
 end
