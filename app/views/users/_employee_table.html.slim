@@ -9,7 +9,7 @@ hr.small.mb-5.primary-red
       th Reset Password?
     tbody
       - @employees.each do |e|
-        tr.employee-row data-user=e.id
+        tr.employee-row data-id=e.id
           td
             => e.forename
             = e.surname

@@ -1,10 +1,13 @@
 
 $(document).on('turbolinks:load', () => {
+  // Show updated password
   $(document).on('ajax:success', (event) => {
     const response = event.detail[0]
     $(`tr[data-id="${response.id}"] .reset-password`).replaceWith(`<div class="new-password">${response.password}</div>`)
 
   })
+
+  // Data tables initialisation
 
   if (!$.fn.dataTable.isDataTable('#students-table')) {
     $('#students-table').DataTable({
