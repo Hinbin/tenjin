@@ -1,10 +1,11 @@
 # rubocop:disable Metrics/AbcSize
 class Leaderboard::BuildLeaderboard
   def initialize(user, params)
-    @user = user
+    @user = user if user.present?
     @subject = Subject.where(name: params.dig(:id)).first
     @topic = params.dig(:topic)
-    @school_group = true if @user.school.school_group_id.present? && params.dig(:school_group) == 'true'
+    @school = params.dig(:school)
+    @school_group = true if @user.present? && @user.school.school_group_id.present? && params.dig(:school_group) == 'true'
     @all_time = true if params.dig(:all_time) == 'true'
   end
 
@@ -86,7 +87,8 @@ class Leaderboard::BuildLeaderboard
   end
 
   def by_school
-    @query = @query.where(users[:school_id].eq(@user.school_id))
+    @school = @user.school_id if @school.blank?
+    @query = @query.where(users[:school_id].eq(@school))
   end
 
   def by_school_group

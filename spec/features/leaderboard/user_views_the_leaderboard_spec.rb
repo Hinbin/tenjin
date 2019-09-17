@@ -5,12 +5,7 @@ require 'pry'
 RSpec.describe 'User views the leaderboard', type: :feature, js: true do
   include_context 'default_creates'
 
-  before do
-    setup_subject_database
-    sign_in student
-    create(:topic_score, topic: topic, user: student)
-  end
-
+  let(:topic_score) { create(:topic_score, topic: topic, user: student) }
   let(:student) { create(:student, forename: 'Aaaron', school: school) } # Ensure first alphabetically
   let(:student_name) { initialize_name student }
   let(:another_name) { initialize_name User.second }
@@ -18,6 +13,17 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
     (1..10).each do |n|
       create(:topic_score, topic: topic, school: school, score: n)
     end
+  end
+  let(:one_to_nine) do
+    (1..9).each do |n|
+      create(:topic_score, topic: topic, school: school, score: n)
+    end
+  end
+
+  before do
+    setup_subject_database
+    sign_in student
+    topic_score
   end
 
   it 'displays myself if I have a score' do
@@ -78,14 +84,14 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
     TopicScore.first.update(score: 0)
     one_to_ten
     visit(leaderboard_path(subject.name))
-    expect(page).to have_css('tr:nth-child(10) td:nth-child(5)', text: TopicScore.first.score)
+    expect(page).to have_css('tr:nth-child(10) td:nth-child(6)', text: TopicScore.first.score)
   end
 
   it 'shows others when I am near the bottom of the table' do # bug
     TopicScore.first.update(score: 3)
     one_to_ten
     visit(leaderboard_path(subject.name))
-    expect(page).to have_css('tr:nth-child(8) td:nth-child(2)', text: student.forename)
+    expect(page).to have_css('tr:nth-child(8) td:nth-child(3)', text: student.forename)
   end
 
   it 'hides schools on a small screen' do
@@ -145,6 +151,42 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
       second_subject_score
       visit(leaderboard_path(subject.name))
       expect(page).to have_css('tr.current-user td:nth-child(4)', exact_text: TopicScore.first.score)
+    end
+  end
+
+  context 'when viewing weekly awards' do
+    let(:second_award) do
+      create(:leaderboard_award,
+             user: TopicScore.all.second.user,
+             subject: TopicScore.all.second.subject,
+             school: TopicScore.all.second.user.school)
+    end
+
+    before do
+      create(:leaderboard_award, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
+    end
+
+    it 'shows a star for a weekly award' do
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: purple')
+    end
+
+    it 'shows a gold star for 5 or more wins' do
+      create_list(:leaderboard_award, 5, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: purple').and have_css('td i.fa-star', style: 'color: gold')
+    end
+    it 'shows a silver star for 3 or more wins' do
+      create_list(:leaderboard_award, 2, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: silver')
+    end
+
+    it 'shows stars for more than one user' do
+      one_to_nine
+      second_award
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: purple', count: 2)
     end
   end
 end
