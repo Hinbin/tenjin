@@ -3,12 +3,13 @@ require 'support/session_helpers'
 
 RSpec.describe Leaderboard::ResetWeeklyLeaderboard do
   let(:topic_score) { create(:topic_score) }
-  let(:topic_score_same_school) do 
-    create(:topic_score, topic: topic_score.topic, 
-                         user: create(:student, school: topic_score.school),
+  let(:top_score_same_school) do
+    create(:topic_score, topic: topic_score.topic,
+                         school: topic_score.school,
                          score: 100_000_00)
   end
   let(:existing_all_time_score) { create(:all_time_topic_score, user: topic_score.user, topic: topic_score.topic) }
+  let(:school) { create(:school) }
 
   context 'when resetting topic scores' do
     it 'copies the current topic score into the all time topic score' do
@@ -26,15 +27,15 @@ RSpec.describe Leaderboard::ResetWeeklyLeaderboard do
       topic_score
       expect { described_class.new.call }.to change(TopicScore, :count).by(-1)
     end
-
   end
 
-  context 'when adding weekly rewards' do
+  context 'when adding weekly rewards', :focus do
     it 'awards it to the top scorer for a subject' do
       topic_score
-      topic_score_same_school
+      create_list(:topic_score, 20, topic: topic_score.topic, school: topic_score.school)
+      top_score_same_school
       described_class.new.call
-      expect(LeaderboardAward.first.user).to eq(topic_score_same_school.user)
+      expect(LeaderboardAward.first.user).to eq(top_score_same_school.user)
     end
 
     it 'adds two awards for two different schools' do
@@ -44,8 +45,18 @@ RSpec.describe Leaderboard::ResetWeeklyLeaderboard do
 
     it 'adds one award for two users of the same school' do
       topic_score
-      topic_score_same_school
+      top_score_same_school
       expect { described_class.new.call }.to change(LeaderboardAward, :count).by(1)
+    end
+
+    it 'does not add an award if there are no scores' do
+      create(:student)
+      expect { described_class.new.call }.to change(LeaderboardAward, :count).by(0)
+    end
+
+    it 'gives awards for three people with the same score' do
+      create_list(:topic_score, 3, school: school, score: 100)
+      expect { described_class.new.call }.to change(LeaderboardAward, :count).by(3)
     end
   end
 end

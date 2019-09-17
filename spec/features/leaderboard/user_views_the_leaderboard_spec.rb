@@ -182,7 +182,7 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
       expect(page).to have_css('td i.fa-star', style: 'color: silver')
     end
 
-    it 'shows starts for more than one user' do
+    it 'shows stars for more than one user' do
       one_to_nine
       second_award
       visit(leaderboard_path(subject.name))
