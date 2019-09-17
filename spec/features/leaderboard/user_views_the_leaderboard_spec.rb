@@ -5,12 +5,7 @@ require 'pry'
 RSpec.describe 'User views the leaderboard', type: :feature, js: true do
   include_context 'default_creates'
 
-  before do
-    setup_subject_database
-    sign_in student
-    create(:topic_score, topic: topic, user: student)
-  end
-
+  let(:topic_score) { create(:topic_score, topic: topic, user: student) }
   let(:student) { create(:student, forename: 'Aaaron', school: school) } # Ensure first alphabetically
   let(:student_name) { initialize_name student }
   let(:another_name) { initialize_name User.second }
@@ -18,6 +13,12 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
     (1..10).each do |n|
       create(:topic_score, topic: topic, school: school, score: n)
     end
+  end
+
+  before do
+    setup_subject_database
+    sign_in student
+    topic_score
   end
 
   it 'displays myself if I have a score' do
@@ -146,5 +147,19 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
       visit(leaderboard_path(subject.name))
       expect(page).to have_css('tr.current-user td:nth-child(4)', exact_text: TopicScore.first.score)
     end
+  end
+
+  context 'when viewing weekly awards', :focus do
+    before do
+      create(:leaderboard_award, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
+    end
+
+    it 'shows a star for a weekly award' do
+      visit(leaderboard_path(subject.name))
+      expect(page).to have_css('td i.fa-star', style: 'color: purple')
+    end
+    it 'shows a gold start for 3 or more wins'
+    it 'shows multiple stars for multiple awards'
+    it 'shows starts for more than one user'
   end
 end

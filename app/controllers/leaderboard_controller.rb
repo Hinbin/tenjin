@@ -12,6 +12,7 @@ class LeaderboardController < ApplicationController
     authorize current_user
 
     if request.xhr?
+      @subject = Subject.where(name: leaderboard_params[:id]).first
       build_leaderboard
     else
       set_subject_and_topic
@@ -30,6 +31,7 @@ class LeaderboardController < ApplicationController
   def build_leaderboard
     @entries = Leaderboard::BuildLeaderboard.new(current_user,
                                                  leaderboard_params).call
+    @awards = LeaderboardAward.where(school: current_user.school, subject: @subject).group(:user_id).count
   end
 
   def set_subject_and_topic
