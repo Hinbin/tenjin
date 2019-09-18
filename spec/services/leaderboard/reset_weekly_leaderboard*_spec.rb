@@ -29,7 +29,7 @@ RSpec.describe Leaderboard::ResetWeeklyLeaderboard do
     end
   end
 
-  context 'when adding weekly rewards', :focus do
+  context 'when adding weekly rewards' do
     it 'awards it to the top scorer for a subject' do
       topic_score
       create_list(:topic_score, 20, topic: topic_score.topic, school: topic_score.school)
