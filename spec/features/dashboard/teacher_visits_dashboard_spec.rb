@@ -37,6 +37,11 @@ RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default
       visit(dashboard_path)
       expect(page).to have_no_content('i.fa-star')
     end
+
+    it 'shows other classes in a school with a subject assigned' do
+      create(:enrollment, classroom: create(:classroom, school: school), user: create(:teacher, school: school))
+      expect(page).to have_css('#other-classrooms tr[data-classroom="' + classroom.id.to_s + '"]')
+    end
   end
 
   context 'when logging in as a school admin' do
