@@ -86,17 +86,16 @@ class LiveLeaderboard extends React.Component {
 
     // Map every entry in the current leaderboard array into an entry component
     const Entries = leaderboard.map((entry) => {
-      console.log(entry)
       return <Entry key={entry.id} {...entry} />
     })
 
     return (
       <div>
         <Row className='page-header'>
-          <h1>Live Leaderboard</h1>
+          <h1>Leaderboard</h1>
         </Row>
         <Row className='form-row align-items-center d-flex justify-content-around'>
-          {/*<Filters getFilters={this.getFilters} />*/}
+          {<Filters getFilters={this.getFilters}/>}
           <FormGroup>
             <ResetButton onClick={() => this.resetLeaderboard()} />
           </FormGroup>
@@ -107,7 +106,7 @@ class LiveLeaderboard extends React.Component {
               <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>School</th>
+                <th>Classes</th>
                 <th>Score</th>
               </tr>
             </thead>

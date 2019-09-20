@@ -9,7 +9,8 @@ class LiveLeaderboardStore extends EventEmitter {
     this.initialLeaderboard = {}
     this.currentLeaderboard = {}
     this.lastChanged = ''
-    this.oldPath = []
+    this.awards = {}
+    this.leaderboardParams = {}
   }
 
   listenToLeaderboard () {
@@ -39,17 +40,6 @@ class LiveLeaderboardStore extends EventEmitter {
     })
   }
 
-  loadInitialScores () {
-    let initialLeaderboard = JSON.parse(localStorage.getItem('leaderboard'))
-
-    if (initialLeaderboard === null) {
-      return this.resetLeaderboard()
-    } else {
-      this.initialLeaderboard = initialLeaderboard
-      return Promise.resolve()
-    }
-  }
-
   loadLeaderboard () {
     this.listenToLeaderboard()
 
@@ -66,10 +56,23 @@ class LiveLeaderboardStore extends EventEmitter {
         }
 
         this.currentLeaderboard = leaderboard
+        this.awards = result.awards
+        this.leaderboardParams = result.params
         this.emit('change')
       },
       error: (error) => this.processError(error)
     })
+  }
+
+  loadInitialScores () {
+    let initialLeaderboard = JSON.parse(localStorage.getItem('leaderboard'))
+
+    if (initialLeaderboard === null) {
+      return this.resetLeaderboard()
+    } else {
+      this.initialLeaderboard = initialLeaderboard
+      return Promise.resolve()
+    }
   }
 
   getLoading () {

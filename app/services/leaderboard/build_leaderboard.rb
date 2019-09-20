@@ -52,6 +52,14 @@ class Leaderboard::BuildLeaderboard
     Customisation.arel_table
   end
 
+  def enrollments
+    Enrollment.arel_table
+  end
+
+  def classrooms
+    Classroom.arel_table
+  end
+
   def name
     separator = Arel::Nodes.build_quoted(' ')
 
@@ -61,24 +69,37 @@ class Leaderboard::BuildLeaderboard
     ).as('name')
   end
 
+  def array_agg(input)
+    seperator = Arel::Nodes.build_quoted(', ')
+    Arel::Nodes::NamedFunction.new 'array_agg', [input]
+  end
+
   def base_query(topic_table)
     @query = users.project(users[:id],
                            name,
                            schools[:name].as('school_name'),
                            topic_table[:score].sum.as('score'),
-                           leaderboard_icon_subquery[:value].as('icon'))
+                           leaderboard_icon_subquery[:value].as('icon'),
+                           classrooms_subquery[:name].as('classroom_names'))
     users_and_schools
     @query = @query.join(topic_table).on(users[:id].eq(topic_table[:user_id]))
     @query = @query.join(topics).on(topics[:id].eq(topic_table[:topic_id]))
     join_leaderboard_icons
     @school_group ? by_school_group : by_school
     @topic.present? ? by_topic : by_subject
+    join_classrooms
   end
 
   def join_leaderboard_icons
     @query = @query.join(leaderboard_icon_subquery, Arel::Nodes::OuterJoin)
                    .on(leaderboard_icon_subquery[:user_id].eq(users[:id]))
     @query.group('n1.value')
+  end
+
+  def join_classrooms
+    @query = @query.join(classrooms_subquery, Arel::Nodes::OuterJoin)
+                   .on(classrooms_subquery[:user_id].eq(users[:id]))
+    @query.group('n2.name')
   end
 
   def users_and_schools
@@ -108,6 +129,16 @@ class Leaderboard::BuildLeaderboard
                          .join(customisations).on(active_customisations[:customisation_id].eq(customisations[:id]))
                          .where(customisations[:customisation_type].eq('leaderboard_icon'))
                          .as('n1')
+  end
+
+  def classrooms_subquery
+    enrollments.project(enrollments[:user_id],
+                        array_agg(classrooms[:name]).as('name'))
+               .join(classrooms).on(enrollments[:classroom_id].eq(classrooms[:id]))
+               .join(users).on(users[:id].eq(enrollments[:user_id]))
+               .where(classrooms[:subject_id].eq(@subject.id))
+               .group(enrollments[:user_id])
+               .as('n2')
   end
 end
 
