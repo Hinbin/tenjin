@@ -1,7 +1,7 @@
 =javascript_pack_tag('schools')
-div class="container"
-  h1 class="display-4" = @school.name
-  table class="table"
+.container
+  h1.display-4 = @school.name
+  table.table
     tr
       td Students
       td =@school.users.where(role:'student').count

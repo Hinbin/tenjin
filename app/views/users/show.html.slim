@@ -3,7 +3,7 @@ section.page-section.text-center
     h1.page-section-header.text-uppercase
       => @user.forename
       = @user.surname
-    hr class="small mb-5 primary-#{@css_flavour}"
+    hr.small.mb-5 class="primary-#{@css_flavour}"
   = render('user_password') if policy(current_user).reset_password?
 - if @user.student?
   = render('shared/homework')
