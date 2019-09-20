@@ -4,6 +4,5 @@ section.page-section
       .col-4.d-none.d-lg-block
         =render 'subject_select'
       .col
-        h1 =@subject.name
-        h3 =@topic_name
-        =render 'leaderboard'
+        = react_component("LiveLeaderboard")
+
