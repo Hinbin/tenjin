@@ -1,18 +1,17 @@
 =javascript_pack_tag('questions/question_top')
 .container.pt-5
   .progress.mb-3
-    .progress-bar role="progressbar" style="width:#{@percent_complete.to_s}%" aria-valuenow="#{@percent_complete.to_s}" aria-valuemin="0" aria-valuemax="100"
+    .progress-bar role="progressbar" style="width:#{@percent_complete}%" aria-valuenow="#{@percent_complete}" aria-valuemin="0" aria-valuemax="100"
   .row.justify-content-around
     .col-3.text-center
       ul.list-inline
-        li.list-inline-item=icon('fas', 'bolt', style: 'color:black', alt:'Streak', title:'Streak', data: {toggle:"tooltip"})
-        li.list-inline-item#streak="#{@quiz.streak}"
+        li.list-inline-item = icon('fas', 'bolt', style: 'color:black', alt:'Streak', title:'Streak', data: { toggle: "tooltip" })
+        li.list-inline-item#streak = @quiz.streak
     .col-3.text-center
       ul.list-inline
         li.list-inline-item=icon('fas', 'check', style: 'color:green', alt:'Correct', title:'Correct', data: {toggle:"tooltip"})
-        li.list-inline-item#answeredCorrect ="#{@quiz.answered_correct}"
+        li.list-inline-item#answeredCorrect = @quiz.answered_correct
     .col-3.text-center
       ul.list-inline
-        li.list-inline-item#multiplier ="#{@multiplier.multiplier}"
-        li.list-inline-item=icon('fas', 'times', style: 'color:black', alt:'Multiplier', title:'Multiplier', data: {toggle:"tooltip"})
-  
+        li.list-inline-item#multiplier = @multiplier.multiplier
+        li.list-inline-item = icon('fas', 'times', style: 'color:black', alt:'Multiplier', title:'Multiplier', data: { toggle: "tooltip" })

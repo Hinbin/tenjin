@@ -1,17 +1,19 @@
 .container#questionEditor
   .row.col.mt-3    
-    label for='questionTypeSelect' Question Type:
+    label for="questionTypeSelect" Question Type:
     select.form-control#questionTypeSelect
       -Question.question_types.each do |t|
         -if @question.question_type == t[0]
-          option[selected value=t[0]] =t[0].humanize
+          option[selected value=t[0]]
+            = t[0].humanize
         -else
-          option value=t[0] =t[0].humanize
+          option value=t[0]
+            = t[0].humanize
   .row.col.mt-3.justify-content-center
     =form_for(@question) do |f|
       =f.rich_text_area :question_text
   .row.col.mt-3
-    table.table id=('table-' + @question.question_type)
+    table.table id="table-#{@question.question_type}"
       thead
         th Answer
         -unless @question.question_type == 'short_answer'
@@ -28,9 +30,11 @@
     -unless @question.question_type == 'boolean'
       =link_to 'Add Answer', new_answer_path( question: {question_id: @question} ), class: 'btn btn-primary btn-block'
   .row.col.mt-3
-    button.btn.btn-block.btn-success.check-and-save data-link=questions_path(topic_id: @question.topic_id) Save and return
+    button.btn.btn-block.btn-success.check-and-save data-link=questions_path(topic_id: @question.topic_id)
+      | Save and return
   .row.col.mt-3
-    button.btn.btn-block.btn-primary.check-and-save data-link=new_question_path(topic: { topic_id: @question.topic }) Create another question
+    button.btn.btn-block.btn-primary.check-and-save data-link=new_question_path(topic: { topic_id: @question.topic })
+      | Create another question
   .row.col.mt-5
     =link_to 'Delete Question', question_path(@question), method: :delete, class: 'btn btn-danger btn-block'
 .modal.fade#noCorrectAnswerModal
@@ -39,6 +43,3 @@
       .modal-body Please select at least one correct answer
       .modal-footer
         button.btn.btn-secondary data-dismiss="modal" Close
-
-
-

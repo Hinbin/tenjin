@@ -16,7 +16,7 @@
               th Completion
               th Due
           tbody
-            -@homeworks.each do |h|        
+            -@homeworks.each do |h|
               tr.homework-data data-controller='homeworks' data-id=h.id
                 td =h.topic.name
                 td =report_progress(h.homework_progresses)
@@ -33,7 +33,7 @@
           th.password-col.d-none Reset Password
           th Homeworks
         tbody
-          -@students.each do |s| 
+          -@students.each do |s|
             tr.student-data data-id=s.id
               td =s.forename
               td =s.surname

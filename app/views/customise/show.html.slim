@@ -1,26 +1,31 @@
 section.page-section.text-center#dashboard-styles
   .container
     h1.page-section-header.text-uppercase Dashboard Styles
-    hr class=("hr small mb-5 primary-" + @css_flavour)
+    hr class="hr small mb-5 primary-#{@css_flavour}"
     -@dashboard_styles.shuffle.each do |style|
       .card class=style.value        
         .card-body
           h2.page-section-header.text-uppercase.text-white =style.name
-          hr class=("small mb-5 primary-" + style.value)
-          p.text-white#cost =icon('fas', 'star', class: 'fa', style: 'color: yellow') + customisation_cost(style)          
-          button.btn.btn-light-outline.float-right.buy-btn type='submit' data-customisation-type='dashboard_style' data-value=style.value id=('buy-dashboard-' + style.value) Buy
+          hr class="small mb-5 primary-#{style.value}"
+          p.text-white#cost
+            = icon('fas', 'star', class: 'fa', style: 'color: yellow')
+            = customisation_cost(style)
+          button.btn.btn-light-outline.float-right.buy-btn type='submit' data-customisation-type='dashboard_style' data-value=style.value id="buy-dashboard-#{style.value}" Buy
 section.page-section.text-center#icons
   .container
     h1.page-section-header.text-uppercase Leaderboard Icons
-    hr class=("hr small mb-5 primary-" + @css_flavour)
+    hr class="hr small mb-5 primary-#{@css_flavour}"
     .row.col.justify-content-center
       -@leaderboard_icons.shuffle.each do |icon|
         .card
           .card-body
             p =icon.name
             =icon('fas', icon.value.split(',')[1] , class: 'fa-2x', style: "color:#{icon.value.split(',')[0]}")
-            p#cost =icon('fas', 'star', class: 'fa', style: 'color: yellow') + customisation_cost(icon)
-            button.btn.btn-dark-outline.buy-btn type='submit' data-customisation-type='leaderboard_icon' data-value=icon.value id=('buy-icon-' + icon.value) Buy
+            p#cost
+              = icon('fas', 'star', class: 'fa', style: 'color: yellow')
+              = customisation_cost(icon)
+            button.btn.btn-dark-outline.buy-btn type='submit' data-customisation-type='leaderboard_icon' data-value=icon.value id="buy-icon-#{icon.value}"
+              | Buy
         
 
 
