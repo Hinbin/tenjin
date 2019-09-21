@@ -12,13 +12,11 @@ export function resetLeaderboard () {
   })
 }
 
-export function loadFilters (path) {
+export function setFilter (name, option) {
   dispatcher.dispatch({
-    type: 'FILTER_LOAD_SCHOOLS_ALL'
-  })
-
-  dispatcher.dispatch({
-    type: 'FILTER_LOAD_SUBJECTS_TOPICS',
-    value: path
+    type: 'FILTER_CHANGE',
+    value: {
+      name: name,
+      option: option }
   })
 }

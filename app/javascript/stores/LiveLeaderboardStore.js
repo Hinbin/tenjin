@@ -11,6 +11,10 @@ class LiveLeaderboardStore extends EventEmitter {
     this.lastChanged = ''
     this.awards = {}
     this.leaderboardParams = {}
+    this.currentFilters = []
+    this.filters = []
+    this.schools = {}
+    this.classrooms = {}
   }
 
   listenToLeaderboard () {
@@ -49,19 +53,52 @@ class LiveLeaderboardStore extends EventEmitter {
       type: 'GET',
       url: path,
       success: (result) => {
-        // Save the current leaderboard into local storage for retrival later     
-        let leaderboard = {}
-        for (let userData of result.leaderboard) {
-          leaderboard[userData.id] = { ...userData }
-        }
-
-        this.currentLeaderboard = leaderboard
-        this.awards = result.awards
-        this.leaderboardParams = result.params
+        this.processLeaderboardLoad(result)
+        this.processFilterLoad(result)
         this.emit('change')
       },
       error: (error) => this.processError(error)
     })
+  }
+
+  processLeaderboardLoad (result) {
+    // Save the current leaderboard into local storage for retrival later
+    let leaderboard = {}
+    for (let userData of result.leaderboard) {
+      leaderboard[userData.id] = { ...userData }
+    }
+
+    this.currentLeaderboard = leaderboard
+    this.awards = result.awards
+    this.leaderboardParams = result.params
+  }
+
+  processFilterLoad (result) {
+    this.schools = result.schools
+    this.classrooms = result.classrooms
+
+    let schoolArray = []
+    let classroomArray = []
+
+    classroomArray.push('All')
+    this.classrooms.map((classroom) => { classroomArray.push(classroom) })
+
+    this.filters['classroom'] = {
+      name: 'Class',
+      options: classroomArray,
+      default: 'Select Class'
+    }
+
+    if (this.schools.length > 1) {
+      schoolArray.push('All')
+      this.schools.map((school) => { schoolArray.push(school) })
+
+      this.filters['schools'] = {
+        name: 'Schools',
+        options: schoolArray,
+        default: 'Select School'
+      }
+    }
   }
 
   loadInitialScores () {
@@ -83,25 +120,38 @@ class LiveLeaderboardStore extends EventEmitter {
     return this.currentLeaderboard
   }
 
+  getFilters () {
+    return this.filters
+  }
+
+  getCurrentFilters () {
+    return this.currentFilters
+  }
   getPath () {
     return this.path
   }
 
   leaderboardFilterChange (value) {
-    const oldPath = this.path
-    let newPath
-    if (value.name === 'Subjects') {
-      newPath = [value.option, 'Overall']
-    } else if (value.name === 'Topics') {
-      newPath = [oldPath[0], value.option]
+    // Remove any existing filters with the same name from the array
+    this.currentFilters = this.currentFilters.filter((filter) => {
+      if (filter.name !== value.name) {
+        return true
+      } else return false
+    })
+
+    this.currentFilters.push(value)
+
+    if (value.name === 'Schools') {
+      this.currentFIlters = this.currentFilters.filter((filter) => filter.name === 'Class')
     }
 
-    let paths = {
-      oldPath: oldPath,
-      path: newPath
+    if (value.name === 'Classrooms') {
+      this.currentFIlters = this.currentFilters.filter((filter) => filter.name === 'Schools')
     }
 
-    if (value.name !== 'Schools') this.loadLeaderboard(paths).then(() => this.emit('change'))
+    // Push this new filter onto the array
+
+    this.emit('change')
   }
 
   removeEntry (snapshot) {
