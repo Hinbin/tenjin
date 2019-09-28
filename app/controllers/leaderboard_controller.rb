@@ -15,6 +15,7 @@ class LeaderboardController < ApplicationController
       @subject = Subject.where(name: leaderboard_params[:id]).first
       build_leaderboard
       set_filter_data
+      set_user_data
     else
       set_subject_and_topic
       set_leaderboard_variables
@@ -55,7 +56,7 @@ class LeaderboardController < ApplicationController
     gon.params = leaderboard_params
     set_path
   end
-  
+
   def set_filter_data
     school_group = current_user.school.school_group
     @schools = if school_group.present?
@@ -65,7 +66,13 @@ class LeaderboardController < ApplicationController
                end
     @classrooms = Classroom.where(school: current_user.school, subject: @subject).pluck(:name)
   end
-  
+
+  def set_user_data
+    @user_data = { id: current_user.id,
+                   role: current_user.role,
+                   school: current_user.school.name }
+  end
+
   def set_path
     gon.path = if @topic.present?
                  leaderboard_path(id: @subject.name, topic: @topic.id)

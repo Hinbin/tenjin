@@ -1,13 +1,15 @@
 import { EventEmitter } from 'events'
 
 import dispatcher from '../dispatcher'
+import { toggleAllTime } from '../actions/LiveLeaderboardActions'
 
 class LiveLeaderboardStore extends EventEmitter {
   constructor () {
     super()
     this.loading = true
     this.initialLeaderboard = {}
-    this.currentLeaderboard = {}
+    this.weeklyLeaderboard = {}
+    this.allTimeLeaderboard = {}
     this.lastChanged = ''
     this.awards = {}
     this.leaderboardParams = {}
@@ -15,6 +17,12 @@ class LiveLeaderboardStore extends EventEmitter {
     this.filters = []
     this.schools = {}
     this.classrooms = {}
+    this.user = {}
+    this.allTime = false
+    this.allSchoolsLoaded = false
+    this.allSchools = false
+    this.showAll = false
+    this.live = false
   }
 
   listenToLeaderboard () {
@@ -44,33 +52,59 @@ class LiveLeaderboardStore extends EventEmitter {
     })
   }
 
-  loadLeaderboard () {
+  loadLeaderboard (schoolGroup) {
     this.listenToLeaderboard()
 
-    const path = window.gon.path + '.json?'
+    let path = window.gon.path + '.json?'
+
+    if (schoolGroup) { path += 'school_group=true' }
+    if (this.allTime) { path += 'all_time=true' }
 
     $.ajax({
       type: 'GET',
       url: path,
       success: (result) => {
         this.processLeaderboardLoad(result)
+        this.processScores()
         this.processFilterLoad(result)
         this.emit('change')
       },
-      error: (error) => this.processError(error)
+      error: (error) => console.log(error)
     })
   }
 
   processLeaderboardLoad (result) {
-    // Save the current leaderboard into local storage for retrival later
     let leaderboard = {}
     for (let userData of result.leaderboard) {
       leaderboard[userData.id] = { ...userData }
     }
 
-    this.currentLeaderboard = leaderboard
+    this.allTime ? this.allTimeLeaderboard = leaderboard : this.weeklyLeaderboard = leaderboard
+
     this.awards = result.awards
     this.leaderboardParams = result.params
+    this.user = result.user
+  }
+
+  processScores () {
+    if (this.allTime) {
+      for (let entry in this.allTimeLeaderboard) {
+        this.calculateAllTimeScore(entry)
+      }
+    } else {
+      // Deep copy of the leaderboard
+      this.currentLeaderboard = JSON.parse(JSON.stringify(this.weeklyLeaderboard))
+    }
+  }
+
+  calculateAllTimeScore (id) {
+    if (this.currentLeaderboard[id]) {
+      const weeklyScore = parseInt(this.weeklyLeaderboard[id].score)
+      const allTime = parseInt(this.allTimeLeaderboard[id].score)
+      this.currentLeaderboard[id].score = weeklyScore + allTime
+    } else {
+      this.currentLeaderboard[id] = this.allTimeLeaderboard[id]
+    }
   }
 
   processFilterLoad (result) {
@@ -101,23 +135,16 @@ class LiveLeaderboardStore extends EventEmitter {
     }
   }
 
-  loadInitialScores () {
-    let initialLeaderboard = JSON.parse(localStorage.getItem('leaderboard'))
-
-    if (initialLeaderboard === null) {
-      return this.resetLeaderboard()
-    } else {
-      this.initialLeaderboard = initialLeaderboard
-      return Promise.resolve()
-    }
-  }
-
   getLoading () {
     return this.loading
   }
 
   getCurrentLeaderboard () {
     return this.currentLeaderboard
+  }
+
+  getUser () {
+    return this.user
   }
 
   getFilters () {
@@ -127,8 +154,25 @@ class LiveLeaderboardStore extends EventEmitter {
   getCurrentFilters () {
     return this.currentFilters
   }
+
   getPath () {
     return this.path
+  }
+
+  getShowAll () {
+    return this.showAll
+  }
+
+  getLive () {
+    return this.live
+  }
+
+  getAllTime () {
+    return this.allTime
+  }
+
+  getAwards () {
+    return this.awards
   }
 
   leaderboardFilterChange (value) {
@@ -142,11 +186,20 @@ class LiveLeaderboardStore extends EventEmitter {
     this.currentFilters.push(value)
 
     if (value.name === 'Schools') {
-      this.currentFIlters = this.currentFilters.filter((filter) => filter.name === 'Class')
+      this.currentFilters = this.currentFilters.filter((filter) => {
+        return filter.name === 'Schools'
+      })
+      if (!this.allSchoolsLoaded && !this.live) {
+
+        this.loadLeaderboard(true)
+        this.allSchoolsLoaded = true
+      }
+
+      this.allSchools = !this.allSchools
     }
 
-    if (value.name === 'Classrooms') {
-      this.currentFIlters = this.currentFilters.filter((filter) => filter.name === 'Schools')
+    if (value.name === 'Class') {
+      this.currentFilters = this.currentFilters.filter((filter) => filter.name === 'Class')
     }
 
     // Push this new filter onto the array
@@ -154,22 +207,21 @@ class LiveLeaderboardStore extends EventEmitter {
     this.emit('change')
   }
 
-  removeEntry (snapshot) {
-    const id = snapshot.key
-    delete this.currentLeaderboard[id]
-    this.emit('change')
-  }
-
-  leaderboardChange (data, all) {
+  leaderboardChange (data) {
     const { id } = data
 
     this.loading = false
-    if (this.initialLeaderboard === undefined) {
+    if (this.weeklyLeaderboard === undefined) {
       setTimeout(() => { this.leaderboardChange(data) }, 1000)
     }
 
+    let score = data.subject_score
+    if (this.live) {
+      score = score - this.initialLeaderboard[id].score
+    }
+
     // Get all the user details from the change object, but replace the score with the "live score"
-    this.currentLeaderboard[id] = { ...data, score: data.subject_score }
+    this.currentLeaderboard[id] = { ...data, score: score }
 
     this.lastChanged = id
     this.currentLeaderboard[id].lastChanged = true
@@ -186,30 +238,6 @@ class LiveLeaderboardStore extends EventEmitter {
     }, 1000)
   }
 
-  calculateLiveScore (leaderboardChange) {
-    const { score } = leaderboardChange
-    return score
-
-    // Calculate the difference between the score when the leaderboard was loaded, and the score given
-    // in the change
-    /*
-    try {
-      const initialScore = this.initialLeaderboard[path[0]][path[1]][uid]
-      if (initialScore === undefined) {
-        return score
-      } else {
-        const liveScore = score - initialScore
-        return liveScore
-      }
-    } catch (TypeError) {
-      return 0
-    */
-  }
-
-  resetLeaderboard () {
-
-  }
-
   handleActions (action) {
     switch (action.type) {
       case 'LEADERBOARD_LOAD': {
@@ -218,6 +246,36 @@ class LiveLeaderboardStore extends EventEmitter {
       }
       case 'LEADERBOARD_RESET': {
         this.resetLeaderboard(action.value)
+        break
+      }
+      case 'LEADERBOARD_ALL_TIME_TOGGLE': {
+        this.allTime = !this.allTime
+        if (Object.entries(this.allTimeLeaderboard).length === 0) {
+          this.loadLeaderboard()
+          this.processScores()
+        } else {
+          this.processScores()
+        }
+        this.emit('change')
+        break
+      }
+      case 'LEADERBOARD_SHOW_ALL_TOGGLE': {
+        this.showAll = !this.showAll
+        this.emit('change')
+        break
+      }
+      case 'LEADERBOARD_LIVE_TOGGLE' : {
+        this.live = !this.live
+        if (this.live) {
+          this.showAll = true
+          this.allTime = false
+          this.initialLeaderboard = this.weeklyLeaderboard
+          this.currentLeaderboard = {}
+        } else {
+          this.processScores()
+        }
+
+        this.emit('change')
         break
       }
       case 'FILTER_CHANGE':

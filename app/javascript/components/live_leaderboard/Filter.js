@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import * as FilterActions from '../../actions/LiveLeaderboardActions'
-import { Dropdown, DropdownItem, DropdownToggle, DropdownMenu, Label, FormGroup } from 'reactstrap'
+import { Dropdown, DropdownItem, DropdownToggle, DropdownMenu, Label, FormGroup, Col } from 'reactstrap'
 
 export default class Filter extends React.Component {
   constructor (props) {
@@ -31,17 +31,18 @@ export default class Filter extends React.Component {
       return <DropdownItem key={index} id={idName} onClick={() => this.selectFilter(this.props.name, option)}>{option}</DropdownItem>
     })
     return (
-      <FormGroup>
-        <Label for={dropDownID}>{this.props.name}</Label>
-        <Dropdown id={dropDownID} isOpen={this.state.dropdownOpen} toggle={this.toggle} className='filter'>
-          <DropdownToggle caret>
-            {this.props.selected}
-          </DropdownToggle>
-          <DropdownMenu>
-            {DropdownItems}
-          </DropdownMenu>
-        </Dropdown>
-      </FormGroup>
+      <Col xs='6'>
+        <FormGroup>    
+          <Dropdown id={dropDownID} isOpen={this.state.dropdownOpen} toggle={this.toggle} className='filter'>
+            <DropdownToggle caret>
+              {this.props.selected}
+            </DropdownToggle>
+            <DropdownMenu>
+              {DropdownItems}
+            </DropdownMenu>
+          </Dropdown>
+        </FormGroup>
+      </Col>
     )
   }
 }

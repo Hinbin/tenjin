@@ -6,9 +6,21 @@ export function loadLeaderboard () {
   })
 }
 
-export function resetLeaderboard () {
+export function toggleLiveLeaderboard () {
   dispatcher.dispatch({
-    type: 'LEADERBOARD_RESET'
+    type: 'LEADERBOARD_LIVE_TOGGLE'
+  })
+}
+
+export function toggleShowAll () {
+  dispatcher.dispatch({
+    type: 'LEADERBOARD_SHOW_ALL_TOGGLE'
+  })
+}
+
+export function toggleAllTime () {
+  dispatcher.dispatch({
+    type: 'LEADERBOARD_ALL_TIME_TOGGLE'
   })
 }
 

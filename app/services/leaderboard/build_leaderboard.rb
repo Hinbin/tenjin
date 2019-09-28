@@ -10,18 +10,8 @@ class Leaderboard::BuildLeaderboard
   end
 
   def call
-    @query = base_query(topic_scores)
-    all_time_query if @all_time
+    @query = @all_time ? base_query(all_time_topic_scores) : base_query(topic_scores)
     User.find_by_sql(@query.to_sql)
-  end
-
-  def all_time_query
-    @query = Arel::Table.new('results').project('results.id',
-                                                'results.name',
-                                                'results.school_name',
-                                                'SUM(results.score) as "score"')
-                        .from(Arel::Nodes::TableAlias.new(@query.union(base_query(all_time_topic_scores)), :results))
-    @query = @query.group('results.id, results.name, results.school_name')
   end
 
   def topic_scores
@@ -60,6 +50,10 @@ class Leaderboard::BuildLeaderboard
     Classroom.arel_table
   end
 
+  def awards
+    LeaderboardAward.arel_table
+  end
+
   def name
     separator = Arel::Nodes.build_quoted(' ')
 
@@ -70,7 +64,6 @@ class Leaderboard::BuildLeaderboard
   end
 
   def array_agg(input)
-    seperator = Arel::Nodes.build_quoted(', ')
     Arel::Nodes::NamedFunction.new 'array_agg', [input]
   end
 
@@ -80,7 +73,8 @@ class Leaderboard::BuildLeaderboard
                            schools[:name].as('school_name'),
                            topic_table[:score].sum.as('score'),
                            leaderboard_icon_subquery[:value].as('icon'),
-                           classrooms_subquery[:name].as('classroom_names'))
+                           classrooms_subquery[:name].as('classroom_names'),
+                           awards_subquery[:awards].as('awards'))
     users_and_schools
     @query = @query.join(topic_table).on(users[:id].eq(topic_table[:user_id]))
     @query = @query.join(topics).on(topics[:id].eq(topic_table[:topic_id]))
@@ -88,6 +82,7 @@ class Leaderboard::BuildLeaderboard
     @school_group ? by_school_group : by_school
     @topic.present? ? by_topic : by_subject
     join_classrooms
+    join_awards
   end
 
   def join_leaderboard_icons
@@ -100,6 +95,13 @@ class Leaderboard::BuildLeaderboard
     @query = @query.join(classrooms_subquery, Arel::Nodes::OuterJoin)
                    .on(classrooms_subquery[:user_id].eq(users[:id]))
     @query.group('n2.name')
+  end
+
+  def join_awards
+    @query = @query.join(awards_subquery, Arel::Nodes::OuterJoin)
+                   .on(awards_subquery[:user_id].eq(users[:id]))
+    @query.group('n3.awards')
+
   end
 
   def users_and_schools
@@ -139,6 +141,14 @@ class Leaderboard::BuildLeaderboard
                .where(classrooms[:subject_id].eq(@subject.id))
                .group(enrollments[:user_id])
                .as('n2')
+  end
+
+  def awards_subquery
+    awards.project(awards[:user_id],
+                   awards[:id].count.as('awards'))
+          .join(users).on(users[:id].eq(awards[:user_id]))
+          .group(awards[:user_id])
+          .as('n3')
   end
 end
 
