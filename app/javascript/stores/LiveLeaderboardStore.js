@@ -218,8 +218,8 @@ class LiveLeaderboardStore extends EventEmitter {
     }
 
     let score = data.subject_score
-    if (this.live) {
-      score = score - this.initialLeaderboard[id].score
+    if (this.live && this.initialLeaderboard[id]) {
+        score = score - this.initialLeaderboard[id].score
     }
 
     // Get all the user details from the change object, but replace the score with the "live score"

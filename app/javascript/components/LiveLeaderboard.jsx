@@ -148,7 +148,7 @@ class LiveLeaderboard extends React.Component {
           </Col>
           {(user.role === 'employee' || user.role === 'school_admin') &&
           <Col>
-            <FormGroup className='custom-control custom-switch'>
+            <FormGroup id='toggleLive' className='custom-control custom-switch'>
               <Input
                 type='checkbox'
                 className='custom-control-input'

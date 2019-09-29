@@ -120,6 +120,53 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true, def
     end
   end
 
-  it 'filters classrooms with the same name in another school out'
-  it 'does live leaderboard testing'
+  context 'when filtering by classroom' do
+    let(:overall_score) { (AllTimeTopicScore.first.score + TopicScore.first.score).to_s }
+    let(:second_topic) { create(:topic, subject: subject) }
+    let(:enrollment_classroom) { create(:enrollment, classroom: second_classroom, user: second_student) }
+    let(:second_classroom) { create(:classroom, subject: subject, school: school) }
+    let(:second_student) { create(:student, school: student.school) }
+    let(:topic_score_different_classroom) { create(:topic_score, user: second_student, subject: subject) }
+    let(:different_school_same_classroom_name) { create(:classroom, name: second_classroom.name, school: second_school) }
+    let(:different_school_enrollment) { create(:enrollment, classroom: different_school_same_classroom_name) }
+    let(:different_school_topic_score) { create(:topic_score, subject: subject, user: different_school_enrollment.user)}
+    let(:same_name_different_school) do
+      different_school_enrollment
+      different_school_topic_score
+    end
+
+    before do
+      topic_score_different_classroom
+      enrollment_classroom
+      second_school
+      second_classroom
+      visit(leaderboard_path(subject.name))
+    end
+
+    it 'shows different classrooms by default' do
+      expect(page).to have_css('#leaderboardTable tbody tr', count: 2)
+    end
+
+    it 'filters by classroom' do
+      click_button('Select Class')
+      click_button(second_classroom.name)
+      expect(page).to have_css('#leaderboardTable tbody tr', count: 1)
+    end
+
+    it 'changes school back to users when selected' do
+      click_button('Select School')
+      click_button(second_school.name)
+      click_button('Select Class')
+      click_button(second_classroom.name)
+      expect(page).to have_button('Select School')
+    end
+
+    it 'filters classrooms with the same name in another school out' do
+      same_name_different_school
+      visit(leaderboard_path(subject.name))
+      click_button('Select Class')
+      click_button(second_classroom.name)
+      expect(page).to have_css('#leaderboardTable tbody tr', count: 1)
+    end
+  end
 end
