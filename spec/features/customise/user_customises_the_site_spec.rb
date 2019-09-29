@@ -105,7 +105,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
       create(:topic_score, user: student, topic: topic)
       find("[data-value='#{icon_customisation.value}']").click
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: black')
+      expect(page).to have_css('td i.fa-star', style: 'color: black;')
     end
   end
 

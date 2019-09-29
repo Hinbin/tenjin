@@ -24,10 +24,13 @@ export default class Entry extends React.Component {
 
   render () {
     const { lastChanged, currentFilters, user, id } = this.props
-    let className = ''
-    if (lastChanged) { className += 'score-changed' }
+    let classNames = []
+    if (lastChanged) { classNames.push('score-changed') }
 
-    if (user.id === id) { className += 'font-weight-bold' }
+    if (user.id === id) {
+      classNames.push('font-weight-bold')
+      classNames.push('current-user')
+    }
 
     const checkSchoolFilter = this.props.currentFilters.filter((f) => { return f.name === 'Schools' })
 
@@ -48,7 +51,7 @@ export default class Entry extends React.Component {
     }
 
     return (
-      <tr id={id} className={className}>
+      <tr id={'row-' + id} className={classNames.join(' ')}>
         <td id={id + '-pos'}>{this.props.position}</td>
         <td id={id + '-awards'}>{this.getAwards()}</td>
         <td id={id + '-name'}>{this.props.name}</td>

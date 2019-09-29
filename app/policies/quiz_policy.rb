@@ -14,8 +14,8 @@ class QuizPolicy < ApplicationPolicy
 
   def new?
     return false if @quiz.subject.nil?
-
-    @user.school.permitted?
+    
+    (@user.subjects.include? @quiz.subject) && @user.school.permitted?
   end
 
   def create?

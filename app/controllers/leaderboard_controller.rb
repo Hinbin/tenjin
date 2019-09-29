@@ -10,6 +10,7 @@ class LeaderboardController < ApplicationController
 
   def show
     authorize current_user
+    set_subject_and_topic
 
     if request.xhr?
       @subject = Subject.where(name: leaderboard_params[:id]).first
@@ -17,7 +18,6 @@ class LeaderboardController < ApplicationController
       set_filter_data
       set_user_data
     else
-      set_subject_and_topic
       set_leaderboard_variables
       set_javascript_variables
       return render 'subject_select' if @subject.blank?
@@ -35,6 +35,7 @@ class LeaderboardController < ApplicationController
                                                  leaderboard_params).call
     @awards = LeaderboardAward.where(school: current_user.school, subject: @subject).group(:user_id).count
     @classrooms = Classroom.where(school: current_user.school, subject: @subject)
+    @name = @topic.present? ? @topic.name : @subject.name
   end
 
   def set_subject_and_topic

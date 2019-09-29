@@ -103,24 +103,24 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
   end
 
   context 'when viewing leaderboard icons' do
-    let(:red_star) do
+    let(:blue_star) do
       create(:customisation, customisation_type: 'leaderboard_icon',
-                             value: 'red,star', name: 'Red Star')
+                             value: 'blue,star', name: 'Blue Star')
     end
 
-    let(:gold_star) do
+    let(:pink_star) do
       create(:customisation, customisation_type: 'leaderboard_icon',
-                             value: 'gold,star', name: 'Gold Star')
+                             value: 'pink,star', name: 'Pink Star')
     end
 
     before do
-      create(:active_customisation, user: student, customisation: red_star)
+      create(:active_customisation, user: student, customisation: blue_star)
       one_to_ten
     end
 
     it 'shows the leaderboard icon for a person' do
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: red')
+      expect(page).to have_css('td i.fa-star', style: 'color: blue;')
     end
 
     it 'shows a blank space if there is no leaderboard icon' do
@@ -130,9 +130,9 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
 
     it 'shows different colours of leaderboard icons' do
       ActiveCustomisation.destroy_all
-      create(:active_customisation, user: student, customisation: gold_star)
+      create(:active_customisation, user: student, customisation: pink_star)
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: gold')
+      expect(page).to have_css('td i.fa-star', style: 'color: pink;')
     end
   end
 
@@ -168,25 +168,25 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
 
     it 'shows a star for a weekly award' do
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: purple')
+      expect(page).to have_css('td i.fa-star', style: 'color: red;')
     end
 
     it 'shows a gold star for 5 or more wins' do
       create_list(:leaderboard_award, 5, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: purple').and have_css('td i.fa-star', style: 'color: gold')
+      expect(page).to have_css('td i.fa-star', style: 'color: gold;')
     end
     it 'shows a silver star for 3 or more wins' do
       create_list(:leaderboard_award, 2, user: topic_score.user, subject: topic_score.subject, school: topic_score.user.school)
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: silver')
+      expect(page).to have_css('td i.fa-star', style: 'color: silver;')
     end
 
     it 'shows stars for more than one user' do
       one_to_nine
       second_award
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: purple', count: 2)
+      expect(page).to have_css('td i.fa-star', style: 'color: red;', count: 2)
     end
   end
 end

@@ -67,6 +67,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
 
   context 'with a school group' do
     before do
+      create(:school, school_group: school.school_group)
       one_to_nine
       visit(leaderboard_path(subject.name))
       find('p', text: student.forename)
@@ -92,8 +93,8 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     end
 
     it 'updates if score is from the same school group' do
-      find(:css, '#optionFlex').click
-      find(:css, '#schoolGroup').click
+      click_button('Select School')
+      click_button('All')
       Leaderboard::BroadcastLeaderboardPoint.new(create(:topic_score, topic: topic, school: second_school)).call
       expect(page).to have_css('tr.score-changed')
     end

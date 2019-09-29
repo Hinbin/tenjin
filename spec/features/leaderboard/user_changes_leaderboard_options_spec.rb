@@ -12,8 +12,7 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true, def
     it 'hides the school group option' do
       School.first.update_attribute(:school_group_id, nil)
       visit(leaderboard_path(subject.name))
-      find(:css, '#optionFlex').click
-      expect(page).to have_no_css('label', text: 'All Schools')
+      expect(page).to have_no_button('Select School')
     end
   end
 
@@ -21,46 +20,48 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true, def
     before do
       create(:topic_score, school: second_school, topic: topic)
       visit(leaderboard_path(subject.name))
-      find(:css, '#optionFlex').click
     end
 
     it 'shows only my school by default' do
-      expect(page).to have_css('table#leaderboardTable tr', count: 2)
+      expect(page).to have_css('table#leaderboardTable tbody tr', count: 1)
     end
 
     it 'allows me to toggle to just my school' do
-      find(:css, '#schoolOnly').click
-      expect(page).to have_css('table#leaderboardTable tr', count: 2)
+      click_button('Select School')
+      click_button(student.school.name)
+      expect(page).to have_css('table#leaderboardTable tbody tr', count: 1)
     end
 
     it 'allows me to toggle to all schools' do
-      find(:css, '#schoolGroup').click
-      expect(page).to have_css('table#leaderboardTable tr', count: 3)
+      click_button('Select School')
+      click_button('All')
+      expect(page).to have_css('table#leaderboardTable tbody tr', count: 2)
     end
 
     it 'allows me to toggle back to viewing the school group from my school,' do
-      find(:css, '#schoolGroup').click
-      find(:css, '#schoolOnly').click
-      expect(page).to have_css('table#leaderboardTable tr', count: 2)
+      click_button('Select School')
+      click_button('All')
+      click_button('All')
+      click_button(student.school.name)
+      expect(page).to have_css('table#leaderboardTable tbody tr', count: 1)
     end
   end
 
-  context 'when viewing the top 50' do
+  context 'when viewing all users' do
     before do
       create_list(:topic_score, 50, school: school, topic: topic)
       visit(leaderboard_path(subject.name))
-      find(:css, '#optionFlex').click
     end
 
-    it 'allows me to see the top 50' do
-      find(:css, '#top50').click
-      expect(page).to have_css('table#leaderboardTable tr', count: 51)
+    it 'allows me to see all entries' do
+      find(:css, '#showAll').click
+      expect(page).to have_css('table#leaderboardTable tbody tr', count: 51)
     end
 
-    it 'allows me to see myself only after viewing the top 50' do
-      find(:css, '#top50').click
-      find(:css, '#myPosition').click
-      expect(page).to have_css('table#leaderboardTable tr', count: 11)
+    it 'allows me to see myself only after viewing all entries' do
+      find(:css, '#showAll').click
+      find(:css, '#showAll').click
+      expect(page).to have_css('table#leaderboardTable tbody tr', count: 10)
     end
   end
 
@@ -73,7 +74,6 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true, def
     before do
       create(:all_time_topic_score, user: student, topic: topic)
       visit(leaderboard_path(subject.name))
-      find(:css, '#optionFlex').click
     end
 
     it 'adds up the the overall score correctly' do
@@ -102,7 +102,6 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true, def
     it 'adds up scores only for that topic' do
       create(:all_time_topic_score, user: student, topic: second_topic)
       visit(leaderboard_path(subject.name, topic: second_topic))
-      find(:css, '#optionFlex').click
       find(:css, '#allTime').click
       expect(page).to have_css('td', exact_text: AllTimeTopicScore.second.score)
     end
@@ -120,4 +119,7 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true, def
       expect(page).to have_css('td', exact_text: AllTimeTopicScore.first.score)
     end
   end
+
+  it 'filters classrooms with the same name in another school out'
+  it 'does live leaderboard testing'
 end

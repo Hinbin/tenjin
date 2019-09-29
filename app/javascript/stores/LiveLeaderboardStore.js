@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events'
 
 import dispatcher from '../dispatcher'
-import { toggleAllTime } from '../actions/LiveLeaderboardActions'
 
 class LiveLeaderboardStore extends EventEmitter {
   constructor () {
@@ -12,7 +11,7 @@ class LiveLeaderboardStore extends EventEmitter {
     this.allTimeLeaderboard = {}
     this.lastChanged = ''
     this.awards = {}
-    this.leaderboardParams = {}
+    this.name = ''
     this.currentFilters = []
     this.filters = []
     this.schools = {}
@@ -34,7 +33,6 @@ class LiveLeaderboardStore extends EventEmitter {
       school_group: window.gon.school_group
     }, {
       connected () {
-
       },
       // Called when the subscription is ready for use on the server
 
@@ -82,7 +80,7 @@ class LiveLeaderboardStore extends EventEmitter {
     this.allTime ? this.allTimeLeaderboard = leaderboard : this.weeklyLeaderboard = leaderboard
 
     this.awards = result.awards
-    this.leaderboardParams = result.params
+    this.name = result.name
     this.user = result.user
   }
 
@@ -175,6 +173,10 @@ class LiveLeaderboardStore extends EventEmitter {
     return this.awards
   }
 
+  getName () {
+    return this.name
+  }
+
   leaderboardFilterChange (value) {
     // Remove any existing filters with the same name from the array
     this.currentFilters = this.currentFilters.filter((filter) => {
@@ -221,7 +223,7 @@ class LiveLeaderboardStore extends EventEmitter {
     }
 
     // Get all the user details from the change object, but replace the score with the "live score"
-    this.currentLeaderboard[id] = { ...data, score: score }
+    this.currentLeaderboard[id] = { ...this.currentLeaderboard[id], ...data, score: score }
 
     this.lastChanged = id
     this.currentLeaderboard[id].lastChanged = true

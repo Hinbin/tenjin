@@ -19,22 +19,22 @@ RSpec.describe 'User selects a leaderboard', type: :feature, js: true do
       visit leaderboard_index_path
     end
 
-    it 'lets me pick the topic score for a subject' do
+    it 'lets me pick the topic for a subject' do
       click_link(subject.name)
       click_link(topic.name)
-      expect(page).to have_css('h3', text: topic.name) && have_css('h1', text: subject.name)
+      expect(page).to have_css('h1', text: topic.name)
     end
 
     it 'lets me pick the overall score for the subject' do
       click_link(subject.name)
       click_link('All')
-      expect(page).to have_css('h3', text: 'All') && have_css('h1', text: subject.name)
+      expect(page).to have_css('h1', text: subject.name)
     end
 
     it 'lets me pick from multiple subjects' do
       click_link(second_subject.name)
       click_link('All')
-      expect(page).to have_css('h3', text: 'All') && have_css('h1', text: second_subject.name)
+      expect(page).to have_css('h1', text: second_subject.name)
     end
   end
 

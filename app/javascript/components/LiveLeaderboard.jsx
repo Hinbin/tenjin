@@ -8,12 +8,6 @@ import Entry from './live_leaderboard/Entry'
 import Filters from './live_leaderboard/Filters'
 import withLoading from '../hoc/withLoading'
 
-function ResetButton (props) {
-  return (<Button id='reset-button' {...props}>Reset</Button>)
-}
-
-const ResetButtonWithLoading = withLoading(ResetButton)
-
 class LiveLeaderboard extends React.Component {
   constructor () {
     super()
@@ -25,7 +19,8 @@ class LiveLeaderboard extends React.Component {
       user: LiveLeaderboardStore.getUser(),
       showAll: LiveLeaderboardStore.getShowAll(),
       allTime: LiveLeaderboardStore.getAllTime(),
-      live: LiveLeaderboardStore.getLive()
+      live: LiveLeaderboardStore.getLive(),
+      name: LiveLeaderboardStore.getName()
     }
     this.getLeaderboard = this.getLeaderboard.bind(this)
 
@@ -46,7 +41,8 @@ class LiveLeaderboard extends React.Component {
       user: LiveLeaderboardStore.getUser(),
       showAll: LiveLeaderboardStore.getShowAll(),
       allTime: LiveLeaderboardStore.getAllTime(),
-      live: LiveLeaderboardStore.getLive()
+      live: LiveLeaderboardStore.getLive(),
+      name: LiveLeaderboardStore.getName()
     })
   }
 
@@ -92,16 +88,16 @@ class LiveLeaderboard extends React.Component {
     const maxUsersToDisplay = 10
     let userRowIndex = tableData.findIndex(x => x.id === this.state.user.id)
 
-    if (tableSize < (this.maxUsersToDisplay - 1)) {
+    if (tableSize < (maxUsersToDisplay - 1)) {
       // If there aren't enough users to fill the table, show the whole table
       return tableData
-    } else if (userRowIndex < this.maxUsersToDisplay) {
+    } else if (userRowIndex < maxUsersToDisplay) {
       // If the user is close enough to the top of the table, display the top only
-      return tableData.slice(0, (this.maxUsersToDisplay))
+      return tableData.slice(0, (maxUsersToDisplay))
       // Otherwise snip the 5 around the user
-    } else if ((userRowIndex + (this.maxUsersToDisplay / 2)) > tableSize) {
+    } else if ((userRowIndex + (maxUsersToDisplay / 2)) > tableSize) {
       // If the user is too close to the bottom - display from the bottom of the table up
-      return tableData.slice(tableSize - this.maxUsersToDisplay)
+      return tableData.slice(tableSize - maxUsersToDisplay)
     } else {
       let lower = Math.max(0, userRowIndex - (maxUsersToDisplay / 2) + 1)
       let upper = Math.min(tableSize, lower + maxUsersToDisplay)
@@ -118,16 +114,16 @@ class LiveLeaderboard extends React.Component {
       if (filter.name === 'Schools' && filter.option !== 'All' &&
           entry.school_name !== filter.option) return false
       if ((filter.name === 'Class' && filter.option !== 'All') &&
-          (entry.classroom_names === null ||
+          ((entry.classroom_names === null ||
           !entry.classroom_names.includes(filter.option)) ||
-          entry.school_name !== userSchool) return false
+          entry.school_name !== userSchool)) return false
     }
     return true
   }
 
   render () {
     const leaderboard = this.sortLeaderboard()
-    const { loading, filters, currentFilters, user, showAll, allTime, live } = this.state
+    const { loading, filters, currentFilters, user, showAll, allTime, live, name } = this.state
 
     // Map every entry in the current leaderboard array into an entry component
     const Entries = leaderboard.map((entry) => {
@@ -147,8 +143,8 @@ class LiveLeaderboard extends React.Component {
     return (
       <div>
         <Row>
-          <Col className='d-none d-lg-block'>
-            <h1>Leaderboard</h1>
+          <Col className='d-none d-md-block'>
+            <h1>{name}</h1>
           </Col>
           {(user.role === 'employee' || user.role === 'school_admin') &&
           <Col>
@@ -167,20 +163,20 @@ class LiveLeaderboard extends React.Component {
           {<Filters filters={filters} currentFilters={currentFilters}/>}
           {!live &&
           <Col>
-            <FormGroup className='custom-control custom-switch'>
+            <FormGroup className='custom-control custom-switch' id='showAll'>
               <Input
                 type='checkbox'
                 className='custom-control-input'
-                id='meSwitch'
+                id='showAllSwitch'
                 checked={showAll}
                 onChange={() => this.toggleShowAll()}/>
-              <Label className='custom-control-label' for='meSwitch'>Show all</Label>
+              <Label className='custom-control-label' for='showAllSwitch'>Show all</Label>
             </FormGroup>
           </Col>
           }
           {!live &&
           <Col className='col-sm'>
-            <FormGroup className='custom-control custom-switch'>
+            <FormGroup className='custom-control custom-switch' id='allTime'>
               <Input
                 type='checkbox'
                 className='custom-control-input'
@@ -190,10 +186,10 @@ class LiveLeaderboard extends React.Component {
               <Label className='custom-control-label' for='allTimeSwitch'>All Time</Label>
             </FormGroup>
           </Col>
-          } 
+          }
         </Row>
         <Row>
-          <Table>
+          <Table id='leaderboardTable'>
             <thead>
               <tr>
                 <th>#</th>
