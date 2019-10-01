@@ -49,6 +49,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
     it 'shows updates from other schools when selected' do
       click_button('Select School')
       click_button('All')
+      find(:css, 'table#leaderboardTable tbody tr:nth-child(2)')
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
       expect(page).to have_css('.score-changed')
     end
