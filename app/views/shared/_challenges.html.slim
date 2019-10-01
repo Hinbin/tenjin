@@ -16,5 +16,7 @@ section#challenges.page-section.text-center
                 tr.challenge-row data-challenge=c.id data-topic=c.topic.id data-subject=c.topic.subject_id
                   td.text-left = c.stringify
                   td = write_challenge_progress(c.challenge_progresses.first)
-                  td.d-none.d-sm-table-cell = c.points
+                  td.d-none.d-sm-table-cell 
+                    = c.points
+                    = icon('fas', 'star', class: 'fa', style: 'color: yellow')                     
                   td = challenge_time_left(c)
