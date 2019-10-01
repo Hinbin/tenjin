@@ -189,4 +189,16 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
       expect(page).to have_css('td i.fa-star', style: 'color: red;', count: 2)
     end
   end
+
+  context 'when showing weekly winners' do
+
+    it 'shows last weeks winner for the classroom' do
+      create(:classroom_winner, user: student, classroom: classroom, score: 100)
+      visit(leaderboard_path(subject.name))
+      click_button('Select Class')
+      click_button(classroom.name)
+      expect(page).to have_content("#{classroom.name} winner: #{student.forename}")
+    end
+
+  end
 end

@@ -21,7 +21,7 @@ class Challenge::UpdateChallengeProgress
   def check_number_correct(challenge, progress)
     return unless @quiz.topic == challenge.topic
 
-    check_progress_percentage(@quiz.answered_correct.to_f / challenge.number_required.to_f, progress)
+    check_progress_percentage(@quiz.answered_correct.to_f / challenge.number_required, progress)
   end
 
   def check_streak(challenge, progress)

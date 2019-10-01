@@ -8,7 +8,7 @@ FactoryBot.define do
     provider { 'Wonde' }
     upi { SecureRandom.hex }
     association :school, factory: :school
-    challenge_points { 0 }
+    challenge_points { rand(0..30) * 10 }
     time_of_last_quiz { rand((Time.now - 1.day)..(Time.now - 1.hour)) }
     username { forename[0].downcase + surname.downcase + upi[0..3] }
     password { FFaker::Internet.password }

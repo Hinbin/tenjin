@@ -6,6 +6,7 @@ import LiveLeaderboardStore from '../stores/LiveLeaderboardStore'
 import * as LiveLeaderboardActions from '../actions/LiveLeaderboardActions'
 import Entry from './live_leaderboard/Entry'
 import Filters from './live_leaderboard/Filters'
+import ClassroomWinner from './live_leaderboard/ClassroomWinner'
 import withLoading from '../hoc/withLoading'
 
 class LiveLeaderboard extends React.Component {
@@ -20,7 +21,8 @@ class LiveLeaderboard extends React.Component {
       showAll: LiveLeaderboardStore.getShowAll(),
       allTime: LiveLeaderboardStore.getAllTime(),
       live: LiveLeaderboardStore.getLive(),
-      name: LiveLeaderboardStore.getName()
+      name: LiveLeaderboardStore.getName(),
+      winners: LiveLeaderboardStore.getWinners()
     }
     this.getLeaderboard = this.getLeaderboard.bind(this)
 
@@ -42,7 +44,8 @@ class LiveLeaderboard extends React.Component {
       showAll: LiveLeaderboardStore.getShowAll(),
       allTime: LiveLeaderboardStore.getAllTime(),
       live: LiveLeaderboardStore.getLive(),
-      name: LiveLeaderboardStore.getName()
+      name: LiveLeaderboardStore.getName(),
+      winners: LiveLeaderboardStore.getWinners()
     })
   }
 
@@ -123,7 +126,16 @@ class LiveLeaderboard extends React.Component {
 
   render () {
     const leaderboard = this.sortLeaderboard()
-    const { loading, filters, currentFilters, user, showAll, allTime, live, name } = this.state
+    const { loading, filters, currentFilters, user, showAll, allTime, live, name, winners } = this.state
+    const classFilter = currentFilters.filter( (f) => { return f.name === 'Class'})
+
+    let winnerClassroom
+
+    if (classFilter.length > 0) {
+      winnerClassroom = classFilter[0].option === 'All' ? user.classrooms[0] : classFilter[0].option
+    } else if (user.classrooms) {
+      winnerClassroom = user.classrooms[0]
+    } 
 
     // Map every entry in the current leaderboard array into an entry component
     const Entries = leaderboard.map((entry) => {
@@ -146,19 +158,27 @@ class LiveLeaderboard extends React.Component {
           <Col className='d-none d-md-block'>
             <h1>{name}</h1>
           </Col>
-          {(user.role === 'employee' || user.role === 'school_admin') &&
           <Col>
-            <FormGroup id='toggleLive' className='custom-control custom-switch'>
-              <Input
-                type='checkbox'
-                className='custom-control-input'
-                id='liveSwitch'
-                onChange={() => this.toggleLiveLeaderboard()}/>
-              <Label className='custom-control-label' for='liveSwitch'>Live Leaderboard</Label>
-            </FormGroup>
+            <ClassroomWinner classroom={winnerClassroom} winners={winners}/>
           </Col>
-          }
         </Row>
+
+        {(user.role === 'employee' || user.role === 'school_admin') &&
+          <Row>
+            <Col>
+              <FormGroup id='toggleLive' className='custom-control custom-switch'>
+                <Input
+                  type='checkbox'
+                  className='custom-control-input'
+                  id='liveSwitch'
+                  checked={live}
+                  onChange={() => this.toggleLiveLeaderboard()}/>
+                <Label className='custom-control-label' for='liveSwitch'>Live Leaderboard</Label>
+              </FormGroup>
+            </Col>
+          </Row>
+        }
+
         <Row className='form-row align-items-center d-flex justify-content-around'>
           {<Filters filters={filters} currentFilters={currentFilters}/>}
           {!live &&

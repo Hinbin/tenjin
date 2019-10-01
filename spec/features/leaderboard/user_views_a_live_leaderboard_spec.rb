@@ -74,7 +74,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
     before do
       sign_in teacher
       visit(leaderboard_path(subject.name))
-      find(:css, '#toggleLive').click
+      find(:css, '#toggleLive label').click
     end
 
     it 'shows the option or a school admin or employee' do
@@ -86,7 +86,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
     end
 
     it 'shows weekly scores when turned off' do
-      find(:css, '#toggleLive').click
+      find(:css, '#toggleLive label').click
       expect(page).to have_css('tbody tr', count: 10)
     end
 

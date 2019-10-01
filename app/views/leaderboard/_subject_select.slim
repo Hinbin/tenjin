@@ -4,13 +4,13 @@
       -@subjects.each do |s|
         -subject_id = s.name.split(' ').join('-').downcase
         .card-header id=('heading' + s.name)
-          =link_to leaderboard_path(id: s.name), data: { turbolinks: false, toggle: 'collapse', target: ('#body'+ subject_id) }
+          =link_to leaderboard_path(id: s.name), data: { toggle: 'collapse', target: ('#body'+ subject_id) }
             p =s.name
         .collapse id=('body'+ subject_id) aria-labelledby=('heading' + subject_id)
           .card-body
-            =link_to leaderboard_path(id: s.name), data: { turbolinks: false }
+            =link_to leaderboard_path(id: s.name)
               p All
             -s.topics.order(:name).each do |t|
               -topic_id = t.name.split(' ').join('-').downcase
-              p =link_to t.name, leaderboard_path(id: s.name, topic: t.id), data: { turbolinks: false }
+              p =link_to t.name, leaderboard_path(id: s.name, topic: t.id)
     

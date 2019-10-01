@@ -22,6 +22,7 @@ class LiveLeaderboardStore extends EventEmitter {
     this.allSchools = false
     this.showAll = false
     this.live = false
+    this.winners = []
   }
 
   listenToLeaderboard () {
@@ -82,6 +83,7 @@ class LiveLeaderboardStore extends EventEmitter {
     this.awards = result.awards
     this.name = result.name
     this.user = result.user
+    this.winners = result.winners
   }
 
   processScores () {
@@ -175,6 +177,10 @@ class LiveLeaderboardStore extends EventEmitter {
 
   getName () {
     return this.name
+  }
+
+  getWinners () {
+    return this.winners
   }
 
   leaderboardFilterChange (value) {
