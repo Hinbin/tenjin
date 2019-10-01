@@ -54,14 +54,14 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true, def
     end
 
     it 'allows me to see all entries' do
-      find(:css, '#showAll').click
+      find(:css, '#showAll label').click
       expect(page).to have_css('table#leaderboardTable tbody tr', count: 51)
     end
 
     it 'allows me to see myself only after viewing all entries' do
-      find(:css, '#showAll').click
+      find(:css, '#showAll label').click
       find(:css, 'table#leaderboardTable tbody tr:nth-child(51)')
-      find(:css, '#showAll').click
+      find(:css, '#showAll label').click
       expect(page).to have_css('table#leaderboardTable tbody tr', count: 10)
     end
   end
