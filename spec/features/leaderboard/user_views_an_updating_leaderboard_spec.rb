@@ -86,9 +86,11 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       expect(page).to have_css('tr#row-' + new_entry.user_id.to_s, text: new_entry.user.forename)
     end
 
-    it 'updates if score is from the same school group' do
+    it 'updates if score is from the same school group', :focus do
+      binding.pry
       click_button('Select School')
       click_button('All')
+      binding.pry
       Leaderboard::BroadcastLeaderboardPoint.new(create(:topic_score, topic: topic, school: second_school)).call
       expect(page).to have_css('tr.score-changed')
     end
