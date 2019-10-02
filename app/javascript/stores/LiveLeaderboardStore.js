@@ -24,6 +24,7 @@ class LiveLeaderboardStore extends EventEmitter {
     this.live = false
     this.winners = []
     this.schoolGroup = false
+    this.connected = false
   }
 
   listenToLeaderboard () {
@@ -35,6 +36,8 @@ class LiveLeaderboardStore extends EventEmitter {
       school_group: window.gon.school_group
     }, {
       connected () {
+        lb.connected = true
+        lb.emit('change')
       },
       // Called when the subscription is ready for use on the server
 
@@ -182,6 +185,10 @@ class LiveLeaderboardStore extends EventEmitter {
 
   getWinners () {
     return this.winners
+  }
+
+  getConnected () {
+    return this.connected
   }
 
   leaderboardFilterChange (value) {

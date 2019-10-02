@@ -22,7 +22,8 @@ class LiveLeaderboard extends React.Component {
       allTime: LiveLeaderboardStore.getAllTime(),
       live: LiveLeaderboardStore.getLive(),
       name: LiveLeaderboardStore.getName(),
-      winners: LiveLeaderboardStore.getWinners()
+      winners: LiveLeaderboardStore.getWinners(),
+      connected: LiveLeaderboardStore.getConnected()
     }
     this.getLeaderboard = this.getLeaderboard.bind(this)
 
@@ -45,7 +46,8 @@ class LiveLeaderboard extends React.Component {
       allTime: LiveLeaderboardStore.getAllTime(),
       live: LiveLeaderboardStore.getLive(),
       name: LiveLeaderboardStore.getName(),
-      winners: LiveLeaderboardStore.getWinners()
+      winners: LiveLeaderboardStore.getWinners(),
+      connected: LiveLeaderboardStore.getConnected()
     })
   }
 
@@ -126,8 +128,8 @@ class LiveLeaderboard extends React.Component {
 
   render () {
     const leaderboard = this.sortLeaderboard()
-    const { loading, filters, currentFilters, user, showAll, allTime, live, name, winners } = this.state
-    const classFilter = currentFilters.filter( (f) => { return f.name === 'Class'})
+    const { loading, filters, currentFilters, user, showAll, allTime, live, name, winners, connected } = this.state
+    const classFilter = currentFilters.filter((f) => { return f.name === 'Class' })
 
     let winnerClassroom
 
@@ -135,7 +137,7 @@ class LiveLeaderboard extends React.Component {
       winnerClassroom = classFilter[0].option === 'All' ? user.classrooms[0] : classFilter[0].option
     } else if (user.classrooms) {
       winnerClassroom = user.classrooms[0]
-    } 
+    }
 
     // Map every entry in the current leaderboard array into an entry component
     const Entries = leaderboard.map((entry) => {
@@ -225,6 +227,9 @@ class LiveLeaderboard extends React.Component {
             </tbody>
           </Table>
         </Row>
+        {connected &&
+        <span id='connected'/>
+        }
       </div>
     )
   }
