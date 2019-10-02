@@ -23,6 +23,7 @@ class LiveLeaderboardStore extends EventEmitter {
     this.showAll = false
     this.live = false
     this.winners = []
+    this.schoolGroup = false
   }
 
   listenToLeaderboard () {
@@ -51,13 +52,13 @@ class LiveLeaderboardStore extends EventEmitter {
     })
   }
 
-  loadLeaderboard (schoolGroup) {
+  loadLeaderboard () {
     this.listenToLeaderboard()
 
     let path = window.gon.path + '.json?'
 
-    if (schoolGroup) { path += 'school_group=true' }
-    if (this.allTime) { path += 'all_time=true' }
+    if (this.schoolGroup) { path += '&school_group=true' }
+    if (this.allTime) { path += '&all_time=true' }
 
     $.ajax({
       type: 'GET',
@@ -194,6 +195,7 @@ class LiveLeaderboardStore extends EventEmitter {
     this.currentFilters.push(value)
 
     if (value.name === 'Schools') {
+      this.schoolGroup = true
       this.currentFilters = this.currentFilters.filter((filter) => {
         return filter.name === 'Schools'
       })
