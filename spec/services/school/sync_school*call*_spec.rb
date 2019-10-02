@@ -90,6 +90,8 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
   end
 
   context 'when given updated student data' do
+    let(:student_with_points) { create(:student, upi: student_upi, challenge_points: 50) }
+
     it 'updates student details' do
       create(:student, forename: 'test', upi: student_upi)
       sync_school_with_wonde
@@ -97,7 +99,13 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
       sync_school_with_wonde
       expect(User.where(upi: student_upi).first.forename).to eq(student_forename)
     end
-  end
+
+    it 'keeps the number of challenge points the same' do
+      student_with_points
+      sync_school_with_wonde
+      expect(User.where(upi: student_upi).first.challenge_points).to eq(50)
+    end
+  end 
 
   context 'with a new teacher assigned to classroom' do
     before do

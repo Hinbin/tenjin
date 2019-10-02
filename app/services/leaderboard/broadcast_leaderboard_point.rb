@@ -31,7 +31,8 @@ class Leaderboard::BroadcastLeaderboardPoint
                  school_name: @user.school.name,
                  topic: @topic_score.topic.id,
                  topic_score: @topic_score.score,
-                 subject_score: @subject_score }
+                 subject_score: @subject_score,
+                 classroom_names: @user.classrooms.all.pluck(:name) }
   end
 
   def calculate_subject_score
