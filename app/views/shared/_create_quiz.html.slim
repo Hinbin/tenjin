@@ -6,7 +6,7 @@ section.page-section.text-center#newQuiz
     .carousel.slide.col-md-8.col-lg-5.mx-auto#subjectCarousel data-ride="carousel"
       ol.carousel-indicators
         -@subjects.each_with_index do |s, i|
-          li data-target="#subjectCarousel" data-slide-to=i class=('active' if i ==0)
+          li data-target="#subjectCarousel" data-slide-to=i class=('active' if i.zero?)
       .carousel-inner
         -@subjects.each_with_index do |s, i|
             .carousel-item class=('active' if i.zero?)

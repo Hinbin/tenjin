@@ -2,8 +2,12 @@ section.page-section.text-center.pt-2#HomeworkTitle
   .container
     h1.page-section-header.text-uppercase Homework
     p.lead =link_to(@homework.classroom.name, @homework.classroom)
-    p.lead =(@homework.topic.name + " - " + number_to_percentage(@homework.required, precision: 0) + " required" )
-    hr class=("small mb-5 primary-red")
+    p.lead
+      => @homework.topic.name
+      ' -
+      => number_to_percentage(@homework.required, precision: 0)
+      | required
+    hr.small.mb-5.primary-red
     h3.display-4 =report_progress(@homework_progress)
 section.page-section.text-center.pt-2#StudentProgress
   .container
@@ -16,9 +20,13 @@ section.page-section.text-center.pt-2#StudentProgress
         tbody
           - @homework_progress.each do |h|
             tr.student-row data-user=h.user.id
-              td =h.user.forename[0] + " " + h.user.surname
-              td =boolean_icon(h.completed?)
-              td =(h.progress.to_s) + "%"
+              td
+                => h.user.forename[0]
+                = h.user.surname
+              td = boolean_icon(h.completed?)
+              td
+                = h.progress.to_s
+                | %
     .row.col.mt-5
       =link_to 'Delete Homework', homework_path(@homework), method: :delete, class: 'btn btn-block btn-danger'
-        
+ 

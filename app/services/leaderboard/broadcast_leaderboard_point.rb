@@ -16,8 +16,8 @@ class Leaderboard::BroadcastLeaderboardPoint
 
   def broadcast_point
     school = @user.school
-    @channel_name = @subject.name + ':'
-    @channel_name += if school.school_group_id.present?
+    @channel_name = "#{@subject.name}:"
+    @channel_name << if school.school_group_id.present?
                        school.school_group.name
                      else
                        school.name
@@ -37,7 +37,7 @@ class Leaderboard::BroadcastLeaderboardPoint
 
   def calculate_subject_score
     @subject_score = TopicScore.joins(:subject)
-                               .where('user_id = ? AND subject_id = ?', @user.id, @subject.id)
+                               .where(user_id: @user.id, subject_id: @subject.id)
                                .sum(:score)
   end
 end

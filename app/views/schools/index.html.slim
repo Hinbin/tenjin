@@ -1,6 +1,6 @@
-div class="container"
-  span class="display-4" Schools
-  table class="table table-responsive"
+.container
+  span.display-4 Schools
+  table.table.table-responsive
     tr
       th scope="col" Name
       th scope="col" Client ID
@@ -17,4 +17,4 @@ div class="container"
         td =sync_status_icon(school.sync_status)
         td =boolean_icon(school.permitted?)
   =link_to(new_school_path)
-    button type="button" class="btn btn-dark" Add School
+    button.btn.btn-dark type="button" Add School
