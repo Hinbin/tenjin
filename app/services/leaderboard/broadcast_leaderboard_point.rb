@@ -37,7 +37,7 @@ class Leaderboard::BroadcastLeaderboardPoint
 
   def calculate_subject_score
     @subject_score = TopicScore.joins(:subject)
-                               .where(user_id: @user.id, subject_id: @subject.id)
+                               .where('user_id = ? AND subject_id = ?', @user.id, @subject.id)
                                .sum(:score)
   end
 end

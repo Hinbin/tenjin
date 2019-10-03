@@ -39,6 +39,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
       sign_in teacher
       visit(leaderboard_path(subject.name))
       find(:css, '#toggleLive').click
+      find(:css, 'span#connected', visible: false)
     end
 
     it 'shows updates from own school only by default' do
@@ -76,6 +77,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
       sign_in teacher
       visit(leaderboard_path(subject.name))
       find(:css, '#toggleLive label').click
+      find(:css, 'span#connected', visible: false)
     end
 
     it 'shows the option or a school admin or employee' do

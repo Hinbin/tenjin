@@ -13,7 +13,7 @@ RSpec.describe 'Student completes a homework', type: :feature, js: true, default
       answer
     end
 
-    it 'lets me complete a homwork' do
+    it 'lets me complete a homework' do
       visit(dashboard_path)
       find(:css, '.homework-row[data-homework="' + homework_ten_percent.id.to_s + '"]').click
       first(class: 'question-button').click
