@@ -8,6 +8,15 @@ $(document).on('turbolinks:load', () => {
     Turbolinks.visit('/classrooms/' + pickedClassroom)
   })
 
+  if (!$.fn.dataTable.isDataTable('#otherClassroomTable')) {
+    $('#otherClassroomTable').DataTable({
+      'pageLength': 25,
+      'language': {
+        'emptyTable': 'No other classrooms have been found'
+      }
+    })
+  }
+
 })
 
 if (!Turbolinks) {

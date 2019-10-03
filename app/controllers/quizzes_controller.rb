@@ -17,7 +17,17 @@ class QuizzesController < ApplicationController
     gon.quiz_id = @quiz.id
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     calculate_percent_completed
-    render Quiz::RenderQuestionType.new(question: @question).call
+    return render Quiz::RenderQuestionType.new(question: @question).call if @quiz.active?
+
+    percent_correct = calculate_percent_correct
+
+    flash[:notice] = if percent_correct > 60
+                       "Finished!  You got #{percent_correct}%.  Well done!"
+                     else
+                       "Finished!  You got #{percent_correct}%"
+                     end
+
+    redirect_to dashboard_path
   end
 
   def new
@@ -105,14 +115,17 @@ class QuizzesController < ApplicationController
                       end
     when 'show?'
       return flash[:alert] = 'Quiz does not belong to you' if exception.record.active?
-
-      flash[:notice] = 'The quiz has finished'
-
     end
     redirect_to dashboard_path
   end
 
   def calculate_percent_completed
-    @percent_complete = (@quiz.num_questions_asked.to_f / @quiz.questions.length.to_f) * 100.to_f
+    @percent_complete = (@quiz.num_questions_asked / @quiz.questions.length.to_f) * 100.to_f
+  end
+
+  def calculate_percent_correct
+    return 0 if @quiz.answered_correct.blank? || @quiz.questions.blank?
+
+    ((@quiz.answered_correct / @quiz.questions.length.to_f) * 100.to_f).round
   end
 end

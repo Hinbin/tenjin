@@ -69,9 +69,9 @@ RSpec.describe 'using a quiz', default_creates: true, type: :request do
       end
 
       it 'prevents me from looking at a finished quiz' do
-        quiz = create(:new_quiz, active: false, question_order: [question.id])
+        quiz = create(:new_quiz, user: student, active: false, question_order: [question.id])
         get quiz_path(id: quiz.id)
-        expect(flash[:notice]).to match(/The quiz has finished/)
+        expect(flash[:notice]).to match(/Finished!  You got 0%/)
       end
     end
 

@@ -5,12 +5,7 @@ require 'pry'
 RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
   include_context 'default_creates'
 
-  let(:student_topic_score) { create(:topic_score, user: student, score: 10, topic: topic) }
-  let(:one_to_nine) do
-    (1..9).each do |n|
-      create(:topic_score, topic: topic, school: school, score: n)
-    end
-  end
+
   let(:new_entry) { create(:topic_score, topic: topic, school: school, score: 11) }
 
   before do
@@ -23,7 +18,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     before do
       one_to_nine
       visit(leaderboard_path(subject.name))
-      find('p', text: student.forename)
+      find(:css, 'span#connected', visible: false)
     end
 
     it 'flashes an update if I have a score' do
@@ -62,14 +57,14 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       Leaderboard::BroadcastLeaderboardPoint.new(new_entry).call
       expect(page).to have_css('tr:nth-child(2)#row-' + student.id.to_s)
     end
-
   end
 
   context 'with a school group' do
     before do
+      create(:school, school_group: school.school_group)
       one_to_nine
       visit(leaderboard_path(subject.name))
-      find('p', text: student.forename)
+      find(:css, 'span#connected', visible: false)
     end
 
     let(:student_another_school) { create(:student) }
@@ -92,8 +87,8 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     end
 
     it 'updates if score is from the same school group' do
-      find(:css, '#optionFlex').click
-      find(:css, '#schoolGroup').click
+      click_button('Select School')
+      click_button('All')
       Leaderboard::BroadcastLeaderboardPoint.new(create(:topic_score, topic: topic, school: second_school)).call
       expect(page).to have_css('tr.score-changed')
     end
@@ -104,7 +99,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       school.update_attribute(:school_group_id, nil)
       one_to_nine
       visit(leaderboard_path(subject.name))
-      find('p', text: student.forename)
+      find(:css, 'span#connected', visible: false)
     end
 
     it 'updates if someone from the same schools has a score' do
@@ -122,7 +117,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     before do
       one_to_nine
       visit(leaderboard_path(subject.name))
-      find('p', text: student.forename)
+      find(:css, 'span#connected', visible: false)
     end
 
     let(:different_subject) { create(:subject) }
@@ -138,7 +133,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     before do
       one_to_nine
       visit(leaderboard_path(subject.name, topic: Topic.first))
-      find('p', text: student.forename)
+      find(:css, 'span#connected', visible: false)
     end
 
     let(:different_topic) { create(:topic, subject: subject) }

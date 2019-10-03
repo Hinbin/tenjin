@@ -5,7 +5,7 @@ class QuizPolicy < ApplicationPolicy
   end
 
   def show?
-    @user.id == @quiz.user_id && @quiz.active
+    @user.id == @quiz.user_id
   end
 
   def update?
@@ -15,7 +15,7 @@ class QuizPolicy < ApplicationPolicy
   def new?
     return false if @quiz.subject.nil?
 
-    @user.school.permitted? && @user.subjects.exists?(@quiz.subject.id)
+    (@user.subjects.include? @quiz.subject) && @user.school.permitted?
   end
 
   def create?

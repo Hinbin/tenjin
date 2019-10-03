@@ -59,6 +59,23 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
+  # show retry status in spec process
+  config.verbose_retry = true
+  # show exception that triggers a retry if verbose_retry is set to true
+  config.display_try_failure_messages = true
+
+  # run retry only on features
+  config.around :each, :js do |ex|
+    ex.run_with_retry retry: 3
+  end
+
+  # callback to be run between retries
+  config.retry_callback = proc do |ex|
+    # run some additional clean up task - can be filtered by example metadata
+    Capybara.reset! if ex.metadata[:js]
+    DatabaseCleaner.clean
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -137,9 +154,11 @@ if ENV['TRAVIS']
   end
 
   Capybara.javascript_driver = :travis_chrome
+  # Increase timeouts to avoid intermittent failures
+  Capybara.default_max_wait_time = 15
 else
   Capybara.default_driver = :selenium_chrome
-  Capybara.javascript_driver = :selenium_chrome
+  Capybara.javascript_driver = :selenium_chrome_headless
 end
 
 # REMOVE WITH NEW VERSION OF SHOULDAMATCHERS

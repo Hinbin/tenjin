@@ -10,12 +10,14 @@ class LeaderboardController < ApplicationController
 
   def show
     authorize current_user
+    set_subject_and_topic
 
     if request.xhr?
       @subject = Subject.where(name: leaderboard_params[:id]).first
       build_leaderboard
+      set_filter_data
+      set_user_data
     else
-      set_subject_and_topic
       set_leaderboard_variables
       set_javascript_variables
       return render 'subject_select' if @subject.blank?
@@ -32,6 +34,20 @@ class LeaderboardController < ApplicationController
     @entries = Leaderboard::BuildLeaderboard.new(current_user,
                                                  leaderboard_params).call
     @awards = LeaderboardAward.where(school: current_user.school, subject: @subject).group(:user_id).count
+    @classrooms = Classroom.where(school: current_user.school, subject: @subject)
+    set_subject_or_topic_name
+    set_classroom_winners
+  end
+
+  def set_subject_or_topic_name
+    @name = @topic.present? ? @topic.name : @subject.name
+  end
+
+  def set_classroom_winners
+    @classroom_winners = ClassroomWinner.joins(:classroom, :user)
+                                        .where(classroom: @classrooms)
+                                        .pluck('classrooms.name', 'users.forename', 'users.surname', :score)
+    @classroom_winners.map! { |w| [w[0], "#{w[1]} #{w[2][0]}", w[3]] }
   end
 
   def set_subject_and_topic
@@ -52,6 +68,23 @@ class LeaderboardController < ApplicationController
     gon.user = current_user.id
     gon.params = leaderboard_params
     set_path
+  end
+
+  def set_filter_data
+    school_group = current_user.school.school_group
+    @schools = if school_group.present?
+                 School.where(school_group_id: school_group).pluck(:name)
+               else
+                 [current_user.school.name]
+               end
+    @classrooms = Classroom.where(school: current_user.school, subject: @subject).pluck(:name)
+  end
+
+  def set_user_data
+    @user_data = { id: current_user.id,
+                   role: current_user.role,
+                   school: current_user.school.name,
+                   classrooms: current_user.enrollments.joins(:classroom).pluck('classrooms.name') }
   end
 
   def set_path

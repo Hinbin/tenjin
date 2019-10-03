@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_16_192307) do
+ActiveRecord::Schema.define(version: 2019_09_29_140248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,6 +120,16 @@ ActiveRecord::Schema.define(version: 2019_09_16_192307) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["topic_id"], name: "index_challenges_on_topic_id"
+  end
+
+  create_table "classroom_winners", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "classroom_id"
+    t.integer "score"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["classroom_id"], name: "index_classroom_winners_on_classroom_id"
+    t.index ["user_id"], name: "index_classroom_winners_on_user_id"
   end
 
   create_table "classrooms", force: :cascade do |t|
@@ -345,6 +355,8 @@ ActiveRecord::Schema.define(version: 2019_09_16_192307) do
   add_foreign_key "challenge_progresses", "challenges"
   add_foreign_key "challenge_progresses", "users"
   add_foreign_key "challenges", "topics"
+  add_foreign_key "classroom_winners", "classrooms"
+  add_foreign_key "classroom_winners", "users"
   add_foreign_key "customisation_unlocks", "customisations"
   add_foreign_key "customisation_unlocks", "users"
   add_foreign_key "enrollments", "classrooms"

@@ -2,12 +2,39 @@ class Leaderboard::ResetWeeklyLeaderboard
   def initialize; end
 
   def call
-    award_weekly_winners
+    update_classroom_winners
+    create_leaderboard_awards
     copy_points_to_all_time_scores
     reset_weekly_leaderboard_tables
   end
 
-  def award_weekly_winners
+  def update_classroom_winners
+    ClassroomWinner.destroy_all
+
+    School.all.each do |sc|
+      classrooms = Classroom.where(school: sc).where.not(subject: nil)
+      classrooms.each do |c|
+        top = Leaderboard::BuildLeaderboard.new(nil, id: c.subject.name, school: sc.id).call.sort_by { |s| -s[:score] }
+        top = top.select do |elem|
+          next if elem[:classroom_names].blank?
+
+          elem[:classroom_names].include? c.name
+        end
+
+        next unless top.present?
+
+        top_score = top[0].score
+        i = 0
+        while top[i].present? && top[i].score == top_score
+          user_id = top[i][:id]
+          ClassroomWinner.create(classroom: c, user: User.find(user_id), score: top_score)
+          i += 1
+        end
+      end
+    end
+  end
+
+  def create_leaderboard_awards
     School.all.each do |sc|
       Subject.all.each do |su|
         top = Leaderboard::BuildLeaderboard.new(nil, id: su.name, school: sc.id).call.sort_by { |s| -s[:score] }

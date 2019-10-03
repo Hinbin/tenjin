@@ -4,11 +4,6 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
     sign_in student
   end
 
-  context 'when showing subjects' do
-    it 'only shows subjects that the user takes'
-    it 'does not duplicate subjects'
-  end
-
   context 'when changing the dashboard style' do
     let(:customisation) { create(:customisation, customisation_type: 'dashboard_style', value: 'darkred') }
 
@@ -112,9 +107,13 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
 
   context 'when looking at homeworks' do
     let(:homework_future) { create(:homework, due_date: Time.now + 8.days, classroom: classroom) }
+    
 
     before do
       homework
+    end
+
+    it 'tells me if I have completed a homework' do
     end
 
     it 'shows the homeworks I currnently have' do

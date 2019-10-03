@@ -1,11 +1,11 @@
 =javascript_pack_tag('teacher_dashboard')
-section.page-section.text-center#challenges
+section.page-section.text-center#myClassrooms
   .container
     h1.page-section-header.text-uppercase My Classes
     hr class=("small mb-5 primary-red")
     .row.justify-content-center
       .table-responsive
-        table.table.table-hover#classroom-table
+        table.table.table-hover#classroomTable
           thead
             tr
               th Name
@@ -21,3 +21,23 @@ section.page-section.text-center#challenges
                 td =e.subject.name if e.subject.present?
                 td.d-none.d-lg-block =e.classroom.enrollments.count
                 td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'btn btn-dark'
+- if @other_classrooms.present?
+  section.page-section.text-center#otherClassrooms
+    .container
+      h1.page-section-header.text-uppercase Other Classrooms
+      hr class=("small mb-5 primary-red")
+      .row.justify-content-center
+        .table-responsive
+          table.table.table-hover#otherClassroomTable
+            thead
+              tr
+                th Name
+                th.d-none.d-lg-block Description
+                th Subject
+            tbody
+              - @other_classrooms.each do |c|
+                tr data-classroom = c.id
+                  td =c.name
+                  td.d-none.d-lg-block =c.description
+                  td =c.subject.name if c.subject.present?
+                  

@@ -1,6 +1,10 @@
 {
   "leaderboard":<%= raw(@entries.to_json) %>,
   "awards":<%= raw(@awards.to_json) %>,
-  "params": <%=raw(@leaderboard_params.to_json)%>
+  "name": <%=raw(@name.to_json)%>,
+  "schools":<%= raw(@schools.to_json) %>,
+  "classrooms":<%= raw(@classrooms.to_json) %>,
+  "user":<%= raw(@user_data.to_json) %>,
+  "winners":<%= raw(@classroom_winners.to_json) %>
 }
 
