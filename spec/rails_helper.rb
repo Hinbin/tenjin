@@ -134,11 +134,11 @@ if ENV['TRAVIS']
     options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu])
 
     Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
-    # Increase timeouts to avoid intermittent failures
-    Capybara.default_max_wait_time = 15
+    # Increase timeouts to avoid intermittent failures    
   end
 
   Capybara.javascript_driver = :travis_chrome
+  Capybara.default_max_wait_time = 15
 else
   Capybara.default_driver = :selenium_chrome
   Capybara.javascript_driver = :selenium_chrome_headless
