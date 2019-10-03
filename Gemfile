@@ -92,6 +92,7 @@ group :test do
   gem 'rails-controller-testing' # If you are using Rails 5.x
   gem 'database_cleaner'
   gem 'simplecov', require: false # For code coverage
+  gem 'rspec-retry'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
