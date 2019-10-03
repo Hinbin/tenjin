@@ -15,7 +15,7 @@ class Homework::UpdateHomeworkProgress
   def check_percentage_correct(progress)
     return unless @quiz.topic == progress.homework.topic
 
-    check_progress_percentage(@quiz.answered_correct.to_f / @quiz.num_questions_asked.to_f, progress)
+    check_progress_percentage(@quiz.answered_correct.to_f / @quiz.num_questions_asked, progress)
   end
 
   def check_progress_percentage(percentage, progress)

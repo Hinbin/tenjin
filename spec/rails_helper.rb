@@ -139,7 +139,7 @@ if ENV['TRAVIS']
   Capybara.javascript_driver = :travis_chrome
 else
   Capybara.default_driver = :selenium_chrome
-  Capybara.javascript_driver = :selenium_chrome
+  Capybara.javascript_driver = :selenium_chrome_headless
 end
 
 # REMOVE WITH NEW VERSION OF SHOULDAMATCHERS

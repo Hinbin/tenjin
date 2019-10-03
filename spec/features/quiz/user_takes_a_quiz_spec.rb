@@ -78,7 +78,7 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       find(class: 'next-button').click
       find(class: 'question-button').click
       find(class: 'next-button').click
-      expect(page).to have_content('The quiz has finished')
+      expect(page).to have_content('Finished!')
     end
   end
 
