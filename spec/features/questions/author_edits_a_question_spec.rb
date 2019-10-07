@@ -11,8 +11,11 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
   end
 
   context 'when adding or removing questions' do
+    let(:flagged_question) { create_list(:flagged_question, 5, question: question) }
+
     before do
       question
+      flagged_question
       visit(questions_path)
       click_link(question.topic.name)
     end
@@ -26,6 +29,10 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
       visit(question_path(question))
       click_link('Delete Question')
       expect(page).to have_no_css('.question-row')
+    end
+
+    it 'shows the number of flags a question has' do
+      expect(page).to have_css("tr#question-#{question.id} td.flags", exact_text: '5')
     end
   end
 
@@ -54,6 +61,7 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
   end
 
   context 'when visiting the topic index page' do
+
     before do
       question
       visit(questions_path)
