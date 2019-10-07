@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_29_140248) do
+ActiveRecord::Schema.define(version: 2019_10_05_120807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,6 +189,15 @@ ActiveRecord::Schema.define(version: 2019_09_29_140248) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
+  create_table "flagged_questions", force: :cascade do |t|
+    t.bigint "question_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id"], name: "index_flagged_questions_on_question_id"
+    t.index ["user_id"], name: "index_flagged_questions_on_user_id"
+  end
+
   create_table "homework_progresses", force: :cascade do |t|
     t.bigint "homework_id"
     t.bigint "user_id"
@@ -361,6 +370,8 @@ ActiveRecord::Schema.define(version: 2019_09_29_140248) do
   add_foreign_key "customisation_unlocks", "users"
   add_foreign_key "enrollments", "classrooms"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "flagged_questions", "questions"
+  add_foreign_key "flagged_questions", "users"
   add_foreign_key "homework_progresses", "homeworks"
   add_foreign_key "homework_progresses", "users"
   add_foreign_key "homeworks", "classrooms"

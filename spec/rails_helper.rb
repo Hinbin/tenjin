@@ -173,7 +173,7 @@ if ENV['TRAVIS']
   Capybara.default_max_wait_time = 15
 else
   Capybara.default_driver = :selenium_chrome
-  Capybara.javascript_driver = :selenium_chrome_headless
+  Capybara.javascript_driver = :selenium_chrome
 end
 
 # REMOVE WITH NEW VERSION OF SHOULDAMATCHERS

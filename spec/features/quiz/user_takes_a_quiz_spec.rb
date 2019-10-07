@@ -59,6 +59,31 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       expect(page).to have_css('i.fa-times')
     end
 
+    context 'when flagging unfair questions' do
+      let(:flagged_question) { create(:flagged_question, user: student, question: question)}
+
+      it 'shows an option to flag a problem with a question' do
+        expect(page).to have_css('i.fa-flag')
+      end
+
+      it 'allows me to flag a question' do
+        find(:css, 'i.fa-flag').click
+        expect(page).to have_css('i.fas.fa-flag').and have_content('You have flagged this question as unfair')
+      end
+
+      it 'shows if I have already flagged a particular question' do
+        flagged_question
+        visit current_path # refresh page
+        expect(page).to have_css('i.fas.fa-flag')
+      end
+
+      it 'allows me to unflag a question' do
+        flagged_question
+        visit current_path # refresh page
+        find(:css, 'i.fas.fa-flag').click
+        expect(page).to have_css('i.far.fa-flag')
+      end
+    end
   end
 
   context 'with more than two quesitons in a quiz' do
