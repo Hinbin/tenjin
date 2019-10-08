@@ -1,5 +1,6 @@
 require 'wondeclient'
-class School::AddSchool
+
+class School::AddSchool < ApplicationService
   def initialize(school_params)
     @school_id = school_params[:client_id]
     @client_token = school_params[:token]

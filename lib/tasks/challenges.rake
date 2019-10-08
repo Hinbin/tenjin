@@ -1,7 +1,7 @@
 namespace :challenges do
   desc 'Removing old challenges'
   task remove_challenges: :environment do
-    Challenge::ProcessExpiredChallenges.new.call
+    Challenge::ProcessExpiredChallenges.call
   end
 
   desc 'Add new challenges'
@@ -9,7 +9,7 @@ namespace :challenges do
     # Should be checked hourly
     today = Date.current
     hour = Time.current.hour
-    Challenge::AddNewChallenges.new.call if (today.monday? || today.wednesday?) && hour == 8
-    Challenge::AddNewChallenges.new(duration: 66.hours, multiplier: 2).call if today.friday? && hour == 14
+    Challenge::AddNewChallenges.call if (today.monday? || today.wednesday?) && hour == 8
+    Challenge::AddNewChallenges.call(duration: 66.hours, multiplier: 2) if today.friday? && hour == 14
   end
 end

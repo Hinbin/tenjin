@@ -1,4 +1,4 @@
-class Quiz::RenderQuestionType
+class Quiz::RenderQuestionType < ApplicationService
   def initialize(params)
     @question = params[:question]
   end

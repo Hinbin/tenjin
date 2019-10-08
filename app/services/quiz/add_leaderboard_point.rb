@@ -1,4 +1,4 @@
-class Quiz::AddLeaderboardPoint
+class Quiz::AddLeaderboardPoint < ApplicationService
   def initialize(params)
     @quiz = params[:quiz]
     @user = @quiz.user
@@ -10,7 +10,7 @@ class Quiz::AddLeaderboardPoint
     return unless @quiz.counts_for_leaderboard
 
     add_points
-    Leaderboard::BroadcastLeaderboardPoint.new(@topic_score).call
+    Leaderboard::BroadcastLeaderboardPoint.call(@topic_score)
   end
 
   def add_points
@@ -18,7 +18,7 @@ class Quiz::AddLeaderboardPoint
 
     @topic_score.score = 0 if @topic_score.new_record?
     @topic_score.score += @multiplier.to_i
-    Challenge::UpdateChallengeProgress.new(@quiz, 'number_of_points', @multiplier.to_i, @question.topic).call
+    Challenge::UpdateChallengeProgress.call(@quiz, 'number_of_points', @multiplier.to_i, @question.topic)
 
     @topic_score.save
   end

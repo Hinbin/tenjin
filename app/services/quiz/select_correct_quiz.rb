@@ -1,5 +1,5 @@
 # Finds the correct quiz for a user if multiple quizzes have been created.
-class Quiz::SelectCorrectQuiz
+class Quiz::SelectCorrectQuiz < ApplicationService
   def initialize(params)
     @quizzes = params[:quizzes]
   end

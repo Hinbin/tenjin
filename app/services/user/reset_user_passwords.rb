@@ -1,5 +1,5 @@
 # Resets the passwords for a group of users, and returns their new passwords
-class User::ResetUserPasswords
+class User::ResetUserPasswords < ApplicationService
   def initialize(user, school = nil)
     @user = user
     @school = school

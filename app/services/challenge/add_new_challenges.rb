@@ -1,4 +1,4 @@
-class Challenge::AddNewChallenges
+class Challenge::AddNewChallenges < ApplicationService
   def initialize(multiplier: 1, duration: 7.days)
     @subjects = Subject.all
     @multiplier = multiplier

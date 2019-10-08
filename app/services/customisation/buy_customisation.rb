@@ -1,4 +1,4 @@
-class Customisation::BuyCustomisation
+class Customisation::BuyCustomisation < ApplicationService
   def initialize(user, customisation)
     @user = user
     @customisation = customisation

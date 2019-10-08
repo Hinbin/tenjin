@@ -1,5 +1,5 @@
 # Creates a Quiz session object and initialises it appropriately
-class Quiz::CreateQuiz
+class Quiz::CreateQuiz < ApplicationService
   def initialize(params)
     @user = params[:user]
     @topic_id = params[:topic]

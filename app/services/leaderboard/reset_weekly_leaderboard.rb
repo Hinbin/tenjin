@@ -1,4 +1,4 @@
-class Leaderboard::ResetWeeklyLeaderboard
+class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
   def initialize; end
 
   def call
@@ -14,7 +14,7 @@ class Leaderboard::ResetWeeklyLeaderboard
     School.all.each do |sc|
       classrooms = Classroom.where(school: sc).where.not(subject: nil)
       classrooms.each do |c|
-        top = Leaderboard::BuildLeaderboard.new(nil, id: c.subject.name, school: sc.id).call.sort_by { |s| -s[:score] }
+        top = Leaderboard::BuildLeaderboard.call(nil, id: c.subject.name, school: sc.id).sort_by { |s| -s[:score] }
         top = top.select do |elem|
           next if elem[:classroom_names].blank?
 
@@ -37,7 +37,7 @@ class Leaderboard::ResetWeeklyLeaderboard
   def create_leaderboard_awards
     School.all.each do |sc|
       Subject.all.each do |su|
-        top = Leaderboard::BuildLeaderboard.new(nil, id: su.name, school: sc.id).call.sort_by { |s| -s[:score] }
+        top = Leaderboard::BuildLeaderboard.call(nil, id: su.name, school: sc.id).sort_by { |s| -s[:score] }
         next unless top.present?
 
         top_score = top[0].score

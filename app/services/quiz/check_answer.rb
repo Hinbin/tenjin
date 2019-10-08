@@ -1,4 +1,4 @@
-class Quiz::CheckAnswer
+class Quiz::CheckAnswer < ApplicationService
   def initialize(params)
     @quiz = params[:quiz]
     @question = params[:question]
@@ -9,7 +9,7 @@ class Quiz::CheckAnswer
   def call
     check_answer_correct unless already_answered?
 
-    Quiz::MoveQuizForward.new(quiz: @quiz).call
+    Quiz::MoveQuizForward.call(quiz: @quiz)
     { answer: Answer.where(question: @question).where(correct: true), streak: @quiz.streak,
       answeredCorrect: @quiz.answered_correct,
       multiplier: Multiplier.where('score <= ?', @quiz.streak).last.multiplier }
@@ -58,7 +58,7 @@ class Quiz::CheckAnswer
     @quiz.answered_correct += 1
     @quiz.streak += 1
     @asked_question.correct = true
-    Quiz::AddLeaderboardPoint.new(quiz: @quiz, question: @question).call
+    Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question)
   end
 
   def process_incorrect_answer
