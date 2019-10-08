@@ -46,6 +46,7 @@ class QuestionsController < ApplicationController
     redirect_to questions_path(topic_id: @question.topic)
 
     @question.answers.destroy_all
+    FlaggedQuestion.where(question: @question).destroy_all
     @question.destroy
   end
 

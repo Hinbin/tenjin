@@ -1,5 +1,26 @@
+=javascript_pack_tag('questions/question_bottom')
 .container
-  .row.col
-    p=@question.topic.name
+  .row
+    .col
+      p=@question.topic.name
+    .col
+      p.text-right
+        =link_to flag_icon,
+          flagged_questions_path(flagged_question: {user_id: current_user.id, question_id: @question.id }),
+          class: 'btn',
+          id: 'unfairFlag',
+          data: {method: :post},
+          remote: true
+
 -unless @quiz.counts_for_leaderboard
-  .row.col-lg-8.mx-auto.alert.alert-warning This quiz is currently not counting towards your leaderboard points.  You can take a maximum of 4 quizzes on a chosen topic in a day.
+  .row.col-lg-8.mx-auto.alert.alert-warning 
+    | This quiz is currently not counting towards your leaderboard points.  You can take a maximum of 4 quizzes on a chosen topic in a day.
+
+#feedbackModal.modal.fade
+  .modal-dialog role="document"
+    .modal-content 
+      .modal-body
+        p#feedback You have flagged this question as unfair.  Thanks for your feedback!
+      .modal-footer
+        button.btn.btn-secondary type="button" data-dismiss="modal"
+          | Close

@@ -17,8 +17,9 @@ class QuizzesController < ApplicationController
     gon.quiz_id = @quiz.id
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     calculate_percent_completed
+    @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
     return render Quiz::RenderQuestionType.new(question: @question).call if @quiz.active?
-
+    
     percent_correct = calculate_percent_correct
 
     flash[:notice] = if percent_correct > 60

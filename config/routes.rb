@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :flagged_questions, only:[:create]
+
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'
   get 'customise/', to: 'customise#show'
