@@ -6,6 +6,7 @@ $(document).on('turbolinks:load', () => {
       $.ajax({
         type: 'put',
         url: window.location.pathname,
+        beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
         data: { question: { question_type: pickedType } },
         success: function (data) {
           location.reload()
@@ -44,6 +45,7 @@ function saveQuestionText (successCallback) {
   $.ajax({
     type: 'put',
     url: window.location.pathname,
+    beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
     data: { question: { question_text: questionText } },
     success: successCallback()
   })

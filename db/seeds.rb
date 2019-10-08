@@ -102,8 +102,6 @@ Customisation.create([
 case Rails.env
   when "development"
     Admin.create(email: 'n.houlton@grange.outwood.com', password: 'password', password_confirmation: 'password', role: 'super')
-    subject = Subject.where(name:'Computer Science').first
-    DefaultSubjectMap.create(name: 'Sociology', subject: subject)
 end
 
 
