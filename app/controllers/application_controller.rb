@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Pundit
+
   protect_from_forgery
   before_action :configure_permitted_parameters, if: :devise_controller?
   after_action :verify_authorized, except: :index, unless: :devise_controller?
@@ -15,11 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    if resource.class == User
-      dashboard_path
-    elsif resource.class == Admin
-      questions_path
-    end
+    resource.is_a?(Admin) ? questions_path : dashboard_path
   end
 
   private
@@ -31,14 +28,12 @@ class ApplicationController < ActionController::Base
 
   def find_dashboard_style
     style = ActiveCustomisation.joins(:customisation)
-                               .where(user: current_user,
-                                      customisations: { customisation_type: 'dashboard_style' }).first
+                               .find_by(user: current_user,
+                                      customisations: { customisation_type: 'dashboard_style' })
     style.present? ? style.customisation.value : 'red'
   end
   
   def pundit_user
-    return current_admin if current_admin.present?
-
-    current_user
+    admin_signed_in? ? current_admin : current_user
   end
 end
