@@ -29,7 +29,11 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def update?
-    user.school_admin?
+    user.super?
+  end
+  
+  def sync?
+    user.school_admin? && user.school == record
   end
 
   def destroy?

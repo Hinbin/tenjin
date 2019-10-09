@@ -12,7 +12,7 @@ class ClassroomsController < ApplicationController
   end
 
   def index
-    authorize current_user.school, :update?
+    authorize current_user.school, :sync?
     @classrooms = policy_scope(Classroom).order(:name)
     @school = current_user.school
     @subjects = Subject.all

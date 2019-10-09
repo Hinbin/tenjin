@@ -1,0 +1,5 @@
+.container
+  span.display-4 = @school_group.name
+  =simple_form_for @school_group do |f|
+    =f.input_field :name
+    =f.submit 'Save'

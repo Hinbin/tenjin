@@ -20,6 +20,11 @@
               tr
                 td =c.name
                 td.d-none.d-lg-block =c.enrollments.count
-                td =select_tag :subject, options_from_collection_for_select(@subjects, :id, :name, c.subject_id), include_blank: '', id: ('classroom-' + c.id.to_s), class: 'custom-select', data: { remote: 'true',  url: classroom_path(c.id), method: 'patch' }
+                td =select_tag :subject,
+                  options_from_collection_for_select(@subjects, :id, :name, c.subject_id),
+                  include_blank: '',
+                  id: ('classroom-' + c.id.to_s),
+                  class: 'custom-select',
+                  data: { remote: 'true',  url: classroom_path(c.id), method: 'patch' }
         
         

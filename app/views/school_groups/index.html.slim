@@ -1,0 +1,16 @@
+.container
+  span.display-4 School Groups
+  table.table.table-responsive
+    tr
+      th scope="col" Name
+      th
+      th
+
+    - @school_groups.each do |sg|
+      tr 
+        td =sg.name
+        td = button_to('Edit', school_group_path(sg.id), class: 'btn btn-primary', method: :get )
+        td = button_to('Delete', school_group_path(sg.id), method: :delete, class: 'btn btn-danger',  data: { confirm: 'Are you sure?' } )
+
+  =link_to(new_school_group_path)
+    button.btn.btn-dark type="button" Add School Group

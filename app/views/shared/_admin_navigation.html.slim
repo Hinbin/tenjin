@@ -12,6 +12,9 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
       - if current_admin.super?
         li.nav-item.active
           a.nav-link href=schools_path Schools
+      - if current_admin.super?
+        li.nav-item.active
+          a.nav-link href=school_groups_path School Groups
       - if current_admin.author? || current_admin.super?
         li.nav-item.active
           a.nav-link href=questions_path Questions

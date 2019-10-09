@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     member do
       patch 'reset_all_passwords'
       get 'show_employees'
+      patch 'sync'
     end
   end
   resources :subject_maps, only: [:update]
@@ -29,6 +30,7 @@ Rails.application.routes.draw do
   end
 
   resources :flagged_questions, only:[:create]
+  resources :school_groups
 
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'
