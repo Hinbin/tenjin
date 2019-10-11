@@ -29,7 +29,7 @@ class Enrollment < ApplicationRecord
 
       students = students_data.data
       students.each do |s|
-        student = User.user_from_upi(s.upi)
+        student = User.find_by(upi: s.upi)
         create_enrollment(classroom, student)
       end
 
