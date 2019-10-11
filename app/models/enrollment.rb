@@ -7,7 +7,7 @@ class Enrollment < ApplicationRecord
   validates :user, uniqueness: { scope: [:classroom] }
 
   def self.from_wonde(classroom_api_data)
-    classroom = Classroom.classroom_from_client_id(classroom_api_data.id)
+    classroom = Classroom.find_by(client_id: classroom_api_data.id)
 
     return unless classroom.subject_id.present?
 

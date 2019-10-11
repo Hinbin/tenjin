@@ -33,9 +33,4 @@ class School < ApplicationRecord
     school.sync_status = 'successful'
     school.save
   end
-
-  def self.school_from_client_id(client_id)
-    School.where(client_id: client_id).first
-  end
-
 end

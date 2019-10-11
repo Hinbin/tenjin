@@ -23,12 +23,4 @@ RSpec.describe School, type: :model do
       expect(school).to have_attributes(client_id: '1234', name: 'test')
     end
   end
-
-  describe '#school_from_client_id' do
-    context 'with a school client id'
-    it 'retrieves a school record' do
-      school = create(:school)
-      expect(School.school_from_client_id(school.client_id)) .to eq(school)
-    end
-  end
 end
