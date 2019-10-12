@@ -20,8 +20,3 @@ $(document).on('turbolinks:load', function () {
   }
 })
 
-if (!Turbolinks) {
-  location.reload()
-}
-
-Turbolinks.dispatch('turbolinks:load')

@@ -17,6 +17,18 @@
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
 
+import './classroom'
+import './homework'
+import './pages'
+import './schools'
+import './student_dashboard'
+import './teacher_dashboard'
+import './users'
+import './questions/multiple_choice_question'
+import './questions/question_bottom'
+import './questions/question_top'
+import './questions/short_response_question'
+
 var dt_extras = [
 
   require('datatables.net-bs4'),
@@ -38,7 +50,8 @@ $(document).on('turbolinks:load', function () {
     $('#alertModal').modal()
   }
 })
+
 // Support component names relative to this directory:
-var componentRequireContext = require.context("components", true);
-var ReactRailsUJS = require("react_ujs");
-ReactRailsUJS.useContext(componentRequireContext);
+var componentRequireContext = require.context('components', true)
+var ReactRailsUJS = require('react_ujs')
+ReactRailsUJS.useContext(componentRequireContext)

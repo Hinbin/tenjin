@@ -4,7 +4,7 @@ module ClassroomsHelper
     entries.take(5).map! { |e| boolean_icon(e.completed?) }.join
   end
 
-  def sync_status_button
+  def sync_status_button    
     case @school.sync_status
     when 'never', 'successful'
       link_to 'Sync Classrooms & Users', sync_school_path(current_user.school),

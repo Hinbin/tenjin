@@ -7,8 +7,6 @@ $(document).on('turbolinks:load', () => {
       $('#syncButton').text('School sync required. Click here to start.')
     })
 
-    $('tr[data-controller]').off('click')
-
     $('tr[data-controller]').click((event) => {
       if (!event.target.classList.contains('btn')) {
 
@@ -34,7 +32,7 @@ $(document).on('turbolinks:load', () => {
     $('#resetPasswordCheck').on('click', () => {
       $('.password-col').toggleClass('d-none')
     })
-
+    
     if (!$.fn.dataTable.isDataTable('#homework-table')) {
       $('#homework-table').DataTable({
         dom: 'rtp',
@@ -56,8 +54,9 @@ $(document).on('turbolinks:load', () => {
   }
 })
 
-if (!Turbolinks) {
-  location.reload()
-}
-
-Turbolinks.dispatch('turbolinks:load')
+$(document).on('turbolinks:before-cache', () => {
+  $('tr[data-controller]').off('click')
+  $('#classroom-table').DataTable().destroy()
+  $('#homework-table').DataTable().destroy()
+  $('#students-table').DataTable().destroy()
+})

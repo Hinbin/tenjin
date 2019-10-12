@@ -13,7 +13,7 @@ html
     = stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Roboto:300,900,900i'
     = stylesheet_pack_tag 'application', media: 'all'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application'
     - unless Rails.env.test?
       = render partial: 'layouts/cookie_consent'
 

@@ -1,6 +1,4 @@
 $(document).on('turbolinks:load', () => {
-  $('tr[data-classroom]').off('click')
-
   $('tr[data-classroom]').click((event) => {
     const pickedClassroom = $(event.target.parentNode).data('classroom')
     if (event.target.classList.contains('btn')) return
@@ -16,11 +14,9 @@ $(document).on('turbolinks:load', () => {
       }
     })
   }
-
 })
 
-if (!Turbolinks) {
-  location.reload()
-}
-
-Turbolinks.dispatch('turbolinks:load')
+$(document).on('turbolinks:before-cache', () => {
+  $('tr[data-controller]').off('click')
+  $('#otherClassroomTable').DataTable().destroy()
+})

@@ -39,7 +39,7 @@ RSpec.describe 'School admin views user list', type: :feature, js: true, default
     expect(page).to have_link('Confirm')
   end
 
-  it 'allows an admin to reset all passwords and save a list of username and passwords'do
+  it 'allows an admin to reset all passwords and save a list of username and passwords' do
     visit(users_path)
     click_button('Reset and print all passwords')
     find('#confirmAllPasswordResetTextbox').set(school.name)
