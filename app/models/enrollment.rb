@@ -33,7 +33,7 @@ class Enrollment < ApplicationRecord
         create_enrollment(classroom, student)
       end
 
-      classroom.update_attribute('disabled', classroom.enrollments.count.zero? ? true : false)
+      classroom.update_attribute('disabled', classroom.enrollments.exists? ? false : true)
     end
 
     def destroy_classroom_enrollments(classroom)

@@ -18,7 +18,7 @@ class TopicsController < ApplicationController
   end
 
   def destroy
-    return unless @topic.questions.count.zero?
+    return if @topic.questions.exists?
 
     authorize @topic
     @topic.destroy
