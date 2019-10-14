@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: [:set_role]
   before_action :authenticate_admin!, only: [:set_role]

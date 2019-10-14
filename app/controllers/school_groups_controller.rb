@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SchoolGroupsController < ApplicationController
   before_action :authenticate_admin!
   before_action :set_school_group, only: %i[show update destroy]
