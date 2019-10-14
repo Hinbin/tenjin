@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClassroomPolicy < ApplicationPolicy
   def show?
     user.employee? || user.school_admin?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuizPolicy < ApplicationPolicy
   def initialize(user, quiz)
     @user = user
