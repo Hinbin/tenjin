@@ -5,8 +5,9 @@ $(document).on('turbolinks:load', () => {
     // Show updated password
     $(document).on('ajax:success', (event) => {
       const response = event.detail[0]
-      $(`tr[data-id="${response.id}"] .reset-password`).replaceWith(`<div class="new-password">${response.password}</div>`)
-
+      let studentTable = $('#students-table').DataTable()
+      let oldCell = $(`tr[data-id="${response.id}"] .reset-password`).parent('td')
+      studentTable.cell(oldCell).data(`<div class="new-password">${response.password}</div>`).draw()
     })
   }
 
