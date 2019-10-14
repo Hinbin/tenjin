@@ -31,7 +31,7 @@ class Quiz::CheckAnswer
   end
 
   def check_short_answer
-    return unless @question.answers.count.positive?
+    return unless @question.answers.exists?
 
     correct_answer = @question.answers.first.text
     if @answer_given[:short_answer].casecmp(correct_answer).zero?
