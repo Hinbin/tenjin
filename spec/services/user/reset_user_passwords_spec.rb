@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe User::ResetUserPasswords do
   context 'when resetting the passwords for the whole school', default_creates: true do
     let(:reset_password) { Quiz::CreateQuiz.new(admin: school_admin).call }

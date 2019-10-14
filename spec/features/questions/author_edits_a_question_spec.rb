@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Author edits a question', type: :feature, js: true do
   include_context 'default_creates'
 

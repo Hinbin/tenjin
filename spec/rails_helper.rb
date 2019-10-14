@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Start code coverage
 require 'simplecov'
 SimpleCov.start 'rails'

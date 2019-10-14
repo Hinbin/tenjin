@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SessionHelpers
   def log_in
     sign_in student

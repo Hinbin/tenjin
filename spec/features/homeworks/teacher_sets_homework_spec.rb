@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Teacher sets homework', type: :feature, js: true, default_creates: true do
   let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
   let(:flatpickr_one_week_from_now) do
