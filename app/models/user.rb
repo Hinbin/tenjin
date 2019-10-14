@@ -46,10 +46,6 @@ class User < ApplicationRecord
     self.role ||= :student
   end
 
-  def self.user_from_upi(upi)
-    User.where(upi: upi).first
-  end
-
   def self.from_omniauth(auth)
     where(provider: auth['provider'], upi: auth['upi']).first
   end

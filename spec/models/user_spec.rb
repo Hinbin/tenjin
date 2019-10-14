@@ -2,22 +2,6 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe User, type: :model do
-  describe '#user_from_upi' do
-    context 'with a upi' do
-      let(:user) { create(:user, upi: '123456') }
-
-      it 'retrieves the correct user record' do
-        u = user
-        expect(User.user_from_upi('123456')).to eq(u)
-      end
-
-      it 'returns nil when an invalid upi is given' do
-        user
-        expect(User.user_from_upi('56789')).to eq(nil)
-      end
-    end
-  end
-
   describe '#from_wonde' do
     include_context 'api_data'
 

@@ -23,8 +23,4 @@ class Classroom < ApplicationRecord
     c.save
     c
   end
-
-  def self.classroom_from_client_id(client_id)
-    Classroom.where(client_id: client_id).first
-  end
 end
