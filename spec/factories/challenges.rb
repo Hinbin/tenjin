@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :challenge do
     challenge_type { Challenge.challenge_types.values.sample }
