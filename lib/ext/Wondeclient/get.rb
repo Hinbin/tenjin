@@ -20,4 +20,19 @@ class Wonde::Endpoints
     puts object if ENV['debug_wonde']
     object['data']
   end
+
+    # Forwards request info to unirest
+    #
+    # @param url [String]
+    # @return [Object]
+    def getUrl(url)
+      RestClient::Request.execute(
+        method: :get,
+        url: url,
+        headers: {
+          "Authorization" => "Bearer #{self.token}",
+          "User-Agent" => "wonde-rb-client-#{self.version}"
+        }
+      )
+    end
 end
