@@ -21,18 +21,18 @@ class Wonde::Endpoints
     object['data']
   end
 
-    # Forwards request info to unirest
-    #
-    # @param url [String]
-    # @return [Object]
-    def getUrl(url)
-      RestClient::Request.execute(
-        method: :get,
-        url: url,
-        headers: {
-          "Authorization" => "Bearer #{self.token}",
-          "User-Agent" => "wonde-rb-client-#{self.version}"
-        }
-      )
-    end
+  # Forwards request info to unirest
+  #
+  # @param url [String]
+  # @return [Object]
+  def getUrl(url)
+    RestClient::Request.execute(
+      method: :get,
+      url: url,
+      headers: {
+        'Authorization' => "Bearer #{token}",
+        'User-Agent' => "wonde-rb-client-#{version}"
+      }
+    )
+  end
 end
