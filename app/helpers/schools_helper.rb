@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SchoolsHelper
   def sync_status_icon(status)
     case status

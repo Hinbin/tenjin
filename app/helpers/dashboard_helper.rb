@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DashboardHelper
   def write_challenge_progress(challenge_progress)
     return '0%' if challenge_progress.nil?
