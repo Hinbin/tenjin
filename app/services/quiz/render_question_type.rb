@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Quiz::RenderQuestionType < ApplicationService
   def initialize(params)
     @question = params[:question]

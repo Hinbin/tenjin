@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
   def initialize; end
 

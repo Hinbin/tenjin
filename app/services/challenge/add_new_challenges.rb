@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Challenge::AddNewChallenges < ApplicationService
   def initialize(multiplier: 1, duration: 7.days)
     @subjects = Subject.all

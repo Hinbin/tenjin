@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Resets the passwords for a group of users, and returns their new passwords
 class User::ResetUserPasswords < ApplicationService
   def initialize(user, school = nil)

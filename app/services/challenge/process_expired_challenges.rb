@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Challenge::ProcessExpiredChallenges < ApplicationService
   def initialize
     @expired_challenges = Challenge.where('end_date < ?', Time.current)
