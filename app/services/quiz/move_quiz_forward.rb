@@ -1,5 +1,5 @@
 # Moves the quiz to the next question.  If finished, set quiz as inactive
-class Quiz::MoveQuizForward
+class Quiz::MoveQuizForward < ApplicationService
   def initialize(params)
     @quiz = params[:quiz]
   end
@@ -12,7 +12,7 @@ class Quiz::MoveQuizForward
   private
 
   def move_to_next_question
-    Challenge::UpdateChallengeProgress.new(@quiz, 'streak').call
+    Challenge::UpdateChallengeProgress.call(@quiz, 'streak')
 
     @quiz.num_questions_asked = @quiz.num_questions_asked + 1
     @quiz.save
@@ -22,8 +22,8 @@ class Quiz::MoveQuizForward
     return unless @quiz.num_questions_asked >= @quiz.questions.length
 
     @quiz.active = false
-    Challenge::UpdateChallengeProgress.new(@quiz, 'number_correct').call
-    Homework::UpdateHomeworkProgress.new(@quiz).call
+    Challenge::UpdateChallengeProgress.call(@quiz, 'number_correct')
+    Homework::UpdateHomeworkProgress.call(@quiz)
 
     @quiz.save
   end

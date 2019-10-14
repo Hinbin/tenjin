@@ -9,7 +9,7 @@ class QuizzesController < ApplicationController
 
   def index
     quizzes = policy_scope(Quiz)
-    redirect_to Quiz::SelectCorrectQuiz.new(quizzes: quizzes).call
+    redirect_to Quiz::SelectCorrectQuiz.call(quizzes: quizzes)
   end
 
   def show
@@ -18,7 +18,7 @@ class QuizzesController < ApplicationController
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     calculate_percent_completed
     @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
-    return render Quiz::RenderQuestionType.new(question: @question).call if @quiz.active?
+    return render Quiz::RenderQuestionType.call(question: @question) if @quiz.active?
     
     percent_correct = calculate_percent_correct
 
@@ -49,7 +49,7 @@ class QuizzesController < ApplicationController
   def create
     return select_quiz_topic if @topic.blank?
 
-    result = Quiz::CreateQuiz.new(user: current_user, topic: @topic, subject: @subject).call
+    result = Quiz::CreateQuiz.call(user: current_user, topic: @topic, subject: @subject)
     result.success? ? authorize(result.quiz) : authorize(current_user, :show?, policy_class: UserPolicy)
     return fail_quiz_creation(result) unless result.success?
 
@@ -60,7 +60,7 @@ class QuizzesController < ApplicationController
 
   def update
     authorize @quiz
-    render(json: Quiz::CheckAnswer.new(quiz: @quiz, question: @question, answer_given: answer_params).call)
+    render(json: Quiz::CheckAnswer.call(quiz: @quiz, question: @question, answer_given: answer_params))
   end
 
   private

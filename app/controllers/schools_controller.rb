@@ -14,7 +14,7 @@ class SchoolsController < ApplicationController
   end
 
   def create
-    @school = School::AddSchool.new(school_params).call
+    @school = School::AddSchool.call(school_params)
     if @school.persisted?
       authorize @school
       redirect_to @school
@@ -41,7 +41,7 @@ class SchoolsController < ApplicationController
 
   def reset_all_passwords
     authorize current_user.school
-    @result = User::ResetUserPasswords.new(current_user).call
+    @result = User::ResetUserPasswords.call(current_user)
     if @result.success?
       @students = policy_scope(User).where(role: 'student').includes(enrollments: :classroom)
       @employees = policy_scope(User).where(role: 'employee')

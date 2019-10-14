@@ -1,4 +1,4 @@
-class Leaderboard::BroadcastLeaderboardPoint
+class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
   def initialize(topic_score)
     @subject = topic_score.subject
     @user = topic_score.user

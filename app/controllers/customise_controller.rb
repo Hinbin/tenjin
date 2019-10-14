@@ -15,7 +15,7 @@ class CustomiseController < ApplicationController
     @customisation = Customisation.where('customisation_type = ? AND value = ?',
                                          Customisation.customisation_types[customisation_params[:type]], 
                                          customisation_params[:value]).first
-    result = Customisation::BuyCustomisation.new(current_user, @customisation).call
+    result = Customisation::BuyCustomisation.call(current_user, @customisation)
     flash_notice(result)
 
     redirect_to dashboard_path

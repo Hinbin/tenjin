@@ -1,4 +1,4 @@
-class Homework::UpdateHomeworkProgress
+class Homework::UpdateHomeworkProgress < ApplicationService
   def initialize(quiz)
     @quiz = quiz
     @homework_progresses = HomeworkProgress.includes(:homework).where(user: @quiz.user)
