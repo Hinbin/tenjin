@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -90,8 +92,10 @@ class User < ApplicationRecord
     end
 
     def generate_username(u)
-      u.username = u.forename[0].downcase + u.surname.downcase + u.upi[0..3]
-      u.username = u.username + '1' while User.where(username: u.username).count.positive?
+      u.forename.strip[0].downcase.tap do |str|
+        str << u.surname.strip.downcase << u.upi[0..3]
+        str.next! while User.where(username: str).exists?
+      end
     end
 
     def initialize_user(user, role, school)
@@ -104,7 +108,7 @@ class User < ApplicationRecord
       u.surname = user.surname
       u.challenge_points = 0 if user.challenge_points.blank?
       u.disabled = false
-      generate_username(u) if u.new_record? || u.username.blank?
+      u.username = generate_username(u) if u.new_record? || u.username.blank?
       u
     end
   end

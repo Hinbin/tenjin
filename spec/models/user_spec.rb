@@ -54,7 +54,8 @@ RSpec.describe User, type: :model do
         classroom_api_data.students = duplicate_user_api_data
         User.from_wonde(school_api_data, classroom_api_data, classroom)
         u = duplicate_user_api_data.data[1]
-        expect(User.second.username).to eq(u.forename[0].downcase + u.surname.downcase + u.upi[0..3] + '1')
+        expect(User.second.username)
+          .to start_with(u.forename[0].downcase + u.surname.downcase)
       end
 
       it 'does not update a username if the record already exists' do
