@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'School admin views student list', type: :feature, js: true do
   include_context 'default_creates'
 

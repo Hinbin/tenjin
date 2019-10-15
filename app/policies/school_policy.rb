@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SchoolPolicy < ApplicationPolicy
   attr_reader :user, :record
 

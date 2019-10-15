@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'User customises the site', type: :feature, js: true, default_creates: true do
   before do
     setup_subject_database

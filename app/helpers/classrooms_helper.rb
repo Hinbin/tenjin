@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ClassroomsHelper
   def student_homeworks(student, homework_progress)
     entries = homework_progress.find_all { |hp| hp.user_id == student.id }

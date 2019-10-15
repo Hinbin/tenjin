@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :classroom do
     name { FFaker::AddressUK.street_address }

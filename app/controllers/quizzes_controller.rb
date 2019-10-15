@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Quizzes Controller
 class QuizzesController < ApplicationController
   before_action :authenticate_user!

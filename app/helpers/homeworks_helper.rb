@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HomeworksHelper
   def report_progress(homework_progress)
     completed = homework_progress.where(completed: true).count

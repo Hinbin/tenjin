@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Finds the correct quiz for a user if multiple quizzes have been created.
 class Quiz::SelectCorrectQuiz < ApplicationService
   def initialize(params)

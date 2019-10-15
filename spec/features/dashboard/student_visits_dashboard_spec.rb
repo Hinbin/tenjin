@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default_creates: true do
   before do
     setup_subject_database

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PagesHelper
   # Add devise helpers for login modal
   def resource_name

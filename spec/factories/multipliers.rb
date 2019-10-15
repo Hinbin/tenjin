@@ -1,3 +1,5 @@
+# frozen_string_literal: trues
+
 FactoryBot.define do
   factory :multiplier do
     score { 0 }

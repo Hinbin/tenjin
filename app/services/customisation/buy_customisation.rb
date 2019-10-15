@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customisation::BuyCustomisation < ApplicationService
   def initialize(user, customisation)
     @user = user
