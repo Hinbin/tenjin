@@ -23,8 +23,9 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
   end
 
   context 'with a school group' do
+    let(:second_student) { create(:student, school: second_school) }
     let(:second_school) { create(:school, school_group: school.school_group) }
-    let(:topic_score_same_school_group) {create(:topic_score, score: 100, topic: topic, school: second_school) }
+    let(:topic_score_same_school_group) { create(:topic_score, score: 100, topic: topic, user: second_student) }
     let(:student_same_school) { create(:student, school: school )}
     let(:enrollment_different_classroom) do 
       create(:enrollment, 
@@ -37,22 +38,23 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
       second_school
       enrollment_different_classroom
       sign_in teacher
+      topic_score_same_school_group
       visit(leaderboard_path(subject.name))
       find(:css, '#leaderboardTable tbody tr:nth-child(10)')
-      find(:css, '#toggleLive').click
+      find(:css, '#toggleLive label', visible: false).click
     end
 
     it 'shows updates from own school only by default' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
-      expect(page).to have_no_css('.score-changed')
+      expect(page).to have_no_css('#leaderboardTable tbody tr')
     end
 
     it 'shows updates from other schools when selected' do
-      click_button('Select School')
+      topic_score_same_school_group.update_attribute('score', 110)
+      click_button(school.name)
       click_button('All')
-      find(:css, 'table#leaderboardTable tbody tr:nth-child(2)')
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
-      expect(page).to have_css('.score-changed')
+      expect(page).to have_css("#leaderboardTable tbody tr td#score-#{topic_score_same_school_group.user.id}", exact_text: 10)
     end
 
     it 'allows you to filter by class' do
@@ -64,9 +66,9 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
 
     it 'allows you to filter by school' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
-      click_button('Select School')
+      click_button(school.name)
       click_button(topic_score_same_school_group.user.school.name)
-      expect(page).to have_css('.score-changed').and have_css('tbody tr', count: 1)
+      expect(page).to have_css('tbody tr', count: 1)
     end
   end
 

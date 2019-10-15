@@ -36,12 +36,12 @@ export default class Entry extends React.Component {
 
     let contextualRow
     if (checkSchoolFilter.length > 0) {
-      contextualRow = <td className='d-none d-lg-block' id={id + '-schools'}>{this.props.school_name}</td>
+      contextualRow = <td className='d-none d-lg-block' id={id + 'schools-'}>{this.props.school_name}</td>
     } else {
       const classroomNames = this.props.classroom_names
       let classrooms = ''
       if (classroomNames && classroomNames.length > 0) { classrooms = classroomNames.join(', ') }
-      contextualRow = <td className='d-none d-lg-block' id={id + '-classrooms'}>{classrooms}</td>
+      contextualRow = <td className='d-none d-lg-block' id={id + 'classrooms-'}>{classrooms}</td>
     }
 
     let icon
@@ -52,12 +52,12 @@ export default class Entry extends React.Component {
 
     return (
       <tr id={'row-' + id} className={classNames.join(' ')}>
-        <td id={id + '-pos'}>{this.props.position}</td>
-        <td id={id + '-awards'}>{this.getAwards()}</td>
-        <td id={id + '-name'}>{this.props.name}</td>
-        <td id={id + '-icon'}>{icon}</td>
+        <td id={'pos-' + id}>{this.props.position}</td>
+        <td id={'icon-' + id}>{icon}</td>
+        <td id={'name-' + id}>{this.props.name}</td>
+        <td id={'awards-' + id}>{this.getAwards()}</td>
         {contextualRow}
-        <td id={id + '-score'}>{this.props.score}</td>
+        <td id={'score-' + id}>{this.props.score}</td>
       </tr>
     )
   }

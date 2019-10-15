@@ -82,7 +82,12 @@ class LiveLeaderboardStore extends EventEmitter {
       leaderboard[userData.id] = { ...userData }
     }
 
-    this.allTime ? this.allTimeLeaderboard = leaderboard : this.weeklyLeaderboard = leaderboard
+    if (this.allTime) {
+      this.allTimeLeaderboard = leaderboard
+    } else {
+      this.weeklyLeaderboard = leaderboard
+      this.initialLeaderboard = this.weeklyLeaderboard
+    }
 
     this.awards = result.awards
     this.name = result.name
@@ -206,8 +211,7 @@ class LiveLeaderboardStore extends EventEmitter {
       this.currentFilters = this.currentFilters.filter((filter) => {
         return filter.name === 'Schools'
       })
-      if (!this.allSchoolsLoaded && !this.live) {
-
+      if (!this.allSchoolsLoaded) {
         this.loadLeaderboard(true)
         this.allSchoolsLoaded = true
       }
@@ -233,8 +237,9 @@ class LiveLeaderboardStore extends EventEmitter {
     }
 
     let score = data.subject_score
+
     if (this.live && this.initialLeaderboard[id]) {
-        score = score - this.initialLeaderboard[id].score
+      score = score - this.initialLeaderboard[id].score
     }
 
     // Get all the user details from the change object, but replace the score with the "live score"
@@ -281,12 +286,16 @@ class LiveLeaderboardStore extends EventEmitter {
         this.emit('change')
         break
       }
-      case 'LEADERBOARD_LIVE_TOGGLE' : {
+      case 'LEADERBOARD_LIVE_TOGGLE': {
         this.live = !this.live
         if (this.live) {
           this.showAll = true
           this.allTime = false
-          this.initialLeaderboard = this.weeklyLeaderboard
+          if (this.schools.length > 1) {
+            this.leaderboardFilterChange({ name: 'Schools', option: this.user.school })
+          } else {
+            this.initialLeaderboard = this.weeklyLeaderboard            
+          }
           this.currentLeaderboard = {}
         } else {
           this.processScores()
