@@ -85,9 +85,17 @@ RSpec.describe 'School admin views user list', type: :feature, js: true, default
     expect(page).to have_css('.employee-row', count: 2)
   end
 
-  it 'resets a password and then shows the result' do
+  it 'resets a student password and then shows the result' do
     visit(users_path)
     within '#students-table' do
+      click_link('Reset Password')
+      expect(page).to have_no_link('Reset Password').and have_css('.new-password')
+    end
+  end
+
+  it 'resets an employee password and then shows the result' do
+    visit(users_path)
+    within '#employees-table' do
       click_link('Reset Password')
       expect(page).to have_no_link('Reset Password').and have_css('.new-password')
     end

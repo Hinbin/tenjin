@@ -4,9 +4,9 @@ $(document).on('turbolinks:load', () => {
     // Show updated password
     $(document).on('ajax:success', (event) => {
       const response = event.detail[0]
-      let studentTable = $('#students-table').DataTable()
+      let table = $(`tr[data-id="${response.id}"] .reset-password`).closest('table').DataTable()
       let oldCell = $(`tr[data-id="${response.id}"] .reset-password`).parent('td')
-      studentTable.cell(oldCell).data(`<div class="new-password">${response.password}</div>`).draw()
+      table.cell(oldCell).data(`<div class="new-password">${response.password}</div>`).draw()
     })
   }
 
