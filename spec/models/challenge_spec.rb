@@ -6,8 +6,8 @@ RSpec.describe Challenge, type: :model do
   let(:subject) { create(:subject) }
   let(:topic) { create(:topic, subject: subject) }
   let(:different_subject_topic) { create(:topic) }
-  let(:challenge_one) { Challenge.create_challenge(topic.subject) }
-  let(:challenge_two) { Challenge.create_challenge(topic.subject) }
+  let(:challenge_one) { described_class.create_challenge(topic.subject) }
+  let(:challenge_two) { described_class.create_challenge(topic.subject) }
   let(:challenge_full_marks) do
     create(:challenge, topic: topic, challenge_type: 'number_correct',
                        number_required: 10, end_date: Time.now + 1.hour)
@@ -15,11 +15,11 @@ RSpec.describe Challenge, type: :model do
 
   describe '#create_challenge' do
     it 'creates a new challenge for a given subject' do
-      expect(Challenge.create_challenge(topic.subject).topic.subject).to eq(subject)
+      expect(described_class.create_challenge(topic.subject).topic.subject).to eq(subject)
     end
 
     it 'has the default length of a week' do
-      expect(Challenge.create_challenge(topic.subject).end_date).to be_within(1.second).of(Time.now + 1.week)
+      expect(described_class.create_challenge(topic.subject).end_date).to be_within(1.second).of(Time.now + 1.week)
     end
 
     it 'is created with a random type when one not given' do
@@ -33,24 +33,24 @@ RSpec.describe Challenge, type: :model do
 
     it 'allows me to specify a point multiplier' do
       srand(1)
-      expect(Challenge.create_challenge(topic.subject, multiplier: 2).points).to eq(20)
+      expect(described_class.create_challenge(topic.subject, multiplier: 2).points).to eq(20)
     end
 
     it 'allows me to specify a duration' do
       srand(1)
-      expect(Challenge.create_challenge(topic.subject, duration: 3.days).end_date)
+      expect(described_class.create_challenge(topic.subject, duration: 3.days).end_date)
         .to be_within(1.second).of(Time.now + 3.days)
     end
 
     it 'allows me to specify a duration in hours' do
       srand(1)
-      expect(Challenge.create_challenge(topic.subject, duration: 36.hours).end_date)
+      expect(described_class.create_challenge(topic.subject, duration: 36.hours).end_date)
         .to be_within(1.second).of(Time.now + 36.hours)
     end
 
     it 'defaults to a multiplier of x1' do
       srand(1)
-      expect(Challenge.create_challenge(topic.subject).points).to eq(10)
+      expect(described_class.create_challenge(topic.subject).points).to eq(10)
     end
   end
 
