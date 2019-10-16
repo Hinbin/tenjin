@@ -13,4 +13,3 @@ class ClassroomWinner < ApplicationRecord
     errors[:base] << 'Classroom school does not match user school'
   end
 end
-

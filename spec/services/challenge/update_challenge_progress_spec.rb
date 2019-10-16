@@ -3,13 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
-
   context 'when updating a number correct challenge' do
     before do
       challenge_full_marks
     end
 
-    let(:student) { create(:student, challenge_points: 0 ) }
+    let(:student) { create(:student, challenge_points: 0) }
 
     let(:quiz_full_marks) do
       create(:quiz, subject: subject, topic: topic, num_questions_asked: 10,
@@ -72,7 +71,7 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
   end
 
   context 'when updating a 5 streak challenge' do
-    let(:student) { create(:student, challenge_points: 0 )}
+    let(:student) { create(:student, challenge_points: 0) }
     let(:quiz_streak_of_five) { create(:quiz, subject: subject, user: student, topic: topic, streak: 5) }
     let(:quiz_streak_of_three) { create(:quiz, subject: subject, user: student, topic: topic, streak: 3) }
     let(:challenge_streak_of_five) do

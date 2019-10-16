@@ -17,5 +17,4 @@ class AdminsController < ApplicationController
   def become_admin_params
     params.require(:user_id)
   end
-
 end

@@ -74,7 +74,7 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
 
       it 'allows you to buy a previously bought customisation at no cost' do
         visit(customise_path)
- 
+
         find('button#buy-dashboard-' + dashboard_customisation.value).click
         expect { student.reload }.to change(student, :challenge_points).by(0)
       end
@@ -93,7 +93,6 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
       icon_customisation
       student.update_attribute(:challenge_points, 1000)
       visit(customise_path)
-
     end
 
     it 'shows what icons are available to purchase' do
@@ -110,5 +109,4 @@ RSpec.describe 'User customises the site', type: :feature, js: true, default_cre
       expect(page).to have_css('td i.fa-star', style: 'color: black;')
     end
   end
-
 end

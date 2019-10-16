@@ -9,5 +9,4 @@ RSpec.describe 'School admin views student list', type: :feature, js: true do
     create_list(:student, 5, school: school)
     create_list(:teacher, 2, school: school)
   end
-
 end

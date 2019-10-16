@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe 'School admin views a student record', type: :feature, js: true, default_creates: true do
-
   before do
     setup_subject_database
   end
@@ -40,5 +39,5 @@ RSpec.describe 'School admin views a student record', type: :feature, js: true, 
     sign_in student
     visit(user_path(student))
     expect(page).to have_button('Update Password')
-  end 
+  end
 end

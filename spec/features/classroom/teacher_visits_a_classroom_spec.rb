@@ -26,7 +26,7 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
 
     it 'allows me to create a homework' do
       click_link('Set Homework')
-      expect(page).to have_current_path(new_homework_path(classroom: {classroom_id: classroom.id}))
+      expect(page).to have_current_path(new_homework_path(classroom: { classroom_id: classroom.id }))
     end
 
     it 'takes me to a homework that I have clicked on' do
@@ -70,7 +70,7 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
         visit(classroom_path(classroom))
         click_link('Set Homework')
         page.go_back
-        expect{ page.accept_alert }.to raise_error(Capybara::ModalNotFound)
+        expect { page.accept_alert }.to raise_error(Capybara::ModalNotFound)
       end
 
       it 'paginates the number of homeworks, 5 per page' do
@@ -119,7 +119,5 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
     expect(page).to have_css('input[type="search"]', count: 1)
   end
 
-  it 'produces a csv file with updated passwords in' 
-
-
+  it 'produces a csv file with updated passwords in'
 end

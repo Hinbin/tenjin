@@ -5,7 +5,6 @@ require 'support/api_data'
 require 'pry'
 
 RSpec.describe 'User views an updating leaderboard', type: :feature, default_creates: true, js: true do
-
   before do
     setup_subject_database
     student_topic_score
@@ -28,10 +27,10 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
     let(:second_student) { create(:student, school: second_school) }
     let(:second_school) { create(:school, school_group: school.school_group) }
     let(:topic_score_same_school_group) { create(:topic_score, score: 100, topic: topic, user: second_student) }
-    let(:student_same_school) { create(:student, school: school )}
-    let(:enrollment_different_classroom) do 
-      create(:enrollment, 
-             user: student_same_school, 
+    let(:student_same_school) { create(:student, school: school) }
+    let(:enrollment_different_classroom) do
+      create(:enrollment,
+             user: student_same_school,
              classroom: create(:classroom, subject: subject, school: school))
     end
     let(:topic_score_different_classroom) { create(:topic_score, score: 100, topic: topic, user: student_same_school) }

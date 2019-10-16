@@ -31,10 +31,10 @@ class ApplicationController < ActionController::Base
   def find_dashboard_style
     style = ActiveCustomisation.joins(:customisation)
                                .find_by(user: current_user,
-                                      customisations: { customisation_type: 'dashboard_style' })
+                                        customisations: { customisation_type: 'dashboard_style' })
     style.present? ? style.customisation.value : 'red'
   end
-  
+
   def pundit_user
     admin_signed_in? ? current_admin : current_user
   end

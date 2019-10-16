@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe 'User changes leaderboard options', type: :feature, js: true, default_creates: true do
-
   before do
     setup_subject_database
     sign_in student
@@ -133,7 +132,7 @@ RSpec.describe 'User changes leaderboard options', type: :feature, js: true, def
     let(:topic_score_different_classroom) { create(:topic_score, user: second_student, subject: subject) }
     let(:different_school_same_classroom_name) { create(:classroom, name: second_classroom.name, school: second_school) }
     let(:different_school_enrollment) { create(:enrollment, classroom: different_school_same_classroom_name) }
-    let(:different_school_topic_score) { create(:topic_score, subject: subject, user: different_school_enrollment.user)}
+    let(:different_school_topic_score) { create(:topic_score, subject: subject, user: different_school_enrollment.user) }
     let(:same_name_different_school) do
       different_school_enrollment
       different_school_topic_score

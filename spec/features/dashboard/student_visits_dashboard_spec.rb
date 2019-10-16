@@ -109,7 +109,6 @@ RSpec.describe 'Student visits the dashboard', type: :feature, js: true, default
 
   context 'when looking at homeworks' do
     let(:homework_future) { create(:homework, due_date: Time.now + 8.days, classroom: classroom) }
-    
 
     before do
       homework

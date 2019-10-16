@@ -107,7 +107,7 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
       sync_school_with_wonde
       expect(User.where(upi: student_upi).first.challenge_points).to eq(50)
     end
-  end 
+  end
 
   context 'with a new teacher assigned to classroom' do
     before do
@@ -133,7 +133,6 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
     end
 
     it 'updates employee details' do
-
       expect(User.where(upi: employee_upi).first.forename).to eq(employee_name)
     end
   end

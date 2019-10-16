@@ -86,5 +86,4 @@ class SchoolsController < ApplicationController
   def reset_all_password_params
     params.permit(:reset_all)
   end
-
 end

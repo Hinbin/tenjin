@@ -14,7 +14,7 @@ class SchoolGroupsController < ApplicationController
     render :show
   end
 
-  def show 
+  def show
     authorize @school_group
   end
 
@@ -49,5 +49,4 @@ class SchoolGroupsController < ApplicationController
   def school_group_params
     params.require(:school_group).permit(:name)
   end
-
 end

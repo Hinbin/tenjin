@@ -135,7 +135,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
-  config.after :each, :js  do
+  config.after :each, :js do
     errors = page.driver.browser.manage.logs.get(:browser)
     if errors.present?
       aggregate_failures 'javascript errrors' do

@@ -35,5 +35,4 @@ class ClassroomsController < ApplicationController
   def update_classroom_params
     params.permit(:subject, :id)
   end
-
 end

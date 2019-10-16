@@ -127,7 +127,7 @@ RSpec.describe Leaderboard::BuildLeaderboard do
     let(:call) { described_class.new(student, id: subject.name, all_time: 'true').call }
 
     it 'takes data from the all time topic scores' do
-      create(:all_time_topic_score, user: student, topic: topic)  
+      create(:all_time_topic_score, user: student, topic: topic)
       expect(call.first.score).to eq(AllTimeTopicScore.all.sum(:score))
     end
   end

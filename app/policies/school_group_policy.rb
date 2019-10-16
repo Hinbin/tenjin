@@ -33,5 +33,4 @@ class SchoolGroupPolicy < ApplicationPolicy
   def destroy?
     user.super?
   end
-
 end

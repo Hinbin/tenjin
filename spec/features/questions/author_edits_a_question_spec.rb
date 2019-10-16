@@ -63,7 +63,6 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
   end
 
   context 'when visiting the topic index page' do
-
     before do
       question
       visit(questions_path)
@@ -84,7 +83,6 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
       click_link(question.question_text.to_plain_text)
       expect(page).to have_current_path(question_path(question))
     end
-
   end
 
   context 'when visiting the subject index page' do
