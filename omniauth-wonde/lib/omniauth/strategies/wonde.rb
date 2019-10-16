@@ -6,7 +6,7 @@ module OmniAuth::Strategies
     # Give your strategy a name.
     option :name, 'wonde'
 
-    GRAPHQL_URI = 'https://api.wonde.com/graphql/me'.freeze
+    GRAPHQL_URI = 'https://api.wonde.com/graphql/me'
 
     # This is where you pass the options you would pass when
     # initializing your consumer from the OAuth gem.
