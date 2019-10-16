@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChallengeProgress < ApplicationRecord
   belongs_to :challenge
   belongs_to :user
