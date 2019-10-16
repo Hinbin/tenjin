@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/wondeltd/ruby-client.git
-  revision: e69c47021e35a0b9783fedefea33b99e3ff02904
+  revision: 6e84e61dc93f1e0cbbff493029d085129d549d5f
   specs:
-    wondeclient (0.0.8)
+    wondeclient (0.1.2)
       addressable (~> 2.3.5)
       rest-client (~> 2.0.0)
 
@@ -224,7 +224,7 @@ GEM
     method_source (0.9.2)
     mime-types (3.3)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.0904)
+    mime-types-data (3.2019.1009)
     mimemagic (0.3.3)
     mini_magick (4.9.5)
     mini_mime (1.0.2)
