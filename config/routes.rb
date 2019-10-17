@@ -44,10 +44,6 @@ Rails.application.routes.draw do
     root to: 'dashboard#show', as: :authenticated_root
   end
 
-  authenticate :admin, -> (admin) { admin.super? } do
-    mount PgHero::Engine, at: "pghero"
-  end
-
   # if routing the root path, update for your controller
   root to: 'pages#show', id: 'home'
 end
