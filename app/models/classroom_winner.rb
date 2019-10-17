@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClassroomWinner < ApplicationRecord
   belongs_to :classroom
   belongs_to :user

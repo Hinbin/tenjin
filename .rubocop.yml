@@ -19,7 +19,8 @@ Style/ClassAndModuleChildren:
   EnforcedStyle: compact
 
 Style/FrozenStringLiteralComment:
-  Enabled: false
+  Exclude:
+    - 'lib/ext/Wondeclient/**/*.rb'
 
 Metrics/LineLength:
   Max: 120  

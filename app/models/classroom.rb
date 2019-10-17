@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Classroom < ApplicationRecord
   belongs_to :subject, optional: true
   belongs_to :school
