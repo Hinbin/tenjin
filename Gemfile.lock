@@ -270,9 +270,6 @@ GEM
     parser (2.6.5.0)
       ast (~> 2.4.0)
     pg (1.1.4)
-    pg_query (1.1.0)
-    pghero (2.3.0)
-      activerecord (>= 5)
     popper_js (1.14.5)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -501,8 +498,6 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-wonde!
   pg (>= 0.18, < 2.0)
-  pg_query (>= 0.9.0)
-  pghero
   pry-rails
   puma (~> 3.11)
   pundit
