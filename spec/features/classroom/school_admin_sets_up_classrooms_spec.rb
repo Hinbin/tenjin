@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe 'School admin sets up classrooms', type: :feature, js: true, default_creates: true do
-
   context 'when configuring classrooms' do
     let(:classroom) { create(:classroom, school: school) }
     let(:subject) { create(:subject) }
@@ -29,12 +28,11 @@ RSpec.describe 'School admin sets up classrooms', type: :feature, js: true, defa
       expect(page).to have_css('a', text: 'Setup Classrooms')
     end
 
-    it 'tells me when I need to sync the school'do
+    it 'tells me when I need to sync the school' do
       subject
       visit(classrooms_path)
       select subject.name, from: 'subject'
       expect(page).to have_content('School sync required. Click here to start')
     end
-
   end
 end

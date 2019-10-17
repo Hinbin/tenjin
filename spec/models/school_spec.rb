@@ -13,7 +13,7 @@ RSpec.describe School, type: :model do
   it { is_expected.to validate_presence_of(:token) }
 
   describe '#from_wonde' do
-    let(:school) { School.from_wonde(OpenStruct.new(id: '1234', name: 'test'), 'token') }
+    let(:school) { described_class.from_wonde(OpenStruct.new(id: '1234', name: 'test'), 'token') }
 
     it 'Adds a school from a wonde object' do
       expect(school.persisted?).to be true

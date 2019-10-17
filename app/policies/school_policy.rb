@@ -33,7 +33,7 @@ class SchoolPolicy < ApplicationPolicy
   def update?
     user.super?
   end
-  
+
   def sync?
     user.school_admin? && user.school == record
   end

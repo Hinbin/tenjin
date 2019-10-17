@@ -14,5 +14,4 @@ class ClassroomPolicy < ApplicationPolicy
       scope.where(school: user.school)
     end
   end
-
 end

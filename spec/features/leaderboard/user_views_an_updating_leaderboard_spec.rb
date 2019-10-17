@@ -7,7 +7,6 @@ require 'pry'
 RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
   include_context 'default_creates'
 
-
   let(:new_entry) { create(:topic_score, topic: topic, school: school, score: 11) }
 
   before do

@@ -103,7 +103,6 @@ class Leaderboard::BuildLeaderboard < ApplicationService
     @query = @query.join(awards_subquery, Arel::Nodes::OuterJoin)
                    .on(awards_subquery[:user_id].eq(users[:id]))
     @query.group('n3.awards')
-
   end
 
   def users_and_schools
