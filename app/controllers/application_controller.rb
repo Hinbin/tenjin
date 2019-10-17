@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    added_attrs = [:username, :email, :password, :password_confirmation, :remember_me, :school_id]
+    added_attrs = %i[username email password password_confirmation remember_me school_id]
     devise_parameter_sanitizer.permit :sign_up, keys: added_attrs
     devise_parameter_sanitizer.permit :account_update, keys: added_attrs
   end
@@ -31,10 +31,10 @@ class ApplicationController < ActionController::Base
   def find_dashboard_style
     style = ActiveCustomisation.joins(:customisation)
                                .find_by(user: current_user,
-                                      customisations: { customisation_type: 'dashboard_style' })
+                                        customisations: { customisation_type: 'dashboard_style' })
     style.present? ? style.customisation.value : 'red'
   end
-  
+
   def pundit_user
     admin_signed_in? ? current_admin : current_user
   end

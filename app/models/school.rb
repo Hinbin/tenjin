@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class School < ApplicationRecord
   has_many :users
   belongs_to :school_group, optional: true

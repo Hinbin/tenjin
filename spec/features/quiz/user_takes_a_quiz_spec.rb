@@ -62,7 +62,7 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
     end
 
     context 'when flagging unfair questions' do
-      let(:flagged_question) { create(:flagged_question, user: student, question: question)}
+      let(:flagged_question) { create(:flagged_question, user: student, question: question) }
 
       it 'shows an option to flag a problem with a question' do
         expect(page).to have_css('i.fa-flag')

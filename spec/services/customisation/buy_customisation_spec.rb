@@ -55,7 +55,6 @@ RSpec.describe Customisation::BuyCustomisation do
       described_class.new(student, customisation).call
       expect(CustomisationUnlock.where(customisation: customisation).count).to eq(1)
     end
-
   end
 
   context 'when moving from the default customisation' do

@@ -193,7 +193,6 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
   end
 
   context 'when showing weekly winners' do
-
     it 'shows last weeks winner for the classroom' do
       create(:classroom_winner, user: student, classroom: classroom, score: 100)
       visit(leaderboard_path(subject.name))
@@ -201,6 +200,5 @@ RSpec.describe 'User views the leaderboard', type: :feature, js: true do
       click_button(classroom.name)
       expect(page).to have_content("#{classroom.name} winner: #{student.forename}")
     end
-
   end
 end

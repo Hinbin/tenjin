@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClassroomWinner < ApplicationRecord
   belongs_to :classroom
   belongs_to :user
@@ -13,4 +15,3 @@ class ClassroomWinner < ApplicationRecord
     errors[:base] << 'Classroom school does not match user school'
   end
 end
-

@@ -15,7 +15,7 @@ class CustomiseController < ApplicationController
   def update
     authorize current_user, :show?
     @customisation = Customisation.where('customisation_type = ? AND value = ?',
-                                         Customisation.customisation_types[customisation_params[:type]], 
+                                         Customisation.customisation_types[customisation_params[:type]],
                                          customisation_params[:value]).first
     result = Customisation::BuyCustomisation.call(current_user, @customisation)
     flash_notice(result)

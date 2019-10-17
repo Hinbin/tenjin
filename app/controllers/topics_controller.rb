@@ -41,5 +41,4 @@ class TopicsController < ApplicationController
   def new_topic_params
     params.require(:subject).permit(:subject_id)
   end
-
 end

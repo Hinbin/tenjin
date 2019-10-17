@@ -34,7 +34,7 @@ class LeaderboardController < ApplicationController
 
   def build_leaderboard
     @entries = Leaderboard::BuildLeaderboard.call(current_user,
-                                                 leaderboard_params)
+                                                  leaderboard_params)
     @awards = LeaderboardAward.where(school: current_user.school, subject: @subject).group(:user_id).count
     @classrooms = Classroom.where(school: current_user.school, subject: @subject)
     set_subject_or_topic_name
