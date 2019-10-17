@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Super manages a school', type: :feature, js: true, default_creates: true do
 
   context 'when logging in' do

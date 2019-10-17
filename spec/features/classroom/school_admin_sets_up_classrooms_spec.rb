@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'School admin sets up classrooms', type: :feature, js: true, default_creates: true do
 
   context 'when configuring classrooms' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module QuestionsHelper
   def flag_icon
     if @flagged_question.present? && @flagged_question.persisted?

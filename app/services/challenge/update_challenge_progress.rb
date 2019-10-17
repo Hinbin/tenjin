@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Challenge::UpdateChallengeProgress < ApplicationService
   def initialize(quiz, challenge_type, number_to_add = 0, question_topic = nil)
     @quiz = quiz

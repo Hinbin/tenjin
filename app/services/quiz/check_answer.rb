@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Quiz::CheckAnswer < ApplicationService
   def initialize(params)
     @quiz = params[:quiz]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :quiz do
     time_last_answered { rand(5).minute.ago }

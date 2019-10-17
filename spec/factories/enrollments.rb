@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   ## TODO - make the school be the same for the classroom and the user
   factory :enrollment do

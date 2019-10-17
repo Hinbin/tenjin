@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SchoolsController < ApplicationController
   before_action :authenticate_admin!, only: %i[index new create update show]
   before_action :authenticate_user!, only: %i[sync]

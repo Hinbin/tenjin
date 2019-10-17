@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'default_creates', shared_context: :metadata do
   let(:subject) { create(:subject) }
   let(:topic) { create(:topic, subject: subject) }

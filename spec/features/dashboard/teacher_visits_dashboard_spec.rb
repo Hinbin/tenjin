@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Teacher visits the dashboard', type: :feature, js: true, default_creates: true do
   let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
   let(:other_classroom) { create(:classroom, school: school) }

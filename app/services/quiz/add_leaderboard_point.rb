@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Quiz::AddLeaderboardPoint < ApplicationService
   def initialize(params)
     @quiz = params[:quiz]

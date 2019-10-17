@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Homework::UpdateHomeworkProgress < ApplicationService
   def initialize(quiz)
     @quiz = quiz

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FlaggedQuestionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_flagged_question, only: [:destroy]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :weekly_reset do
   desc 'Resetting weekly leaderboard'
   task leaderboard: :environment do

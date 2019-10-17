@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Creates a Quiz session object and initialises it appropriately
 class Quiz::CreateQuiz < ApplicationService
   def initialize(params)

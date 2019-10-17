@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :challenges do
   desc 'Removing old challenges'
   task remove_challenges: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
