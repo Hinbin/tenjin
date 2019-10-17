@@ -12,6 +12,7 @@ gem 'rails', '~> 6.0.0'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 gem 'rack-timeout'
+gem 'sprockets', '3.7.2' # Fix at 3.7.2 as 4.0.0 as issues with sassc compilation
 
 
 gem 'delayed_job_active_record'
@@ -79,6 +80,13 @@ group :development do
   # Help with n+1 queries
   gem 'bullet'
 
+  # Performance testing
+  gem 'derailed_benchmarks'
+  gem 'rack-mini-profiler'  
+  gem 'flamegraph'
+  gem 'stackprof'
+  gem 'memory-profiler'
+
 end
 
 group :test do
@@ -137,10 +145,8 @@ gem 'best_in_place'
 # Use Amazon S3 for Active Storage
 gem 'aws-sdk-s3'
 
-# Gems to track usage and performance
-gem 'pghero'
-gem 'pg_query', '>= 0.9.0'
-
+# Investigate memory leaks
+gem 'scout_apm'
 # Heroku dyno management & statistics
 gem "hirefire-resource"
 gem "barnes"
