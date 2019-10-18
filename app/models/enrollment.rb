@@ -2,7 +2,7 @@
 
 class Enrollment < ApplicationRecord
   belongs_to :user
-  belongs_to :classroom
+  belongs_to :classroom, counter_cache: true
 
   has_one :subject, through: :classroom
 

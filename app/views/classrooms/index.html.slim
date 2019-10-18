@@ -18,7 +18,7 @@
             -@classrooms.each do |c|
               tr
                 td =c.name
-                td.d-none.d-lg-block =c.enrollments.count
+                td.d-none.d-lg-block =c.enrollments.size
                 td =select_tag :subject,
                   options_from_collection_for_select(@subjects, :id, :name, c.subject_id),
                   include_blank: '',

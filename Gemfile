@@ -79,16 +79,6 @@ group :development do
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
 
-  # Help with n+1 queries
-  gem 'bullet'
-
-  # Performance testing
-  gem 'derailed_benchmarks'
-  gem 'rack-mini-profiler'  
-  gem 'flamegraph'
-  gem 'stackprof'
-  gem 'memory-profiler'
-
 end
 
 group :test do

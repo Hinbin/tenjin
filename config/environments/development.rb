@@ -67,16 +67,7 @@ Rails.application.configure do
       config.logger = Rails.logger
       config.color = :red
       config.log_headers = true
-    end
-        
-    
-    Bullet.enable = false
-    Bullet.sentry = true
-    Bullet.alert = true
-    Bullet.bullet_logger = true
-    Bullet.rails_logger = true
-    Bullet.raise = true
-
+    end          
   end
   
 end
