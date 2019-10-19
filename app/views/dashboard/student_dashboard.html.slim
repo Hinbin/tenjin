@@ -11,7 +11,7 @@ section.page-section.text-center#newQuiz
         -@subjects.each_with_index do |s, i|
             .carousel-item class=('active' if i.zero?)
               a href=new_quiz_path(subject: s.name)
-                img.w-100.subject-carousel-item-image src=image_url("#{s.name.parameterize}.jpg")
+                img.w-100.subject-carousel-item-image src=print_subject_image("#{s.name.parameterize}.jpg")
                 .carousel-caption
                   h3.text-uppercase = s.name
       a.carousel-control-prev href="#subjectCarousel" role="button" data-slide="prev"

@@ -9,6 +9,18 @@ module ApplicationHelper
     end
   end
 
+  def asset_exists?(path)
+    if Rails.env.production?
+      !Rails.application.assets_manifest.find_sources(path).nil?
+    else
+      !Rails.application.assets.find_asset(path).nil?
+    end
+  end
+
+  def print_subject_image(url)
+    asset_exists?(url) ? image_url(url) : image_url('default-subject.jpg')
+  end
+
   def render_small_separator
     @css_flavour = 'default' if @css_flavour.nil?
     "small mb-5 primary-#{@css_flavour}"
