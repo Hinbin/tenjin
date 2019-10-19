@@ -10,12 +10,7 @@ module ApplicationHelper
   end
 
   def print_subject_image(url)
-    # Find if we have an image for this subject, if not return the default image
-    if (Rails.application.assets || ::Sprockets::Railtie.build_environment(Rails.application)).find_asset(url).nil?
-      url = nil
-    end
-
-    image_url url || 'default-subject.jpg'
+    Rails.application.assets.find_asset(url) ? image_url(url) : image_url('default-subject.jpg')
   end
 
   def render_small_separator
