@@ -9,10 +9,6 @@ module ApplicationHelper
     end
   end
 
-  def print_subject_image(url)
-    Rails.application.assets.find_asset(url) ? image_url(url) : image_url('default-subject.jpg')
-  end
-
   def render_small_separator
     @css_flavour = 'default' if @css_flavour.nil?
     "small mb-5 primary-#{@css_flavour}"
