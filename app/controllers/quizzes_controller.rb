@@ -16,7 +16,6 @@ class QuizzesController < ApplicationController
 
   def show
     authorize @quiz
-    gon.quiz_id = @quiz.id
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     calculate_percent_completed
     @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first

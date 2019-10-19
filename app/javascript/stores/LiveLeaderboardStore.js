@@ -25,15 +25,19 @@ class LiveLeaderboardStore extends EventEmitter {
     this.winners = []
     this.schoolGroup = false
     this.connected = false
+    this.subject = $('.jsVars[data-subject-name]').attr('data-subject-name')
+    this.school = $('.jsVars[data-school-name]').attr('data-school-name')
+    this.school_group = $('.jsVars[data-school_group-name]').attr('data-school_group-name')
+    this.topic = $('.jsVars[data-topic-id]').attr('data-topic-id')
   }
 
   listenToLeaderboard () {
     let lb = this
     App.cable.subscriptions.create({
       channel: 'LeaderboardChannel',
-      subject: window.gon.subject,
-      school: window.gon.school,
-      school_group: window.gon.school_group
+      subject: this.subject,
+      school: this.school,
+      school_group: this.school_group
     }, {
       connected () {
         lb.connected = true
@@ -46,9 +50,9 @@ class LiveLeaderboardStore extends EventEmitter {
 
       received (data) {
         // If this isn't for the topic being shown, return and do nothing
-        if (window.gon.topic === undefined) {
+        if (this.topic === undefined) {
           lb.leaderboardChange(data, 'ALL')
-        } else if (data.topic === window.gon.topic) {
+        } else if (data.topic === this.topic) {
           lb.leaderboardChange(data, 'TOPIC')
         }
       }
@@ -58,8 +62,9 @@ class LiveLeaderboardStore extends EventEmitter {
   loadLeaderboard () {
     this.listenToLeaderboard()
 
-    let path = window.gon.path + '.json?'
+    let path = window.location.pathname + '.json?'
 
+    if (this.topic) { path += `&topic=${this.topic}` }
     if (this.schoolGroup) { path += '&school_group=true' }
     if (this.allTime) { path += '&all_time=true' }
 

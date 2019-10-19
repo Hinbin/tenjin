@@ -111,9 +111,6 @@ gem 'slim'
 # Pundit to control authorization
 gem 'pundit'
 
-# Gon to pass rails variables to Javascript
-gem 'gon'
-
 # Wonde client to easily access Wonde data
 gem 'wondeclient', github: 'wondeltd/ruby-client'
 

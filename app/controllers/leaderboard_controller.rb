@@ -13,18 +13,15 @@ class LeaderboardController < ApplicationController
   def show
     authorize current_user
     set_subject_and_topic
-
+    @school_group = current_user.school.school_group
     if request.xhr?
-      @subject = Subject.where(name: leaderboard_params[:id]).first
+      @subject = Subject.find_by(name: leaderboard_params[:id])
       build_leaderboard
       set_filter_data
       set_user_data
     else
       set_leaderboard_variables
-      set_javascript_variables
       return render 'subject_select' if @subject.blank?
-
-      set_topic_name
     end
 
     render 'show'
@@ -63,19 +60,9 @@ class LeaderboardController < ApplicationController
     cookies.encrypted[:user_id] = current_user.id
   end
 
-  def set_javascript_variables
-    gon.subject = @subject
-    gon.school = { id: @school.id, name: @school.name }
-    gon.school_group = { id: @school.school_group.id, name: @school.school_group.name } if @school.school_group.present?
-    gon.user = current_user.id
-    gon.params = leaderboard_params
-    set_path
-  end
-
-  def set_filter_data
-    school_group = current_user.school.school_group
-    @schools = if school_group.present?
-                 School.where(school_group_id: school_group).pluck(:name)
+  def set_filter_data    
+    @schools = if @school_group.present?
+                 School.where(school_group_id: @school_group).pluck(:name)
                else
                  [current_user.school.name]
                end
@@ -87,23 +74,6 @@ class LeaderboardController < ApplicationController
                    role: current_user.role,
                    school: current_user.school.name,
                    classrooms: current_user.enrollments.joins(:classroom).pluck('classrooms.name') }
-  end
-
-  def set_path
-    gon.path = if @topic.present?
-                 leaderboard_path(id: @subject.name, topic: @topic.id)
-               else
-                 leaderboard_path(id: @subject.name)
-               end
-  end
-
-  def set_topic_name
-    @topic_name = if @topic.nil?
-                    'All'
-                  else
-                    gon.topic = @topic.id
-                    @topic.name
-                  end
   end
 
   def leaderboard_params

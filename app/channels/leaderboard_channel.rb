@@ -9,8 +9,8 @@ class LeaderboardChannel < ApplicationCable::Channel
   end
 
   def stream_string
-    subject = params[:subject][:name]
-    location = params[:school_group].present? ? params[:school_group][:name] : params[:school][:name]
+    subject = params[:subject]
+    location = params[:school_group].present? ? params[:school_group] : params[:school]
     "leaderboard:#{subject}:#{location}"
   end
 

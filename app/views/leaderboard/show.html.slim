@@ -3,5 +3,10 @@
     .col-4.d-none.d-lg-block
       =render 'subject_select'
     .col
+      .jsVars data={ subject: {id: @subject.id, name: @subject.name }, school: { id: @school.id, name: @school.name } }
+      - if @school_group.present?
+        .jsVars data={ school_group: { id: @school_group.id, name: @school_group.name } }
+      - if @topic.present?
+        .jsVars data={ topic: {id: @topic.id} }
       = react_component("LiveLeaderboard")
 

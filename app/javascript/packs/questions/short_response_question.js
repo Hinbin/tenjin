@@ -47,7 +47,7 @@ $(document).on('ready turbolinks:load', function () {
 
     $.ajax({
       type: 'PUT',
-      url: '/quizzes/' + gon.quiz_id,
+      url: window.location.pathname,
       beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
       success: (result) => processShortResponse(result, $('#shortAnswerText').val()),
       data: {
