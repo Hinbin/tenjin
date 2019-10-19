@@ -12,7 +12,6 @@ Rails.application.routes.draw do
       patch 'sync'
     end
   end
-  resources :subject_maps, only: [:update]
   resources :leaderboard, only:[:show, :index]
   resources :classrooms, only: [:show, :index, :update]
   resources :questions

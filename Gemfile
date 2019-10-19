@@ -16,11 +16,9 @@ gem 'puma', '~> 3.11'
 gem 'rack-timeout'
 gem 'sprockets', '3.7.2' # Fix at 3.7.2 as 4.0.0 as issues with sassc compilation
 
-
 gem 'delayed_job_active_record'
 
 # Templates & asset handling
-gem 'coffee-rails', '~> 5.0'
 gem 'jbuilder', '~> 2.5'
 gem 'sassc'
 gem 'uglifier', '>= 1.3.0'
@@ -139,6 +137,7 @@ gem 'aws-sdk-s3'
 
 # Investigate memory leaks
 gem 'scout_apm'
+
 # Heroku dyno management & statistics
 gem "hirefire-resource"
 gem "barnes"
