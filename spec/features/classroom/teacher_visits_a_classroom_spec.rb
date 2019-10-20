@@ -107,10 +107,6 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
     expect(page).to have_current_path(root_path)
   end
 
-  it 'allows a teacher to add or change the classroom description'
-
-  it 'uses favoured names?'
-
   it 'does not show the search box twice after going back' do
     visit(classroom_path(classroom))
     click_link('Set Homework')
@@ -119,5 +115,4 @@ RSpec.describe 'User visits a classroom', type: :feature, js: true, default_crea
     expect(page).to have_css('input[type="search"]', count: 1)
   end
 
-  it 'produces a csv file with updated passwords in'
 end
