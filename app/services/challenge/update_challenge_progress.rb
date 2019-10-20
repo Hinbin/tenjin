@@ -43,11 +43,13 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   def check_progress_percentage(percentage, progress)
     percentage *= 100
     progress.progress = percentage if percentage > progress.progress
-    complete_challenge(progress) if progress.progress >= 100 && progress.completed == false
+    complete_challenge(progress) if progress.progress >= 100
     progress.save if progress.changed?
   end
 
   def complete_challenge(progress)
+    return if progress.completed == true
+
     progress.completed = true
     progress.user.challenge_points = 0 if progress.user.challenge_points.nil?
     progress.user.challenge_points += progress.challenge.points

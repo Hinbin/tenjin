@@ -10,6 +10,12 @@
     tr
       td Questions Asked
       td = @asked_questions
+    tr
+      td Homeworks Completed
+      td = @homeworks_completed
+    tr
+      td Challenge Points Earned
+      td = @challenge_points_earned
   h1.pt-5 Manage School Admins
   -if @school_admins.count.zero?
     p No current admins

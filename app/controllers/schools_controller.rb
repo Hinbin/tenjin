@@ -59,6 +59,10 @@ class SchoolsController < ApplicationController
     @asked_questions =
       AskedQuestion.joins(quiz: [{ user: :school }])
                    .where('asked_questions.correct IS NOT NULL AND schools.id = ?', @school.id).count
+    @homeworks_completed =
+      HomeworkProgress.joins(user: :school)
+                      .where('homework_progresses.completed = true AND schools.id = ?', @school.id).count
+    @challenge_points_earned = User.where(school: @school).sum(:challenge_points)
     @school_admins = User.where(school: @school, role: 'school_admin')
   end
 
