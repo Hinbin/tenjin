@@ -124,7 +124,7 @@ RSpec.configure do |config|
   config.after :each, :js do
     errors = page.driver.browser.manage.logs.get(:browser)
     if errors.present?
-      aggregate_failures 'javascript errrors' do
+      aggregate_failures 'javascript errors' do
         errors.each do |error|
           expect(error.level).not_to eq('SEVERE'), error.message
           next unless error.level == 'WARNING'
@@ -133,6 +133,25 @@ RSpec.configure do |config|
           warn error.message
         end
       end
+    end
+  end
+
+  if ENV['TRAVIS']
+    # show retry status in spec process
+    config.verbose_retry = true
+    # show exception that triggers a retry if verbose_retry is set to true
+    config.display_try_failure_messages = true
+
+    # run retry only on features
+    config.around :each, :js do |ex|
+      ex.run_with_retry retry: 3
+    end
+
+    # callback to be run between retries
+    config.retry_callback = proc do |ex|
+      # run some additional clean up task - can be filtered by example metadata
+      Capybara.reset! if ex.metadata[:js]
+      DatabaseCleaner.clean
     end
   end
 end
@@ -161,25 +180,9 @@ if ENV['TRAVIS']
   # Increase timeouts to avoid intermittent failures
   Capybara.default_max_wait_time = 15
 
-  # show retry status in spec process
-  config.verbose_retry = true
-  # show exception that triggers a retry if verbose_retry is set to true
-  config.display_try_failure_messages = true
-
-  # run retry only on features
-  config.around :each, :js do |ex|
-    ex.run_with_retry retry: 3
-  end
-
-  # callback to be run between retries
-  config.retry_callback = proc do |ex|
-    # run some additional clean up task - can be filtered by example metadata
-    Capybara.reset! if ex.metadata[:js]
-    DatabaseCleaner.clean
-  end
 else
-  Capybara.default_driver = :selenium_chrome
-  Capybara.javascript_driver = :selenium_chrome_headless
+  Capybara.default_driver = :selenium_chromex
+  Capybara.javascript_driver = :selenium_chrome
 end
 
 # REMOVE WITH NEW VERSION OF SHOULDAMATCHERS
