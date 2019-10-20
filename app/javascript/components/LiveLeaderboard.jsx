@@ -113,6 +113,7 @@ class LiveLeaderboard extends React.Component {
   checkFilters (entry) {
     const filters = this.state.currentFilters
     const userSchool = this.state.user.school
+    let schoolFilterSet = false
 
     for (let i in filters) {
       let filter = filters[i]
@@ -122,7 +123,10 @@ class LiveLeaderboard extends React.Component {
           ((entry.classroom_names === null ||
           !entry.classroom_names.includes(filter.option)) ||
           entry.school_name !== userSchool)) return false
+      if (filter.name === 'Schools') { schoolFilterSet = true }
     }
+    // If no schools have been set, only show user's school
+    if ((!schoolFilterSet) && entry.school_name !== userSchool) { return false }
     return true
   }
 

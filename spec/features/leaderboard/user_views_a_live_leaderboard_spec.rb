@@ -45,14 +45,18 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
       find(:css, '#toggleLive label', visible: false).click
     end
 
-    it 'shows updates from own school only by default' do
+    it 'resets all scores to 0 when live leaderboard selected' do
+      wait_for_ajax
+      expect(page).to have_css('tbody tr', count: 0)
+    end
+
+    it 'shows updates from all schools only by default' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
-      expect(page).to have_no_css('#leaderboardTable tbody tr')
+      expect(page).to have_css('#leaderboardTable tbody tr')
     end
 
     it 'shows updates from other schools when selected' do
       topic_score_same_school_group.update_attribute('score', 110)
-      click_button(school.name)
       click_button('All')
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
       expect(page).to have_css("#leaderboardTable tbody tr td#score-#{topic_score_same_school_group.user.id}", exact_text: 10)
@@ -67,7 +71,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, default_cre
 
     it 'allows you to filter by school' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
-      click_button(school.name)
+      click_button('All')
       click_button(topic_score_same_school_group.user.school.name)
       expect(page).to have_css('tbody tr', count: 1)
     end

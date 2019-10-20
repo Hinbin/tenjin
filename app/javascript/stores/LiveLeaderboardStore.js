@@ -105,7 +105,7 @@ class LiveLeaderboardStore extends EventEmitter {
       for (let entry in this.allTimeLeaderboard) {
         this.calculateAllTimeScore(entry)
       }
-    } else {
+    } else if (!this.live) {
       // Deep copy of the leaderboard
       this.currentLeaderboard = JSON.parse(JSON.stringify(this.weeklyLeaderboard))
     }
@@ -265,6 +265,22 @@ class LiveLeaderboardStore extends EventEmitter {
     }, 1000)
   }
 
+  toggleLiveLeaderboard () {
+    this.live = !this.live
+    if (this.live) {
+      this.showAll = true
+      this.allTime = false
+      if (this.schools.length > 1) {
+        this.leaderboardFilterChange({ name: 'Schools', option: 'All' })
+      } else {
+        this.initialLeaderboard = this.weeklyLeaderboard        
+      }
+      this.currentLeaderboard = {}
+    } else {
+      this.processScores()
+    }
+  }
+
   handleActions (action) {
     switch (action.type) {
       case 'LEADERBOARD_LOAD': {
@@ -292,20 +308,7 @@ class LiveLeaderboardStore extends EventEmitter {
         break
       }
       case 'LEADERBOARD_LIVE_TOGGLE': {
-        this.live = !this.live
-        if (this.live) {
-          this.showAll = true
-          this.allTime = false
-          if (this.schools.length > 1) {
-            this.leaderboardFilterChange({ name: 'Schools', option: this.user.school })
-          } else {
-            this.initialLeaderboard = this.weeklyLeaderboard            
-          }
-          this.currentLeaderboard = {}
-        } else {
-          this.processScores()
-        }
-
+        this.toggleLiveLeaderboard()
         this.emit('change')
         break
       }

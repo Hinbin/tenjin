@@ -19,7 +19,7 @@ RSpec.describe Challenge, type: :model do
     end
 
     it 'has the default length of a week' do
-      expect(described_class.create_challenge(topic.subject).end_date).to be_within(1.second).of(Time.now + 1.week)
+      expect(described_class.create_challenge(topic.subject).end_date).to be_within(1.second).of(Time.now.utc + 1.week)
     end
 
     it 'is created with a random type when one not given' do

@@ -70,6 +70,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
 
     let(:student_another_school) { create(:student) }
     let(:student_same_school_group) { create(:student, school_group: student.school.school_group) }
+    let(:topic_score_same_school_group) { create(:topic_score, topic: topic, school: second_school) }
     let(:another_name) { initialize_name User.second }
 
     it 'does not update if update is from an unaffiliated school group' do
@@ -87,10 +88,16 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
       expect(page).to have_css('tr#row-' + new_entry.user_id.to_s, text: new_entry.user.forename)
     end
 
+    it 'shows updates from only my school by default' do
+      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
+      expect(page).to have_no_css('td',
+        exact_text: "#{topic_score_same_school_group.user.forename} #{topic_score_same_school_group.user.surname[0]}")
+    end
+
     it 'updates if score is from the same school group' do
       click_button('Select School')
       click_button('All')
-      Leaderboard::BroadcastLeaderboardPoint.new(create(:topic_score, topic: topic, school: second_school)).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
       expect(page).to have_css('tr.score-changed')
     end
   end
