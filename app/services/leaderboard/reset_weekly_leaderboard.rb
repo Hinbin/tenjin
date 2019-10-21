@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
-  def initialize; end
-
   def call
     update_classroom_winners
     create_leaderboard_awards
@@ -10,12 +8,13 @@ class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
     reset_weekly_leaderboard_tables
   end
 
+  protected
+
   def update_classroom_winners
     ClassroomWinner.destroy_all
 
-    School.all.each do |sc|
-      classrooms = Classroom.where(school: sc).where.not(subject: nil)
-      classrooms.each do |c|
+    School.find_each do |sc|
+      Classroom.where(school: sc).where.not(subject: nil).find_each do |c|
         top = Leaderboard::BuildLeaderboard.call(nil, id: c.subject.name, school: sc.id).sort_by { |s| -s[:score] }
         top = top.select do |elem|
           next if elem[:classroom_names].blank?
@@ -37,8 +36,8 @@ class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
   end
 
   def create_leaderboard_awards
-    School.all.each do |sc|
-      Subject.all.each do |su|
+    School.find_each do |sc|
+      Subject.find_each do |su|
         top = Leaderboard::BuildLeaderboard.call(nil, id: su.name, school: sc.id).sort_by { |s| -s[:score] }
         next unless top.present?
 
@@ -53,7 +52,7 @@ class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
   end
 
   def copy_points_to_all_time_scores
-    TopicScore.all.each do |ts|
+    TopicScore.find_each do |ts|
       atts = AllTimeTopicScore.where(user: ts.user, topic: ts.topic).first_or_initialize
       atts.score = (atts.new_record? ? ts.score : atts.score + ts.score)
       atts.save!

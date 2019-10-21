@@ -7,7 +7,9 @@ class Leaderboard::BuildLeaderboard < ApplicationService
     @subject = Subject.where(name: params.dig(:id)).first
     @topic = params.dig(:topic)
     @school = params.dig(:school)
-    @school_group = true if @user.present? && @user.school.school_group_id.present? && params.dig(:school_group) == 'true'
+    if @user.present? && @user.school.school_group_id.present? && params.dig(:school_group) == 'true'
+      @school_group = true
+    end
     @all_time = true if params.dig(:all_time) == 'true'
   end
 

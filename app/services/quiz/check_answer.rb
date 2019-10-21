@@ -4,7 +4,7 @@ class Quiz::CheckAnswer < ApplicationService
   def initialize(params)
     @quiz = params[:quiz]
     @question = params[:question]
-    @asked_question = AskedQuestion.where(quiz: @quiz).where(question: @question).first
+    @asked_question = AskedQuestion.find_by(quiz: @quiz, question: @question)
     @answer_given = params[:answer_given]
   end
 
@@ -12,10 +12,15 @@ class Quiz::CheckAnswer < ApplicationService
     check_answer_correct unless already_answered?
 
     Quiz::MoveQuizForward.call(quiz: @quiz)
-    { answer: Answer.where(question: @question).where(correct: true), streak: @quiz.streak,
+    {
+      answer: Answer.where(question: @question, correct: true),
+      streak: @quiz.streak,
       answeredCorrect: @quiz.answered_correct,
-      multiplier: Multiplier.where('score <= ?', @quiz.streak).last.multiplier }
+      multiplier: Multiplier.where('score <= ?', @quiz.streak).order(id: :desc).pick(:multiplier)
+    }
   end
+
+  protected
 
   def already_answered?
     @asked_question.correct.present?

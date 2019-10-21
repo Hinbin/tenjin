@@ -3,15 +3,20 @@
 class Homework::UpdateHomeworkProgress < ApplicationService
   def initialize(quiz)
     @quiz = quiz
-    @homework_progresses = HomeworkProgress.includes(:homework).where(user: @quiz.user)
   end
 
   def call
     completed_homework = false
-    @homework_progresses.each do |progress|
+    homework_progresses.find_each do |progress|
       check_percentage_correct(progress)
     end
     OpenStruct.new(success?: true, completed?: completed_homework, errors: nil)
+  end
+
+  protected
+
+  def homework_progresses
+    HomeworkProgress.includes(:homework).where(user: @quiz.user)
   end
 
   def check_percentage_correct(progress)
