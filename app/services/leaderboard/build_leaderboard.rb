@@ -18,6 +18,8 @@ class Leaderboard::BuildLeaderboard < ApplicationService
     User.find_by_sql(@query.to_sql)
   end
 
+  protected
+
   def topic_scores
     TopicScore.arel_table
   end
