@@ -3,7 +3,10 @@
 require 'rails_helper'
 require 'support/session_helpers'
 
-RSpec.describe Question, type: :model, default_creates: true do
+RSpec.describe Question, :focus, type: :model, default_creates: true do
+
+  it { is_expected.to belong_to(:questions).optional }
+
   it 'deletes answers when being deleted' do
     answer
     expect { question.destroy }.to change(described_class, :count).by(-1)
