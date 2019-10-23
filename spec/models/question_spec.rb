@@ -3,9 +3,14 @@
 require 'rails_helper'
 require 'support/session_helpers'
 
-RSpec.describe Question, :focus, type: :model, default_creates: true do
+RSpec.describe Question, type: :model, default_creates: true do
+  context 'with validations' do
+    subject { build(:question) }
 
-  it { is_expected.to belong_to(:questions).optional }
+    it { is_expected.to belong_to(:topic) }
+    it { is_expected.to have_many(:answers) }
+    it { is_expected.to belong_to(:lesson).optional }
+  end
 
   it 'deletes answers when being deleted' do
     answer
