@@ -108,8 +108,9 @@ gem 'simple_form'
 # Slim for clean HTML
 gem 'slim'
 
-# Pundit to control authorization
+# User specific authorization
 gem 'pundit'
+gem 'rolify'
 
 # Wonde client to easily access Wonde data
 gem 'wondeclient', github: 'wondeltd/ruby-client'
