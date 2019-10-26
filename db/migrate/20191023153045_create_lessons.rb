@@ -2,8 +2,10 @@ class CreateLessons < ActiveRecord::Migration[6.0]
   def change
     create_table :lessons do |t|
       t.string :url
-      t.integer :type
+      t.integer :category
       t.string :title
+      t.string :video_id
+      t.references :topic
 
       t.timestamps
     end

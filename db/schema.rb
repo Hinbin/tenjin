@@ -234,10 +234,13 @@ ActiveRecord::Schema.define(version: 2019_10_25_122411) do
 
   create_table "lessons", force: :cascade do |t|
     t.string "url"
-    t.integer "type"
+    t.integer "category"
     t.string "title"
+    t.string "video_id"
+    t.bigint "topic_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["topic_id"], name: "index_lessons_on_topic_id"
   end
 
   create_table "multipliers", force: :cascade do |t|

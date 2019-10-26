@@ -1,6 +1,15 @@
+.container
+  section.page-section.text-center.pt-2#newLesson 
+    h1.page-section-header.text-uppercase Lessons
+    hr class=("small mb-5 primary-red")
+
 -if @editable_subjects.present?
-  h1.h1 Edit Lessons
-  - @editable_subjects.each do |s|
-    h3.h3 = s.name
-    - @editable_lessons.where(subject: s) do |l|
-      =l.url
+  .container
+    section.page-section.text-center.pt-2#editLessons
+      h1.page-section-header.text-uppercase Edit Lessons
+      hr class=("small mb-5 primary-red")
+        - @editable_subjects.each do |s|
+          h3.h3.py-2 = s.name
+          - @editable_lessons.where(subject: s) do |l|
+            =l.url
+          =link_to("Add #{s.name} Lesson", new_lesson_path(subject: s), class: 'btn btn-block btn-primary')
