@@ -32,6 +32,7 @@ Rails.application.routes.draw do
 
   resources :flagged_questions, only:[:create]
   resources :school_groups
+  resources :lessons
 
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'

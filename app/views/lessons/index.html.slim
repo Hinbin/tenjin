@@ -1,0 +1,6 @@
+-if @editable_subjects.present?
+  h1.h1 Edit Lessons
+  - @editable_subjects.each do |s|
+    h3.h3 = s.name
+    - @editable_lessons.where(subject: s) do |l|
+      =l.url

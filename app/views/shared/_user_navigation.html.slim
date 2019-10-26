@@ -21,6 +21,9 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
               | Styles
             a.dropdown-item href=customise_path(anchor: 'icons')
               | Leaderboard Icons 
+      li.nav-item
+        a.nav-link href=lessons_path
+          | Lessons     
       - if current_user.employee? || current_user.school_admin?
         li.nav-item
           a.nav-link href=dashboard_path
