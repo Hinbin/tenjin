@@ -3,7 +3,6 @@ class CreateLessons < ActiveRecord::Migration[6.0]
     create_table :lessons do |t|
       t.string :url
       t.integer :category
-      t.string :title
       t.string :video_id
       t.references :topic
 

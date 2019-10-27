@@ -28,6 +28,7 @@ import './questions/multiple_choice_question'
 import './questions/question_bottom'
 import './questions/question_top'
 import './questions/short_response_question'
+import './lessons'
 
 var dt_extras = [
 

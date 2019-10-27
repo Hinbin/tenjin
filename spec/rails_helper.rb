@@ -92,6 +92,7 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :feature
+  config.include SessionHelpers, type: :system
   config.include BestInPlace::TestHelpers
   config.include ActiveJob::TestHelper
 
@@ -154,6 +155,14 @@ RSpec.configure do |config|
       Capybara.reset! if ex.metadata[:js]
       DatabaseCleaner.clean
     end
+
+    config.before(:each, type: :system) do
+      driven_by :travis_chrome
+    end
+  else
+    config.before(:each, type: :system) do
+      driven_by :selenium_chrome
+    end
   end
 end
 
@@ -174,17 +183,16 @@ if ENV['TRAVIS']
     options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu])
 
     Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
-  end
 
+  end
+  
   Capybara.javascript_driver = :travis_chrome
 
   # Increase timeouts to avoid intermittent failures
   Capybara.default_max_wait_time = 15
 
 else
-  Capybara.default_driver = :selenium_chrome
+  Capybara.default_driver = :selenium_chrome_headless
   Capybara.javascript_driver = :selenium_chrome_headless
-end
 
-# REMOVE WITH NEW VERSION OF SHOULDAMATCHERS
-class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end
+end

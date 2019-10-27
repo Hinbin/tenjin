@@ -4,7 +4,8 @@ class LessonPolicy < ApplicationPolicy
   attr_reader :user, :record
   class Scope < Scope
     def resolve
-      scope.where(subject: user.subjects)
+      scope.includes(:topic)
+           .where(topics: { subject_id: user.subjects })
     end
   end
 

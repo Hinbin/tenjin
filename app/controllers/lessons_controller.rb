@@ -2,12 +2,17 @@
 
 class LessonsController < ApplicationController
   def index
-    @lessons = policy_scope(Lesson)
+    @author = current_user.has_role? :lesson_author, :any
 
-    return unless current_user.has_role? :lesson_author, :any
+    if @author
+      @editable_subjects = Subject.with_role(:lesson_author, current_user)
+      @lessons = policy_scope(Lesson).or( Lesson.includes(:topic).where(topics: { subject: @editable_subjects.pluck(:id) }) )
+    else
+      @lessons = policy_scope(Lesson)
+    end
 
-    @editable_subjects = Subject.with_role(:lesson_author, current_user)
-    @editable_lessons = Lesson.where(subject: @editable_lessons)
+    @topics = Topic.joins(:lessons).where(id: @lessons.pluck(:topic_id)).uniq
+    @subjects = Subject.where(topics: @topics)
   end
 
   def new
