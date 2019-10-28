@@ -9,11 +9,14 @@
         h3.py-3.h3=t.name
         .card-columns
           -@lessons.where(topic: t).each do |l|
-            .card.videoLink src="http://www.youtube.com/embed/#{l.video_id}" data-toggle="modal" data-target="#videoModal" 
-              img.img-fluid.card-img-top src="https://img.youtube.com/vi/#{l.video_id}/hqdefault.jpg"          
+            .card
+              .card-body.videoLink src="http://www.youtube.com/embed/#{l.video_id}" data-toggle="modal" data-target="#videoModal" 
+                h3.h4 =l.title
+                img.img-fluid.card-img-top src="https://img.youtube.com/vi/#{l.video_id}/hqdefault.jpg"          
               -if @subject_author
                 .card-footer
-                  =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary'
+                  =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
+                  =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
 
 
 -if @author
@@ -23,12 +26,12 @@
       hr class=("small mb-5 primary-red")
         - @editable_subjects.each do |s|
           h3.h3.py-2 = s.name
-          =link_to("Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'btn btn-block btn-primary')
+          =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'btn btn-block btn-primary'
 
 .modal.fade#videoModal
-  .modal-dialog.modal-lg role="document"
+  .modal-dialog.modal-dialog-centered.modal-lg role="document"
     .modal-content 
-      .modal-body
+      .modal-body.p-0.p-md-2
         button.close type="button" data-dismiss="modal" aria-label="Close"
           span aria-hidden="true"&times;
         .embed-responsive.embed-responsive-16by9

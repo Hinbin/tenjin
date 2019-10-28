@@ -234,6 +234,7 @@ ActiveRecord::Schema.define(version: 2019_10_25_122411) do
 
   create_table "lessons", force: :cascade do |t|
     t.string "url"
+    t.string "title"
     t.integer "category"
     t.string "video_id"
     t.bigint "topic_id"

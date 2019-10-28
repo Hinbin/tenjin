@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class LessonsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_lesson, only: %i[edit update destroy]
+
   def index
     @author = current_user.has_role? :lesson_author, :any
 
@@ -26,11 +29,41 @@ class LessonsController < ApplicationController
   end
 
   def create
-    @lesson = Lesson.new(create_lesson_params)
+    @lesson = Lesson.new(lesson_params)
+    save_lesson
+  end
+
+  def edit
+    @topics = Topic.where(subject: @lesson.subject)
+    authorize @lesson
+  end
+
+  def update
+    authorize @lesson
+    @lesson.update(lesson_params)
+    save_lesson
+  end
+
+  def destroy
+    authorize @lesson
+    @lesson.destroy
+    redirect_to lessons_path
+  end
+
+  private
+
+  def set_lesson
+    @lesson = Lesson.find(params[:id])
+  end
+
+  def save_lesson
     authorize @lesson
 
     unless @lesson.valid?
       @topics = Topic.where(subject: @lesson.topic.subject)
+
+      return render 'edit' if @lesson.persisted?
+
       return render 'new'
     end
 
@@ -42,13 +75,11 @@ class LessonsController < ApplicationController
     redirect_to lessons_path
   end
 
-  private
-
   def new_lesson_params
     params.require(:subject)
   end
 
-  def create_lesson_params
-    params.require(:lesson).permit(:url, :title, :topic_id)
+  def lesson_params
+    params.require(:lesson).permit(:title, :url, :topic_id)
   end
 end

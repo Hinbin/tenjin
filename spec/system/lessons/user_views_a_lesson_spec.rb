@@ -25,7 +25,7 @@ RSpec.describe 'User views a lesson', type: :system, js: true, default_creates: 
 
   it 'plays the video when clicked on' do
     visit(lessons_path)
-    find(:css, 'div.card.videoLink').click
+    find(:css, '.videoLink').click
     expect(page).to have_css("iframe[src^=\"http://www.youtube.com/embed/#{lesson.video_id}?autoplay=1\"]")
   end
 

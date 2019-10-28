@@ -3,9 +3,11 @@
 RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_creates: true do
   let(:second_subject) { create(:subject) }
   let(:lesson) { create(:lesson, topic: topic) }
+  let(:new_lesson) { build(:lesson, topic: topic) }
 
   def fill_in_form(lesson)
     fill_in('YouTube URL', with: lesson.url)
+    fill_in('Title', with: lesson.title)
     select lesson.topic.name, from: 'Topic'
   end
 
@@ -39,7 +41,6 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
   end
 
   context 'when adding a lesson' do
-    let(:new_lesson) { build(:lesson, topic: topic) }
     let(:new_lesson_bad_content) { build(:lesson, topic: topic, url: 'http://redtube.com/t-ZRX8984sc') }
 
     before do
@@ -64,7 +65,31 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       visit(new_lesson_path(subject: subject))
       fill_in_form(new_lesson)
       click_button('Create Lesson')
-      expect(page).to have_css('div.card.videoLink', count: 2)
+      expect(page).to have_css('.videoLink', count: 2)
     end
+  end
+
+  context 'when editing existings lesson' do
+    before do
+      setup_subject_database
+      teacher.add_role :lesson_author, subject
+    end
+
+    it 'saves new lesson details' do
+      visit(lessons_path)
+      click_link('Edit')
+      fill_in_form(new_lesson)
+      click_button('Update Lesson')
+      expect(page).to have_css(".videoLink[src^=\"http://www.youtube.com/embed/#{new_lesson.video_id}\"]")
+    end
+
+    it 'deleted lessons' do
+      visit(lessons_path)
+      page.accept_confirm do
+        click_link('Delete')
+      end
+      expect(page).to have_no_css('.videoLink')
+    end
+
   end
 end

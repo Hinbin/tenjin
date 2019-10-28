@@ -13,7 +13,8 @@ class LessonPolicy < ApplicationPolicy
     user.has_role? :lesson_author, record.subject
   end
 
-  def create?
-    user.has_role? :lesson_author, record.subject
-  end
+  alias create? new?
+  alias edit? new?
+  alias update? new?
+  alias destroy? new?
 end
