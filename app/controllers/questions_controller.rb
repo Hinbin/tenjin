@@ -28,12 +28,12 @@ class QuestionsController < ApplicationController
 
   def show
     authorize @question.topic
+    @lessons = Lesson.where(topic: @question.topic)
   end
 
   def update
     authorize @question.topic
     @question.update(question_update_params)
-
     @question.save unless @question.question_text.to_plain_text.blank?
 
     if request.xhr?
@@ -59,7 +59,7 @@ class QuestionsController < ApplicationController
   end
 
   def question_update_params
-    params.require(:question).permit(:question_text, :question_type)
+    params.require(:question).permit(:question_text, :question_type, :lesson_id)
   end
 
   def set_question

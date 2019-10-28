@@ -5,6 +5,7 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
 
   let(:author) { create(:author) }
   let(:question) { create(:question, topic: topic) }
+  let(:lesson) { create(:lesson, topic: topic) }
   let(:new_topic_name) { FFaker::Lorem.word }
 
   before do
@@ -212,6 +213,14 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
       answer
       visit(question_path(question))
       expect { click_link('Remove') }.to change(Answer, :count).by(-1)
+    end
+
+    it 'allows you to assign a lesson to the question' do
+      lesson
+      visit(question_path(question))
+      select lesson.title, from: 'Select Lesson'
+      visit(question_path(question))
+      expect(page).to have_content(lesson.title)
     end
   end
 end

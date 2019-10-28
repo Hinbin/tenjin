@@ -10,8 +10,16 @@
           option value=t[0]
             = t[0].humanize
   .row.col.mt-3.justify-content-center
-    =form_for(@question) do |f|
+    =form_with model: @question do |f|
       =f.rich_text_area :question_text
+  .row.col.mt-3
+    label for="select-lesson" Select Lesson
+    =select_tag('question[lesson_id]',
+      options_from_collection_for_select(@lessons, :id, :title, selected: @question.lesson_id),
+      include_blank: 'Select Lesson',
+      id: 'select-lesson',
+      class: 'custom-select',
+      data: { remote: 'true',  url: question_path(@question.id), method: 'patch' })
   .row.col.mt-3
     table.table id="table-#{@question.question_type}"
       thead
