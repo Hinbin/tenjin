@@ -96,14 +96,14 @@ RSpec.describe 'using a quiz', default_creates: true, type: :request do
 
       it 'renders a multiple choice quiz question' do
         get quiz_path(id: quiz.id)
-        expect(response).to render_template('quizzes/question_multiple_choice')
+        expect(response).to render_template('quizzes/_multiple_choice')
       end
 
       it 'renders a single word answer question' do
         question = create(:question, question_type: 'short_answer')
         quiz.update_attribute(:question_order, [question.id])
         get quiz_path(id: quiz.id)
-        expect(response).to render_template('quizzes/question_short_response')
+        expect(response).to render_template('quizzes/_short_response')
       end
     end
   end

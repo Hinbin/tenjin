@@ -4,6 +4,8 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: true do
+  let(:lesson) { create(:lesson, topic: topic) }
+
   context 'when answering a multiple choice question' do
     let(:question) { create(:question, topic: topic) }
     let(:correct_response) { Answer.where(correct: true).first }
@@ -16,6 +18,16 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       create(:answer, question: question, correct: true)
       sign_in student
       navigate_to_quiz
+    end
+
+    it 'shows a lesson video if one is present' do
+      question.lesson = lesson
+      visit quizzes_path
+      expect(page).to have_content(lesson.title)
+    end
+
+    it 'only shows a lesson video if one is present' do
+      expect(page).to have_no_css('.videoLink')
     end
 
     it 'displays the question text' do
@@ -137,6 +149,16 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       create(:answer, question: question, correct: true)
       sign_in student
       navigate_to_quiz
+    end
+
+    it 'shows a lesson video if one is present' do
+      question.lesson = lesson
+      visit quizzes_path
+      expect(page).to have_content(lesson.title)
+    end
+
+    it 'only shows a lesson video if one is present' do
+      expect(page).to have_no_css('.videoLink')
     end
 
     it 'displays the question text' do

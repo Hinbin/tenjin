@@ -1,4 +1,4 @@
-.container
+.container.py-2
   .row
     .col
       p=@question.topic.name
@@ -23,3 +23,12 @@
       .modal-footer
         button.btn.btn-secondary type="button" data-dismiss="modal"
           | Close
+
+.modal.fade#videoModal
+  .modal-dialog.modal-dialog-centered.modal-lg role="document"
+    .modal-content 
+      .modal-body.p-0.p-md-2
+        button.close type="button" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true"&times;
+        .embed-responsive.embed-responsive-16by9
+          iframe.embed-responsive-item#video(allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen)

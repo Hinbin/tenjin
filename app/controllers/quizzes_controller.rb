@@ -19,7 +19,7 @@ class QuizzesController < ApplicationController
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     calculate_percent_completed
     @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
-    return render Quiz::RenderQuestionType.call(question: @question) if @quiz.active?
+    return render 'show' if @quiz.active?
 
     percent_correct = calculate_percent_correct
 
