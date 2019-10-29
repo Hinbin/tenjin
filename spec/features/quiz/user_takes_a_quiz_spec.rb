@@ -20,10 +20,14 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       navigate_to_quiz
     end
 
-    it 'shows a lesson video if one is present' do
-      question.lesson = lesson
-      visit quizzes_path
-      expect(page).to have_content(lesson.title)
+    context 'with a lesson' do
+      let(:question) { create(:question, topic: topic, lesson: lesson) }
+
+      it 'shows a lesson video if one is present' do
+        question.lesson = lesson
+        visit quizzes_path
+        expect(page).to have_content(lesson.title)
+      end
     end
 
     it 'only shows a lesson video if one is present' do
@@ -151,10 +155,14 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       navigate_to_quiz
     end
 
-    it 'shows a lesson video if one is present' do
-      question.lesson = lesson
-      visit quizzes_path
-      expect(page).to have_content(lesson.title)
+    context 'with a lesson' do
+      let(:question) { create(:short_answer_question, topic: topic, lesson: lesson) }
+
+      it 'shows a lesson video if one is present' do
+        question.lesson = lesson
+        visit quizzes_path
+        expect(page).to have_content(lesson.title)
+      end
     end
 
     it 'only shows a lesson video if one is present' do

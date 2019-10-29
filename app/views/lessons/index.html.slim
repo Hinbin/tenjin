@@ -2,6 +2,8 @@
   section.page-section.text-center.pt-2#newLesson 
     h1.page-section-header.text-uppercase Lessons
     hr class=("small mb-2 primary-red")
+    -if @lessons.count.zero?
+      p.lead No lessons yet!
     -@subjects.each do |s|
       - @subject_author = current_user.has_role? :lesson_author, s if @author
       h1.py-4.h1=s.name

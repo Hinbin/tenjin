@@ -103,7 +103,7 @@ RSpec.describe 'using a quiz', default_creates: true, type: :request do
         question = create(:question, question_type: 'short_answer')
         quiz.update_attribute(:question_order, [question.id])
         get quiz_path(id: quiz.id)
-        expect(response).to render_template('quizzes/_short_response')
+        expect(response).to render_template('quizzes/_short_answer')
       end
     end
   end
