@@ -1,36 +1,61 @@
 .container
-  h1.display-4 = @school.name
-  table.table
-    tr
-      td Students
-      td =@school.users.where(role:'student').count
-    tr
-      td Employees
-      td =@school.users.where(role:'employee').count
-    tr
-      td Questions Asked
-      td = @asked_questions
-    tr
-      td Homeworks Completed
-      td = @homeworks_completed
-    tr
-      td Challenge Points Earned
-      td = @challenge_points_earned
-  h1.pt-5 Manage School Admins
-  -if @school_admins.count.zero?
-    p No current admins
-  -else
-    table.table
-      thead
+  .row
+    .col
+      h1.display-4 = @school.name
+      table.table
         tr
-          th Username
-          th Change Role
-          th Login As
-      tbody
-        -@school_admins.each do |sa|
-          tr.school-admin-data
-            td =sa.username
-            td =sa.role.humanize          
-            td =button_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary'
-  .d-flex.justify-content-center
-    =link_to 'Manage User Roles', show_employees_school_path(@school), class: 'btn btn-dark'
+          td Students
+          td =@school.users.where(role:'student').count
+        tr
+          td Employees
+          td =@school.users.where(role:'employee').count
+        tr
+          td Questions Asked
+          td = @asked_questions
+        tr
+          td Homeworks Completed
+          td = @homeworks_completed
+        tr
+          td Challenge Points Earned
+          td = @challenge_points_earned
+  .row
+    .col
+      h3.h3 School Admins
+      -if @school_admins.count.zero?
+        p No current admins
+      -else
+        table.table#schoolAdminTable
+          thead
+            tr
+              th Username
+              th Role
+              th Login As
+          tbody
+            -@school_admins.each do |sa|
+              tr.school-admin-data
+                td =sa.username
+                td =sa.role.humanize          
+                td =button_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary'
+      .d-flex.justify-content-center
+        =link_to 'Manage User Roles', manage_roles_users_path(school: @school), class: 'btn btn-dark'
+    
+  .row.py-4
+    .col
+     h3.h3 Users
+    .table-responsive
+      table.table#users-table
+        thead
+          tr
+            th Username
+            th Name
+            th Role
+            th Login As
+        tbody
+          -@users.each do |u|
+            tr.user-data id="user-#{u.id}"
+              td =u.username
+              td 
+                => u.forename
+                = u.surname
+              td =u.role.humanize          
+              td =button_to 'Become User', become_admin_path(@current_admin, user_id: u.id ), class: 'btn btn-primary'

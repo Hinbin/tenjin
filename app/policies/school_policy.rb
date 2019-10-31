@@ -41,8 +41,4 @@ class SchoolPolicy < ApplicationPolicy
   def destroy?
     user.super?
   end
-
-  def show_employees?
-    user.super?
-  end
 end

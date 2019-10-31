@@ -24,6 +24,12 @@ $(document).on('turbolinks:load', () => {
       })
     }
 
+    if (!$.fn.dataTable.isDataTable('#users-table')) {
+      $('#users-table').DataTable({
+        paging: true
+      })
+    }
+
     if (!$.fn.dataTable.isDataTable('#employees-table')) {
       $('#employees-table').DataTable({
         paging: true,
@@ -54,4 +60,5 @@ $(document).on('turbolinks:load', () => {
 $(document).on('turbolinks:before-cache', () => {
   $('#employees-table').DataTable().destroy()
   $('#students-table').DataTable().destroy()
+  $('#users-table').DataTable().destroy()
 })

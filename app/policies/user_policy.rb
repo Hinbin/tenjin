@@ -42,6 +42,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def set_role?
-    user.super?
+    user.super? && record.employee?
   end
+
+  def remove_role?
+    user.super? && record.employee?
+  end
+
 end

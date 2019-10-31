@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'resetting all user passwords', default_creates: true, type: :request do
+RSpec.describe 'user_controller', default_creates: true, type: :request do
   before do
     student
   end
@@ -25,6 +25,7 @@ RSpec.describe 'resetting all user passwords', default_creates: true, type: :req
       reset_all_link
       expect(response).to redirect_to(root_path)
     end
+
     it 'does not succeed if I am a student' do
       sign_in student
       reset_all_link
@@ -37,4 +38,20 @@ RSpec.describe 'resetting all user passwords', default_creates: true, type: :req
       expect(flash[:alert]).to be_present
     end
   end
+
+  context 'when managing roles' do
+    it 'only adds roles to employees' do
+      sign_in super_admin
+      student
+      patch set_role_user_path(student, user: { role: 'school_admin', subject: school })
+      expect(response).to redirect_to(root_path)
+    end
+
+    it 'only allows me to add roles if I am a super admin' do
+      sign_in student
+      patch set_role_user_path(employee, user: { role: 'school_admin', subject: school })
+      expect(response).to redirect_to(root_path)
+    end
+  end
+
 end

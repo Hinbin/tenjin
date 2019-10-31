@@ -63,14 +63,8 @@ class SchoolsController < ApplicationController
       HomeworkProgress.joins(user: :school)
                       .where('homework_progresses.completed = true AND schools.id = ?', @school.id).count
     @challenge_points_earned = User.where(school: @school).sum(:challenge_points)
-    @school_admins = User.where(school: @school, role: 'school_admin')
-  end
-
-  def show_employees
-    authorize @school
-    @school_admins = User.where(school: @school, role: 'school_admin')
-    @employees = User.where(school: @school, role: 'employee').or @school_admins
-    render 'school_employees'
+    @school_admins = User.where(school: @school).with_role(:school_admin)
+    @users = User.where(school: @school)
   end
 
   private

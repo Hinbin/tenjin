@@ -14,5 +14,7 @@ class RolifyCreateRoles < ActiveRecord::Migration[4.2]
     
     add_index(:roles, [ :name, :resource_type, :resource_id ])
     add_index(:users_roles, [ :user_id, :role_id ])
+
+    User.where(role: 'school_admin').update_all(role: 'employee')
   end
 end

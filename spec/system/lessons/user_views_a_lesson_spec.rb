@@ -29,5 +29,4 @@ RSpec.describe 'User views a lesson', type: :system, js: true, default_creates: 
     expect(page).to have_css("iframe[src^=\"http://www.youtube.com/embed/#{lesson.video_id}?autoplay=1\"]")
   end
 
-  it 'creates a quiz for the video if I choose to'
 end

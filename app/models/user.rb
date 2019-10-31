@@ -17,7 +17,7 @@ class User < ApplicationRecord
 
   belongs_to :school
 
-  enum role: %i[student employee contact school_admin]
+  enum role: { student: 0, employee: 1, contact: 2, school_admin: 3 }
   validates :upi, presence: true
   validates :role, presence: true
 

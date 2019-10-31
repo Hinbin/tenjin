@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   resources :schools do
     member do
       patch 'reset_all_passwords'
-      get 'show_employees'
       patch 'sync'
     end
   end
@@ -21,7 +20,11 @@ Rails.application.routes.draw do
   resources :users, only:[:show, :index, :update] do
       member do
         patch 'set_role'
+        delete 'remove_role'
         patch 'reset_password'
+      end
+      collection do
+        get 'manage_roles'
       end
   end
   resources :admins, only:[:show]  do
