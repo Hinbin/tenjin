@@ -32,10 +32,6 @@ class User < ApplicationRecord
     @login || username || email
   end
 
-  def school_employee?
-    school_admin? || employee?
-  end
-
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     if (login = conditions.delete(:login))
@@ -102,7 +98,7 @@ class User < ApplicationRecord
     def initialize_user(user, role, school)
       u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
       u.school_id = school.id
-      u.role = role unless u.role == 'school_admin'
+      u.role = role
       u.provider = 'Wonde'
       u.upi = user.upi
       u.forename = user.forename

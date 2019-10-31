@@ -22,9 +22,14 @@ class School < ApplicationRecord
     school.sync_status = 'syncing'
     school.save
 
-    User.where(school: school).where.not(role: 'school_admin').update_all(disabled: true)
-    Enrollment.joins(:classroom).where('school_id = ?', school.id).destroy_all
-    Classroom.where('school_id = ?', school.id).update_all(disabled: true)
+    User.where(school: school)
+        .where.not(id: User.with_role(:school_admin))
+        .update_all(disabled: true)
+    Enrollment.joins(:classroom)
+              .where('school_id = ?', school.id)
+              .destroy_all
+    Classroom.where('school_id = ?', school.id)
+             .update_all(disabled: true)
   end
 
   def self.from_wonde_sync_end(school)

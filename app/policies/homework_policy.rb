@@ -3,7 +3,7 @@
 class HomeworkPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user.school_admin?
+      if user.has_role?(:school_admin)
         scope.joins(:classroom).where(classrooms: { school: user.school })
       else
         scope.where(classroom_id: user.classrooms)
@@ -12,15 +12,15 @@ class HomeworkPolicy < ApplicationPolicy
   end
 
   def new?
-    @user.school_employee? && @record.classroom.school == @user.school
+    @user.employee? && @record.classroom.school == @user.school
   end
 
   def create?
-    @user.school_employee? && @record.classroom.school == @user.school
+    @user.employee? && @record.classroom.school == @user.school
   end
 
   def destroy?
-    @user.school_employee? && @record.classroom.school == @user.school
+    @user.employee? && @record.classroom.school == @user.school
   end
 
   def show?

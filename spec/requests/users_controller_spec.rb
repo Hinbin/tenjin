@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'user_controller', default_creates: true, type: :request do
+RSpec.describe 'user controller', default_creates: true, type: :request do
   before do
     student
   end
@@ -49,9 +49,8 @@ RSpec.describe 'user_controller', default_creates: true, type: :request do
 
     it 'only allows me to add roles if I am a super admin' do
       sign_in student
-      patch set_role_user_path(employee, user: { role: 'school_admin', subject: school })
-      expect(response).to redirect_to(root_path)
+      patch set_role_user_path(teacher, user: { role: 'school_admin', subject: school })
+      expect(response).to redirect_to(new_admin_session_path)
     end
   end
-
 end

@@ -2,11 +2,11 @@
 
 class ClassroomPolicy < ApplicationPolicy
   def show?
-    user.employee? || user.school_admin?
+    user.employee?
   end
 
   def update?
-    user.school_admin? && @record.school == user.school
+    user.has_role?(:school_admin) && @record.school == user.school
   end
 
   class Scope < Scope

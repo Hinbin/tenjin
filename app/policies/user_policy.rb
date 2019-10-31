@@ -10,11 +10,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def index?
-    user.school_admin?
+    user.has_role?(:school_admin)
   end
 
   def show?
-    if user.school_admin?
+    if user.has_role?(:school_admin)
       user.school == record.school
     elsif user.employee?
       (user.school == record.school) && (record.student? || user == record)
@@ -28,13 +28,13 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    (user.school_employee? && record.school == user.school) || (record == user)
+    (user.employee? && record.school == user.school) || (record == user)
   end
 
   def destroy?
     return false if user == record
 
-    user.school_admin?
+    user.has_role?(:school_admin)
   end
 
   def become?
