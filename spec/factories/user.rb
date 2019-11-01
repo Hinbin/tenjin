@@ -22,14 +22,23 @@ FactoryBot.define do
 
     factory :teacher do
       role { 'employee' }
-      email { FFaker::Internet.email }
     end
 
     factory :school_admin do
       role { 'employee' }
-      email { FFaker::Internet.email }
       after(:create) do |user, _evaluator|
         user.add_role :school_admin
+      end
+    end
+
+    factory :question_author do
+      transient do
+        subject { subject }
+      end
+
+      role { 'employee' }
+      after(:create) do |user, evaluator|
+        user.add_role :question_author, evaluator.subject
       end
     end
   end

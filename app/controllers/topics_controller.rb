@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TopicsController < ApplicationController
-  before_action :authenticate_admin!
+  before_action :authenticate_user!
   before_action :set_topic, only: %i[update destroy]
 
   def new

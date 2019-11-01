@@ -8,10 +8,6 @@ FactoryBot.define do
     role { 'admin' }
     password { FFaker::Internet.password }
 
-    factory :author do
-      role { 'author' }
-    end
-
     factory :super_admin do
       role { 'super' }
     end

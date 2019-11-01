@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  before_action :authenticate_admin!
+  before_action :authenticate_user!
   before_action :set_answer, only: %i[show update destroy]
 
   def new

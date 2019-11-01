@@ -28,14 +28,18 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
         li.nav-item
           a.nav-link href=dashboard_path
             | Classrooms
-      -if current_user.has_role? :school_admin
-        li.nav-item
-          a.nav-link href=users_path
-            | User Admin
-      -if current_user.has_role? :school_admin
-        li.nav-item
-          a.nav-link href=classrooms_path
-            | Setup Classrooms         
+        -if current_user.has_role? :school_admin
+          li.nav-item
+            a.nav-link href=users_path
+              | User Admin
+        -if current_user.has_role? :school_admin
+          li.nav-item
+            a.nav-link href=classrooms_path
+              | Setup Classrooms    
+        -if current_user.has_role? :question_author, :any
+          li.nav-item
+            a.nav-link href=questions_path
+              | Edit Questions      
 
     -if current_user.student?
       a href=customise_path

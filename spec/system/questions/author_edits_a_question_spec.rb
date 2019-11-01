@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Author edits a question', type: :feature, js: true do
-  include_context 'default_creates'
+RSpec.describe 'Author edits a question', type: :system, js: true, default_creates: true do
 
-  let(:author) { create(:author) }
+  let(:author) { create(:question_author, subject: subject) }
   let(:question) { create(:question, topic: topic) }
   let(:lesson) { create(:lesson, topic: topic) }
   let(:new_topic_name) { FFaker::Lorem.word }

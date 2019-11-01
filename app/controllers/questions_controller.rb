@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  before_action :authenticate_admin!
+  before_action :authenticate_user!
   before_action :set_question, only: %i[show update destroy]
 
   def index
+    @subjects = policy_scope(Subject).includes(:topics)
+    authorize @subjects.first, :update?, policy_class: SubjectPolicy
+
     if question_params[:topic_id].present?
       @topic = policy_scope(Topic).find(question_params[:topic_id])
       @questions = Question.clean_empty_questions(@topic)
 
       return render 'question_topic_index'
     end
-
-    @subjects = policy_scope(Subject).includes(:topics)
   end
 
   def new

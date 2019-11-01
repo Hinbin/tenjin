@@ -8,25 +8,15 @@ class SubjectPolicy < ApplicationPolicy
     end
 
     def resolve
-      @scope.all
+      @scope.with_role(:question_author, user)
     end
   end
 
   def update?
-    must_be_super_or_author
+    user.has_role? :question_author, record
   end
 
-  def create?
-    must_be_super_or_author
-  end
+  alias create? update?
+  alias destroy? update?
 
-  def destroy?
-    must_be_super_or_author
-  end
-
-  def must_be_super_or_author
-    return false unless @user.present?
-
-    @user.author? || @user.super?
-  end
 end

@@ -1,5 +1,23 @@
 # frozen_string_literal: true
 
-class TopicPolicy < SubjectPolicy
-  # Inherits from subject policy
+class TopicPolicy < ApplicationPolicy
+  
+  class Scope < Scope
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    def resolve
+      @scope.where(subject: Subject.with_role(:question_author, user).pluck(:id))
+    end
+  end
+
+  def update?
+    user.has_role? :question_author, record.subject
+  end
+
+  alias create? update?
+  alias destroy? update?
+
 end
