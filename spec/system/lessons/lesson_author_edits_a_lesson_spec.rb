@@ -75,7 +75,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       teacher.add_role :lesson_author, subject
     end
 
-    it 'saves new lesson details' do
+    it 'saves new lesson details', :focus do
       visit(lessons_path)
       click_link('Edit')
       fill_in_form(new_lesson)

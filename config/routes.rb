@@ -13,7 +13,11 @@ Rails.application.routes.draw do
   end
   resources :leaderboard, only:[:show, :index]
   resources :classrooms, only: [:show, :index, :update]
-  resources :questions
+  resources :questions do
+    collection do
+      get 'topic_questions'
+    end
+  end
   resources :answers
   resources :topics
   resources :homeworks
@@ -27,7 +31,7 @@ Rails.application.routes.draw do
         get 'manage_roles'
       end
   end
-  resources :admins, only:[:show]  do
+  resources :admins, only:[:show] do
     member do
       post 'become'
     end

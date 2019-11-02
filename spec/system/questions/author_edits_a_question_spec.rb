@@ -7,10 +7,34 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   let(:lesson) { create(:lesson, topic: topic) }
   let(:new_topic_name) { FFaker::Lorem.word }
 
+  def create_and_navigate_to_quiz
+    sign_out author
+    sign_in student
+    create_list(:answer, 3, question: question)
+    create(:answer, question: question, correct: true)
+    create(:question, topic: topic, lesson: lesson)
+    navigate_to_quiz
+  end
+
+  def switch_to_student_account
+    find('div', exact_text: subject.name, count: 2)
+    sign_out author
+    sign_in student
+    visit new_quiz_path(subject: topic.subject.name)
+  end
+
   before do
     setup_subject_database
     sign_in author
   end
+
+  # it 'assigns a default lesson to a topic' do
+  #   lesson
+  #   visit(topic_questions_questions_path(topic_id: topic))
+  #   select lesson.title, from: 'Default Lesson'
+  #   create_and_navigate_to_quiz
+  #   expect(page).to have_css(".videoLink[src^=\"http://www.youtube.com/embed/#{lesson.video_id}?autoplay=1\"]")
+  # end
 
   context 'when adding or removing questions' do
     let(:flagged_question) { create_list(:flagged_question, 5, question: question) }
@@ -27,9 +51,9 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       expect(page).to have_css('#questionEditor')
     end
 
-    it 'allows you to delete a question' do
+    it 'allows you to delete a question', :focus do
       visit(question_path(question))
-      click_link('Delete Question')
+      page.accept_confirm { click_link('Delete Question') }
       expect(page).to have_no_css('.question-row')
     end
 
@@ -48,10 +72,18 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       expect(page).to have_content('Delete Topic')
     end
 
-    it 'allows you to delete a topic' do
+    it 'allows you to disable a topic' do
       click_link('Add Topic')
-      click_link('Delete Topic')
+      page.accept_confirm { click_link('Delete Topic') }
       expect(page).to have_no_css('.topic-row')
+    end
+
+    it 'prevents disabled topics from showing when taking a quiz' do
+      topic
+      visit(topic_questions_questions_path(topic_id: topic))
+      page.accept_confirm { click_link('Delete Topic') }
+      switch_to_student_account
+      expect(page).to have_no_css('option', text: topic.name )
     end
 
     it 'only allows you to delete a topic with no questions' do
@@ -112,7 +144,8 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
     it 'allows you to delete the question' do
       visit(question_path(question))
-      expect { click_link('Delete Question') }.to change(Question, :count).by(-1)
+      page.accept_confirm{ click_link('Delete Question') }
+      expect(page).to have_no_content(question.question_text.to_plain_text)
     end
 
     context 'when showing a multiple choice question' do

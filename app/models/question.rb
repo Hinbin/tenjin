@@ -17,7 +17,7 @@ class Question < ApplicationRecord
   before_destroy :destroy_answers
 
   def self.clean_empty_questions(topic)
-    questions = Question.where(topic_id: topic).includes(:answers, :asked_questions)
+    questions = Question.where(active: true, topic_id: topic).includes(:answers, :asked_questions)
     update_questions = false
     # Clean up empty questions
     questions.each do |q|

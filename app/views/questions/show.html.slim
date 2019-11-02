@@ -44,7 +44,11 @@
     button.btn.btn-block.btn-primary.check-and-save data-link=new_question_path(topic: { topic_id: @question.topic })
       | Create another question
   .row.col.mt-5
-    =link_to 'Delete Question', question_path(@question), method: :delete, class: 'btn btn-danger btn-block'
+    =link_to 'Delete Question',
+      question_path(@question),
+      data:{ confirm: 'Are you sure?' },
+      method: :delete,
+      class: 'btn btn-danger btn-block'
 .modal.fade#noCorrectAnswerModal
   .modal-dialog.modal-dialog-centered role="document"
     .modal-content

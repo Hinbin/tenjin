@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_25_122411) do
+ActiveRecord::Schema.define(version: 2019_11_01_144306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -257,6 +257,7 @@ ActiveRecord::Schema.define(version: 2019_10_25_122411) do
     t.datetime "updated_at", null: false
     t.integer "external_id"
     t.bigint "lesson_id"
+    t.boolean "active", default: true
     t.index ["lesson_id"], name: "index_questions_on_lesson_id"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
@@ -331,6 +332,9 @@ ActiveRecord::Schema.define(version: 2019_10_25_122411) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "external_id"
+    t.bigint "lesson_id"
+    t.boolean "active", default: true
+    t.index ["lesson_id"], name: "index_topics_on_lesson_id"
     t.index ["subject_id"], name: "index_topics_on_subject_id"
   end
 
@@ -415,6 +419,7 @@ ActiveRecord::Schema.define(version: 2019_10_25_122411) do
   add_foreign_key "schools", "school_groups"
   add_foreign_key "topic_scores", "topics"
   add_foreign_key "topic_scores", "users"
+  add_foreign_key "topics", "lessons"
   add_foreign_key "topics", "subjects"
   add_foreign_key "usage_statistics", "topics"
   add_foreign_key "usage_statistics", "users"

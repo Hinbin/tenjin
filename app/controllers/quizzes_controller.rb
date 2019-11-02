@@ -41,7 +41,9 @@ class QuizzesController < ApplicationController
       render 'new'
     else
       @css_flavour = find_dashboard_style
-      @topics = @subject.topics.pluck(:name, :id)
+      @topics = @subject.topics.where(active: true)
+                        .order(:name)
+                        .pluck(:name, :id)
       @topics.prepend(['Lucky Dip', 'Lucky Dip'])
       render 'select_topic'
     end

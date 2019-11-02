@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class TopicPolicy < ApplicationPolicy
-  
+  # Also used to authorize editing questions for a topic
+
   class Scope < Scope
     def initialize(user, scope)
       @user = user
@@ -9,7 +10,7 @@ class TopicPolicy < ApplicationPolicy
     end
 
     def resolve
-      @scope.where(subject: Subject.with_role(:question_author, user).pluck(:id))
+      @scope.where(active: true, subject: Subject.with_role(:question_author, user).pluck(:id))
     end
   end
 

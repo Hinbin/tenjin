@@ -19,12 +19,12 @@ class LessonsController < ApplicationController
   end
 
   def new
-    first_topic = Topic.where(subject: Subject.find(new_lesson_params)).first
+    first_topic = Topic.where(active: true, subject: Subject.find(new_lesson_params)).first
     redirect_to lessons_path flash: { error: 'No topics found for subject' } unless first_topic.present?
 
     @lesson = Lesson.new
     @lesson.topic = first_topic
-    @topics = Topic.where(subject: Subject.find(new_lesson_params))
+    @topics = Topic.where(active: true, subject: Subject.find(new_lesson_params))
     authorize @lesson
   end
 
@@ -34,7 +34,7 @@ class LessonsController < ApplicationController
   end
 
   def edit
-    @topics = Topic.where(subject: @lesson.subject)
+    @topics = Topic.where(active: true, subject: @lesson.subject)
     authorize @lesson
   end
 
@@ -60,7 +60,7 @@ class LessonsController < ApplicationController
     authorize @lesson
 
     unless @lesson.valid?
-      @topics = Topic.where(subject: @lesson.topic.subject)
+      @topics = policy_scope(Topic).where(subject: @lesson.topic.subject)
 
       return render 'edit' if @lesson.persisted?
 

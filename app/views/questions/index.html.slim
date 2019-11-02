@@ -7,9 +7,9 @@
         tr
           th Topic Name
           th Question # 
-      -s.topics.each do |t|
+      -s.topics.where(active: true).order(:name).each do |t|
         tr    
-          td =link_to t.name, controller: "questions", topic_id: t.id
+          td =link_to t.name, topic_questions_questions_path(topic_id: t)
           td =t.questions.count
 
         

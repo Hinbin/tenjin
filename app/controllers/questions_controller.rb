@@ -7,13 +7,17 @@ class QuestionsController < ApplicationController
   def index
     @subjects = policy_scope(Subject).includes(:topics)
     authorize @subjects.first, :update?, policy_class: SubjectPolicy
+  end
 
-    if question_params[:topic_id].present?
-      @topic = policy_scope(Topic).find(question_params[:topic_id])
-      @questions = Question.clean_empty_questions(@topic)
+  def topic_questions
+    redirect questions_path unless question_topic_params.present?
 
-      return render 'question_topic_index'
-    end
+    @topic = Topic.find(question_topic_params)
+    authorize @topic, :update?
+    @topic_lessons = Lesson.where(topic: @topic)
+    @questions = Question.clean_empty_questions(@topic)
+
+    render 'topic_question_index'
   end
 
   def new
@@ -21,7 +25,7 @@ class QuestionsController < ApplicationController
     return unless @topic.present?
 
     authorize @topic
-    @question = Question.create(topic: @topic, question_type: 'multiple')
+    @question = Question.create(topic: @topic, question_type: 'multiple', active: true)
     Answer.create(question: @question, text: 'Click to edit this answer', correct: false)
 
     redirect_to @question
@@ -46,17 +50,15 @@ class QuestionsController < ApplicationController
 
   def destroy
     authorize @question.topic
-    redirect_to questions_path(topic_id: @question.topic)
+    redirect_to topic_questions_questions_path(topic_id: @question.topic)
 
-    @question.answers.destroy_all
-    FlaggedQuestion.where(question: @question).destroy_all
-    @question.destroy
+    @question.update_attribute(:active, false)
   end
 
   private
 
-  def question_params
-    params.permit(:topic_id)
+  def question_topic_params
+    params.require(:topic_id)
   end
 
   def question_update_params

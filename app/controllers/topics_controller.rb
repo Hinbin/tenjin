@@ -9,9 +9,9 @@ class TopicsController < ApplicationController
     return unless @subject.present?
 
     authorize @subject
-    @topic = Topic.create(subject: @subject, name: 'New topic.  Click here to change name')
+    @topic = Topic.create(subject: @subject, active: true, name: 'New topic.  Click here to change name')
 
-    redirect_to questions_path(topic_id: @topic)
+    redirect_to topic_questions_questions_path(topic_id: @topic)
   end
 
   def update
@@ -20,11 +20,9 @@ class TopicsController < ApplicationController
   end
 
   def destroy
-    return if @topic.questions.exists?
-
     authorize @topic
-    @topic.destroy
 
+    @topic.update_attribute(:active, false)
     redirect_to questions_path
   end
 
@@ -35,7 +33,7 @@ class TopicsController < ApplicationController
   end
 
   def topic_params
-    params.require(:topic).permit(:name)
+    params.require(:topic).permit(:name, :lesson_id)
   end
 
   def new_topic_params
