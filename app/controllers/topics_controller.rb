@@ -33,7 +33,7 @@ class TopicsController < ApplicationController
   end
 
   def topic_params
-    params.require(:topic).permit(:name, :lesson_id)
+    params.require(:topic).permit(:name, :default_lesson_id)
   end
 
   def new_topic_params

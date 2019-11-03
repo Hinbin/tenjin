@@ -28,13 +28,18 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     sign_in author
   end
 
-  # it 'assigns a default lesson to a topic' do
-  #   lesson
-  #   visit(topic_questions_questions_path(topic_id: topic))
-  #   select lesson.title, from: 'Default Lesson'
-  #   create_and_navigate_to_quiz
-  #   expect(page).to have_css(".videoLink[src^=\"http://www.youtube.com/embed/#{lesson.video_id}?autoplay=1\"]")
-  # end
+  it 'assigns a default lesson to a topic' do
+    lesson
+    visit(topic_questions_questions_path(topic_id: topic))
+    select lesson.title, from: 'Default Lesson'
+    create_and_navigate_to_quiz
+    expect(page).to have_css(".videoLink[src^=\"http://www.youtube.com/embed/#{lesson.video_id}\"]")
+  end
+
+  it 'only shows a default lesson when needed' do
+    create_and_navigate_to_quiz
+    expect(page).to have_no_css('.videoLink')
+  end
 
   context 'when adding or removing questions' do
     let(:flagged_question) { create_list(:flagged_question, 5, question: question) }
@@ -51,7 +56,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       expect(page).to have_css('#questionEditor')
     end
 
-    it 'allows you to delete a question', :focus do
+    it 'allows you to delete a question' do
       visit(question_path(question))
       page.accept_confirm { click_link('Delete Question') }
       expect(page).to have_no_css('.question-row')

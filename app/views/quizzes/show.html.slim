@@ -1,13 +1,13 @@
 =render('question_top')
 .container
-  -if @question.lesson.present?
+  -if @lesson.present?
     .row.align-items-center
       .col-md-8
         = render_question
       .col-md-4.text-center#lesson
-        h3.h3 = @question.lesson.title
-        .videoLink src=("http://www.youtube.com/embed/" + @question.lesson.video_id)
-          img#btnVideo.img-fluid src=("https://img.youtube.com/vi/#{@question.lesson.video_id}/hqdefault.jpg") data-toggle="modal" data-target="#videoModal" 
+        h3.h3 = @lesson.title
+        .videoLink src=("http://www.youtube.com/embed/" + @lesson.video_id)
+          img#btnVideo.img-fluid src=("https://img.youtube.com/vi/#{@lesson.video_id}/hqdefault.jpg") data-toggle="modal" data-target="#videoModal" 
   -else
     = render_question
 = render('question_bottom')

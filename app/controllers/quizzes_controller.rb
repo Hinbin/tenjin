@@ -19,6 +19,7 @@ class QuizzesController < ApplicationController
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     calculate_percent_completed
     @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
+    find_lesson
     return render 'show' if @quiz.active?
 
     percent_correct = calculate_percent_correct
@@ -67,6 +68,14 @@ class QuizzesController < ApplicationController
   end
 
   private
+
+  def find_lesson
+    if @question.lesson.present?
+      @lesson = @question.lesson
+    elsif @question.topic.default_lesson.present?
+      @lesson = @question.topic.default_lesson
+    end
+  end
 
   def fail_quiz_creation(result)
     flash[:alert] = result.errors
