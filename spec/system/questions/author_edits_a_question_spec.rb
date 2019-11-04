@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Author edits a question', type: :system, js: true, default_creates: true do
+RSpec.describe 'Author edits a question' type: :system, js: true, default_creates: true do
   let(:author) { create(:question_author, subject: subject) }
   let(:question) { create(:question, topic: topic) }
   let(:lesson) { create(:lesson, topic: topic) }
@@ -13,6 +13,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
   def switch_to_student_account
     sign_out author
+    visit(dashboard_path)
     sign_in student
     visit new_quiz_path(subject: topic.subject.name)
   end

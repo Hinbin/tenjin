@@ -152,10 +152,14 @@ RSpec.configure do |config|
       Capybara.reset! if ex.metadata[:js]
       DatabaseCleaner.clean
     end
-  end
+    config.before(:each, type: :system) do
+      driven_by :selenium_chrome_headless
+    end
+  else
 
-  config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless
+    config.before(:each, type: :system) do
+      driven_by :selenium_chrome_headless
+    end
   end
 end
 
