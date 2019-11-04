@@ -174,5 +174,6 @@ Shoulda::Matchers.configure do |config|
 end
 
 Capybara.server = :puma, { Silent: true }
+Capybara.default_max_wait_time = 15 if ENV['CI']
 Capybara.default_driver = :selenium_chrome_headless
 Capybara.javascript_driver = :selenium_chrome_headless

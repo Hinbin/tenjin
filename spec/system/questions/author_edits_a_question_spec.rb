@@ -196,6 +196,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         answer
         visit(question_path(question))
         find_by_id('questionTypeSelect').click
+        wait_for_ajax
         find('option', text: 'Short answer').click
         find('table', id: 'table-short_answer')
       end
