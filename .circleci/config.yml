@@ -59,7 +59,10 @@ jobs:
       - run: sudo apt install -y postgresql-client || true      
       - run: bundle exec rake db:create
       - run: bundle exec rake db:schema:load
-
+      - run: 
+          name: "Setup CI Environment variable"
+          command: |
+            echo 'export CI="true"' >> $BASH_ENV # Set CI env var up
       # run tests!
       - run:
           name: run tests

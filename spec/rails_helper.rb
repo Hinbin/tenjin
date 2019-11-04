@@ -135,7 +135,7 @@ RSpec.configure do |config|
     end
   end
 
-  if ENV['TRAVIS']
+  if ENV['CI']
     # show retry status in spec process
     config.verbose_retry = true
     # show exception that triggers a retry if verbose_retry is set to true
@@ -174,21 +174,5 @@ Shoulda::Matchers.configure do |config|
 end
 
 Capybara.server = :puma, { Silent: true }
-
-if ENV['TRAVIS']
-  Capybara.register_driver :travis_chrome do |app|
-    options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu])
-
-    Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
-  end
-
-  Capybara.javascript_driver = :travis_chrome
-
-  # Increase timeouts to avoid intermittent failures
-  Capybara.default_max_wait_time = 15
-
-else
-  Capybara.default_driver = :selenium_chrome_headless
-  Capybara.javascript_driver = :selenium_chrome_headless
-
-end
+Capybara.default_driver = :selenium_chrome_headless
+Capybara.javascript_driver = :selenium_chrome_headless
