@@ -108,8 +108,9 @@ gem 'simple_form'
 # Slim for clean HTML
 gem 'slim'
 
-# Pundit to control authorization
+# User specific authorization
 gem 'pundit'
+gem 'rolify'
 
 # Wonde client to easily access Wonde data
 gem 'wondeclient', github: 'wondeltd/ruby-client'
@@ -125,9 +126,6 @@ gem 'high_voltage'
 
 #Required for rails 6.1 (recommeneded 1.2)
 gem 'image_processing'
-
-# In place editing for answers
-gem 'best_in_place'
 
 # Use Amazon S3 for Active Storage
 gem 'aws-sdk-s3'

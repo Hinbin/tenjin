@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TopicsController < ApplicationController
-  before_action :authenticate_admin!
+  before_action :authenticate_user!
   before_action :set_topic, only: %i[update destroy]
 
   def new
@@ -9,9 +9,9 @@ class TopicsController < ApplicationController
     return unless @subject.present?
 
     authorize @subject
-    @topic = Topic.create(subject: @subject, name: 'New topic.  Click here to change name')
+    @topic = Topic.create(subject: @subject, active: true, name: 'New topic.  Click here to change name')
 
-    redirect_to questions_path(topic_id: @topic)
+    redirect_to topic_questions_questions_path(topic_id: @topic)
   end
 
   def update
@@ -20,11 +20,9 @@ class TopicsController < ApplicationController
   end
 
   def destroy
-    return if @topic.questions.exists?
-
     authorize @topic
-    @topic.destroy
 
+    @topic.update_attribute(:active, false)
     redirect_to questions_path
   end
 
@@ -35,7 +33,7 @@ class TopicsController < ApplicationController
   end
 
   def topic_params
-    params.require(:topic).permit(:name)
+    params.require(:topic).permit(:name, :default_lesson_id)
   end
 
   def new_topic_params

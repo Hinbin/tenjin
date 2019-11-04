@@ -8,23 +8,30 @@ Rails.application.routes.draw do
   resources :schools do
     member do
       patch 'reset_all_passwords'
-      get 'show_employees'
       patch 'sync'
     end
   end
   resources :leaderboard, only:[:show, :index]
   resources :classrooms, only: [:show, :index, :update]
-  resources :questions
+  resources :questions do
+    collection do
+      get 'topic_questions'
+    end
+  end
   resources :answers
   resources :topics
   resources :homeworks
   resources :users, only:[:show, :index, :update] do
       member do
         patch 'set_role'
+        delete 'remove_role'
         patch 'reset_password'
       end
+      collection do
+        get 'manage_roles'
+      end
   end
-  resources :admins, only:[:show]  do
+  resources :admins, only:[:show] do
     member do
       post 'become'
     end
@@ -32,6 +39,7 @@ Rails.application.routes.draw do
 
   resources :flagged_questions, only:[:create]
   resources :school_groups
+  resources :lessons
 
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'

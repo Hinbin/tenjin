@@ -20,9 +20,6 @@ require 'vcr'
 require 'action_cable/testing/rspec'
 require 'action_cable/testing/rspec/features'
 
-require 'best_in_place'
-require 'best_in_place/test_helpers'
-
 WebMock.disable_net_connect!(allow_localhost: true)
 # WebMock.allow_net_connect!
 
@@ -88,16 +85,18 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::IntegrationHelpers, type: :feature
+  config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :feature
-  config.include BestInPlace::TestHelpers
+  config.include SessionHelpers, type: :system
   config.include ActiveJob::TestHelper
 
   config.include_context 'default_creates', default_creates: true
 
   # Allow wait for ajax command
   config.include WaitForAjax, type: :feature
+  config.include WaitForAjax, type: :system
 
   # Required to use database cleaner with action cable
   # or feature testing will not work
@@ -153,6 +152,14 @@ RSpec.configure do |config|
       Capybara.reset! if ex.metadata[:js]
       DatabaseCleaner.clean
     end
+
+    config.before(:each, type: :system) do
+      driven_by :travis_chrome
+    end
+  else
+    config.before(:each, type: :system) do
+      driven_by :selenium_chrome
+    end
   end
 end
 
@@ -181,9 +188,7 @@ if ENV['TRAVIS']
   Capybara.default_max_wait_time = 15
 
 else
-  Capybara.default_driver = :selenium_chromex
-  Capybara.javascript_driver = :selenium_chrome
-end
+  Capybara.default_driver = :selenium_chrome_headless
+  Capybara.javascript_driver = :selenium_chrome_headless
 
-# REMOVE WITH NEW VERSION OF SHOULDAMATCHERS
-class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end
+end

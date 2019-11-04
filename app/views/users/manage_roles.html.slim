@@ -1,0 +1,50 @@
+section.page-section.pt-2#Users
+  .container    
+    h1.page-section-header.text-uppercase.text-center Manage Roles
+    hr.text-center class=("small mb-5 primary-red")
+    =render partial: 'role_table',
+      locals: {role: 'school_admin',
+      role_collection: @school_admins} if @school_admins.present?
+    =render partial: 'role_table',
+      locals: {role: 'lesson_author',
+      role_collection: @lesson_authors} if @lesson_authors.present?
+    =render partial: 'role_table',
+      locals: {role: 'question_author',
+      role_collection: @question_authors} if @question_authors.present?
+    -if @employees.present?
+      .col        
+        h1.text-center =link_to @school.name, school_path(@school)
+        h2.h2.text-center.text-uppercase School Users
+        hr.text-center class=("small mb-5 primary-red")          
+        .table-responsive
+          table.table#employees-table
+            thead
+              th Name
+              th Username
+              th Subject
+              th Role
+              th Add Role
+            tbody
+              - @employees.each do |e|
+                tr.employee-row data-user=e.id
+                  td
+                    => e.forename
+                    = e.surname
+                  td = e.username
+                  td 
+                    = select_tag 'user[subject]',
+                      options_from_collection_for_select(@all_subjects, :id, :name),
+                      id: "role-select-user-#{e.id}",
+                      form: "form-#{e.id}",
+                      class: 'custom-select'
+                  td = select_tag 'user[role]',
+                    options_for_select([ 'school_admin', 'question_author', 'lesson_author'], e.role),
+                    id: "role-select-user-#{e.id}",
+                    form: "form-#{e.id}",
+                    class: 'custom-select'
+                  td = button_to 'Add Role',
+                    set_role_user_path(e.id),
+                    id: "add-role-#{e.id}",
+                    class: 'btn btn-primary add-role-button',
+                    form: {id: "form-#{e.id}"},
+                    method: :patch

@@ -1,0 +1,40 @@
+.container
+  section.page-section.text-center.pt-2#newLesson 
+    h1.page-section-header.text-uppercase Lessons
+    hr class=("small mb-2 primary-red")
+    -if @lessons.count.zero?
+      p.lead No lessons yet!
+    -@subjects.each do |s|
+      - @subject_author = current_user.has_role? :lesson_author, s if @author
+      h1.py-4.h1=s.name
+      -@topics.each do |t|
+        h3.py-3.h3=t.name
+        .card-columns
+          -@lessons.where(topic: t).each do |l|
+            .card
+              .card-body.videoLink src="http://www.youtube.com/embed/#{l.video_id}" data-toggle="modal" data-target="#videoModal" 
+                h3.h4 =l.title
+                img.img-fluid.card-img-top src="https://img.youtube.com/vi/#{l.video_id}/hqdefault.jpg"          
+              -if @subject_author
+                .card-footer
+                  =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
+                  =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
+
+
+-if @author
+  .container
+    section.page-section.text-center.pt-2#createLessons
+      h1.page-section-header.text-uppercase Create Lessons
+      hr class=("small mb-5 primary-red")
+        - @editable_subjects.each do |s|
+          h3.h3.py-2 = s.name
+          =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'btn btn-block btn-primary'
+
+.modal.fade#videoModal
+  .modal-dialog.modal-dialog-centered.modal-lg role="document"
+    .modal-content 
+      .modal-body.p-0.p-md-2
+        button.close type="button" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true"&times;
+        .embed-responsive.embed-responsive-16by9
+          iframe.embed-responsive-item#video(allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen)

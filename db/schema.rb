@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_17_205758) do
+ActiveRecord::Schema.define(version: 2019_11_01_144306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -232,6 +232,17 @@ ActiveRecord::Schema.define(version: 2019_10_17_205758) do
     t.index ["user_id"], name: "index_leaderboard_awards_on_user_id"
   end
 
+  create_table "lessons", force: :cascade do |t|
+    t.string "url"
+    t.string "title"
+    t.integer "category"
+    t.string "video_id"
+    t.bigint "topic_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["topic_id"], name: "index_lessons_on_topic_id"
+  end
+
   create_table "multipliers", force: :cascade do |t|
     t.integer "score"
     t.integer "multiplier"
@@ -245,6 +256,9 @@ ActiveRecord::Schema.define(version: 2019_10_17_205758) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "external_id"
+    t.bigint "lesson_id"
+    t.boolean "active", default: true
+    t.index ["lesson_id"], name: "index_questions_on_lesson_id"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
 
@@ -264,6 +278,15 @@ ActiveRecord::Schema.define(version: 2019_10_17_205758) do
     t.index ["subject_id"], name: "index_quizzes_on_subject_id"
     t.index ["topic_id"], name: "index_quizzes_on_topic_id"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
+  end
+
+  create_table "roles", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "resource_type"
+    t.integer "resource_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
   end
 
   create_table "school_groups", force: :cascade do |t|
@@ -309,6 +332,8 @@ ActiveRecord::Schema.define(version: 2019_10_17_205758) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "external_id"
+    t.bigint "default_lesson_id"
+    t.boolean "active", default: true
     t.index ["subject_id"], name: "index_topics_on_subject_id"
   end
 
@@ -356,6 +381,12 @@ ActiveRecord::Schema.define(version: 2019_10_17_205758) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  create_table "users_roles", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+    t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+  end
+
   add_foreign_key "active_customisations", "customisations"
   add_foreign_key "active_customisations", "users"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -380,6 +411,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_205758) do
   add_foreign_key "leaderboard_awards", "schools"
   add_foreign_key "leaderboard_awards", "subjects"
   add_foreign_key "leaderboard_awards", "users"
+  add_foreign_key "questions", "lessons"
   add_foreign_key "questions", "topics"
   add_foreign_key "quizzes", "topics"
   add_foreign_key "quizzes", "users"

@@ -51,16 +51,18 @@ class Quiz::CreateQuiz < ApplicationService
                   # Keep getting random questions, one from each topic until we have at
                   # least 10 questions
 
-                  question_array += Question.includes(:topic).references(:topic)
+                  question_array += Question.where(active: true)
+                                            .includes(:topic).references(:topic)
                                             .select('DISTINCT ON(questions.topic_id) questions.topic_id, questions.*')
-                                            .where(topics: { subject_id: @subject_id })
+                                            .where(topics: { active: true, subject_id: @subject_id })
                                             .order('questions.topic_id, random()')
 
                   if question_array.length < 10
                     # There are not 10 or more topics so try without getting one from each topic
-                    question_array += Question.includes(:topic).references(:topic)
+                    question_array += Question.where(active: true)
+                                              .includes(:topic).references(:topic)
                                               .select('questions.topic_id, questions.*')
-                                              .where(topics: { subject_id: @subject_id })
+                                              .where(topics: { active: true, subject_id: @subject_id })
                                               .order('questions.topic_id, random()')
                   end
 
@@ -68,9 +70,10 @@ class Quiz::CreateQuiz < ApplicationService
                   question_array.shuffle.sample(10)
 
                 else
-                  Question.where(topic: @topic_id).includes(:topic).order(Arel.sql('RANDOM()')).take(10)
+                  Question.where(active: true, topic: @topic_id)
+                          .includes(:topic)
+                          .order(Arel.sql('RANDOM()')).take(10)
                 end
-
     @quiz.questions = questions
     @quiz.question_order = @quiz.questions.shuffle.pluck(:id)
   end

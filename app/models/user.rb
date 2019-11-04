@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # Note - removed :registerable so new accounts cannot be created
@@ -16,7 +17,7 @@ class User < ApplicationRecord
 
   belongs_to :school
 
-  enum role: %i[student employee contact school_admin]
+  enum role: { student: 0, employee: 1, contact: 2, school_admin: 3 }
   validates :upi, presence: true
   validates :role, presence: true
 
@@ -29,10 +30,6 @@ class User < ApplicationRecord
 
   def login
     @login || username || email
-  end
-
-  def school_employee?
-    school_admin? || employee?
   end
 
   def self.find_for_database_authentication(warden_conditions)
@@ -101,7 +98,7 @@ class User < ApplicationRecord
     def initialize_user(user, role, school)
       u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
       u.school_id = school.id
-      u.role = role unless u.role == 'school_admin'
+      u.role = role
       u.provider = 'Wonde'
       u.upi = user.upi
       u.forename = user.forename

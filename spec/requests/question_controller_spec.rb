@@ -3,15 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe 'using question editing', type: :request do
+  let(:subject) { create(:subject) }
   let(:school) { create(:school) }
   let(:student) { create(:student) }
-  let(:author) { create(:author) }
+  let(:author) { create(:question_author, subject: subject) }
 
   context 'when I am a student' do
     it 'redirects me to the dashboard' do
       sign_in student
       get questions_path
-      expect(response).to redirect_to(new_admin_session_path)
+      expect(response).to redirect_to(root_path)
     end
   end
 

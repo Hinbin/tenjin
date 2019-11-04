@@ -1,0 +1,46 @@
+.container
+  .row.mt-3.form-group
+    .col-sm-3
+      label for='topic-name' class='form-label' Topic Name: 
+    .col-sm-9
+      =text_field_tag('topic[name]',
+      @topic.name,
+      id: 'topic-name',
+      class: 'form-control',
+      data: { remote: 'true',  url: topic_path(@topic), method: 'patch' })      
+  .row.form-group
+    .col-sm-3
+      label for="select-default-lesson" class='form-label' Select Default Lesson
+    .col-sm-9
+      =select_tag('topic[default_lesson_id]',
+        options_from_collection_for_select(Lesson.where(topic: @topic), :id, :title, selected: @topic.default_lesson_id),
+        include_blank: 'No default lesson',
+        id: 'select-default-lesson',
+        class: 'custom-select',
+        data: { remote: 'true',  url: topic_path(@topic), method: 'patch' })
+  .row.my-2
+    .col
+      =link_to 'Add Question', new_question_path(topic: { topic_id: @topic }), class:'btn btn-primary btn-block'
+  .row.my-2
+    .col
+      table.table
+        thead
+          tr
+            th Question
+            th Times Asked
+            th Flags
+            th % Correct
+        tbody
+          -@questions.each do |q|
+            tr id="question-#{q.id}"
+              td.question-text = link_to q.question_text.blank? ? 'Click here to edit' : q.question_text, q
+              td.amount = q.asked_questions.count
+              td.flags = FlaggedQuestion.where(question: q).count
+              td.correct = number_to_percentage( (q.asked_questions.where(correct: true).count.to_f / q.asked_questions.count.to_f) * 100, precision: 0)  if q.asked_questions.count > 0
+  .row.my-5
+    .col
+      =link_to 'Delete Topic',
+        topic_path(@topic),
+        method: :delete,
+        class: 'btn btn-danger btn-block',
+        data: {confirm: 'Are you sure?  This cannot be undone'}

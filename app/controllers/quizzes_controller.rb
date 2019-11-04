@@ -19,7 +19,8 @@ class QuizzesController < ApplicationController
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     calculate_percent_completed
     @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
-    return render Quiz::RenderQuestionType.call(question: @question) if @quiz.active?
+    find_lesson
+    return render 'show' if @quiz.active?
 
     percent_correct = calculate_percent_correct
 
@@ -41,7 +42,9 @@ class QuizzesController < ApplicationController
       render 'new'
     else
       @css_flavour = find_dashboard_style
-      @topics = @subject.topics.pluck(:name, :id)
+      @topics = @subject.topics.where(active: true)
+                        .order(:name)
+                        .pluck(:name, :id)
       @topics.prepend(['Lucky Dip', 'Lucky Dip'])
       render 'select_topic'
     end
@@ -65,6 +68,14 @@ class QuizzesController < ApplicationController
   end
 
   private
+
+  def find_lesson
+    if @question.lesson.present?
+      @lesson = @question.lesson
+    elsif @question.topic.default_lesson.present?
+      @lesson = @question.topic.default_lesson
+    end
+  end
 
   def fail_quiz_creation(result)
     flash[:alert] = result.errors

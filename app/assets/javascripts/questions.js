@@ -27,7 +27,7 @@ $(document).on('turbolinks:load', () => {
 })
 
 function validateAndSave (successCallback) {
-  const correctAnswers = $('i.fa-check')
+  const correctAnswers = $('input[checked=checked]')
 
   // If not answers have been selected as correct, and we're trying to save...
   if (correctAnswers.length === 0 && $('#questionTypeSelect').val() !== 'short_answer') {

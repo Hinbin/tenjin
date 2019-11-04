@@ -19,7 +19,7 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def reset_all_passwords?
-    user.school_admin? && user.school == record
+    user.has_role?(:school_admin) && user.school == record
   end
 
   def show?
@@ -35,14 +35,10 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def sync?
-    user.school_admin? && user.school == record
+    user.has_role?(:school_admin) && user.school == record
   end
 
   def destroy?
-    user.super?
-  end
-
-  def show_employees?
     user.super?
   end
 end

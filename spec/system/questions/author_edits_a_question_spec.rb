@@ -1,15 +1,50 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Author edits a question', type: :feature, js: true do
-  include_context 'default_creates'
-
-  let(:author) { create(:author) }
+RSpec.describe 'Author edits a question', type: :system, js: true, default_creates: true do
+  let(:author) { create(:question_author, subject: subject) }
   let(:question) { create(:question, topic: topic) }
+  let(:lesson) { create(:lesson, topic: topic) }
   let(:new_topic_name) { FFaker::Lorem.word }
+
+  def add_answer
+    click_link('Add Answer')
+    find('#answer-text-1')
+  end
+
+  def switch_to_student_account
+    sign_out author
+    sign_in student
+    visit new_quiz_path(subject: topic.subject.name)
+  end
+
+  def switch_and_create_quiz
+    switch_to_student_account
+    click_button('Create Quiz')
+  end
 
   before do
     setup_subject_database
     sign_in author
+  end
+
+  context 'when assigning default lessons' do
+    before do
+      lesson
+      create(:question, topic: topic, lesson: lesson)
+    end
+
+    it 'assigns a default lesson to a topic' do
+      visit(topic_questions_questions_path(topic_id: topic))
+      select lesson.title, from: 'Default Lesson'
+      switch_and_create_quiz
+      expect(page).to have_css(".videoLink[src^=\"http://www.youtube.com/embed/#{lesson.video_id}\"]")
+    end
+  end
+
+  it 'only shows a default lesson when needed' do
+    question
+    switch_and_create_quiz
+    expect(page).to have_no_css('.videoLink')
   end
 
   context 'when adding or removing questions' do
@@ -29,7 +64,7 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
 
     it 'allows you to delete a question' do
       visit(question_path(question))
-      click_link('Delete Question')
+      page.accept_confirm { click_link('Delete Question') }
       expect(page).to have_no_css('.question-row')
     end
 
@@ -48,10 +83,18 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
       expect(page).to have_content('Delete Topic')
     end
 
-    it 'allows you to delete a topic' do
+    it 'allows you to disable a topic' do
       click_link('Add Topic')
-      click_link('Delete Topic')
+      page.accept_confirm { click_link('Delete Topic') }
       expect(page).to have_no_css('.topic-row')
+    end
+
+    it 'prevents disabled topics from showing when taking a quiz' do
+      visit(topic_questions_questions_path(topic_id: topic))
+      page.accept_confirm { click_link('Delete Topic') }
+      find('div', exact_text: subject.name, count: 2)
+      switch_to_student_account
+      expect(page).to have_no_css('option', text: topic.name)
     end
 
     it 'only allows you to delete a topic with no questions' do
@@ -70,9 +113,11 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
     end
 
     it 'allows you to edit a topic name' do
-      bip_text(question.topic, :name, new_topic_name)
-      question.topic.reload
-      expect(question.topic.name).to eq(new_topic_name)
+      fill_in('Topic Name', with: new_topic_name)
+      find('label', text: 'Topic Name').click
+      switch_to_student_account
+      navigate_to_quiz
+      expect(page).to have_content(new_topic_name)
     end
 
     it 'shows the quesitons for a topic' do
@@ -103,7 +148,8 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
   context 'when editing a question' do
     let(:answer_text) { FFaker::Lorem.word }
     let(:answer) { create(:answer, question: question) }
-    let(:answer_id) { 'best_in_place_answer_' + Answer.last.id.to_s + '_text' }
+    let(:answer_id) { 'answer-text-' + Answer.last.id.to_s }
+    let(:answer_check_id) { 'answer-check-' + Answer.last.id.to_s }
 
     it 'shows the content of the question' do
       visit(question_path(question))
@@ -112,7 +158,8 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
 
     it 'allows you to delete the question' do
       visit(question_path(question))
-      expect { click_link('Delete Question') }.to change(Question, :count).by(-1)
+      page.accept_confirm { click_link('Delete Question') }
+      expect(page).to have_no_content(question.question_text.to_plain_text)
     end
 
     context 'when showing a multiple choice question' do
@@ -125,8 +172,9 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
 
       it 'allows you to set an answer as correct' do
         find('table', id: 'table-multiple')
-        find('span', id: 'best_in_place_answer_' + Answer.first.id.to_s + '_correct').click
-        expect(page).to have_css('i.fa-check')
+        find('input', id: answer_check_id).click
+        visit(question_path(question))
+        expect(page).to have_css('#' + answer_check_id)
       end
 
       it 'only saves if I have selected a correct answer' do
@@ -166,7 +214,8 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
 
       it 'flags any new answers entered as correct' do
         click_link('Add Answer')
-        bip_text(Answer.last, :text, answer_text)
+        fill_in(answer_id, with: answer_text)
+        wait_for_ajax
         expect(Answer.last.correct).to eq(true)
       end
     end
@@ -180,12 +229,15 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
       end
 
       it 'creates two answers, true and false' do
-        expect(page).to have_content('True').and have_content('False')
+        expect(page).to have_selector('input[value="True"]').and have_selector('input[value="False"]')
       end
 
       it 'allows you to set an answer as correct' do
-        find('span', id: 'best_in_place_answer_' + Answer.first.id.to_s + '_correct').click
-        expect(page).to have_css('i.fa-check')
+        find('input', id: answer_check_id).click
+        wait_for_ajax
+        switch_and_create_quiz
+        find("#response-#{Answer.last.id}").click
+        expect(page).to have_css("#response-#{Answer.last.id}.correct-answer")
       end
 
       it 'does not allow you to remove an answer' do
@@ -195,23 +247,32 @@ RSpec.describe 'Author edits a question', type: :feature, js: true do
 
     it 'allows you to add an answer' do
       visit(question_path(question))
-      click_link('Add Answer')
-      find('span', text: 'Click here to edit answer').click
-      bip_text(Answer.first, :text, answer_text)
-      expect(question.answers.first.text).to eq(answer_text)
+      add_answer
+      fill_in(answer_id, with: "#{answer_text}\n")
+      switch_and_create_quiz
+      expect(page).to have_content(answer_text)
     end
 
     it 'allows you to edit an existing answer' do
       answer
       visit(question_path(question))
-      bip_text(Answer.first, :text, answer_text)
-      expect(Answer.first.text).to eq(answer_text)
+      fill_in(answer_id, with: "#{answer_text}\n")
+      switch_and_create_quiz
+      expect(page).to have_content(answer_text)
     end
 
     it 'allows you to delete an existing answer' do
       answer
       visit(question_path(question))
       expect { click_link('Remove') }.to change(Answer, :count).by(-1)
+    end
+
+    it 'allows you to assign a lesson to the question' do
+      lesson
+      visit(question_path(question))
+      select lesson.title, from: 'Select Lesson'
+      visit(question_path(question))
+      expect(page).to have_content(lesson.title)
     end
   end
 end

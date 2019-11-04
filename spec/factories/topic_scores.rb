@@ -18,7 +18,7 @@ FactoryBot.define do
 
     after(:build) do |topic_score, evaluator|
       if evaluator.topic_in_subject.present?
-        topic_score.topic = Topic.find(Topic.where(subject: evaluator.topic_in_subject).pluck(:id).sample)
+        topic_score.topic = Topic.find(Topic.where(active: true, subject: evaluator.topic_in_subject).pluck(:id).sample)
       end
 
       if evaluator.existing_users && evaluator.school.present?

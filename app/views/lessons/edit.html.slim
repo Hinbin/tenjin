@@ -1,0 +1,10 @@
+.container
+  section.page-section.text-center.pt-2#createLesson 
+    h1.page-section-header.text-uppercase Update Lesson
+    h3.text-uppercase =@lesson.subject.name
+    hr class=("small mb-5 primary-red")
+    =simple_form_for @lesson do |f|
+      =f.input :title, input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
+      =f.input :url, label: 'YouTube URL:', input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
+      =f.association :topic, collection: @topics, input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
+      =f.button :submit, 'Update Lesson', class: 'btn btn-block btn-primary'

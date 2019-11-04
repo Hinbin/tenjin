@@ -1,0 +1,31 @@
+h3.h3 =role.humanize
+.table-responsive
+  table.table id="#{role}-table"
+    thead
+      th Name
+      th Username
+      - if role == 'school_admin'
+        th School
+      - else 
+        th Subject 
+      th Remove
+    tbody
+      - role_collection.uniq.each do |r|
+        tr
+          td
+            => r.forename
+            = r.surname
+          td = r.username
+          - if role == 'school_admin' 
+            td = r.school.name
+          - else
+            td =select_tag 'user[subject]',
+                options_from_collection_for_select(Subject.with_role(role, r), :id, :name),
+                class: 'custom-select',
+                form: "form-#{role}-#{r.id}"       
+          td = button_to 'Remove',
+            remove_role_user_path(id: r.id),
+            class: 'btn btn-danger',
+            method: :delete,
+            params: {user: { role: role} },
+            form: {id: "form-#{role}-#{r.id}" }

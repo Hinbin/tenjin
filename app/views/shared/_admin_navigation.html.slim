@@ -15,8 +15,8 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
       - if current_admin.super?
         li.nav-item.active
           a.nav-link href=school_groups_path School Groups
-      - if current_admin.author? || current_admin.super?
+      - if current_admin.super?
         li.nav-item.active
-          a.nav-link href=questions_path Questions
+          a.nav-link href=manage_roles_users_path Roles
     = link_to(destroy_admin_session_path, method: :delete) do
       button.btn.btn-light Logout
