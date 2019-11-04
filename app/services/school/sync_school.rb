@@ -20,6 +20,8 @@ class School::SyncSchool < ApplicationService
     School.from_wonde_sync_end(@school)
   end
 
+  protected
+
   def fetch_class_data
     @school_api.classes.all(%w[students employees]).each do |data|
       @sync_data = data

@@ -18,13 +18,19 @@ class Quiz::SelectCorrectQuiz < ApplicationService
     end
   end
 
+  protected
+
   def deactivate_old_quizzes
     # Get every quiz, apart from the last one...
-    @quizzes.order(:id).reverse_order.drop(1).each do |quiz|
-      # Deactive each quiz.  Check if no questions have been asked, if so delete it
-      quiz.active = false
-      quiz.save
-      quiz.delete if quiz.num_questions_asked.zero?
+    @quizzes.order(created_at: :desc).drop(1).each do |quiz|
+      # Check if no questions have been asked, if so delete it
+      # Deactive each quiz.
+      if quiz.num_questions_asked.zero?
+        quiz.delete
+      else
+        quiz.active = false
+        quiz.save
+      end
     end
   end
 end

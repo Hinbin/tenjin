@@ -15,6 +15,8 @@ class Quiz::AddLeaderboardPoint < ApplicationService
     Leaderboard::BroadcastLeaderboardPoint.call(@topic_score)
   end
 
+  protected
+
   def add_points
     @multiplier = Multiplier.where('score < ?', @quiz.streak).last.multiplier
 

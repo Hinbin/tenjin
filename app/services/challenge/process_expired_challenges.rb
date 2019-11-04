@@ -10,6 +10,8 @@ class Challenge::ProcessExpiredChallenges < ApplicationService
     delete_challenges
   end
 
+  protected
+
   def delete_challenge_progresses
     @expired_challenges.each do |c|
       completed_challenges = ChallengeProgress.where('challenge_id = ?', c)

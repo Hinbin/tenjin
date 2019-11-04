@@ -7,7 +7,9 @@ class Leaderboard::BuildLeaderboard < ApplicationService
     @subject = Subject.where(name: params.dig(:id)).first
     @topic = params.dig(:topic)
     @school = params.dig(:school)
-    @school_group = true if @user.present? && @user.school.school_group_id.present? && params.dig(:school_group) == 'true'
+    if @user.present? && @user.school.school_group_id.present? && params.dig(:school_group) == 'true'
+      @school_group = true
+    end
     @all_time = true if params.dig(:all_time) == 'true'
   end
 
@@ -15,6 +17,8 @@ class Leaderboard::BuildLeaderboard < ApplicationService
     @query = @all_time ? base_query(all_time_topic_scores) : base_query(topic_scores)
     User.find_by_sql(@query.to_sql)
   end
+
+  protected
 
   def topic_scores
     TopicScore.arel_table

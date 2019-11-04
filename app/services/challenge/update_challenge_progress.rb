@@ -3,14 +3,13 @@
 class Challenge::UpdateChallengeProgress < ApplicationService
   def initialize(quiz, challenge_type, number_to_add = 0, question_topic = nil)
     @quiz = quiz
-    @challenges = Challenge.joins(:topic).where('topics.subject_id = ? AND end_date > ? AND challenge_type = ?',
-                                                @quiz.subject, Time.current, Challenge.challenge_types[challenge_type])
+    @challenge_type = challenge_type
     @number_to_add = number_to_add
     @question_topic = question_topic
   end
 
   def call
-    @challenges.each do |c|
+    challenges.find_each do |c|
       cp = find_challenge_progress(c)
       case c.challenge_type
       when 'streak' then check_streak(c, cp)
@@ -18,6 +17,15 @@ class Challenge::UpdateChallengeProgress < ApplicationService
       when 'number_of_points' then check_number_of_points(c, cp)
       end
     end
+  end
+
+  protected
+
+  def challenges
+    Challenge.joins(:topic)
+             .where(challenge_type: Challenge.challenge_types[@challenge_type])
+             .where(topics: { subject_id: @quiz.subject })
+             .where('end_date > ?', Time.current)
   end
 
   def check_number_correct(challenge, progress)

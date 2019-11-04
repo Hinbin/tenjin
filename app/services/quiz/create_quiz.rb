@@ -29,6 +29,8 @@ class Quiz::CreateQuiz < ApplicationService
     OpenStruct.new(success?: true, quiz: @quiz, errors: nil)
   end
 
+  protected
+
   def initialise_quiz
     @quiz.user_id = @user.id
     @quiz.time_last_answered = Time.current
@@ -81,10 +83,8 @@ class Quiz::CreateQuiz < ApplicationService
   def check_if_quiz_counts_for_leaderboard
     return true if @quiz.topic.nil?
 
-    stats_today = UsageStatistic.where(user: @user, topic: @quiz.topic, date: Date.today.all_day).first
-
-    return false if stats_today.present? && (stats_today.quizzes_started + 1) >= 4
-
-    true
+    !UsageStatistic.where(user: @user, topic: @quiz.topic, date: Date.today.all_day)
+                   .where('quizzes_started >= 3')
+                   .exists?
   end
 end

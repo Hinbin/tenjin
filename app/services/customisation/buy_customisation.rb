@@ -23,6 +23,8 @@ class Customisation::BuyCustomisation < ApplicationService
     OpenStruct.new(success?: true, user: @user, errors: nil)
   end
 
+  protected
+
   def deduct_challenge_points
     @user.challenge_points -= @customisation.cost
     @user.save!
