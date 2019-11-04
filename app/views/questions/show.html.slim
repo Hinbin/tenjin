@@ -46,7 +46,7 @@
     -unless @question.question_type == 'boolean'
       =link_to 'Add Answer', new_answer_path( question: {question_id: @question} ), class: 'btn btn-primary btn-block'
   .row.col.mt-3
-    button.btn.btn-block.btn-success.check-and-save data-link=questions_path(topic_id: @question.topic_id)
+    button.btn.btn-block.btn-success.check-and-save data-link=topic_questions_questions_path(topic_id: @question.topic_id)
       | Save and return
   .row.col.mt-3
     button.btn.btn-block.btn-primary.check-and-save data-link=new_question_path(topic: { topic_id: @question.topic })

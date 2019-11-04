@@ -31,7 +31,7 @@
             th Flags
             th % Correct
         tbody
-          -@questions.each do |q|
+          -@questions.order(:id).each do |q|
             tr id="question-#{q.id}"
               td.question-text = link_to q.question_text.blank? ? 'Click here to edit' : q.question_text, q
               td.amount = q.asked_questions.count
