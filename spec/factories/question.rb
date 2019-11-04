@@ -6,9 +6,15 @@ FactoryBot.define do
     question_type { 'multiple' }
     association :topic, factory: :topic
     active { true }
+    lesson { nil }
 
     factory :short_answer_question do
       question_type { 'short_answer' }
     end
+
+    factory :question_with_lesson do
+      lesson
+    end
+
   end
 end

@@ -127,9 +127,6 @@ gem 'high_voltage'
 #Required for rails 6.1 (recommeneded 1.2)
 gem 'image_processing'
 
-# In place editing for answers
-gem 'best_in_place'
-
 # Use Amazon S3 for Active Storage
 gem 'aws-sdk-s3'
 

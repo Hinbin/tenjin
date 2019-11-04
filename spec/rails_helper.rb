@@ -20,9 +20,6 @@ require 'vcr'
 require 'action_cable/testing/rspec'
 require 'action_cable/testing/rspec/features'
 
-require 'best_in_place'
-require 'best_in_place/test_helpers'
-
 WebMock.disable_net_connect!(allow_localhost: true)
 # WebMock.allow_net_connect!
 
@@ -93,13 +90,13 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :feature
   config.include SessionHelpers, type: :system
-  config.include BestInPlace::TestHelpers
   config.include ActiveJob::TestHelper
 
   config.include_context 'default_creates', default_creates: true
 
   # Allow wait for ajax command
   config.include WaitForAjax, type: :feature
+  config.include WaitForAjax, type: :system
 
   # Required to use database cleaner with action cable
   # or feature testing will not work
