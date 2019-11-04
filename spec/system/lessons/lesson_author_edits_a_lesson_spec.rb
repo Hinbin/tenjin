@@ -41,7 +41,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
   end
 
   context 'when adding a lesson' do
-    let(:new_lesson_bad_content) { build(:lesson, topic: topic, url: 'http://redtube.com/t-ZRX8984sc') }
+    let(:new_lesson_bad_content) { build(:lesson, topic: topic, url: 'https://redtube.com/t-ZRX8984sc') }
 
     before do
       teacher.add_role :lesson_author, subject
@@ -80,7 +80,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       click_link('Edit')
       fill_in_form(new_lesson)
       click_button('Update Lesson')
-      expect(page).to have_css(".videoLink[src^=\"http://www.youtube.com/embed/#{new_lesson.video_id}\"]")
+      expect(page).to have_css(".videoLink[src^=\"https://www.youtube.com/embed/#{new_lesson.video_id}\"]")
     end
 
     it 'deleted lessons' do

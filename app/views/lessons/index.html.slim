@@ -12,7 +12,7 @@
         .card-columns
           -@lessons.where(topic: t).each do |l|
             .card
-              .card-body.videoLink src="http://www.youtube.com/embed/#{l.video_id}" data-toggle="modal" data-target="#videoModal" 
+              .card-body.videoLink src="https://www.youtube.com/embed/#{l.video_id}" data-toggle="modal" data-target="#videoModal" 
                 h3.h4 =l.title
                 img.img-fluid.card-img-top src="https://img.youtube.com/vi/#{l.video_id}/hqdefault.jpg"          
               -if @subject_author

@@ -38,7 +38,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       visit(topic_questions_questions_path(topic_id: topic))
       select lesson.title, from: 'Default Lesson'
       switch_and_create_quiz
-      expect(page).to have_css(".videoLink[src^=\"http://www.youtube.com/embed/#{lesson.video_id}\"]")
+      expect(page).to have_css(".videoLink[src^=\"https://www.youtube.com/embed/#{lesson.video_id}\"]")
     end
   end
 
