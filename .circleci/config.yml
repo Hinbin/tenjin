@@ -83,5 +83,5 @@ jobs:
           path: /tmp/test-results
           destination: test-results
       - store_artifacts:
-          path: /tmp/screenshots/
+          path: /home/circleci/repo/tmp/screenshots/
           destination: browser-screenshots

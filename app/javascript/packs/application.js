@@ -29,6 +29,7 @@ import './questions/question_bottom'
 import './questions/question_top'
 import './questions/short_response_question'
 import './lessons'
+import './questions'
 
 var dt_extras = [
 

@@ -23,13 +23,14 @@
       =link_to 'Add Question', new_question_path(topic: { topic_id: @topic }), class:'btn btn-primary btn-block'
   .row.my-2
     .col
-      table.table
+      table.table#questionTable
         thead
           tr
             th Question
             th Times Asked
             th Flags
             th % Correct
+            th Lesson
         tbody
           -@questions.order(:id).each do |q|
             tr id="question-#{q.id}"
@@ -37,6 +38,7 @@
               td.amount = q.asked_questions.count
               td.flags = FlaggedQuestion.where(question: q).count
               td.correct = number_to_percentage( (q.asked_questions.where(correct: true).count.to_f / q.asked_questions.count.to_f) * 100, precision: 0)  if q.asked_questions.count > 0
+              td.lesson = q.lesson.present? ? q.lesson.title : '-'
   .row.my-5
     .col
       =link_to 'Delete Topic',

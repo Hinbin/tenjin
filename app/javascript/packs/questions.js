@@ -1,5 +1,16 @@
 $(document).on('turbolinks:load', () => {
-  if (page.controller() === 'questions' && page.action() === 'show') {
+
+  if (page.controller() === 'questions') {
+ 
+    if (!$.fn.dataTable.isDataTable('#questionTable')) {
+      $('#questionTable').DataTable({
+        'pageLength': 50,
+        'language': {
+          'emptyTable': 'No questions have been found'
+        }
+      })
+    }
+
     $('#questionTypeSelect').change(function () {
       let pickedType = $(this).val()
 
