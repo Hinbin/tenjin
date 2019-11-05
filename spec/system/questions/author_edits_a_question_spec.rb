@@ -44,6 +44,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
   it 'only shows a default lesson when needed' do
     question
+    visit(dashboard_path)
     switch_and_create_quiz
     expect(page).to have_no_css('.videoLink')
   end
@@ -98,12 +99,6 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       expect(page).to have_no_css('option', text: topic.name)
     end
 
-    it 'only allows you to delete a topic with no questions' do
-      question
-      visit(questions_path)
-      click_link(Topic.first.name)
-      expect(page).to have_no_content('Delete Topic')
-    end
   end
 
   context 'when visiting the topic index page' do
@@ -198,6 +193,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         find_by_id('questionTypeSelect').click
         wait_for_ajax
         find('option', text: 'Short answer').click
+        wait_for_ajax
         find('table', id: 'table-short_answer')
       end
 
@@ -211,7 +207,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
       it 'allows me to save without saying I need to select a correct answer' do
         click_button('Save and return')
-        expect(page).to have_content(question.topic.name)
+        expect(page).to have_current_path(topic_questions_questions_path(topic_id: question.topic.id))
       end
 
       it 'flags any new answers entered as correct' do
