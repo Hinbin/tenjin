@@ -12,9 +12,9 @@
         .card-columns
           -@lessons.where(topic: t).each do |l|
             .card
-              .card-body.videoLink src="https://www.youtube.com/embed/#{l.video_id}" data-toggle="modal" data-target="#videoModal" 
+              .card-body.videoLink src=l.generate_video_src data-toggle="modal" data-target="#videoModal" 
                 h3.h4 =l.title
-                img.img-fluid.card-img-top src="https://img.youtube.com/vi/#{l.video_id}/hqdefault.jpg"          
+                img.img-fluid.card-img-top video_id=l.video_id category=l.category src=l.generate_thumbnail_src      
               -if @subject_author
                 .card-footer
                   =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'

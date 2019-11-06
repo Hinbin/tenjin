@@ -2,9 +2,8 @@
 
 FactoryBot.define do
   factory :lesson do
-    category { 'video' }
+    category { 'youtube' }
     title { FFaker::BaconIpsum.sentence }
-    video_id { FFaker::Youtube.video_id }
-    url { 'http://www.youtu.be/' + video_id }
+    video_id { 'https://' + FFaker::Youtube.url }
   end
 end

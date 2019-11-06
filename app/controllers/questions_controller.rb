@@ -44,7 +44,7 @@ class QuestionsController < ApplicationController
     if request.xhr?
       head :ok
     else
-      redirect_to @question
+      redirect_to topic_questions_questions_path(topic_id: @question.topic)
     end
   end
 

@@ -9,7 +9,10 @@ class LessonsController < ApplicationController
 
     if @author
       @editable_subjects = Subject.with_role(:lesson_author, current_user)
-      @lessons = policy_scope(Lesson).or( Lesson.includes(:topic).where(topics: { subject: @editable_subjects.pluck(:id) }) )
+      @lessons = policy_scope(Lesson)
+                 .or(Lesson
+                  .includes(:topic)
+                  .where(topics: { subject: @editable_subjects.pluck(:id) }))
     else
       @lessons = policy_scope(Lesson)
     end
@@ -24,7 +27,7 @@ class LessonsController < ApplicationController
 
     @lesson = Lesson.new
     @lesson.topic = first_topic
-    @topics = Topic.where(active: true, subject: Subject.find(new_lesson_params))
+    @topics = Topic.where(active: true, subject: Subject.find(new_lesson_params)).order(:name)
     authorize @lesson
   end
 
@@ -34,13 +37,15 @@ class LessonsController < ApplicationController
   end
 
   def edit
-    @topics = Topic.where(active: true, subject: @lesson.subject)
+    @topics = Topic.where(active: true, subject: @lesson.subject).order(:name)
+    @lesson.video_id = @lesson.generate_video_src
     authorize @lesson
   end
 
   def update
     authorize @lesson
-    @lesson.update(lesson_params)
+    @lesson.assign_attributes(lesson_params)
+
     save_lesson
   end
 
@@ -67,9 +72,6 @@ class LessonsController < ApplicationController
       return render 'new'
     end
 
-    url = @lesson.url.match(%r{http(?:s?)://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?}).captures
-    @lesson.video_id = url[0]
-    @lesson.category = 'video'
     @lesson.save!
 
     redirect_to lessons_path
@@ -80,6 +82,6 @@ class LessonsController < ApplicationController
   end
 
   def lesson_params
-    params.require(:lesson).permit(:title, :url, :topic_id)
+    params.require(:lesson).permit(:title, :video_id, :topic_id)
   end
 end

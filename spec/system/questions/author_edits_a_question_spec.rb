@@ -207,7 +207,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
       it 'allows me to save without saying I need to select a correct answer' do
         click_button('Save and return')
-        expect(page).to have_current_path(topic_questions_questions_path(topic_id: question.topic.id))
+        expect(page).to have_current_path(topic_questions_questions_path(topic_id: question.topic))
       end
 
       it 'flags any new answers entered as correct' do

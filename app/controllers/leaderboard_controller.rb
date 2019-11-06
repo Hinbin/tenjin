@@ -60,7 +60,7 @@ class LeaderboardController < ApplicationController
     cookies.encrypted[:user_id] = current_user.id
   end
 
-  def set_filter_data    
+  def set_filter_data
     @schools = if @school_group.present?
                  School.where(school_group_id: @school_group).pluck(:name)
                else

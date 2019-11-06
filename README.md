@@ -1,6 +1,6 @@
 # Tenjin
 
-[![Build Status](https://travis-ci.org/Hinbin/tenjin.svg?branch=master)](https://travis-ci.org/Hinbin/tenjin)
+[![CircleCI](https://circleci.com/gh/Hinbin/tenjin.svg?style=svg)](https://circleci.com/gh/Hinbin/tenjin)
 [![Maintainability](https://api.codeclimate.com/v1/badges/5ae5ee384434b20e2789/maintainability)](https://codeclimate.com/github/Hinbin/tenjin/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/5ae5ee384434b20e2789/test_coverage)](https://codeclimate.com/github/Hinbin/tenjin/test_coverage)
 

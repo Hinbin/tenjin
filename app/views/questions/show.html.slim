@@ -11,7 +11,7 @@
             = t[0].humanize
   .row.col.mt-3.justify-content-center
     =form_with model: @question do |f|
-      =f.rich_text_area :question_text
+      =f.rich_text_area :question_text, remote: true
   .row.col.mt-3
     label for="select-lesson" Select Lesson
     =select_tag('question[lesson_id]',
@@ -46,10 +46,10 @@
     -unless @question.question_type == 'boolean'
       =link_to 'Add Answer', new_answer_path( question: {question_id: @question} ), class: 'btn btn-primary btn-block'
   .row.col.mt-3
-    button.btn.btn-block.btn-success.check-and-save data-link=topic_questions_questions_path(topic_id: @question.topic_id)
+    button.btn.btn-block.btn-success.check-and-save data-redirect=topic_questions_questions_path(topic_id: @question.topic) data-update=question_path( @question )
       | Save and return
   .row.col.mt-3
-    button.btn.btn-block.btn-primary.check-and-save data-link=new_question_path(topic: { topic_id: @question.topic })
+    button.btn.btn-block.btn-primary.check-and-save data-redirect=new_question_path(topic: { topic_id: @question.topic }) data-update=new_question_path(topic: { topic_id: @question.topic })
       | Create another question
   .row.col.mt-5
     =link_to 'Delete Question',

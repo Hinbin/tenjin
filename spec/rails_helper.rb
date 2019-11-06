@@ -158,7 +158,7 @@ RSpec.configure do |config|
   else
 
     config.before(:each, type: :system) do
-      driven_by :selenium_chrome_headless
+      driven_by :selenium_chrome
     end
   end
 end

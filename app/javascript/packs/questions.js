@@ -30,14 +30,14 @@ $(document).on('turbolinks:load', () => {
     })
 
     $('.check-and-save').click((event) => {
-      const questionTopicIndexLocation = $(event.target).data()
+      const paths = $(event.target).data()
 
-      validateAndSave(() => { Turbolinks.visit(questionTopicIndexLocation['link']) })
+      validateAndSave(() => { Turbolinks.visit(paths['redirect']) }, paths['update'])
     })
   }
 })
 
-function validateAndSave (successCallback) {
+function validateAndSave (successCallback, updatePath) {
   const correctAnswers = $('input[checked=checked]')
 
   // If not answers have been selected as correct, and we're trying to save...
@@ -46,16 +46,16 @@ function validateAndSave (successCallback) {
     $('#noCorrectAnswerModal').modal()
   } else {
     // Else save the question text and return
-    saveQuestionText(successCallback)
+    saveQuestionText(successCallback, updatePath)
   }
 }
 
-function saveQuestionText (successCallback) {
+function saveQuestionText (successCallback, updatePath) {
   const questionText = $('#question_question_text').val()
 
   $.ajax({
     type: 'put',
-    url: window.location.pathname,
+    url: updatePath,
     beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
     data: { question: { question_text: questionText } },
     success: successCallback()

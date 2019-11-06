@@ -6,7 +6,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
   let(:new_lesson) { build(:lesson, topic: topic) }
 
   def fill_in_form(lesson)
-    fill_in('YouTube URL', with: lesson.url)
+    fill_in('URL', with: lesson.video_id)
     fill_in('Title', with: lesson.title)
     select lesson.topic.name, from: 'Topic'
   end
@@ -41,7 +41,8 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
   end
 
   context 'when adding a lesson' do
-    let(:new_lesson_bad_content) { build(:lesson, topic: topic, url: 'https://redtube.com/t-ZRX8984sc') }
+    let(:new_lesson_bad_content) { build(:lesson, topic: topic, video_id: 'https://redtube.com/t-ZRX8984sc') }
+    let(:new_lesson_vimeo) { build(:lesson, topic: topic, video_id: 'https://vimeo.com/371104836') }
 
     before do
       teacher.add_role :lesson_author, subject
@@ -58,12 +59,19 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       visit(new_lesson_path(subject: subject))
       fill_in_form(new_lesson_bad_content)
       click_button('Create Lesson')
-      expect(page).to have_content('must be a YouTube video link')
+      expect(page).to have_content('Must be a YouTube or Vimeo link')
     end
 
     it 'allows me to create a lesson' do
       visit(new_lesson_path(subject: subject))
       fill_in_form(new_lesson)
+      click_button('Create Lesson')
+      expect(page).to have_css('.videoLink', count: 2)
+    end
+
+    it 'allows me to create a vimeo lesson' do
+      visit(new_lesson_path(subject: subject))
+      fill_in_form(new_lesson_vimeo)
       click_button('Create Lesson')
       expect(page).to have_css('.videoLink', count: 2)
     end
@@ -80,7 +88,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       click_link('Edit')
       fill_in_form(new_lesson)
       click_button('Update Lesson')
-      expect(page).to have_css(".videoLink[src^=\"https://www.youtube.com/embed/#{new_lesson.video_id}\"]")
+      expect(page).to have_css(".videoLink[src=\"#{Lesson.last.generate_video_src}\"]")
     end
 
     it 'deleted lessons' do
