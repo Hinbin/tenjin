@@ -16,6 +16,8 @@
 
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
+import { Application } from 'stimulus'
+import { definitionsFromContext } from 'stimulus/webpack-helpers'
 
 import './classroom'
 import './homework'
@@ -57,3 +59,8 @@ $(document).on('turbolinks:load', function () {
 var componentRequireContext = require.context('components', true)
 var ReactRailsUJS = require('react_ujs')
 ReactRailsUJS.useContext(componentRequireContext)
+
+// Stimulus
+const application = Application.start()
+const context = require.context('./controllers', true, /\.js$/)
+application.load(definitionsFromContext(context))

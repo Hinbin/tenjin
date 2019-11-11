@@ -91,7 +91,7 @@ RSpec.describe 'User views an updating leaderboard', type: :feature, js: true do
     it 'shows updates from only my school by default' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
       expect(page).to have_no_css('td',
-        exact_text: "#{topic_score_same_school_group.user.forename} #{topic_score_same_school_group.user.surname[0]}")
+                                  exact_text: "#{topic_score_same_school_group.user.forename} #{topic_score_same_school_group.user.surname[0]}")
     end
 
     it 'updates if score is from the same school group' do

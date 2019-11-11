@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :question do
     sequence(:question_text) { |n| FFaker::Lorem.sentence + n.to_s }
     question_type { 'multiple' }
-    association :topic, factory: :topic
+    topic
     active { true }
     lesson { nil }
 
@@ -15,6 +15,8 @@ FactoryBot.define do
     factory :question_with_lesson do
       lesson
     end
+
+    after(:build) { |question| question.answers << create(:answer, question: question, correct: true) }
 
   end
 end

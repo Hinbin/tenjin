@@ -1,65 +1,26 @@
 .container#questionEditor
-  .row.col.mt-3    
-    label for="questionTypeSelect" Question Type:
-    select.form-control#questionTypeSelect
-      -Question.question_types.each do |t|
-        -if @question.question_type == t[0]
-          option[selected value=t[0]]
-            = t[0].humanize
-        -else
-          option value=t[0]
-            = t[0].humanize
-  .row.col.mt-3.justify-content-center
-    =form_with model: @question do |f|
-      =f.rich_text_area :question_text, remote: true
-  .row.col.mt-3
-    label for="select-lesson" Select Lesson
-    =select_tag('question[lesson_id]',
-      options_from_collection_for_select(@lessons, :id, :title, selected: @question.lesson_id),
-      include_blank: 'Select Lesson',
-      id: 'select-lesson',
-      class: 'custom-select',
-      data: { remote: 'true',  url: question_path(@question.id), method: 'patch' })
-  .row.col.mt-3
-    table.table id="table-#{@question.question_type}"
-      thead
-        th Answer
-        -unless @question.question_type == 'short_answer'
-          th Correct? 
-        th 
-      tbody
-      -@question.answers.reverse.each do |a|
-        tr.question-row
-          td =text_field_tag('answer[text]',
-                a.text,
-                id: "answer-text-#{a.id}",
-                class: 'form-control',
-                data: { remote: 'true',  url: answer_path(a), method: 'patch' })     
-          -unless @question.question_type == 'short_answer'
-            td =check_box_tag('answer[correct]', true, a.correct,
-                onchange: "this.setAttribute('data-params', 'answer[correct]=' + this.checked*this.checked)",
-                id: "answer-check-#{a.id}",
-                class: 'form-control',
-                data: { remote: 'true',  url: answer_path(a), method: 'patch' })
-          -unless @question.question_type == 'boolean'
-            td =link_to 'Remove', answer_path(a), method: :delete, class: 'btn btn-secondary'
-    -unless @question.question_type == 'boolean'
-      =link_to 'Add Answer', new_answer_path( question: {question_id: @question} ), class: 'btn btn-primary btn-block'
-  .row.col.mt-3
-    button.btn.btn-block.btn-success.check-and-save data-redirect=topic_questions_questions_path(topic_id: @question.topic) data-update=question_path( @question )
-      | Save and return
-  .row.col.mt-3
-    button.btn.btn-block.btn-primary.check-and-save data-redirect=new_question_path(topic: { topic_id: @question.topic }) data-update=new_question_path(topic: { topic_id: @question.topic })
-      | Create another question
-  .row.col.mt-5
-    =link_to 'Delete Question',
-      question_path(@question),
-      data:{ confirm: 'Are you sure?' },
-      method: :delete,
-      class: 'btn btn-danger btn-block'
+  =render('question_edit_form')
+  .row.mt-3
+    .col    
+      = link_to 'Back to Topic Questions',
+        topic_questions_questions_path(topic_id: @question.topic),
+        class: 'btn btn-block btn-secondary'
+  .row.mt-5
+    .col
+      =link_to 'Delete Question',
+        question_path(@question),
+        data:{ confirm: 'Are you sure?' },
+        method: :delete,
+        class: 'btn btn-danger btn-block'
 .modal.fade#noCorrectAnswerModal
   .modal-dialog.modal-dialog-centered role="document"
     .modal-content
       .modal-body Please select at least one correct answer
       .modal-footer
         button.btn.btn-secondary data-dismiss="modal" Close
+        
+        
+    
+        
+
+        

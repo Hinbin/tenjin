@@ -13,22 +13,8 @@ RSpec.describe Question, type: :model, default_creates: true do
   end
 
   it 'deletes answers when being deleted' do
-    answer
+    question
     expect { question.destroy }.to change(described_class, :count).by(-1)
-  end
-
-  describe '.clean_empty_questions' do
-    context 'when saving a question with no text' do
-      it 'deletes questions that have no text' do
-        question = create(:question, question_text: nil)
-        expect { described_class.clean_empty_questions(question.topic) }.to change(described_class, :count).by(-1)
-      end
-
-      it 'does not delete questions that have text' do
-        create(:question)
-        expect(described_class.count).to eq(1)
-      end
-    end
   end
 
   describe '.check_boolean' do

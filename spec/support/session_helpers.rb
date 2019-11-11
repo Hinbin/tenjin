@@ -32,15 +32,13 @@ module SessionHelpers
 
   def navigate_to_quiz
     visit(new_quiz_path(subject: subject.name))
-    find(:xpath, '//select').click
-    find(:xpath, '//select/option[2]').click
+    select Topic.last.name, from: 'quiz_topic_id'
     click_button('Create Quiz')
   end
 
   def navigate_to_lucky_dip
     visit(new_quiz_path(subject: subject.name))
-    find(:xpath, '//select').click
-    find(:xpath, '//select/option[1]').click
+    select 'Lucky Dip', from: 'quiz_topic_id'
     click_button('Create Quiz')
   end
 

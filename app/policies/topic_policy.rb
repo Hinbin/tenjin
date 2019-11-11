@@ -21,4 +21,5 @@ class TopicPolicy < ApplicationPolicy
   alias create? update?
   alias destroy? update?
 
+
 end

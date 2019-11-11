@@ -20,7 +20,7 @@
         data: { remote: 'true',  url: topic_path(@topic), method: 'patch' })
   .row.my-2
     .col
-      =link_to 'Add Question', new_question_path(topic: { topic_id: @topic }), class:'btn btn-primary btn-block'
+      =link_to 'Add Question', new_question_path(question: { topic_id: @topic }), class:'btn btn-primary btn-block'
   .row.my-2
     .col
       table.table#questionTable

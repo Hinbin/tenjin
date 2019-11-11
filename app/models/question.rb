@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Question < ApplicationRecord
-  has_many :answers
+  has_many :answers, dependent: :destroy
   has_many :asked_questions
   has_many :quizzes, through: :asked_questions
   belongs_to :lesson, optional: true
@@ -14,21 +14,23 @@ class Question < ApplicationRecord
   before_update :check_boolean
   before_update :check_short_answer
 
-  before_destroy :destroy_answers
+  accepts_nested_attributes_for :answers, allow_destroy: true
 
-  def self.clean_empty_questions(topic)
-    questions = Question.where(active: true, topic_id: topic).includes(:answers, :asked_questions)
-    update_questions = false
-    # Clean up empty questions
-    questions.each do |q|
-      next unless q.question_text.blank?
+  validates_presence_of :question_text
+  validates_associated :answers
 
-      q.answers.destroy_all
-      q.destroy
-      update_questions = true
-    end
+  validate :at_least_one_correct_answer
+  validate :boolean_true_or_false
 
-    update_questions ? Question.where(topic_id: topic).includes(:answers, :asked_questions) : questions
+  def boolean_true_or_false
+    return unless boolean?
+    return if answers.first.text == 'True' && answers.second.text == 'False' && answers.length == 2
+
+    errors[:base] << 'Boolean must be true or false only'
+  end
+
+  def at_least_one_correct_answer
+    errors[:base] << 'Question must have at least one correct answer.' unless answers.each.pluck(:correct).include? true
   end
 
   private
@@ -49,7 +51,4 @@ class Question < ApplicationRecord
     answers.update_all(correct: true)
   end
 
-  def destroy_answers
-    answers.destroy_all
-  end
 end

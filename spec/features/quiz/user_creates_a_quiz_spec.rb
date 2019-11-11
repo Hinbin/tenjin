@@ -34,7 +34,6 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
     before do
       setup_subject_database
       create_list(:answer, 3, question: question)
-      create(:answer, question: question, correct: true)
       sign_in student
       navigate_to_quiz
       visit(dashboard_path)
@@ -57,7 +56,7 @@ RSpec.describe 'User creates a quiz', type: :feature, js: true do
 
     before do
       setup_subject_database
-      create(:answer, question: question, correct: true)
+      question
       sign_in student
     end
 

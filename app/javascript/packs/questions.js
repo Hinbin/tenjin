@@ -1,7 +1,5 @@
 $(document).on('turbolinks:load', () => {
-
   if (page.controller() === 'questions') {
- 
     if (!$.fn.dataTable.isDataTable('#questionTable')) {
       $('#questionTable').DataTable({
         'pageLength': 50,
@@ -11,30 +9,42 @@ $(document).on('turbolinks:load', () => {
       })
     }
 
-    $('#questionTypeSelect').change(function () {
-      let pickedType = $(this).val()
-
-      $.ajax({
-        type: 'put',
-        url: window.location.pathname,
-        beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
-        data: { question: { question_type: pickedType } },
-        success: function (data) {
-          location.reload()
-        }
-      })
-    })
-
-    $('trix-editor').on('trix-blur', (event) => {
-      saveQuestionText(() => {})
+    $('.save-question-text').on('trix-blur', (event) => {
+      saveQuestionText(() => { })
     })
 
     $('.check-and-save').click((event) => {
       const paths = $(event.target).data()
-
       validateAndSave(() => { Turbolinks.visit(paths['redirect']) }, paths['update'])
     })
+
+    $('.reload-page').on('change', (target) => {
+      const currentPath = window.location.href.split('?')[0]
+      $('input[name=authenticity_token').remove()
+      let form = $('#questionForm')
+      const formParams = form.serialize()
+      Turbolinks.visit(currentPath + '?' + formParams)
+    })
+
+    $('form').on('click', '.remove_record', function (event) {
+      $(this).prev('input[type=hidden]').val('1')
+      $(this).closest('tr').hide()
+      $(this).closest('tr').remove()
+      return event.preventDefault()
+    })
+  
+    $('form').on('click', '.add_fields', function (event) {
+      var regexp, time
+      time = new Date().getTime()
+      regexp = new RegExp($(this).data('id'), 'g')
+      $('.fields').append($(this).data('fields').replace(regexp, time))
+      return event.preventDefault()
+    })
   }
+})
+
+$(document).on('turbolinks:before-cache', () => {
+  $('#questionTable').DataTable().destroy()
 })
 
 function validateAndSave (successCallback, updatePath) {

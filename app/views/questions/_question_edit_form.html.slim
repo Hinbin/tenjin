@@ -1,0 +1,51 @@
+=form_with model: @question, id:'questionForm' do |f| 
+  .row.my-2
+    .col-sm-3
+      =f.label('select-question-type', 'Question Type')
+    .col-sm-9
+      =f.select( :question_type,
+        options_for_select(Question.question_types.to_a.map { |k| [k[0].humanize, k[0]] }, selected: @question.question_type ),
+        {},
+        id: 'select-question-type',
+        class: 'custom-select reload-page' )
+  .row.my-2
+    .col.justify-content-center
+      =f.rich_text_area :question_text
+      - @question.errors[:question_text].each do |e|
+        p.error = e
+      - @question.errors[:base].each do |e|
+        p.error = e
+  .row.my-2
+    .col-sm-3
+      =f.label('select-lesson', 'Lesson:')
+    .col-sm-9
+      =f.select( :lesson_id,
+          options_from_collection_for_select(@question.topic.lessons, :id, :title, selected: @question.lesson_id),
+          { include_blank: 'Select Lesson' },
+          id: 'select-lesson',
+          class: 'custom-select')
+  .row.my-2
+    .col-sm-3
+      =f.label('select-topic', 'Topic:')
+    .col-sm-9
+      =f.select( :topic_id,
+          options_from_collection_for_select( @question.topic.subject.topics.order(:name),
+            :id, :name, selected: @question.topic_id),
+          {},
+          id: 'select-topic',
+          class: 'custom-select reload-page')
+  table.table#table-answers
+    thead
+      th Answer Text
+      th = "Correct?" unless @question.short_answer?
+      th
+    tbody.fields
+      =f.fields_for :answers, @question.answers do |a|
+        =render 'answer', f: a
+  -unless @question.question_type == 'boolean'
+    .row.my-2
+      .col
+        =link_to_add_row('Add Answer', f, :answers, class: 'btn btn-primary btn-block')
+  .row.my-2
+    .col
+      =f.submit("Save Question", class: 'btn btn-block btn-success')

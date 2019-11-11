@@ -387,6 +387,9 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
+    turbolinks_render (0.9.16)
+      rails (>= 5.2.0)
+      turbolinks-source (~> 5.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
@@ -480,6 +483,7 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   sprockets (= 3.7.2)
   turbolinks (~> 5.2.0)
+  turbolinks_render
   tzinfo-data
   uglifier (>= 1.3.0)
   vcr

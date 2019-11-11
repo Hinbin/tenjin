@@ -9,13 +9,12 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
   context 'when answering a multiple choice question' do
     let(:question) { create(:question, topic: topic) }
     let(:correct_response) { Answer.where(correct: true).first }
-    let(:correct_response_selector) { ('response-' + correct_response.id.to_s).to_s }
-    let(:incorrect_response_selector) { ('response-' + (correct_response.id - 1).to_s).to_s }
+    let(:correct_response_selector) { "response-#{correct_response.id}" }
+    let(:incorrect_response_selector) { "response-#{question.answers.where(correct: false).first.id}" }
 
     before do
       setup_subject_database
-      create_list(:answer, 3, question: question)
-      create(:answer, question: question, correct: true)
+      create_list(:answer, 3, question: question, correct: false)
       sign_in student
       navigate_to_quiz
     end
@@ -110,8 +109,8 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
 
     before do
       setup_subject_database
-      create(:answer, question: question, correct: true)
-      create(:answer, question: next_question, correct: true)
+      question
+      next_question
       sign_in student
       navigate_to_quiz
     end
@@ -132,7 +131,6 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
       question = create(:question, topic: topic, question_text: html)
 
       setup_subject_database
-      create(:answer, question: question, correct: true)
       sign_in student
       navigate_to_quiz
     end
@@ -150,7 +148,7 @@ RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: t
 
     before do
       setup_subject_database
-      create(:answer, question: question, correct: true)
+      question
       sign_in student
       navigate_to_quiz
     end

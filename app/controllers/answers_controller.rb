@@ -9,7 +9,7 @@ class AnswersController < ApplicationController
     return unless @question.present?
 
     authorize @question.topic
-    @answer = Answer.create(question: @question, text: 'Click here to edit answer', correct: false)
+    @answer = Answer.create(question: @question, correct: false)
     @answer.update_attribute(:correct, true) if @question.question_type == 'short_answer'
 
     redirect_to @question

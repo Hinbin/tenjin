@@ -153,7 +153,7 @@ RSpec.configure do |config|
       DatabaseCleaner.clean
     end
     config.before(:each, type: :system) do
-      driven_by :selenium_chrome_headless
+      driven_by :selenium_chrome
     end
   else
 
@@ -175,5 +175,5 @@ end
 
 Capybara.server = :puma, { Silent: true }
 Capybara.default_max_wait_time = 15 if ENV['CI']
-Capybara.default_driver = :selenium_chrome_headless
-Capybara.javascript_driver = :selenium_chrome_headless
+Capybara.default_driver = :selenium_chrome
+Capybara.javascript_driver = :selenium_chrome

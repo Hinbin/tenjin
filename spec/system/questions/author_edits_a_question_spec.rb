@@ -98,7 +98,6 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       switch_to_student_account
       expect(page).to have_no_css('option', text: topic.name)
     end
-
   end
 
   context 'when visiting the topic index page' do
@@ -144,8 +143,8 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   context 'when editing a question' do
     let(:answer_text) { FFaker::Lorem.word }
     let(:answer) { create(:answer, question: question) }
-    let(:answer_id) { 'answer-text-' + Answer.last.id.to_s }
-    let(:answer_check_id) { 'answer-check-' + Answer.last.id.to_s }
+    let(:answer_id) { 'answer-text-' + (Answer.last.id - 1).to_s }
+    let(:answer_check_id) { 'answer-check-' + (Answer.last.id - 1).to_s }
 
     it 'shows the content of the question' do
       visit(question_path(question))
@@ -160,41 +159,66 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
     context 'when showing a multiple choice question' do
       before do
-        answer
+        create_list(:answer, 3, correct: false, question: question)
         visit(question_path(question))
-        find_by_id('questionTypeSelect').click
+        find_by_id('select-question-type').click
         find('option', text: 'Multiple').click
       end
 
       it 'allows you to set an answer as correct' do
-        find('table', id: 'table-multiple')
+        find('table', id: 'table-answers')
         find('input', id: answer_check_id).click
         visit(question_path(question))
         expect(page).to have_css('#' + answer_check_id)
       end
 
       it 'only saves if I have selected a correct answer' do
-        find('table', id: 'table-multiple')
-        click_button('Save and return')
-        expect(page).to have_content('Please select at least one correct answer')
+        Answer.all.update_all(correct: false)
+        visit(question_path(question))
+        find('table', id: 'table-answers')
+        click_button('Save Question')
+        expect(page).to have_content('Question must have at least one correct answer')
       end
 
-      it 'only creates a new question if I have selected a correct answer' do
-        find('table', id: 'table-multiple')
-        click_button('Create another question')
-        expect(page).to have_content('Please select at least one correct answer')
+      it 'allows you to add an answer' do
+        visit(question_path(question))
+        add_answer
+        all('.text-answer').last.set("#{answer_text}\n")
+        click_button('Save Question')
+        switch_and_create_quiz
+        expect(page).to have_content(answer_text)
+      end
+
+      it 'allows you to edit an existing answer' do
+        visit(question_path(question))
+        fill_in(answer_id, with: "#{answer_text}\n")
+        switch_and_create_quiz
+        expect(page).to have_content(answer_text)
+      end
+
+      it 'allows you to delete an existing answer' do
+        create_list(:answer, 2, question: question)
+        visit(question_path(question))
+        expect { first('.btn-danger').click }.to change(Answer, :count).by(-1)
       end
     end
 
     context 'when showing a short answer question' do
+      let(:question) { create(:question, question_type: 'short_answer', topic: topic) }
+
       before do
-        answer
         visit(question_path(question))
-        find_by_id('questionTypeSelect').click
+        find_by_id('select-question-type').click
         wait_for_ajax
         find('option', text: 'Short answer').click
         wait_for_ajax
-        find('table', id: 'table-short_answer')
+        find('table', id: 'table-answers')
+      end
+
+      def add_new_answer
+        click_link('Add Answer')
+        all('.text-answer').last.set("#{answer_text}\n")
+        click_button('Save Question')
       end
 
       it 'does not let you modify if the answer is correct' do
@@ -206,24 +230,24 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       end
 
       it 'allows me to save without saying I need to select a correct answer' do
-        click_button('Save and return')
-        expect(page).to have_current_path(topic_questions_questions_path(topic_id: question.topic))
+        click_button('Save Question')
+        expect(page).to have_content('Question successfully updated')
       end
 
-      it 'flags any new answers entered as correct' do
-        click_link('Add Answer')
-        fill_in(answer_id, with: answer_text)
-        wait_for_ajax
-        expect(Answer.last.correct).to eq(true)
+      it 'saves every answer as correct' do
+        add_new_answer
+        switch_and_create_quiz
+        fill_in('shortAnswerText', with: "#{answer_text}\n")
+        expect(page).to have_css('.correct-answer')
       end
     end
 
-    context 'when showing to a boolean question' do
+    context 'when showing a boolean question' do
       before do
         visit(question_path(question))
-        find_by_id('questionTypeSelect').click
+        find_by_id('select-question-type').click
         find('option', text: 'Boolean').click
-        find('table', id: 'table-boolean')
+        find('table', id: 'table-answers')
       end
 
       it 'creates two answers, true and false' do
@@ -243,34 +267,19 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       end
     end
 
-    it 'allows you to add an answer' do
-      visit(question_path(question))
-      add_answer
-      fill_in(answer_id, with: "#{answer_text}\n")
-      switch_and_create_quiz
-      expect(page).to have_content(answer_text)
-    end
+    context 'when assigning a lesson' do
+      before do
+        lesson
+        create_list(:answer, 3, question: question)
+      end
 
-    it 'allows you to edit an existing answer' do
-      answer
-      visit(question_path(question))
-      fill_in(answer_id, with: "#{answer_text}\n")
-      switch_and_create_quiz
-      expect(page).to have_content(answer_text)
-    end
-
-    it 'allows you to delete an existing answer' do
-      answer
-      visit(question_path(question))
-      expect { click_link('Remove') }.to change(Answer, :count).by(-1)
-    end
-
-    it 'allows you to assign a lesson to the question' do
-      lesson
-      visit(question_path(question))
-      select lesson.title, from: 'Select Lesson'
-      visit(question_path(question))
-      expect(page).to have_content(lesson.title)
+      it 'allows you to assign a lesson to the question' do
+        visit(question_path(question))
+        select lesson.title, from: 'select-lesson'
+        click_button('Save Question')
+        switch_and_create_quiz
+        expect(page).to have_content(lesson.title)
+      end
     end
   end
 end
