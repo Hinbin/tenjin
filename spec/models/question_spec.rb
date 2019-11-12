@@ -12,6 +12,24 @@ RSpec.describe Question, type: :model, default_creates: true do
     it { is_expected.to belong_to(:lesson).optional }
   end
 
+  context 'with a boolean question' do
+    let(:boolean_question) { build(:boolean_question) }
+
+    it 'accepts boolean answers when true then false, for any case' do
+      boolean_question
+      Answer.first.update_attribute(:text, 'TruE')
+      create(:answer, question: question, correct: true, text: 'fAlsE')
+      expect(question).to be_valid
+    end
+
+    it 'accepts boolean answers when false then true, for any case' do
+      boolean_question
+      Answer.first.update_attribute(:text, 'FaLsE')
+      create(:answer, question: question, correct: true, text: 'TrUe')
+      expect(question).to be_valid
+    end
+  end
+
   it 'deletes answers when being deleted' do
     question
     expect { question.destroy }.to change(described_class, :count).by(-1)
