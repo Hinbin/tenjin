@@ -57,6 +57,7 @@ jobs:
       - image: circleci/ruby:2.6.3-node-browsers
         environment:
             PGUSER: root
+            PGHOST: 127.0.0.1
             RAILS_ENV: test
       - image: circleci/postgres:10.9
         environment:
