@@ -24,7 +24,13 @@ class Question < ApplicationRecord
 
   def boolean_true_or_false
     return unless boolean?
-    return if answers.first.text == 'True' && answers.second.text == 'False' && answers.length == 2
+
+    if answers.first.text.casecmp('true').zero? && answers.second.text.casecmp('false').zero? && answers.length == 2
+      return
+    end
+    if answers.first.text.casecmp('false').zero? && answers.second.text.casecmp('true').zero? && answers.length == 2
+      return
+    end
 
     errors[:base] << 'Boolean must be true or false only'
   end
@@ -50,5 +56,4 @@ class Question < ApplicationRecord
     # Setup short answer.  Change all answers to correct
     answers.update_all(correct: true)
   end
-
 end
