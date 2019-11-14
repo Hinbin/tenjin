@@ -103,7 +103,7 @@ class User < ApplicationRecord
       u.upi = user.upi
       u.forename = user.forename
       u.surname = user.surname
-      u.challenge_points = 0 if user.challenge_points.blank?
+      u.challenge_points = 0 if u.challenge_points.blank?
       u.disabled = false
       u.username = generate_username(u) if u.new_record? || u.username.blank?
       u
