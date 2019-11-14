@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'School admin views user list', type: :feature, js: true, default_creates: true do
+RSpec.describe 'School admin views user list', type: :system, js: true, default_creates: true do
   before do
     setup_subject_database
     sign_in school_admin

@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User creates a quiz', type: :feature, js: true do
+RSpec.describe 'User creates a quiz', type: :system, js: true do
   include_context 'default_creates'
 
   context 'when picking a subject' do

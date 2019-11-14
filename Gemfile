@@ -39,7 +39,8 @@ group :development, :test do
   gem 'byebug'
 
   # Use the following gems for rspec testing
-  gem 'rspec-rails', '~> 3.8'
+  gem 'rspec-rails'
+  gem 'rails-controller-testing'
   
   # Fast creation of test objects
   gem 'factory_bot_rails'
@@ -88,8 +89,6 @@ group :test do
   gem 'webdrivers'
   gem 'action-cable-testing'
   gem 'shoulda-matchers', '4.0.0.rc1'
-  gem 'rails-controller-testing' # If you are using Rails 5.x
-  gem 'database_cleaner'
   gem 'simplecov', require: false # For code coverage
   gem 'rspec-retry'
   gem 'rspec_junit_formatter'

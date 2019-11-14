@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'User attempts a challenge', type: :feature, js: true, default_creates: true do
+RSpec.describe 'User attempts a challenge', type: :system, js: true, default_creates: true do
   before do
     setup_subject_database
     sign_in student
@@ -15,7 +15,6 @@ RSpec.describe 'User attempts a challenge', type: :feature, js: true, default_cr
     let(:second_topic) { create(:topic, subject: second_subject) }
     let(:challenge_two) { create(:challenge, topic: create(:topic, subject: subject)) }
     let(:question) { create(:question, topic: topic) }
-    let(:answer) { create(:answer, question: question, correct: true) }
     let(:progressed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 70) }
     let(:completed_challenge) do
       create(:challenge_progress, user: student, challenge: challenge_one, progress: 100,
@@ -25,7 +24,7 @@ RSpec.describe 'User attempts a challenge', type: :feature, js: true, default_cr
 
     before do
       challenge_single_question
-      answer
+      question
     end
 
     it 'links you to the correct quiz when clicked' do

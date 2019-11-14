@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User takes a quiz', type: :feature, js: true, default_creates: true do
+RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: true do
   let(:lesson) { create(:lesson, topic: topic) }
 
   context 'when answering a multiple choice question' do

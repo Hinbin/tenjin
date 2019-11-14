@@ -143,8 +143,8 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   context 'when editing a question' do
     let(:answer_text) { FFaker::Lorem.word }
     let(:answer) { create(:answer, question: question) }
-    let(:answer_id) { 'answer-text-' + (Answer.last.id - 1).to_s }
-    let(:answer_check_id) { 'answer-check-' + (Answer.last.id - 1).to_s }
+    let(:answer_id) { 'answer-text-0' }
+    let(:answer_check_id) { 'answer-check-0' }
 
     it 'shows the content of the question' do
       visit(question_path(question))

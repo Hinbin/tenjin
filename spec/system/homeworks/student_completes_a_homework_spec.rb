@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Student completes a homework', type: :feature, js: true, default_creates: true do
+RSpec.describe 'Student completes a homework', type: :system, js: true, default_creates: true do
   before do
     setup_subject_database
     sign_in student

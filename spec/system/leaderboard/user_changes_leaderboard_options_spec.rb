@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'User changes leaderboard options', type: :feature, js: true, default_creates: true do
+RSpec.describe 'User changes leaderboard options', type: :system, js: true, default_creates: true do
   before do
     setup_subject_database
     sign_in student

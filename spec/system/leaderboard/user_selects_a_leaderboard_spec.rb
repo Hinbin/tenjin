@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User selects a leaderboard', type: :feature, js: true do
+RSpec.describe 'User selects a leaderboard', type: :system, js: true do
   include_context 'default_creates'
 
   before do

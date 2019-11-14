@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Employee views a user record', type: :feature, js: true, default_creates: true do
+RSpec.describe 'Employee views a user record', type: :system, js: true, default_creates: true do
   include_context 'default_creates'
 
   let(:second_classroom) { create(:classroom, school: school) }
