@@ -14,15 +14,7 @@ class Quiz < ApplicationRecord
   private
 
   def update_usage_statistics
-    UsageStatistic.where(user: user, topic: topic, date: Date.today.all_day).first_or_create! do |s|
-      if s.new_record?
-        s.quizzes_started = 1
-        s.user = user
-        s.topic = topic
-      else
-        s.quizzes_started += 1
-      end
-      s.save!
-    end
+    s = UsageStatistic.where(user: user, topic: topic, date: Date.today).first_or_create!
+    s.quizzes_started.present? ? s.increment!(:quizzes_started) : s.update_attribute(:quizzes_started, 1)
   end
 end
