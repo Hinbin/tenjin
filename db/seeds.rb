@@ -26,12 +26,11 @@ CSV.foreach('db/CSV Output - unit_export.csv', headers: true) do |row|
 end
 
 CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
-  p row
   topic = Topic.where(external_id: row['topic_id']).first
-  p topic
 
   if row['image'].nil?
-    Question.create!(external_id: row['id'], topic: topic, question_text: row['question_text'], question_type: row['question_type'] )
+    q = Question.new(external_id: row['id'], topic: topic, question_text: row['question_text'], question_type: row['question_type'])
+    q.save!(validate: false)
   else
     google_location = row['image'].gsub(/open?/, 'uc')
 
@@ -53,7 +52,8 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
 
     image = create_file_blob(data: StringIO.new(response.body), filename: filename, content_type: 'image/jpg')
     html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
-    Question.create!(external_id: row['id'], topic: topic, question_text: html , question_type: row['question_type'] )
+    q = Question.new(external_id: row['id'], topic: topic, question_text: html , question_type: row['question_type'] )
+    q.save!(validate: false)
   end
 
 end

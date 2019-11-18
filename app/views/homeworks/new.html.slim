@@ -6,6 +6,6 @@ section.page-section.text-center.pt-2#set_homework
     =simple_form_for @homework do |f|
       =f.input :due_date, as: :citext, label: 'Due date', input_html: { class:'datepicker col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
       =f.input :required, label: 'Required %', collection: (0..100).step(10),  input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
-      =f.association :topic, collection: @classroom.subject.topics,  input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
+      =f.association :topic, collection: @classroom.subject.topics.order(:name),  input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
       =f.association :classroom, as: :hidden
       =f.submit "Set Homework", class: 'btn btn-primary'

@@ -7,19 +7,17 @@
     -@subjects.each do |s|
       - @subject_author = current_user.has_role? :lesson_author, s if @author
       h1.py-4.h1=s.name
-      -@topics.each do |t|
-        h3.py-3.h3=t.name
-        .card-columns
-          -@lessons.where(topic: t).each do |l|
-            .card
-              .card-body.videoLink src=l.generate_video_src data-toggle="modal" data-target="#videoModal" 
-                h3.h4 =l.title
-                img.img-fluid.card-img-top video_id=l.video_id category=l.category src=l.generate_thumbnail_src      
-              -if @subject_author
-                .card-footer
-                  =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
-                  =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
-
+      .card-columns
+        -@lessons.where(topics: { subject:s } ).each do |l|        
+          .card
+            .card-body.videoLink src=l.generate_video_src data-toggle="modal" data-target="#videoModal" 
+              h3.h4 =l.title
+              p.font-weight-light =l.topic.name
+              img.img-fluid.card-img-top video_id=l.video_id category=l.category src=l.generate_thumbnail_src      
+            -if @subject_author
+              .card-footer
+                =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
+                =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
 
 -if @author
   .container

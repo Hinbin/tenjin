@@ -80,6 +80,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
   context 'when editing existings lesson' do
     before do
       setup_subject_database
+      create(:enrollment, user: teacher, subject: subject)
       teacher.add_role :lesson_author, subject
     end
 
@@ -91,7 +92,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       expect(page).to have_css(".videoLink[src=\"#{Lesson.last.generate_video_src}\"]")
     end
 
-    it 'deleted lessons' do
+    it 'deletes lessons' do
       visit(lessons_path)
       page.accept_confirm do
         click_link('Delete')

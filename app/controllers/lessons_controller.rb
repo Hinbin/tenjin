@@ -12,13 +12,12 @@ class LessonsController < ApplicationController
       @lessons = policy_scope(Lesson)
                  .or(Lesson
                   .includes(:topic)
-                  .where(topics: { subject: @editable_subjects.pluck(:id) }))
+                  .where(topics: { subject: @editable_subjects.pluck(:id) })).order('topics.name, lessons.title')
     else
-      @lessons = policy_scope(Lesson)
+      @lessons = policy_scope(Lesson).order('topics.name, lessons.title')
     end
 
-    @topics = Topic.joins(:lessons).where(id: @lessons.pluck(:topic_id)).uniq
-    @subjects = Subject.where(topics: @topics)
+    @subjects = Subject.joins(topics: :lessons).where(lessons: @lessons).distinct
   end
 
   def new

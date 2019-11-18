@@ -371,7 +371,6 @@ ActiveRecord::Schema.define(version: 2019_11_06_140750) do
     t.string "photo"
     t.string "type"
     t.integer "challenge_points"
-    t.string "dashboard_style"
     t.datetime "time_of_last_quiz"
     t.string "username"
     t.boolean "disabled"
