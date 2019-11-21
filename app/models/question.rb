@@ -3,6 +3,7 @@
 class Question < ApplicationRecord
   has_many :answers, dependent: :destroy
   has_many :asked_questions
+  has_many :flagged_questions
   has_many :quizzes, through: :asked_questions
   belongs_to :lesson, optional: true
   belongs_to :topic
@@ -20,12 +21,12 @@ class Question < ApplicationRecord
   validates_associated :answers
 
   validate :at_least_one_correct_answer
-  #validate :boolean_true_or_false
+  validate :boolean_true_or_false
 
   def boolean_true_or_false
     return unless boolean?
     return errors[:base] << 'No first answer for boolean question' unless answers.first.present?
-    return errors[:base] << 'No second answer for boolean quesiton' unless answers.first.present?
+    return errors[:base] << 'No second answer for boolean quesiton' unless answers.second.present?
 
     if answers.first.text.casecmp('true').zero? && answers.second.text.casecmp('false').zero? && answers.length == 2
       return

@@ -35,9 +35,9 @@
           -@questions.order(:id).each do |q|
             tr id="question-#{q.id}"
               td.question-text = link_to q.question_text.blank? ? 'Click here to edit' : q.question_text, q
-              td.amount = q.asked_questions.count
-              td.flags = FlaggedQuestion.where(question: q).count
-              td.correct = number_to_percentage( (q.asked_questions.where(correct: true).count.to_f / q.asked_questions.count.to_f) * 100, precision: 0)  if q.asked_questions.count > 0
+              td.amount = q.asked_questions.size
+              td.flags = q.flagged_questions.size
+              td.correct = calculate_percentage_correct(q)
               td.lesson = q.lesson.present? ? q.lesson.title : '-'
   .row.my-5
     .col
