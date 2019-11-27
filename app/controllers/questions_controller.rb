@@ -85,8 +85,10 @@ class QuestionsController < ApplicationController
   def setup_boolean_question
     @question.answers.build until @question.answers.length >= 2
     @question.answers = @question.answers.slice(0..1) if @question.answers.length > 2
-    @question.answers.first.text = 'True'
-    @question.answers.second.text = 'False'
+    return if @question.persisted?
+
+    @question.answers.second.text = 'True'
+    @question.answers.first.text = 'False'
   end
 
   def check_answers
