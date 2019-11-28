@@ -2,7 +2,7 @@
 
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_question, only: %i[show update destroy]
+  before_action :set_question, only: %i[show update destroy reset_flags]
 
   def index
     @subjects = policy_scope(Subject).includes(:topics)
@@ -20,6 +20,12 @@ class QuestionsController < ApplicationController
                          .where(topic: @topic, active: true)
 
     render 'topic_question_index'
+  end
+
+  def reset_flags
+    authorize current_user, :update?
+    FlaggedQuestion.where(question: @question).delete_all
+    render :show
   end
 
   def new

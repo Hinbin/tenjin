@@ -281,5 +281,22 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         expect(page).to have_content(lesson.title)
       end
     end
+
+    context 'when resetting question flags' do
+      before do
+        create(:flagged_question, question: question)
+      end
+
+      it 'shows the number of question flags' do
+        visit(question_path(question))
+        expect(page).to have_content('Flags: 1')
+      end
+
+      it 'resets flags when presssing the button' do
+        visit(question_path(question))
+        click_link('Reset Question Flags')
+        expect(page).to have_content('Flags: 0')
+      end
+    end
   end
 end

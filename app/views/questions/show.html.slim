@@ -7,11 +7,29 @@
         class: 'btn btn-block btn-secondary'
   .row.mt-5
     .col
+      h1 Statistics
+  .row.text-center
+    .col
+      p = "Times Asked: #{times_asked(@question)}"
+    .col
+      p = "Percent Correct: #{percentage_correct(@question)}"
+    .col
+      p = "Flags: #{FlaggedQuestion.where(question: @question).count}"
+  .row
+    .col
+      = link_to 'Reset Question Flags',
+        reset_flags_question_path,
+        method: :patch,
+        class: 'btn btn-block btn-secondary'
+
+  .row.mt-5
+    .col
       =link_to 'Delete Question',
         question_path(@question),
         data:{ confirm: 'Are you sure?' },
         method: :delete,
         class: 'btn btn-danger btn-block'
+
 .modal.fade#noCorrectAnswerModal
   .modal-dialog.modal-dialog-centered role="document"
     .modal-content

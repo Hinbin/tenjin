@@ -37,9 +37,9 @@
             tr id="question-#{q.id}"
               td = index + 1
               td.question-text = link_to q.question_text.blank? ? 'Click here to edit' : q.question_text, q
-              td.amount = q.question_statistic.present? ? q.question_statistic.number_asked : 0
+              td.amount = times_asked(q)
               td.flags = q.flagged_questions.size
-              td.correct = calculate_percentage_correct(q)
+              td.correct = percentage_correct(q)
               td.lesson = q.lesson.present? ? q.lesson.title : '-'
   .row.my-5
     .col

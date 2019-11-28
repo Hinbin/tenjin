@@ -15,7 +15,10 @@ Rails.application.routes.draw do
   resources :classrooms, only: [:show, :index, :update]
   resources :questions do
     collection do
-      get 'topic_questions'
+      get 'topic_questions'      
+    end
+    member do
+      patch 'reset_flags'
     end
   end
   resources :answers
