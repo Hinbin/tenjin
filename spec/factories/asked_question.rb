@@ -12,11 +12,11 @@ FactoryBot.define do
     correct { nil }
 
     after(:build) do |asked_question, evaluator|
-      if evaluator.user.nil?
-        asked_question.user = create(:student)
-      else
-        asked_question.quiz.user = evaluator.user
-      end
+      asked_question.quiz.user = if evaluator.user.nil?
+                                   create(:student)
+                                 else
+                                   evaluator.user
+                                 end
     end
   end
 end

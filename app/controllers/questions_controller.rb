@@ -15,7 +15,9 @@ class QuestionsController < ApplicationController
     @topic = Topic.find(question_topic_params)
     authorize @topic, :update?
     @topic_lessons = Lesson.where(topic: @topic)
-    @questions = Question.where(topic: @topic, active: true)
+    @questions = Question.with_rich_text_question_text_and_embeds
+                         .includes(:question_statistic)
+                         .where(topic: @topic, active: true)
 
     render 'topic_question_index'
   end
@@ -85,7 +87,7 @@ class QuestionsController < ApplicationController
   def setup_boolean_question
     @question.answers.build until @question.answers.length >= 2
     @question.answers = @question.answers.slice(0..1) if @question.answers.length > 2
-    return if @question.persisted?
+    return if @question.valid?
 
     @question.answers.second.text = 'True'
     @question.answers.first.text = 'False'

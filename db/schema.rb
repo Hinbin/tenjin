@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_06_140750) do
+ActiveRecord::Schema.define(version: 2019_11_27_123005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -249,6 +249,15 @@ ActiveRecord::Schema.define(version: 2019_11_06_140750) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "question_statistics", force: :cascade do |t|
+    t.integer "number_asked"
+    t.integer "number_correct"
+    t.bigint "question_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id"], name: "index_question_statistics_on_question_id", unique: true
+  end
+
   create_table "questions", force: :cascade do |t|
     t.bigint "topic_id"
     t.integer "question_type"
@@ -257,6 +266,7 @@ ActiveRecord::Schema.define(version: 2019_11_06_140750) do
     t.integer "external_id"
     t.bigint "lesson_id"
     t.boolean "active", default: true
+    t.integer "flagged_questions_count"
     t.index ["lesson_id"], name: "index_questions_on_lesson_id"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
@@ -409,6 +419,7 @@ ActiveRecord::Schema.define(version: 2019_11_06_140750) do
   add_foreign_key "leaderboard_awards", "schools"
   add_foreign_key "leaderboard_awards", "subjects"
   add_foreign_key "leaderboard_awards", "users"
+  add_foreign_key "question_statistics", "questions"
   add_foreign_key "questions", "lessons"
   add_foreign_key "questions", "topics"
   add_foreign_key "quizzes", "topics"

@@ -10,9 +10,9 @@ module QuestionsHelper
   end
 
   def calculate_percentage_correct(q)
-    return '0%' if q.asked_questions.empty?
-
-    number_to_percentage((q.asked_questions.where(correct: true).size.to_f / q.asked_questions.size) * 100,
+    return '0%' unless q.question_statistic.present?
+    
+    number_to_percentage((q.question_statistic.number_correct.to_f / q.question_statistic.number_asked) * 100,
                          precision: 0)
   end
 end
