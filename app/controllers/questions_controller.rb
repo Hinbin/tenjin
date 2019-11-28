@@ -10,9 +10,9 @@ class QuestionsController < ApplicationController
   end
 
   def topic_questions
-    redirect questions_path unless question_topic_params.present?
+    redirect questions_path unless topic_question_params.present?
 
-    @topic = Topic.find(question_topic_params)
+    @topic = Topic.find(topic_question_params)
     authorize @topic, :update?
     @topic_lessons = Lesson.where(topic: @topic)
     @questions = Question.with_rich_text_question_text_and_embeds
@@ -26,6 +26,17 @@ class QuestionsController < ApplicationController
     authorize current_user, :update?
     FlaggedQuestion.where(question: @question).delete_all
     render :show
+  end
+
+  def flagged_questions
+    @subject = Subject.find(flagged_questions_params)
+    authorize @subject, :update?
+    @questions = Question.joins(:topic)
+                         .where(topics: { subject: @subject })
+                         .where(flagged_questions_count: 1..)
+                         .order(:flagged_questions_count)
+                         .limit(10)
+    render :flagged_questions
   end
 
   def new
@@ -78,8 +89,12 @@ class QuestionsController < ApplicationController
 
   private
 
-  def question_topic_params
+  def topic_question_params
     params.require(:topic_id)
+  end
+
+  def flagged_questions_params
+    params.require(:subject_id)
   end
 
   def question_params

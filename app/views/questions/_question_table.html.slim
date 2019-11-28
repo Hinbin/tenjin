@@ -1,0 +1,18 @@
+table.table#questionTable
+        thead
+          tr
+            th #
+            th Question
+            th Times Asked
+            th Flags
+            th % Correct
+            th Lesson
+        tbody
+          -@questions.order(:created_at).each_with_index do |q, index|
+            tr id="question-#{q.id}"
+              td = index + 1
+              td.question-text = link_to q.question_text.blank? ? 'Click here to edit' : q.question_text, q
+              td.amount = times_asked(q)
+              td.flags = q.flagged_questions.size
+              td.correct = percentage_correct(q)
+              td.lesson = q.lesson.present? ? q.lesson.title : '-'
