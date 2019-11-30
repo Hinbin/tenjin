@@ -2,67 +2,80 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2
-jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/ruby:2.6.3-node-browsers
-        environment:
-            BUNDLE_PATH: vendor/bundle
-            PGHOST: 127.0.0.1
-            PGUSER: circleci
-            RAILS_ENV: test
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: circleci/postgres:10.9
-        environment:
-            POSTGRES_USER: circleci
-            POSTGRES_DB: tenjin
-            POSTGRES_PASSWORD: ""
-
-    working_directory: ~/repo
-        
+version: 2.1
+commands:
+  shared_steps:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "Gemfile.lock" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
       - run:
-          name: install bundler gem
+          name: Configure bundler
           command: |
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
             gem install bundler
-      - run:          
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
-      - run:
-          name: yarn integrity check
-          command: |
-            yarn install --check-files
+      - restore_cache:
+          name: Restore bundle cache
+          keys:
+            - tenjin-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
+            - tenjin-bundle-{{ arch }}-
+      - run: bundle install --jobs=4 --retry=3 --clean --path vendor/bundle
+      - save_cache:
+          name: Store bundle cache
+          key: tenjin-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - restore_cache:
+          name: Restore yarn cache
+          keys:
+            - tenjin-yarn-{{ checksum "yarn.lock" }}
+            - tenjin-yarn-
+      - run: yarn install --cache-folder ~/.cache/yarn
+      - save_cache:
+          name: Store yarn cache
+          key: tenjin-yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+
+default_job: &default_job
+  working_directory: ~/tenjin
+  steps:
+    - shared_steps
+
+jobs:
+  build:
+    <<: *default_job
+    docker:
+      - image: circleci/ruby:2.6-node-browsers
+        environment:
+          RAILS_ENV: test
+  test:
+    <<: *default_job
+    parallelism: 2
+    docker:
+      - image: circleci/ruby:2.6.3-node-browsers
+        environment:
+            PGUSER: root
+            PGHOST: 127.0.0.1
+            RAILS_ENV: test
+      - image: circleci/postgres:10.9
+        environment:
+          POSTGRES_USER: root
+
+    steps:
+      - shared_steps
       - run:
           name: precompile assets
           command: |
-            bundle exec rails webpacker:compile
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}    
+            bin/rails webpacker:compile
 
-      # Database setup
-      - run: sudo apt install -y postgresql-client || true      
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
-      - run: 
-          name: "Setup CI Environment variable"
-          command: |
-            echo 'export CI="true"' >> $BASH_ENV # Set CI env var up
+      # Wait for DB
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # Database setup   
+      - run: bin/rails db:create db:schema:load
+
       # run tests!
       - run:
           name: run tests
@@ -83,5 +96,14 @@ jobs:
           path: /tmp/test-results
           destination: test-results
       - store_artifacts:
-          path: /home/circleci/repo/tmp/screenshots/
+          path: /home/circleci/tenjin/tmp/screenshots/
           destination: browser-screenshots
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
