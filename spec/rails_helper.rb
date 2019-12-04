@@ -62,7 +62,6 @@ Capybara.register_driver :ci_headless_chrome do |app|
 end
 
 Capybara.server = :puma, { Silent: true }
-Capybara.default_max_wait_time = 15 if ENV['CI']
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
