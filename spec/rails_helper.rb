@@ -9,6 +9,8 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'webdrivers'
+require 'capybara/rspec'
+require 'capybara/rails'
 
 require 'webmock/rspec'
 require 'vcr'
@@ -44,12 +46,24 @@ Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
-begin
-  ActiveRecord::Migration.maintain_test_schema!
-rescue ActiveRecord::PendingMigrationError => e
-  puts e.to_s.strip
-  exit 1
+ActiveRecord::Migration.maintain_test_schema!
+
+Capybara.register_driver :ci_headless_chrome do |app|
+  capabilities =
+    Selenium::WebDriver::Remote::Capabilities.chrome(
+      chromeOptions: { args: %w[headless disable-gpu] }
+    )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+  )
 end
+
+Capybara.server = :puma, { Silent: true }
+Capybara.default_max_wait_time = 15 if ENV['CI']
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -93,7 +107,6 @@ RSpec.configure do |config|
 
   # Required to use database cleaner with action cable
   # or feature testing will not work
-
   config.after :each, :js do
     errors = page.driver.browser.manage.logs.get(:browser)
     if errors.present?
@@ -109,7 +122,15 @@ RSpec.configure do |config|
     end
   end
 
-  if ENV['CI']
+  config.before(:each, type: :system, js: true) do
+    if ENV.fetch('CI') { false }
+      driven_by :selenium, using: :ci_headless_chrome
+    else
+      driven_by :selenium_chrome_headless
+    end
+  end
+
+  if ENV.fetch('CI') { false }
     # show retry status in spec process
     config.verbose_retry = true
     # show exception that triggers a retry if verbose_retry is set to true
@@ -125,26 +146,12 @@ RSpec.configure do |config|
       # run some additional clean up task - can be filtered by example metadata
       Capybara.reset! if ex.metadata[:js]
     end
-    config.before(:each, type: :system) do
-      driven_by :selenium_chrome_headless
-    end
-  else
-
-    config.before(:each, type: :system) do
-      driven_by :selenium_chrome_headless
-    end
   end
 end
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
-    # Choose a test framework:
     with.test_framework :rspec
-
-    # Or, choose all of the above:
     with.library :rails
   end
 end
-
-Capybara.server = :puma, { Silent: true }
-Capybara.default_max_wait_time = 15 if ENV['CI']
