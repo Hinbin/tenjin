@@ -121,6 +121,10 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:each, type: :system) do
+    driven_by :rack_test
+  end
+
   config.before(:each, type: :system, js: true) do
     if ENV.fetch('CI') { false }
       driven_by :selenium, using: :ci_headless_chrome
