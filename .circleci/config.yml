@@ -52,7 +52,7 @@ jobs:
           RAILS_ENV: test
   test:
     <<: *default_job
-    parallelism: 2
+    parallelism: 1
     docker:
       - image: circleci/ruby:2.6.3-node-browsers
         environment:
