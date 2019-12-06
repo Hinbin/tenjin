@@ -23,10 +23,6 @@ class UserPolicy < ApplicationPolicy
     end
   end
 
-  def reset_password?
-    show?
-  end
-
   def update?
     (user.employee? && record.school == user.school) || (record == user)
   end
@@ -45,8 +41,9 @@ class UserPolicy < ApplicationPolicy
     user.super? && record.employee?
   end
 
-  def remove_role?
-    user.super? && record.employee?
-  end
+  alias remove_role? set_role?
+
+  alias reset_password? show?
+  alias unlink_oauth_account? show?
 
 end

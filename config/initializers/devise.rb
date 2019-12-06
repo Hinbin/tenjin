@@ -267,6 +267,11 @@ Devise.setup do |config|
       request = Rack::Request.new(env)
       env['omniauth.strategy'].options['token_params'] = {:redirect_uri => ENV['WONDE_CALLBACK_URL']}
     end)
+
+  config.omniauth :google_oauth2,
+    ENV['GOOGLE_CLIENT_ID'],
+    ENV['GOOGLE_SECRET'],
+    {}
   
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

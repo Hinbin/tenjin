@@ -25,6 +25,24 @@ module SessionHelpers
       )
   end
 
+  def stub_google_omniauth
+    # first, set OmniAuth to run in test mode
+    OmniAuth.config.test_mode = true
+    # then, provide a set of fake oauth data that
+    # omniauth will use when a user tries to authenticate:
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+      "provider"=>"google_oauth2",
+        "uid"=>"123456123456",
+        "info"=>
+         {"name"=>"Test",
+          "email"=>"test@test.com",
+          "unverified_email"=>"test@test.com",
+          "email_verified"=>true,
+          "first_name"=>"Test",
+          "last_name"=>"Person"}
+    )
+  end
+
   def setup_subject_database
     create(:enrollment, classroom: classroom, user: student)
     create(:multiplier)

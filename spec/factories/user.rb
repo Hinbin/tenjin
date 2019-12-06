@@ -15,6 +15,16 @@ FactoryBot.define do
     username { forename[0].downcase + surname.downcase + upi[0..3] }
     password { FFaker::Internet.password }
     disabled { false }
+    oauth_email { '' }
+    oauth_provider { '' }
+    oauth_uid { '' }
+
+
+    trait :oauth do
+      oauth_email { FFaker::Internet.email }
+      oauth_provider { 'google_oauth2' }
+      oauth_uid { rand(0..100_000_000_000) }
+    end
 
     factory :student do
       role { 'student' }

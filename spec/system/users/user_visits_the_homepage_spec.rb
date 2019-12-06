@@ -19,6 +19,8 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true do
   end
 
   context 'when logging in' do
+    let(:student_google) { create(:student, :oauth, oauth_uid: '123456123456') }
+
     before do
       visit root_path
       student
@@ -39,12 +41,12 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true do
       expect(page).to have_content(teacher.forename).and have_content(teacher.surname)
     end
 
-    it 'logs in using Wonde single sign on' do
-      stub_omniauth
-      student_wonde
+    it 'logs in using Google oAuth' do
+      student_google
+      stub_google_omniauth
       click_button 'Login'
-      click_link 'Sign in with Wonde'
-      expect(page).to have_content(student_wonde.forename).and have_content(student_wonde.surname)
+      find(:css, '#loginGoogle').click
+      expect(page).to have_content(student_google.forename).and have_content(student_google.surname)
     end
 
     it 'redirects to dashboard if they are already signed in' do
@@ -59,11 +61,11 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true do
     expect(page).to have_css('nav.fixed-top')
   end
 
-  it 'displays log in error messages' do
+  it 'displays log in error messages', :focus do
     visit root_path
-    stub_omniauth
+    stub_google_omniauth
     click_button 'Login'
-    click_link 'Sign in with Wonde'
+    find(:css, '#loginGoogle').click
     expect(page).to have_text('Your account has not been found')
   end
 

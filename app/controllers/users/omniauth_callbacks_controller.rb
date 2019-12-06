@@ -27,13 +27,22 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     attempt_user_sign_in(user)
   end
 
+  def google_oauth2
+    @user = User.from_omniauth(request.env['omniauth.auth'], current_user)
+
+    if current_user.present?
+      flash[:notice] = 'Successfully linked Google account'
+      redirect_to dashboard_path
+    else
+      attempt_user_sign_in(@user)
+      set_flash_message(:notice, :success, kind: 'Google') if is_navigational_format?
+    end
+  end
+
   def attempt_user_sign_in(user)
     if user.blank?
       fail_sign_in
-    # persisted? means if the record already existed (or hasn't been deleted)
-    # So this effectively prevents a new record from being created if an
-    # e-mail has not been found.
-    elsif user.persisted?
+    elsif user.persisted? 
       sign_in_and_redirect user, event: :authentication
     else
       fail_sign_in
