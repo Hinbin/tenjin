@@ -61,7 +61,7 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true do
     expect(page).to have_css('nav.fixed-top')
   end
 
-  it 'displays log in error messages', :focus do
+  it 'displays log in error messages' do
     visit root_path
     stub_google_omniauth
     click_button 'Login'
