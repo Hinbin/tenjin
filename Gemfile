@@ -12,7 +12,7 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem 'rails', '~> 6.0.0'
 
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 4.3'
 gem 'rack-timeout'
 gem 'sprockets', '3.7.2' # Fix at 3.7.2 as 4.0.0 as issues with sassc compilation
 
