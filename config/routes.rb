@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         patch 'set_role'
         delete 'remove_role'
         patch 'reset_password'
+        delete 'unlink_oauth_account'
       end
       collection do
         get 'manage_roles'

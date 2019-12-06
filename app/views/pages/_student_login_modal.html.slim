@@ -12,7 +12,7 @@
                 required: false,
                 input_html: { autocomplete: "current-password" }
             = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' } if devise_mapping.rememberable?
-            = f.button :submit, "Login", class: 'btn btn-primary', id: 'loginModal'
+            = f.button :submit, "Login", class: 'btn btn-primary btn-block', id: 'loginModal'
         .my-3 
-          - User.omniauth_providers.each do |provider|
-            =link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider)        
+          =link_to image_tag('btn_google_signin_dark_normal_web', class: 'd-flex mx-auto', id: 'loginGoogle'),
+            user_google_oauth2_omniauth_authorize_path

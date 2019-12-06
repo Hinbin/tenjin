@@ -18,7 +18,7 @@ section.page-section.text-center#myClassrooms
                 td =e.classroom.name
                 td.d-none.d-lg-block =e.classroom.description
                 td =e.subject.name if e.subject.present?
-                td.d-none.d-lg-block =e.classroom.enrollments.count
+                td.d-none.d-lg-block =e.classroom.enrollments.size
                 td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'btn btn-dark'
 - if @other_classrooms.present?
   section.page-section.text-center#otherClassrooms
