@@ -384,9 +384,9 @@ ActiveRecord::Schema.define(version: 2019_12_02_150623) do
     t.datetime "time_of_last_quiz"
     t.string "username"
     t.boolean "disabled"
-    t.string "oauth_provider", default: "t"
-    t.string "oauth_uid", default: "t"
-    t.string "oauth_email", default: "t"
+    t.string "oauth_provider"
+    t.string "oauth_uid"
+    t.string "oauth_email"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
     t.index ["username"], name: "index_users_on_username", unique: true
