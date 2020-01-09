@@ -4,6 +4,11 @@ class UpdateQuestionStatisticsJob < ApplicationJob
   queue_as :default
 
   def perform(*_args)
+    update_percentage_correct
+    update_flagged_questions
+  end
+
+  def update_percentage_correct
     inactive_asked_questions = AskedQuestion.joins(:quiz, :question)
                                             .left_joins(question: :question_statistic)
                                             .where(quizzes: { active: false })
@@ -37,5 +42,11 @@ class UpdateQuestionStatisticsJob < ApplicationJob
     return 1 unless asked_question.question.question_statistic.present?
 
     asked_question.question.question_statistic.number_asked + 1
+  end
+
+  def update_flagged_questions
+    Question.find_each do |q|
+      Question.reset_counters(q.id, :flagged_questions)
+    end
   end
 end

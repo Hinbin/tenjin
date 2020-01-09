@@ -3,7 +3,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: %i[set_role manage_roles remove_role]
   before_action :authenticate_admin!, only: %i[set_role manage_roles remove_role]
-  before_action :set_user, only: %i[show update reset_password set_role remove_role]
+  before_action :set_user, only: %i[show update reset_password set_role remove_role unlink_oauth_account]
 
   def index
     authorize current_user
@@ -80,6 +80,16 @@ class UsersController < ApplicationController
     @question_authors = User.with_role :question_author, :any
     @all_subjects = Subject.all
     render 'manage_roles'
+  end
+
+  def unlink_oauth_account
+    authorize @user
+    @user.oauth_uid = ''
+    @user.oauth_email = ''
+    @user.oauth_provider = ''
+    @user.save
+
+    redirect_to @user
   end
 
   private

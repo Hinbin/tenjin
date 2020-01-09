@@ -14,7 +14,7 @@
     .col
       p = "Percent Correct: #{percentage_correct(@question)}"
     .col
-      p = "Flags: #{FlaggedQuestion.where(question: @question).count}"
+      p = "Flags: #{@question.flagged_questions.size}"
   .row
     .col
       = link_to 'Reset Question Flags',

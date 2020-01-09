@@ -25,7 +25,8 @@ class QuestionsController < ApplicationController
   def reset_flags
     authorize current_user, :update?
     FlaggedQuestion.where(question: @question).delete_all
-    render :show
+    Question.reset_counters @question.id, :flagged_questions_count
+    redirect_to @question
   end
 
   def flagged_questions
@@ -34,8 +35,7 @@ class QuestionsController < ApplicationController
     @questions = Question.joins(:topic)
                          .where(topics: { subject: @subject })
                          .where(flagged_questions_count: 1..)
-                         .order(:flagged_questions_count)
-                         .limit(10)
+                         .order(flagged_questions_count: :desc)
     render :flagged_questions
   end
 

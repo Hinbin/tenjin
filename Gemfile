@@ -103,6 +103,7 @@ gem 'devise'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'omniauth-wonde', :path=>"omniauth-wonde/"
+gem 'omniauth-google-oauth2'
 
 # Simple forms
 gem 'simple_form'
