@@ -107,6 +107,11 @@ class UsersController < ApplicationController
     authorize @user
     flash.now[:notice] = "Setup email sent to #{@user.forename} #{@user.surname} (#{@user.email})"
 
+    new_password = Devise.friendly_token(6)
+    @user.reset_password(new_password, new_password)
+
+    UserMailer.with(user: @user, password: new_password).setup_email.deliver_later
+
     render template: 'shared/flash'
   end
 

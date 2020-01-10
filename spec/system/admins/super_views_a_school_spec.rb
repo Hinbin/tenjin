@@ -47,7 +47,7 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
     expect(page).to have_css('#flash-notice', text: email_notice)
   end
 
-  it 'sends setup emails' do
+  it 'sends setup emails', :focus do
     school_admin
     visit(school_path(school))
     expect { click_link 'Send Setup Email' }.to change { ActionMailer::Base.deliveries.count }.by(1)
