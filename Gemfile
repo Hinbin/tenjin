@@ -7,6 +7,7 @@ ruby '~> 2.6.3'
 
 # Sets environment variables
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'recipient_interceptor'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.0'
@@ -129,13 +130,16 @@ gem 'high_voltage'
 #Required for rails 6.1 (recommeneded 1.2)
 gem 'image_processing'
 
-# Use Amazon S3 for Active Storage
+# File storage
 gem 'aws-sdk-s3'
+
+# SES email
+gem 'aws-sdk-rails'
 
 # Investigate memory leaks
 gem 'scout_apm'
 
 # Heroku dyno management & statistics
-gem "hirefire-resource"
-gem "barnes"
+gem 'hirefire-resource'
+gem 'barnes'
 #skylight for response metrics?
