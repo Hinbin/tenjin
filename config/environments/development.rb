@@ -67,8 +67,13 @@ Rails.application.configure do
       config.logger = Rails.logger
       config.color = :red
       config.log_headers = true
-    end          
-  end
-  
-end
+    end
 
+    Mail.register_interceptor(
+      RecipientInterceptor.new(
+        ENV['EMAIL_RECIPIENTS'],
+        subject_prefix: '[DEV]'
+      )
+    )
+  end
+end
