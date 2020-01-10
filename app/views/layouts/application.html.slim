@@ -20,6 +20,6 @@ html
     = render('shared/user_navigation') if current_user.present?  
     = render('shared/admin_navigation') if current_admin.present?
     = render('shared/logged_out_navigation') if current_user.nil? && current_admin.nil?
-    = render('shared/notice_notification') if flash[:notice].present? && current_user.present?
+    = render('shared/notice_notification') if flash[:notice].present? && (current_user.present? || current_admin.present?)
     = yield
     = render('shared/alert_modal')
