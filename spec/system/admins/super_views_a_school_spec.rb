@@ -36,7 +36,7 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
     school_admin
     visit(school_path(school))
     fill_in "user-email-#{school_admin.id}", with: new_email
-    find("#save-email-#{school_admin.id}").click()
+    find("#save-email-#{school_admin.id}").click
     expect(page).to have_css('#flash-notice', text: save_email_notice)
   end
 
@@ -46,10 +46,5 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
     click_link 'Send Setup Email'
     expect(page).to have_css('#flash-notice', text: email_notice)
   end
-
-  it 'sends setup emails', :focus do
-    school_admin
-    visit(school_path(school))
-    expect { click_link 'Send Setup Email' }.to change { ActionMailer::Base.deliveries.count }.by(1)
-  end
+  
 end
