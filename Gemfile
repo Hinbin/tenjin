@@ -124,6 +124,9 @@ gem 'bootstrap'
 gem 'jquery-rails'
 gem 'font-awesome-sass'
 
+# Bootstrap for emails
+gem 'bootstrap-email'
+
 # High-voltage for our static pages (e.g. home)
 gem 'high_voltage'
 

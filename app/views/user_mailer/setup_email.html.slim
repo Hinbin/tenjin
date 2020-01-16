@@ -1,0 +1,32 @@
+doctype Strict
+html
+  head
+    meta content=("text/html; charset=utf-8") http-equiv="Content-Type" /
+    = stylesheet_link_tag "application-mailer", media: "all"
+  body.bg-light
+    .container
+      .row.justify-content-center
+        .col
+          img.img-fluid src=image_url('tenjinHeader.jpg') alt="Tenjin"
+          h1.h1
+            | Welcome to Tenjin, #{@user.forename}!
+          p.text-left
+            br /
+            | You have been assigned as the school administrator for #{@user.school.name}.
+            br/
+            | Your username is: #{@user.login}.
+            br/
+            | Your password is: #{@password}.            
+            br/
+          hr
+          h3.h3 Setup
+          br/
+          p Watch the following video to show you how to setup Tenjin for your school and classes.
+          a href="https://vimeo.com/372642684"
+            img.img-fluid src=image_url('schooladminsetup.webp') alt="https://vimeo.com/372642684"
+          hr
+          / h3.h3 Google
+          / br/
+          / p If your students have been given Google accounts, they can link their accounts to Tenjin.  This video shows you how:
+
+          p Thanks for joining!

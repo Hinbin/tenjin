@@ -28,8 +28,10 @@ Rails.application.routes.draw do
   resources :users, only:[:show, :index, :update] do
       member do
         patch 'set_role'
-        delete 'remove_role'
         patch 'reset_password'
+        patch 'update_email'
+        post 'send_welcome_email'
+        delete 'remove_role'
         delete 'unlink_oauth_account'
       end
       collection do

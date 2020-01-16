@@ -36,6 +36,7 @@ FactoryBot.define do
 
     factory :school_admin do
       role { 'employee' }
+      email { FFaker::Internet.email }
       after(:create) do |user, _evaluator|
         user.add_role :school_admin
       end

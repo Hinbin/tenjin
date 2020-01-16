@@ -42,6 +42,8 @@ class UserPolicy < ApplicationPolicy
   end
 
   alias remove_role? set_role?
+  alias update_email? set_role?
+  alias send_welcome_email? set_role?
 
   alias reset_password? show?
   alias unlink_oauth_account? show?

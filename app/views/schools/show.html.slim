@@ -28,14 +28,19 @@
           thead
             tr
               th Username
-              th Role
+              th Email
+              th 
+              th
               th Login As
           tbody
             -@school_admins.each do |sa|
-              tr.school-admin-data
-                td =sa.username
-                td =sa.role.humanize          
-                td =button_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary'
+              = form_with model: sa, url: update_email_user_path(sa), method: :patch do |f|
+                tr.school-admin-data
+                  td =sa.username
+                  td =text_field_tag 'user[email]', sa.email, class: 'form-control', id: ('user-email-' + sa.id.to_s)
+                  td =submit_tag 'Save Email', class: 'btn btn-primary', id: ('save-email-' + sa.id.to_s)
+                  td =link_to 'Send Setup Email', send_welcome_email_user_path(sa), class: 'btn btn-primary', method: :post, remote: true
+                  td =link_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary', method: :post
       .d-flex.justify-content-center
         =link_to 'Manage User Roles', manage_roles_users_path(school: @school), class: 'btn btn-dark'
     

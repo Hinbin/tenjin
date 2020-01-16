@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authenticate_user!, except: %i[set_role manage_roles remove_role]
-  before_action :authenticate_admin!, only: %i[set_role manage_roles remove_role]
-  before_action :set_user, only: %i[show update reset_password set_role remove_role unlink_oauth_account]
+  before_action :authenticate_user!, except: %i[set_role manage_roles remove_role update_email send_welcome_email]
+  before_action :authenticate_admin!, only: %i[set_role manage_roles remove_role update_email send_welcome_email]
+  before_action :set_user, only: %i[show update reset_password set_role remove_role
+                                    update_email unlink_oauth_account send_welcome_email]
 
   def index
     authorize current_user
@@ -92,6 +93,28 @@ class UsersController < ApplicationController
     redirect_to @user
   end
 
+  def update_email
+    authorize @user
+    @user.email = update_email_params[:email]
+    @user.save
+
+    flash.now[:notice] = "Updated email to #{@user.forename} #{@user.surname}"
+
+    render template: 'shared/flash'
+  end
+
+  def send_welcome_email
+    authorize @user
+    flash.now[:notice] = "Setup email sent to #{@user.forename} #{@user.surname} (#{@user.email})"
+
+    new_password = Devise.friendly_token(6)
+    @user.reset_password(new_password, new_password)
+
+    UserMailer.with(user: @user, password: new_password).setup_email.deliver_later
+
+    render template: 'shared/flash'
+  end
+
   private
 
   def find_homework_progress
@@ -101,6 +124,10 @@ class UsersController < ApplicationController
 
   def update_password_params
     params.require(:user).permit(:password)
+  end
+
+  def update_email_params
+    params.require(:user).permit(:email)
   end
 
   def set_user_role_params

@@ -19,5 +19,8 @@ module Csquiz
     # the framework and any gems in your application.
 
     config.action_mailer.delivery_method = :ses
+
+    config.action_mailer.asset_host = ENV['ASSET_HOST']
+
   end
 end
