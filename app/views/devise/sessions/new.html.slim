@@ -1,21 +1,11 @@
-.container.py-5
-  h2 Log in
-  = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-    .form-inputs
-      - if resource.class.name == 'Admin'
-        = f.input :email,                       \
-          required: false,                      \
-          autofocus: true,                      \
-          input_html: { autocomplete: "email" } 
-      - else
-        = f.input :login,                       \
-          required: false,                      \
-          autofocus: true,                      \
-          input_html: { autocomplete: "email" }      
-      = f.input :password,                               \
-        required: false,                                 \
-        input_html: { autocomplete: "current-password" } 
-      = f.input :remember_me, as: :boolean if devise_mapping.rememberable?
-    .form-actions
-      = f.button :submit, "Log in", class: 'btn btn-primary'
-  = render "devise/shared/links"
+header.masthead.masthead-container.masthead-full.text-white  
+  div.container.h-100
+    div.row.h-100.align-items-center
+      div.col.text-center
+        h1.section-heading.text-uppercase#mastheadText Learn, Compete, Succeed
+        hr.small.mb-5.primary-red
+footer.fixed-bottom.text-right.px-3.py-3.text-white 
+  =link_to 'About', page_path('about'), class: 'text-light'
+=render('pages/student_login_modal')
+
+

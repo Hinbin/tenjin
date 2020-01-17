@@ -7,7 +7,7 @@ html
     .container
       .row.justify-content-center
         .col
-          img.img-fluid src=image_url('tenjinHeader.jpg') alt="Tenjin"
+          img.img-fluid.text-center src=image_url('tenjinHeader.jpg') alt="Tenjin"
           h1.h1
             | Welcome to Tenjin, #{@user.forename}!
           p.text-left
@@ -16,8 +16,10 @@ html
             br/
             | Your username is: #{@user.login}.
             br/
-            | Your password is: #{@password}.            
+            | An email will follow shortly which will let you reset your password.            
             br/
+            | To get started, visit 
+            a href="https://tenjin.outwood.com" https://tenjin.outwood.com
           hr
           h3.h3 Setup
           br/
