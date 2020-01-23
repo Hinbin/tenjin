@@ -42,7 +42,7 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   end
 
   def check_number_of_points(challenge, progress)
-    unless @question_topic == challenge.topic || (challenge.daily && @question_topic.subject == challenge.subject)
+    unless @question_topic == challenge.topic || (challenge.daily && @question_topic.subject == challenge.topic.subject)
       return
     end
 
