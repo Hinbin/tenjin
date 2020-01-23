@@ -11,6 +11,10 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
       create(:challenge, topic: topic, challenge_type: 'number_correct',
                          number_required: 1, end_date: Time.now + 1.hour)
     end
+    let(:challenge_daily) do
+      create(:challenge, challenge_type: 'number_correct', daily: true,
+                         number_required: 1, end_date: Time.now + 1.hour)
+    end
     let(:second_subject) { create(:subject) }
     let(:second_topic) { create(:topic, subject: second_subject) }
     let(:challenge_two) { create(:challenge, topic: create(:topic, subject: subject)) }
@@ -22,30 +26,49 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
     end
     let(:quiz) { create(:new_quiz) }
 
-    before do
-      challenge_single_question
-      question
+    context 'when completing a num. points challenge' do
+      before do
+        challenge_single_question
+        question
+      end
+
+      it 'links you to the correct quiz when clicked' do
+        visit(dashboard_path)
+        find(:css, '#challenge-table tbody tr:nth-child(1)').click
+        expect(page).to have_css('p', exact_text: challenge_single_question.topic.name)
+      end
+
+      it 'allows me to answer a question after creating a quiz from a challenge' do # turbolinks bug
+        visit(dashboard_path)
+        find(:css, '#challenge-table tbody tr:nth-child(1)').click
+        first(class: 'question-button').click
+        expect(page).to have_text('Next Question')
+      end
+
+      it 'lets me complete a number of points required challenge' do
+        visit(dashboard_path)
+        binding.pry
+        find(:css, '#challenge-table tbody tr:nth-child(1)').click
+        first(class: 'question-button').click
+        first(class: 'next-button').click
+        expect(page).to have_css('#challenge-points', exact_text: challenge_single_question.points)
+      end
     end
 
-    it 'links you to the correct quiz when clicked' do
-      visit(dashboard_path)
-      find(:css, '#challenge-table tbody tr:nth-child(1)').click
-      expect(page).to have_css('p', exact_text: challenge_single_question.topic.name)
-    end
+    context 'when completing a daily challenge', :focus do
+      before do
+        challenge_daily
+        question        
+      end
 
-    it 'allows me to answer a question after creating a quiz from a challenge' do # turbolinks bug
-      visit(dashboard_path)
-      find(:css, '#challenge-table tbody tr:nth-child(1)').click
-      first(class: 'question-button').click
-      expect(page).to have_text('Next Question')
-    end
-
-    it 'lets me complete a number of points required challenge' do
-      visit(dashboard_path)
-      find(:css, '#challenge-table tbody tr:nth-child(1)').click
-      first(class: 'question-button').click
-      first(class: 'next-button').click
-      expect(page).to have_css('#challenge-points', exact_text: challenge_single_question.points)
+      it 'lets me complete a number of points in the day challenge' do
+        binding.pry
+        visit(dashboard_path)
+        find(:css, '#challenge-table tbody tr:nth-child(1)').click
+        first(class: 'question-button').click
+        first(class: 'next-button').click
+        expect(page).to have_css('#challenge-points', exact_text: challenge_daily.points)
+      end
     end
   end
 end

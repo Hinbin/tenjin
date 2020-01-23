@@ -8,9 +8,10 @@ class Challenge < ApplicationRecord
 
   enum challenge_type: %i[number_correct streak number_of_points]
 
-  def self.create_challenge(subject, challenge_type = nil, multiplier: 1, duration: 7.days)
+  def self.create_challenge(subject, challenge_type = nil, multiplier: 1, duration: 7.days, daily: false)
     challenge = Challenge.new start_date: Time.current, end_date: duration.from_now
-    challenge.topic = Topic.where(active:'true').order(Arel.sql('RANDOM()')).find_by(subject: subject)
+    challenge.daily = daily
+    challenge.topic = Topic.where(active: 'true').order(Arel.sql('RANDOM()')).find_by(subject: subject) unless daily
 
     setup_challenge_type(challenge, challenge_type)
     setup_point_value(challenge, multiplier: multiplier)
@@ -25,6 +26,9 @@ class Challenge < ApplicationRecord
       "Obtain a streak of #{number_required} correct answers",
       "Score #{number_required} points"
     ]
+
+    binding.pry
+    return "#{challenge_strings[Challenge.challenge_types[challenge_type]]} today" if daily
 
     "#{challenge_strings[Challenge.challenge_types[challenge_type]]} in #{topic.name} for #{topic.subject.name}"
   end

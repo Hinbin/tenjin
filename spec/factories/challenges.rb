@@ -8,5 +8,6 @@ FactoryBot.define do
     end_date { Time.now + 7.days }
     points { 10 }
     topic
+    daily { false }
   end
 end

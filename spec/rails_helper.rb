@@ -126,12 +126,12 @@ RSpec.configure do |config|
       Capybara.reset! if ex.metadata[:js]
     end
     config.before(:each, type: :system) do
-      driven_by :selenium_chrome_headless
+      driven_by :selenium_chrome
     end
   else
 
     config.before(:each, type: :system) do
-      driven_by :selenium_chrome_headless
+      driven_by :selenium_chrome
     end
   end
 end
