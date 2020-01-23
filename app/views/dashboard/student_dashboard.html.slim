@@ -36,7 +36,7 @@ section#challenges.page-section.text-center
               th Expires in
           tbody
             - @challenges.each do |c|
-                tr.challenge-row data-challenge=c.id data-topic=c.topic.id data-subject=c.topic.subject_id
+                tr.challenge-row data-challenge=c.id data-topic=(c.daily? ? 'Lucky Dip' : c.topic.id) data-subject=c.topic.subject_id
                   td.text-left = c.stringify
                   td = write_challenge_progress(c.challenge_progresses.first)
                   td.d-none.d-sm-table-cell 

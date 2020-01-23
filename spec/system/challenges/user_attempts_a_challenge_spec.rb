@@ -6,13 +6,20 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
     sign_in student
   end
 
+  def click_through_quiz
+    first(class: 'question-button').click
+    first(class: 'next-button').click
+    first(class: 'question-button').click
+    first(class: 'next-button').click
+  end
+
   context 'when looking at the challenges' do
     let(:challenge_single_question) do
       create(:challenge, topic: topic, challenge_type: 'number_correct',
                          number_required: 1, end_date: Time.now + 1.hour)
     end
     let(:challenge_daily) do
-      create(:challenge, challenge_type: 'number_correct', daily: true,
+      create(:challenge, challenge_type: 'number_of_points', daily: true, topic: topic,
                          number_required: 1, end_date: Time.now + 1.hour)
     end
     let(:second_subject) { create(:subject) }
@@ -47,27 +54,24 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
 
       it 'lets me complete a number of points required challenge' do
         visit(dashboard_path)
-        binding.pry
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
         first(class: 'next-button').click
-        expect(page).to have_css('#challenge-points', exact_text: challenge_single_question.points)
+        expect(page).to have_css('i.fa-check')
       end
     end
 
-    context 'when completing a daily challenge', :focus do
+    context 'when completing a daily challenge' do
       before do
         challenge_daily
-        question        
       end
 
       it 'lets me complete a number of points in the day challenge' do
-        binding.pry
+        create(:question, topic: create(:topic, subject: subject))
         visit(dashboard_path)
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
-        first(class: 'question-button').click
-        first(class: 'next-button').click
-        expect(page).to have_css('#challenge-points', exact_text: challenge_daily.points)
+        click_through_quiz
+        expect(page).to have_css('i.fa-check')
       end
     end
   end

@@ -52,6 +52,11 @@ RSpec.describe Challenge, type: :model do
       srand(1)
       expect(described_class.create_challenge(topic.subject).points).to eq(10)
     end
+
+    it 'creates a daily challenge' do
+      srand(1)
+      expect(described_class.create_challenge(topic.subject, daily: true).daily).to eq(true)
+    end
   end
 
   describe '#stringify' do

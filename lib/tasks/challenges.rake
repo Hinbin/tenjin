@@ -13,5 +13,6 @@ namespace :challenges do
     hour = Time.current.hour
     Challenge::AddNewChallenges.call if (today.monday? || today.wednesday?) && hour == 8
     Challenge::AddNewChallenges.call(duration: 66.hours, multiplier: 2) if today.friday? && hour == 14
+    Challenge::AddNewChallenges.call(duration: 1.day, daily: true) if hour == 8
   end
 end
