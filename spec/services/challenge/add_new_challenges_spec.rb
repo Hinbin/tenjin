@@ -24,5 +24,19 @@ RSpec.describe Challenge::AddNewChallenges do
       described_class.new(multiplier: 4).call
       expect(Challenge.first.points).to eq(40)
     end
+
+    it 'sets a daily challenge correctly' do
+      srand(1)
+      create(:topic)
+      described_class.new(daily: true).call
+      expect(Challenge.first.daily).to eq(true)
+    end
+
+    it 'defaults to a non daily challenge' do
+      srand(1)
+      create(:topic)
+      described_class.new.call
+      expect(Challenge.first.daily).to eq(false)
+    end
   end
 end

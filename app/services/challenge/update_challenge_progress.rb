@@ -23,6 +23,7 @@ class Challenge::UpdateChallengeProgress < ApplicationService
 
   def challenges
     Challenge.joins(:topic)
+             .includes(topic: :subject)
              .where(challenge_type: Challenge.challenge_types[@challenge_type])
              .where(topics: { subject_id: @quiz.subject })
              .where('end_date > ?', Time.current)
@@ -37,11 +38,13 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   def check_streak(challenge, progress)
     return unless @quiz.topic == challenge.topic
 
-    check_progress_percentage(@quiz.streak.to_f / challenge.number_required.to_f, progress)
+    check_progress_percentage(@quiz.streak.to_f / challenge.number_required, progress)
   end
 
   def check_number_of_points(challenge, progress)
-    return unless @question_topic == challenge.topic
+    unless @question_topic == challenge.topic || (challenge.daily && @question_topic.subject == challenge.topic.subject)
+      return
+    end
 
     progress.progress += @number_to_add
     complete_challenge(progress) if progress.progress >= challenge.number_required
