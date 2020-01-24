@@ -11,7 +11,7 @@ class Challenge < ApplicationRecord
   def self.create_challenge(subject, challenge_type = nil, multiplier: 1, duration: 7.days, daily: false)
     challenge = Challenge.new start_date: Time.current, end_date: duration.from_now    
     challenge.daily = daily
-    challenge.topic = Topic.where(active: 'true').order(Arel.sql('RANDOM()')).find_by(subject: subject)
+    challenge.topic = Topic.where(active: true).order(Arel.sql('RANDOM()')).find_by(subject: subject)
 
     setup_challenge_type(challenge, challenge_type)
     setup_point_value(challenge, multiplier: multiplier)
