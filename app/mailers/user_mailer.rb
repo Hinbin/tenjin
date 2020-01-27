@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserMailer < ApplicationMailer
-  default from: ENV['DEFAULT_EMAIL_FROM']
+  default from: ENV['DEFAULT_MAIL_SENDER']
 
   def setup_email
     @user = params[:user]
