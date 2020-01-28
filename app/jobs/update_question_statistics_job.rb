@@ -4,11 +4,12 @@ class UpdateQuestionStatisticsJob < ApplicationJob
   queue_as :default
 
   def perform(*_args)
-    update_percentage_correct
+    update_question_statistics
     update_flagged_questions
+    clean_old_questions
   end
 
-  def update_percentage_correct
+  def update_question_statistics
     inactive_asked_questions = AskedQuestion.joins(:quiz, :question)
                                             .left_joins(question: :question_statistic)
                                             .where(quizzes: { active: false })
@@ -24,8 +25,21 @@ class UpdateQuestionStatisticsJob < ApplicationJob
                                  created_at: now,
                                  updated_at: now },
                                unique_by: :question_id)
+
+      UsageStatistic.find_by(user: q.quiz.user_id).increment!(:questions_answered)
+
       q.delete
     end
+  end
+
+  def clean_old_questions
+    AskedQuestion.joins(:quiz, :question)
+                 .left_joins(question: :question_statistic)
+                 .where(quizzes: { active: false })
+                 .destroy_all
+
+    AskedQuestion.where('updated_at < ?', 1.day.ago)
+                 .destroy_all
   end
 
   def calculate_correct(asked_question)
