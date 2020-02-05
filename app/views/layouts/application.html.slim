@@ -20,6 +20,7 @@ html
     link rel="icon" type="image/png" sizes="16x16" href="/icon-16x16.png"
     link rel="manifest" href="/manifest.webmanifest"
     meta name="theme-color" content="#333333"
+    = content_for(:page_meta)
 
   body data-action=action_name data-controller=controller_name
     = render('shared/user_navigation') if current_user.present?  
