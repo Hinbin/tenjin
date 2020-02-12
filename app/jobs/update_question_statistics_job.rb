@@ -5,7 +5,6 @@ class UpdateQuestionStatisticsJob < ApplicationJob
 
   def perform(*_args)
     update_question_statistics
-    update_flagged_questions
     clean_old_questions
   end
 
@@ -16,20 +15,29 @@ class UpdateQuestionStatisticsJob < ApplicationJob
     inactive_asked_questions.each do |q|
       next if q.correct.nil?
 
-      correct = calculate_correct(q)
-      asked = calculate_asked(q)
-      now = Time.now
-      QuestionStatistic.upsert({ question_id: q.question_id,
-                                 number_asked: asked,
-                                 number_correct: correct,
-                                 created_at: now,
-                                 updated_at: now },
-                               unique_by: :question_id)
-
-      UsageStatistic.find_by(user: q.quiz.user_id).increment!(:questions_answered)
-
+      increase_question_asked_count(q)
+      increase_question_count_for_user(q)
       q.delete
     end
+  end
+
+  def increase_question_asked_count(question)
+    correct = calculate_correct(question)
+    asked = calculate_asked(question)
+    now = Time.now
+    QuestionStatistic.upsert({ question_id: question.question_id,
+                               number_asked: asked,
+                               number_correct: correct,
+                               created_at: now,
+                               updated_at: now },
+                             unique_by: :question_id)
+  end
+
+  def increase_question_count_for_user(question)
+    UserStatistic.create_or_find_by(
+      user: question.quiz.user,
+      week_beginning: Date.today.beginning_of_week,
+    ).increment!(:questions_asked)
   end
 
   def clean_old_questions
@@ -58,9 +66,5 @@ class UpdateQuestionStatisticsJob < ApplicationJob
     asked_question.question.question_statistic.number_asked + 1
   end
 
-  def update_flagged_questions
-    Question.find_each do |q|
-      Question.reset_counters(q.id, :flagged_questions)
-    end
-  end
+
 end

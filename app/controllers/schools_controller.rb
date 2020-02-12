@@ -47,7 +47,7 @@ class SchoolsController < ApplicationController
     if @result.success?
       @students = policy_scope(User).where(role: 'student').includes(enrollments: :classroom)
       @employees = policy_scope(User).where(role: 'employee')
-      return render 'users/new_passwords'
+      render 'users/new_passwords'
     else
       flash[:alert] = @result.errors
       redirect_to index
@@ -57,8 +57,8 @@ class SchoolsController < ApplicationController
   def show
     authorize @school
     @asked_questions =
-      AskedQuestion.joins(quiz: [{ user: :school }])
-                   .where('asked_questions.correct IS NOT NULL AND schools.id = ?', @school.id).count
+      UserStatistic.joins(user: :school)
+                    .where(users: { school: @school }).sum(:questions_answered)
     @homeworks_completed =
       HomeworkProgress.joins(user: :school)
                       .where('homework_progresses.completed = true AND schools.id = ?', @school.id).count

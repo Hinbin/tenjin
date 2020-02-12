@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_22_150258) do
+ActiveRecord::Schema.define(version: 2020_02_11_092443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -352,12 +352,23 @@ ActiveRecord::Schema.define(version: 2020_01_22_150258) do
     t.bigint "topic_id"
     t.datetime "date"
     t.integer "quizzes_started"
-    t.integer "time_spent_in_seconds"
     t.integer "questions_answered"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["topic_id"], name: "index_usage_statistics_on_topic_id"
     t.index ["user_id"], name: "index_usage_statistics_on_user_id"
+  end
+
+  create_table "user_statistics", force: :cascade do |t|
+    t.integer "time_in_quizzes"
+    t.integer "questions_answered"
+    t.datetime "last_seen_at"
+    t.bigint "user_id", null: false
+    t.datetime "week_beginning"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "week_beginning"], name: "index_user_statistics_on_user_id_and_week_beginning", unique: true
+    t.index ["user_id"], name: "index_user_statistics_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -434,4 +445,5 @@ ActiveRecord::Schema.define(version: 2020_01_22_150258) do
   add_foreign_key "topics", "subjects"
   add_foreign_key "usage_statistics", "topics"
   add_foreign_key "usage_statistics", "users"
+  add_foreign_key "user_statistics", "users"
 end

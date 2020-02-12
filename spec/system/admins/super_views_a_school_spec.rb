@@ -44,7 +44,27 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
     school_admin
     visit(school_path(school))
     click_link 'Send Setup Email'
-    expect(page).to have_css('#flash-notice', text: email_notice)
+    expect(page).to have_css('#flash-notice', text: email_notice, wait: 6)
   end
-  
+
+  context 'when viewing statistics' do
+    let(:statistic) { create(:user_statistic, user: student) }
+    let(:statistic_two) { create(:user_statistic, user: create(:student, school: school)) }
+    let(:total_answered) { statistic.questions_answered + statistic_two.questions_answered}
+
+    before do
+      statistic
+      statistic_two
+      visit(school_path(school))
+    end
+
+    it 'tells you the number of questions asked overall' do
+      expect(page).to have_content("Questions Asked #{total_answered}")
+    end
+
+    it 'tells you the number of questions asked this week' do
+    end
+
+    it 'lets you toggle between weekly/overall statistics'
+  end
 end
