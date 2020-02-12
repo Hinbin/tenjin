@@ -38,6 +38,8 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  config.action_mailer.default_url_options = { :host => "dev.localhost.com" }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -75,5 +77,15 @@ Rails.application.configure do
         subject_prefix: '[DEV]'
       )
     )
+
+    Bullet.enable = true
+    Bullet.alert = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.rails_logger = true
+    Bullet.add_footer = true
+    Bullet.skip_html_injection = false
   end
+
+
 end

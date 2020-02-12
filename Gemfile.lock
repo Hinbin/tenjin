@@ -125,6 +125,9 @@ GEM
       premailer-rails (~> 1.9)
       rails (>= 3)
     builder (3.2.3)
+    bullet (6.1.0)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     byebug (11.0.1)
     capybara (3.29.0)
       addressable
@@ -429,6 +432,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (1.6.0)
+    uniform_notifier (1.13.0)
     vcr (5.0.0)
     warden (1.2.8)
       rack (>= 2.0.6)
@@ -469,6 +473,7 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   bootstrap
   bootstrap-email
+  bullet
   byebug
   capybara
   debase

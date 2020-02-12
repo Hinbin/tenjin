@@ -55,6 +55,7 @@ group :development, :test do
   # Allow console debugging
   gem 'ruby-debug-ide'
   gem 'debase'
+
 end
 
 group :development do
@@ -79,6 +80,8 @@ group :development do
   gem 'rubocop'
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
+
+  gem 'bullet'
 
 end
 
