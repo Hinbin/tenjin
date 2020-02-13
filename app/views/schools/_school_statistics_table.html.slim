@@ -1,0 +1,17 @@
+table.table
+  tr
+    th
+    th Weekly
+    th Overall
+  tr
+    td Questions Asked
+    td = @school_statistics[:asked_questions_weekly]
+    td = @school_statistics[:asked_questions]
+  tr
+    td Homeworks Completed
+    td = @school_statistics[:homeworks_completed_weekly]
+    td = @school_statistics[:homeworks_completed]
+  tr
+    td Customisations Bought
+    td = @school_statistics[:customisation_unlocks_weekly]
+    td = @school_statistics[:customisation_unlocks]

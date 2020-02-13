@@ -65,6 +65,6 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
     it 'tells you the number of questions asked this week' do
     end
 
-    it 'lets you toggle between weekly/overall statistics'
+
   end
 end

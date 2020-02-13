@@ -9,15 +9,7 @@
         tr
           td Employees
           td =@school.users.where(role:'employee').count
-        tr
-          td Questions Asked
-          td = @asked_questions
-        tr
-          td Homeworks Completed
-          td = @homeworks_completed
-        tr
-          td Challenge Points Earned
-          td = @challenge_points_earned
+      =render('school_statistics_table')
   .row
     .col
       h3.h3 School Admins

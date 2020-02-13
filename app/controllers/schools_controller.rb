@@ -1,13 +1,19 @@
 # frozen_string_literal: true
 
 class SchoolsController < ApplicationController
-  before_action :authenticate_admin!, only: %i[index new create update show]
+  before_action :authenticate_admin!, only: %i[index new create update show show_stats]
   before_action :authenticate_user!, only: %i[sync]
   before_action :set_school, only: %i[show update show_employees sync]
 
   def index
     @schools = policy_scope(School).order(:name)
     @school_groups = policy_scope(SchoolGroup).order(:name)
+  end
+
+  def show_stats
+    authorize current_admin
+    @school_statistics = School::CompileSchoolStatistics.call()
+    render 'overall_statistics'
   end
 
   def new
@@ -56,13 +62,7 @@ class SchoolsController < ApplicationController
 
   def show
     authorize @school
-    @asked_questions =
-      UserStatistic.joins(user: :school)
-                    .where(users: { school: @school }).sum(:questions_answered)
-    @homeworks_completed =
-      HomeworkProgress.joins(user: :school)
-                      .where('homework_progresses.completed = true AND schools.id = ?', @school.id).count
-    @challenge_points_earned = User.where(school: @school).sum(:challenge_points)
+    @school_statistics = School::CompileSchoolStatistics.call(@school)
     @school_admins = User.where(school: @school).with_role(:school_admin)
     @users = User.where(school: @school)
   end

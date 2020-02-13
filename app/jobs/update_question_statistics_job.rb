@@ -37,7 +37,7 @@ class UpdateQuestionStatisticsJob < ApplicationJob
     UserStatistic.create_or_find_by(
       user: question.quiz.user,
       week_beginning: Date.today.beginning_of_week,
-    ).increment!(:questions_asked)
+    ).increment!(:questions_answered)
   end
 
   def clean_old_questions
