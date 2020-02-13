@@ -48,23 +48,23 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
   end
 
   context 'when viewing statistics' do
-    let(:statistic) { create(:user_statistic, user: student) }
-    let(:statistic_two) { create(:user_statistic, user: create(:student, school: school)) }
-    let(:total_answered) { statistic.questions_answered + statistic_two.questions_answered}
+    let(:statistic) { create(:user_statistic, user: student, week_beginning: DateTime.now.beginning_of_week) }
+    let(:older_statistic) { create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago) }
+    let(:two_weeks_ago) { (DateTime.now - 2.weeks).beginning_of_week }
+    let(:total_answered) { statistic.questions_answered + older_statistic.questions_answered }
 
     before do
       statistic
-      statistic_two
+      older_statistic
       visit(school_path(school))
     end
 
     it 'tells you the number of questions asked overall' do
-      expect(page).to have_content("Questions Asked #{total_answered}")
+      expect(page).to have_css('#asked_questions', exact_text: total_answered)
     end
 
     it 'tells you the number of questions asked this week' do
+      expect(page).to have_css('#asked_questions_weekly', exact_text: statistic.questions_answered)
     end
-
-
   end
 end

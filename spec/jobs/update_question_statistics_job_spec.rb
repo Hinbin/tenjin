@@ -91,12 +91,12 @@ RSpec.describe UpdateQuestionStatisticsJob, default_creates: true, type: :job do
     it 'updates the user statistic for the correct week'  do
       current_user_statistic
       described_class.perform_now
-      expect { current_user_statistic.reload }.to change(current_user_statistic, :questions_asked).by(1)
+      expect { current_user_statistic.reload }.to change(current_user_statistic, :questions_answered).by(1)
     end
 
     it 'leaves older statistics alone' do
       old_user_statistic
-      expect { current_user_statistic.reload }.to change(current_user_statistic, :questions_asked).by(0)
+      expect { current_user_statistic.reload }.to change(current_user_statistic, :questions_answered).by(0)
     end
 
     it 'creates new user statistics when old statistics present' do
