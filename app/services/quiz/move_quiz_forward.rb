@@ -16,8 +16,7 @@ class Quiz::MoveQuizForward < ApplicationService
   def move_to_next_question
     Challenge::UpdateChallengeProgress.call(@quiz, 'streak')
 
-    @quiz.num_questions_asked = @quiz.num_questions_asked + 1
-    @quiz.save
+    @quiz.num_questions_asked += 1
   end
 
   def check_if_quiz_finished
@@ -26,7 +25,5 @@ class Quiz::MoveQuizForward < ApplicationService
     @quiz.active = false
     Challenge::UpdateChallengeProgress.call(@quiz, 'number_correct')
     Homework::UpdateHomeworkProgress.call(@quiz)
-
-    @quiz.save
   end
 end
