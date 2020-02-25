@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
-  def initialize(topic_score)
-    @subject = topic_score.subject
-    @user = topic_score.user
-    @topic_score = topic_score
+  def initialize(topic, user)
+    @topic = topic
+    @user = user
   end
 
   def call
+    @topic_score, @subject_score = scores
     LeaderboardChannel.broadcast_to(channel_name, json_data)
   end
 
@@ -20,7 +20,7 @@ class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
                else
                  school.name
                end
-    "#{@subject.name}:#{location}"
+    "#{@topic.subject.name}:#{location}"
   end
 
   def json_data
@@ -28,16 +28,31 @@ class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
       id: @user.id,
       name: "#{@user.forename} #{@user.surname[0]}",
       school_name: @user.school.name,
-      topic: @topic_score.topic.id,
-      topic_score: @topic_score.score,
-      subject_score: subject_score,
+      topic: @topic.id,
+      topic_score: @topic_score,
+      subject_score: @subject_score,
       classroom_names: @user.classrooms.all.pluck(:name)
     }
   end
 
-  def subject_score
-    TopicScore.joins(:subject)
-              .where('user_id = ? AND subject_id = ?', @user.id, @subject.id)
-              .sum(:score)
+  def scores
+    s_score = TopicScore.arel_table[:score].sum
+    t_score = TopicScore.select(s_score)
+      .where(user_id: @user, topic_id: @topic)
+      .arel
+
+    TopicScore.joins(:topic)
+      .where(user_id: @user)
+      .where(subject_topics.arel.exists)
+      .pick(s_score.as('subject_score'), t_score.as('topic_score'))
+  end
+
+  private
+
+  def subject_topics
+    Topic.select(1)
+      .from('topics t2')
+      .where(t2: { id: @topic })
+      .where('t2.subject_id = topics.subject_id')
   end
 end

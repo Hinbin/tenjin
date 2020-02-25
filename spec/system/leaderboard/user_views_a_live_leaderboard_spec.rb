@@ -51,26 +51,26 @@ RSpec.describe 'User views an updating leaderboard', type: :system, default_crea
     end
 
     it 'shows updates from all schools only by default' do
-      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group, second_student).call
       expect(page).to have_css('#leaderboardTable tbody tr')
     end
 
     it 'shows updates from other schools when selected' do
       topic_score_same_school_group.update_attribute('score', 110)
       click_button('All')
-      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group, second_student).call
       expect(page).to have_css("#leaderboardTable tbody tr td#score-#{topic_score_same_school_group.user.id}", exact_text: 10)
     end
 
     it 'allows you to filter by class' do
       click_button('Select Class')
       click_button(enrollment_different_classroom.classroom.name)
-      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_different_classroom).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_different_classroom, topic_score_different_classroom.user).call
       expect(page).to have_css('.score-changed').and have_css('tbody tr', count: 1)
     end
 
     it 'allows you to filter by school' do
-      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group, topic_score_same_school_group.user).call
       click_button('All')
       click_button(topic_score_same_school_group.user.school.name)
       expect(page).to have_css('tbody tr', count: 1)
@@ -101,14 +101,14 @@ RSpec.describe 'User views an updating leaderboard', type: :system, default_crea
     end
 
     it 'shows an update after being turned on' do
-      Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score).call
+      Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score, student_topic_score.user).call
       expect(page).to have_css('tr.score-changed')
     end
 
     it 'calculates the score correctly' do
       student_topic_score.update_attribute('score', student_topic_score.score + add_score)
       student_topic_score.reload
-      Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score).call
+      Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score.topic, student_topic_score.user).call
       expect(page).to have_css('td', exact_text: add_score.to_s)
     end
   end

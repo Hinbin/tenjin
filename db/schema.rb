@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_22_150258) do
+ActiveRecord::Schema.define(version: 2020_02_14_204845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -327,13 +327,13 @@ ActiveRecord::Schema.define(version: 2020_01_22_150258) do
   end
 
   create_table "topic_scores", force: :cascade do |t|
-    t.integer "score"
-    t.bigint "user_id"
-    t.bigint "topic_id"
-    t.datetime "created_at", null: false
+    t.integer "score", default: 0, null: false
+    t.bigint "user_id", null: false
+    t.bigint "topic_id", null: false
+    t.datetime "created_at", default: -> { "now()" }, null: false
     t.datetime "updated_at", null: false
     t.index ["topic_id"], name: "index_topic_scores_on_topic_id"
-    t.index ["user_id"], name: "index_topic_scores_on_user_id"
+    t.index ["user_id", "topic_id"], name: "index_topic_scores_on_user_id_and_topic_id", unique: true
   end
 
   create_table "topics", force: :cascade do |t|
