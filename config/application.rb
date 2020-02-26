@@ -21,7 +21,5 @@ module Csquiz
     config.action_mailer.delivery_method = :ses
 
     config.action_mailer.asset_host = ENV['ASSET_HOST']
-    config.action_mailer.default_url_options = { host: ENV['DEFAULT_EMAIL_FROM'] }
-
   end
 end

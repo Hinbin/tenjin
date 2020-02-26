@@ -1,5 +1,5 @@
 .container#questionEditor
-  =render('question_edit_form')
+  = render('question_edit_form')
   .row.mt-3
     .col    
       = link_to 'Back to Topic Questions',
@@ -10,11 +10,17 @@
       h1 Statistics
   .row.text-center
     .col
-      p = "Times Asked: #{times_asked(@question)}"
+      p
+        ' Times Asked:
+        = times_asked(@question)
     .col
-      p = "Percent Correct: #{percentage_correct(@question)}"
+      p
+        ' Percent Correct:
+        = percentage_correct(@question)
     .col
-      p = "Flags: #{@question.flagged_questions.size}"
+      p
+        ' Flags:
+        = @question.flagged_questions.size
   .row
     .col
       = link_to 'Reset Question Flags',
@@ -24,7 +30,7 @@
 
   .row.mt-5
     .col
-      =link_to 'Delete Question',
+      = link_to 'Delete Question',
         question_path(@question),
         data:{ confirm: 'Are you sure?' },
         method: :delete,
@@ -36,9 +42,3 @@
       .modal-body Please select at least one correct answer
       .modal-footer
         button.btn.btn-secondary data-dismiss="modal" Close
-        
-        
-    
-        
-
-        

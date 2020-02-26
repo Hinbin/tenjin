@@ -12,6 +12,7 @@ class Quiz::CheckAnswer < ApplicationService
     check_answer_correct unless already_answered?
 
     Quiz::MoveQuizForward.call(quiz: @quiz)
+    @quiz.save
     {
       answer: Answer.where(question: @question, correct: true),
       streak: @quiz.streak,
@@ -32,16 +33,13 @@ class Quiz::CheckAnswer < ApplicationService
     else
       check_multiple_choice
     end
-
-    @asked_question.save
-    @question.save
   end
 
   def check_short_answer
-    return unless @question.answers.exists?
+    answer_text = Answer.where(question_id: @question).pick(:text)
+    return unless answer_text.present?
 
-    correct_answer = @question.answers.first.text
-    if @answer_given[:short_answer].casecmp(correct_answer).zero?
+    if @answer_given[:short_answer].casecmp(answer_text)&.zero?
       process_correct_answer
     else
       process_incorrect_answer
@@ -51,10 +49,10 @@ class Quiz::CheckAnswer < ApplicationService
   def check_multiple_choice
     raise 'no valid answer given to multiple choice' if @answer_given[:id].blank?
 
-    @answer = Answer.find_by(id: @answer_given[:id])
-    return unless @answer.present?
+    answer = Answer.where(id: @answer_given[:id]).pick(:correct)
+    return unless answer.present?
 
-    if @answer.correct
+    if answer
       process_correct_answer
     else
       process_incorrect_answer
@@ -64,12 +62,12 @@ class Quiz::CheckAnswer < ApplicationService
   def process_correct_answer
     @quiz.answered_correct += 1
     @quiz.streak += 1
-    @asked_question.correct = true
+    @asked_question.update_attribute(:correct, true)
     Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question)
   end
 
   def process_incorrect_answer
     @quiz.streak = 0
-    @asked_question.correct = false
+    @asked_question.update_attribute(:correct, false)
   end
 end
