@@ -1,0 +1,26 @@
+.container
+    h1.page-section-header.text-uppercase.text-center School Statistics
+    hr class=("small mb-5 primary-red")
+    .row.justify-content-center
+      .col.mx-auto
+        =render('school_statistics_table')
+    
+    h1.page-section-header.text-uppercase.text-center Customisations
+    hr class=("small mb-5 primary-red")
+    .row.justify-content-center
+      .col.mx-auto
+        table.table
+          tr
+            th
+            th Weekly
+            th Overall        
+          - @customisation_statistics.each do |c| 
+            tr
+              td = c.name
+              td = c.customisation_type
+              td = c.count.to_s
+
+
+            
+
+       

@@ -6,5 +6,9 @@ namespace :daily_updates do
     Classroom.find_each do |classroom|
       Classroom.reset_counters(classroom.id, :enrollments)
     end
+
+    Question.find_each do |q|
+      Question.reset_counters(q.id, :flagged_questions)
+    end
   end
 end

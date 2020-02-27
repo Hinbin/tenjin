@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   
   resources :quizzes
   resources :schools do
+    collection do
+      get 'show_stats'
+    end
     member do
       patch 'reset_all_passwords'
       patch 'sync'

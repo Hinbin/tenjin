@@ -74,8 +74,10 @@ class UsersController < ApplicationController
     if manage_roles_params[:school].present?
       @school = School.find(manage_roles_params[:school])
       @employees = User.where(school: @school, role: 'employee')
-      @school_admins = User.with_role :school_admin, @school
+      @school_admins = User.includes(:school).with_role :school_admin, @school
     end
+
+    @school_admins = User.includes(:school).with_role :school_admin
 
     @lesson_authors = User.with_role :lesson_author, :any
     @question_authors = User.with_role :question_author, :any

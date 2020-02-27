@@ -2,12 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe UpdateQuestionStatisticsJob, type: :job do
-  let(:quiz) { create(:quiz, active: false) }
+RSpec.describe UpdateQuestionStatisticsJob, default_creates: true, type: :job do
+  let(:quiz) { create(:quiz, active: false, user: student) }
   let(:question) { create(:question) }
-  let(:asked_question) { create(:asked_question, question: question, correct: true, quiz: quiz) }
+  let(:asked_question) { create(:asked_question, question: question, correct: true, quiz: quiz, user: student) }
   let(:existing_statistic) { create(:question_statistic, question: question) }
   let(:question_statistic) { QuestionStatistic.where(question: question).first }
+  let(:current_user_statistic) { create(:user_statistic, user: student, week_beginning: DateTime.now.beginning_of_week) }
+  let(:old_user_statistic) { create(:user_statistic, user: student, created_at: (DateTime.now - 1.month).beginning_of_week) }
 
   context 'when question answered correctly' do
     it 'creates with number asked set to 1' do
@@ -81,5 +83,34 @@ RSpec.describe UpdateQuestionStatisticsJob, type: :job do
     end
   end
 
-  it 'checks for quizzes that have null values for active'
+  context 'when updating user statistics' do
+    before do
+      asked_question
+    end
+
+    it 'updates the user statistic for the correct week'  do
+      current_user_statistic
+      described_class.perform_now
+      expect { current_user_statistic.reload }.to change(current_user_statistic, :questions_answered).by(1)
+    end
+
+    it 'leaves older statistics alone' do
+      old_user_statistic
+      expect { current_user_statistic.reload }.to change(current_user_statistic, :questions_answered).by(0)
+    end
+
+    it 'creates new user statistics when old statistics present' do
+      old_user_statistic
+      expect { described_class.perform_now }.to change(UserStatistic, :count).by(1)
+    end
+
+    it 'creates a user statistic if needed' do
+      expect { described_class.perform_now }.to change(UserStatistic, :count).by(1)
+    end
+
+    it 'assigns the correct user to the statistic' do
+      described_class.perform_now
+      expect(UserStatistic.first.user).to eq(asked_question.quiz.user)
+    end
+  end
 end

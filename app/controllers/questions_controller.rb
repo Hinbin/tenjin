@@ -5,7 +5,7 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: %i[show update destroy reset_flags]
 
   def index
-    @subjects = policy_scope(Subject).includes(:topics)
+    @subjects = policy_scope(Subject)
     authorize @subjects.first, :update?, policy_class: SubjectPolicy
   end
 
@@ -16,7 +16,7 @@ class QuestionsController < ApplicationController
     authorize @topic, :update?
     @topic_lessons = Lesson.where(topic: @topic)
     @questions = Question.with_rich_text_question_text_and_embeds
-                         .includes(:question_statistic)
+                         .includes(:question_statistic, :lesson)
                          .where(topic: @topic, active: true)
 
     render 'topic_question_index'

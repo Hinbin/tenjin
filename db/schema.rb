@@ -352,12 +352,21 @@ ActiveRecord::Schema.define(version: 2020_02_14_204845) do
     t.bigint "topic_id"
     t.datetime "date"
     t.integer "quizzes_started"
-    t.integer "time_spent_in_seconds"
     t.integer "questions_answered"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["topic_id"], name: "index_usage_statistics_on_topic_id"
     t.index ["user_id"], name: "index_usage_statistics_on_user_id"
+  end
+
+  create_table "user_statistics", force: :cascade do |t|
+    t.integer "questions_answered"
+    t.bigint "user_id", null: false
+    t.datetime "week_beginning"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "week_beginning"], name: "index_user_statistics_on_user_id_and_week_beginning", unique: true
+    t.index ["user_id"], name: "index_user_statistics_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -434,4 +443,5 @@ ActiveRecord::Schema.define(version: 2020_02_14_204845) do
   add_foreign_key "topics", "subjects"
   add_foreign_key "usage_statistics", "topics"
   add_foreign_key "usage_statistics", "users"
+  add_foreign_key "user_statistics", "users"
 end

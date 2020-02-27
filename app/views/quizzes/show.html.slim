@@ -1,3 +1,5 @@
+-content_for :title
+  title=('Quiz - ' + @quiz.subject.name)
 =render('question_top')
 .container
   -if @lesson.present?
