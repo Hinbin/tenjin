@@ -12,7 +12,11 @@ class SchoolsController < ApplicationController
 
   def show_stats
     authorize current_admin
-    @school_statistics = School::CompileSchoolStatistics.call()
+    @school_statistics = School::CompileSchoolStatistics.call
+    @customisation_statistics = Customisation.select(:name, :customisation_type, 'COUNT(customisations.id)')
+                                             .left_joins(:customisation_unlocks)
+                                             .group(:id)
+                                             .order(count: :desc)
     render 'overall_statistics'
   end
 
