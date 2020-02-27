@@ -7,7 +7,7 @@ class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
   end
 
   def call
-    @topic_score, @subject_score = scores
+    @subject_score, @topic_score = scores
     LeaderboardChannel.broadcast_to(channel_name, json_data)
   end
 
