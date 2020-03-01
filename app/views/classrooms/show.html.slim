@@ -17,8 +17,8 @@
           tbody
             -@homeworks.each do |h|
               tr.homework-data data-controller='homeworks' data-id=h.id
-                td =h.topic.name
-                td =report_progress(h.homework_progresses)
+                td =h.name
+                td =report_progress(h)
                 td =h.due_date.strftime("%d/%m/%y %H:%M")
   section.page-section.text-center.pt-2#students                            
     h1.page-section-header.text-uppercase Students

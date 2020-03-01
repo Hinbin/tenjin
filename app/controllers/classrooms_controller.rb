@@ -7,9 +7,10 @@ class ClassroomsController < ApplicationController
   def show
     authorize @classroom
     @students = User.joins(enrollments: :classroom).where(role: 'student', enrollments: { classroom: @classroom })
-    @homeworks = Homework.includes(:homework_progresses).where(classroom: @classroom).order('homeworks.due_date')
+    @homeworks = homeworks
+
     @homework_progress = HomeworkProgress.joins(:homework)
-                                         .where(homework: @homeworks)
+                                         .where(homework: @homeworks.pluck(:id))
                                          .order('homeworks.due_date desc')
   end
 
@@ -34,5 +35,17 @@ class ClassroomsController < ApplicationController
 
   def update_classroom_params
     params.permit(:subject, :id)
+  end
+
+  def homeworks
+    h_count = HomeworkProgress.arel_table[:id].count
+    h_count_completed = Arel::Nodes::Case.new HomeworkProgress.arel_table[:completed]
+    h_count_completed.when(true).then(1).else(0)
+
+    topic_name = Topic.arel_table[:name]
+    Homework.select(:id, h_count, h_count_completed.sum.as('completed_count'), :due_date, :topic_id, topic_name)
+            .joins(:homework_progresses, :topic)
+            .group(:id, topic_name)
+            .where(classroom: @classroom)
   end
 end
