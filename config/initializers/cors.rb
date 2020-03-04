@@ -7,7 +7,8 @@
 if defined? Rack::Cors
   Rails.configuration.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins("https://#{ENV['DEFAULT_HOST']}")
+      origins(ENV.fetch('CORS_ORIGINS', '').split(',').map(&:strip))
+
       resource '/assets/*', headers: :any, methods: %i[get head options]
       resource '/packs/*', headers: :any, methods: %i[get head options]
     end
