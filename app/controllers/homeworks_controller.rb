@@ -25,6 +25,7 @@ class HomeworksController < ApplicationController
   def show
     authorize @homework
     @homework_progress = HomeworkProgress.includes(:user).where(homework: @homework).order('users.surname')
+    @homework_counts = @homework.classroom.homework_counts.find_by(id: @homework)
   end
 
   def destroy

@@ -43,19 +43,13 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
 
     it 'sets progress to the highest percentage achieved' do
       described_class.new(quiz_7_out_of_10, 'number_correct').call
-      expect(ChallengeProgress.first.progress).to eq(70)
+      expect(ChallengeProgress.first.progress).to eq(7)
     end
 
     it 'ignores progress that is less than current progress' do
       described_class.new(quiz_full_marks, 'number_correct').call
       described_class.new(quiz_7_out_of_10, 'number_correct').call
-      expect(ChallengeProgress.first.progress).to eq(100)
-    end
-
-    it 'handles fractions for progress' do
-      challenge_three_marks
-      described_class.new(quiz_1_out_of_3, 'number_correct').call
-      expect(ChallengeProgress.where(challenge: challenge_three_marks).first.progress).to eq(33)
+      expect(ChallengeProgress.first.progress).to eq(10)
     end
 
     it 'awards points after the challenge is complete' do
@@ -90,9 +84,9 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
       expect(ChallengeProgress.first.completed).to eq(true)
     end
 
-    it 'sets progress as highest percentage acheived' do
+    it 'sets progress as highest acheived' do
       described_class.new(quiz_streak_of_three, 'streak').call
-      expect(ChallengeProgress.first.progress).to eq(60)
+      expect(ChallengeProgress.first.progress).to eq(3)
     end
 
     it 'awards points after the challenge is complete' do
@@ -127,7 +121,7 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
     end
 
     it 'flags challenge as complete when a streak of 5 is obtained' do
-      described_class.new(quiz_five_points, 'number_of_points', 5, topic).call
+      described_class.new(quiz_five_points, 'streak', 5, topic).call
       expect(ChallengeProgress.first.completed).to eq(true)
     end
   end

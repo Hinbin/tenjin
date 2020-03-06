@@ -81,7 +81,6 @@ group :development do
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
 
-  gem 'bullet'
 
 end
 
