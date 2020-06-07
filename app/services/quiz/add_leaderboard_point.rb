@@ -10,7 +10,7 @@ class Quiz::AddLeaderboardPoint < ApplicationService
   def call
     return unless @quiz.counts_for_leaderboard
 
-    multiplier = Multiplier.where('score < ?', @quiz.streak).pick(:multiplier).to_i
+    multiplier = Multiplier.where('score < ?', @quiz.streak).order(score: :desc).pick(:multiplier)
     upsert_score(@question.topic.id, @user.id, multiplier)
 
     Challenge::UpdateChallengeProgress.call(@quiz, multiplier, @question.topic)
