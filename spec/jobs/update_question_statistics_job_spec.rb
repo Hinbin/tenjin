@@ -8,8 +8,8 @@ RSpec.describe UpdateQuestionStatisticsJob, default_creates: true, type: :job do
   let(:asked_question) { create(:asked_question, question: question, correct: true, quiz: quiz, user: student) }
   let(:existing_statistic) { create(:question_statistic, question: question) }
   let(:question_statistic) { QuestionStatistic.where(question: question).first }
-  let(:current_user_statistic) { create(:user_statistic, user: student, week_beginning: DateTime.now.beginning_of_week) }
-  let(:old_user_statistic) { create(:user_statistic, user: student, created_at: (DateTime.now - 1.month).beginning_of_week) }
+  let(:current_user_statistic) { create(:user_statistic, user: student, week_beginning: Date.today.beginning_of_week) }
+  let(:old_user_statistic) { create(:user_statistic, user: student, created_at: (Date.today - 1.month).beginning_of_week) }
 
   context 'when question answered correctly' do
     it 'creates with number asked set to 1' do
@@ -88,7 +88,7 @@ RSpec.describe UpdateQuestionStatisticsJob, default_creates: true, type: :job do
       asked_question
     end
 
-    it 'updates the user statistic for the correct week'  do
+    it 'updates the user statistic for the correct week' do
       current_user_statistic
       described_class.perform_now
       expect { current_user_statistic.reload }.to change(current_user_statistic, :questions_answered).by(1)

@@ -25,7 +25,7 @@ class School::CompileSchoolStatistics < ApplicationService
 
     @a_q_w = UserStatistic
     @a_q_w = @a_q_w.joins(user: :school).where(users: { school: @school }) unless @school.blank?
-    @a_q_w = @a_q_w.where(week_beginning: DateTime.now.beginning_of_week).sum(:questions_answered)
+    @a_q_w = @a_q_w.where(week_beginning: Date.today.beginning_of_week).sum(:questions_answered)
   end
 
   def compile_homeworks_completed
@@ -33,7 +33,7 @@ class School::CompileSchoolStatistics < ApplicationService
     @h_c = @h_c.joins(user: :school).where(users: { school: @school }) unless @school.blank?
     @h_c = @h_c.count
 
-    @h_c_w = HomeworkProgress.where(completed: true, updated_at: DateTime.now.beginning_of_week..DateTime.now)
+    @h_c_w = HomeworkProgress.where(completed: true, updated_at: Date.today.beginning_of_week..Date.today)
     @h_c_w = @h_c_w.joins(user: :school).where(users: { school: @school }) unless @school.blank?
     @h_c_w = @h_c_w.count
   end
@@ -43,7 +43,7 @@ class School::CompileSchoolStatistics < ApplicationService
     @c_u = @c_u.joins(user: :school).where(users: { school: @school }) unless @school.blank?
     @c_u = @c_u.count
 
-    @c_u_w = CustomisationUnlock.where(updated_at: DateTime.now.beginning_of_week..DateTime.now)
+    @c_u_w = CustomisationUnlock.where(updated_at: Date.today.beginning_of_week..Date.today)
     @c_u_w = @c_u_w.joins(user: :school).where(users: { school: @school }) unless @school.blank?
     @c_u_w = @c_u_w.count
   end

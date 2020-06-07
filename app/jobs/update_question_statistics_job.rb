@@ -36,7 +36,7 @@ class UpdateQuestionStatisticsJob < ApplicationJob
   def increase_question_count_for_user(question)
     UserStatistic.create_or_find_by(
       user: question.quiz.user,
-      week_beginning: Date.today.beginning_of_week,
+      week_beginning: Date.today.beginning_of_week
     ).increment!(:questions_answered)
   end
 
@@ -65,6 +65,4 @@ class UpdateQuestionStatisticsJob < ApplicationJob
 
     asked_question.question.question_statistic.number_asked + 1
   end
-
-
 end
