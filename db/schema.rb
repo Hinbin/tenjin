@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_01_142642) do
+
+ActiveRecord::Schema.define(version: 2020_03_20_122650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -361,9 +362,9 @@ ActiveRecord::Schema.define(version: 2020_03_01_142642) do
   end
 
   create_table "user_statistics", force: :cascade do |t|
-    t.integer "questions_answered"
+    t.integer "questions_answered", default: 0, null: false
     t.bigint "user_id", null: false
-    t.datetime "week_beginning"
+    t.date "week_beginning", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id", "week_beginning"], name: "index_user_statistics_on_user_id_and_week_beginning", unique: true
