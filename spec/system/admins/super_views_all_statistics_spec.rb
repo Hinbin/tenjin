@@ -5,12 +5,12 @@ RSpec.describe 'Super views all statistics', type: :system, js: true, default_cr
     sign_in super_admin
   end
 
-  let(:two_weeks_ago) { (Date.today - 2.weeks).beginning_of_week }
+  let(:two_weeks_ago) { (Date.current - 2.weeks).beginning_of_week }
 
   context 'when looking at questions asked' do
-    let(:new_stat) { create(:user_statistic, user: student, week_beginning: Date.today.beginning_of_week) }
+    let(:new_stat) { create(:user_statistic, user: student, week_beginning: Date.current.beginning_of_week) }
     let(:old_stat) { create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago) }
-    let(:new_stat_different_school) { create(:user_statistic, week_beginning: Date.today.beginning_of_week) }
+    let(:new_stat_different_school) { create(:user_statistic, week_beginning: Date.current.beginning_of_week) }
     let(:old_stat_different_school) { create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago) }
     let(:total_answered) do
       [new_stat.questions_answered,
@@ -38,9 +38,9 @@ RSpec.describe 'Super views all statistics', type: :system, js: true, default_cr
   end
 
   context 'when looking at homeworks completed' do
-    let(:homework_progress) { create(:homework_progress, user: student, completed: true, updated_at: Date.today.beginning_of_week) }
+    let(:homework_progress) { create(:homework_progress, user: student, completed: true, updated_at: Date.current.beginning_of_week) }
     let(:old_homework_progress) { create(:homework_progress, user: student, completed: true, updated_at: two_weeks_ago) }
-    let(:homework_progress_different_school) { create(:homework_progress, completed: true, updated_at: Date.today.beginning_of_week) }
+    let(:homework_progress_different_school) { create(:homework_progress, completed: true, updated_at: Date.current.beginning_of_week) }
     let(:old_homework_progress_different_school) { create(:homework_progress, completed: true, updated_at: two_weeks_ago) }
 
     before do

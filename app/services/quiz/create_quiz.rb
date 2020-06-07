@@ -86,7 +86,7 @@ class Quiz::CreateQuiz < ApplicationService
   def check_if_quiz_counts_for_leaderboard
     return true if @quiz.topic.nil?
 
-    !UsageStatistic.where(user: @user, topic: @quiz.topic, date: Date.today.all_day)
+    !UsageStatistic.where(user: @user, topic: @quiz.topic, date: Date.current.all_day)
                    .where('quizzes_started >= 3')
                    .exists?
   end
