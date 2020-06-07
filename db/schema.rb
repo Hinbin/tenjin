@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 2020_03_01_142642) do
     t.boolean "completed", default: false
     t.datetime "created_at", default: -> { "now()" }, null: false
     t.datetime "updated_at", null: false
+    t.boolean "awarded", default: false
     t.index ["challenge_id"], name: "index_challenge_progresses_on_challenge_id"
     t.index ["user_id", "challenge_id"], name: "index_challenge_progresses_on_user_id_and_challenge_id", unique: true
   end

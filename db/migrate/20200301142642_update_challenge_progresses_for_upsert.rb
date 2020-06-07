@@ -5,6 +5,7 @@ class UpdateChallengeProgressesForUpsert < ActiveRecord::Migration[6.0]
       t.change_default :completed, from: nil, to: false
       t.index %i[user_id challenge_id], unique: true
       t.remove_index :user_id
+      t.boolean :awarded, default: false
     end
 
     change_column_null :challenge_progresses, :user_id, false

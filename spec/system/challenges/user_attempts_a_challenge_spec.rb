@@ -18,6 +18,17 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
       create(:challenge, topic: topic, challenge_type: 'number_correct',
                          number_required: 1, end_date: Time.now + 1.hour)
     end
+
+    let(:challenge_single_point) do
+      create(:challenge, topic: topic, challenge_type: 'number_of_points',
+                         number_required: 1, end_date: Time.now + 1.hour)
+    end
+
+    let(:challenge_single_streak) do
+      create(:challenge, topic: topic, challenge_type: 'streak',
+                         number_required: 1, end_date: Time.now + 1.hour)
+    end
+
     let(:challenge_daily) do
       create(:challenge, challenge_type: 'number_of_points', daily: true, topic: topic,
                          number_required: 1, end_date: Time.now + 1.hour)
@@ -33,9 +44,39 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
     end
     let(:quiz) { create(:new_quiz) }
 
-    context 'when completing a num. points challenge' do
+    context 'when completed a number of questions correct challenge' do
       before do
         challenge_single_question
+        question
+      end
+
+      it 'flags the challenge complete' do
+        visit(dashboard_path)
+        find(:css, '#challenge-table tbody tr:nth-child(1)').click
+        first(class: 'question-button').click
+        first(class: 'next-button').click
+        expect(page).to have_css('i.fa-check')
+      end
+    end
+
+    context 'when completed a number of questions correct challenge' do
+      before do
+        challenge_single_streak
+        question
+      end
+
+      it 'flags the challenge complete' do
+        visit(dashboard_path)
+        find(:css, '#challenge-table tbody tr:nth-child(1)').click
+        first(class: 'question-button').click
+        first(class: 'next-button').click
+        expect(page).to have_css('i.fa-check')
+      end
+    end
+
+    context 'when completing a num. points challenge' do
+      before do
+        challenge_single_point
         question
       end
 
@@ -52,7 +93,7 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
         expect(page).to have_text('Next Question')
       end
 
-      it 'lets me complete a number of points required challenge' do
+      it 'flags the challenge complete' do
         visit(dashboard_path)
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
@@ -66,7 +107,7 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
         challenge_daily
       end
 
-      it 'lets me complete a number of points in the day challenge' do
+      it 'flags the challenge complete' do
         create(:question, topic: create(:topic, subject: subject))
         visit(dashboard_path)
         find(:css, '#challenge-table tbody tr:nth-child(1)').click

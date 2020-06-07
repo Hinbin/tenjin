@@ -13,7 +13,7 @@ class Quiz::AddLeaderboardPoint < ApplicationService
     multiplier = Multiplier.where('score < ?', @quiz.streak).pick(:multiplier).to_i
     upsert_score(@question.topic.id, @user.id, multiplier)
 
-    Challenge::UpdateChallengeProgress.call(@quiz, 'number_of_points', multiplier, @question.topic)
+    Challenge::UpdateChallengeProgress.call(@quiz, multiplier, @question.topic)
     Leaderboard::BroadcastLeaderboardPoint.call(@question.topic, @user)
   end
 

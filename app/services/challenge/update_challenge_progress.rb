@@ -1,41 +1,75 @@
 # frozen_string_literal: true
 
 class Challenge::UpdateChallengeProgress < ApplicationService
-  def initialize(quiz, update_type, number_to_add = 0, question_topic = nil)
+  def initialize(quiz, number_to_add = 0, question_topic = nil)
     @quiz = quiz
-    @update_type = update_type
     @number_to_add = number_to_add
     @question_topic = question_topic
   end
 
   def call
     challenges.find_each do |c|
-      cp = ChallengeProgress.find_or_create_by(user: @quiz.user, challenge: c)
-      next if cp.completed
+      result = case c.challenge_type
+               when 'number_correct' then upsert_progress(@quiz.answered_correct, c)
+               when 'streak' then upsert_progress(@quiz.streak, c)
+               when 'number_of_points' then upsert_points(@number_to_add, c)
+               end
 
-      progress = case c.challenge_type
-                 when 'number_correct' then check_number_correct(c) #upsert_progress?
-                 when 'streak' then check_streak(c)
-                 when 'number_of_points' then check_number_of_points(c, cp) # upsert_points?
-                 end
-      next unless progress > cp.progress
+      # if updated we'll have a result
+      next if result.blank?
 
-      cp.progress = progress
-      complete_challenge(cp) if progress >= c.number_required
-
-      cp.save
+      # Check if completed is true and awarded is false
+      if result.rows[0][1] == true && result.rows[0][2] == false
+        complete_challenge(ChallengeProgress.find(result.rows[0][0]))
+      end
     end
   end
 
   protected
 
-  def upsert_progress
-    binds = [[nil, score], [nil, user], [nil, topic]]
-    TopicScore.connection.exec_insert <<~SQL, 'Upsert topic score', binds
-      INSERT INTO "topic_scores"("score","user_id","topic_id","created_at","updated_at")
-      VALUES ($1, $2, $3, current_timestamp, current_timestamp)
-      ON CONFLICT ("user_id","topic_id")
-      DO UPDATE SET "score"=topic_scores.score + $1,"updated_at"=excluded."updated_at"
+  def upsert_progress(progress, challenge)
+    return unless @quiz.topic == challenge.topic
+
+    completed = progress >= challenge.number_required
+
+    binds = [[nil, progress], [nil, @quiz.user], [nil, challenge.id], [nil, challenge.number_required], [nil, completed]]
+    ChallengeProgress.connection.exec_query <<~SQL, 'Upsert progress', binds
+      INSERT INTO challenge_progresses("progress","user_id", "challenge_id", "completed", "created_at","updated_at")
+      values ($1, $2, $3, $5, current_timestamp, current_timestamp)
+      ON CONFLICT ("user_id", "challenge_id")
+      DO UPDATE
+        SET progress =  CASE
+                          WHEN challenge_progresses.progress > $4 THEN $1
+                          else challenge_progresses.progress
+                        END,
+            completed  = CASE
+                            WHEN challenge_progresses.progress >= $4 OR $1 >= $4
+                              OR challenge_progresses.completed = true
+                              THEN true
+                            ELSE false
+                         END
+      RETURNING id, completed, awarded
+    SQL
+  end
+
+  def upsert_points(points, challenge)
+    completed = points >= challenge.number_required
+
+    binds = [[nil, points], [nil, @quiz.user], [nil, challenge.id], [nil, completed], [nil, challenge.number_required]]
+    ChallengeProgress.connection.exec_query <<~SQL, 'Upsert points', binds
+      INSERT INTO challenge_progresses("progress", "user_id", "challenge_id", "completed", "created_at", "updated_at")
+      values ($1, $2, $3, $4, current_timestamp, current_timestamp)
+      ON CONFLICT ("user_id", "challenge_id")
+      DO UPDATE
+        SET progress = challenge_progresses.progress + $1,
+            completed = CASE
+                          WHEN challenge_progresses.progress >= $5
+                            OR (challenge_progresses.progress + $1) >= $5
+                            OR challenge_progresses.completed = true
+                            THEN true
+                          ELSE false
+                        END
+      RETURNING id, completed, awarded
     SQL
   end
 
@@ -67,7 +101,7 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   end
 
   def complete_challenge(progress)
-    progress.completed = true
+    progress.awarded = true
 
     progress.user.challenge_points = 0 if progress.user.challenge_points.nil?
     progress.user.challenge_points += progress.challenge.points

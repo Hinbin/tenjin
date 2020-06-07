@@ -37,31 +37,33 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
     end
 
     it 'flags challenge as complete if the required number of questions have been answered correctly' do
-      described_class.new(quiz_full_marks, 'number_correct').call
+      described_class.new(quiz_full_marks).call
       expect(ChallengeProgress.first.completed).to eq(true)
     end
 
     it 'sets progress to the highest percentage achieved' do
-      described_class.new(quiz_7_out_of_10, 'number_correct').call
+      described_class.new(quiz_7_out_of_10).call
       expect(ChallengeProgress.first.progress).to eq(7)
     end
 
     it 'ignores progress that is less than current progress' do
-      described_class.new(quiz_full_marks, 'number_correct').call
-      described_class.new(quiz_7_out_of_10, 'number_correct').call
+      described_class.new(quiz_full_marks).call
+      described_class.new(quiz_7_out_of_10).call
       expect(ChallengeProgress.first.progress).to eq(10)
     end
 
     it 'awards points after the challenge is complete' do
-      described_class.new(quiz_full_marks, 'number_correct').call
+      described_class.new(quiz_full_marks).call
       expect(ChallengeProgress.first.user.challenge_points).to eq(challenge_full_marks.points)
     end
 
     it 'only updates the streak progress for the topic of the challenge' do
       challenge_different_topic
       described_class.new(quiz_full_marks, 'number_correct').call
-      expect(ChallengeProgress.where(challenge: challenge_different_topic).first.completed).to eq(false)
+      expect(ChallengeProgress.where(challenge: challenge_different_topic).count).to eq(0)
     end
+
+    it 'only adds challenge points once'
   end
 
   context 'when updating a 5 streak challenge' do
@@ -72,7 +74,7 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
       create(:challenge, topic: topic, challenge_type: 'streak', number_required: 5, end_date: Time.now + 1.hour)
     end
     let(:completed_challenge_progress) do
-      create(:challenge_progress, challenge: challenge_streak_of_five, user: student, completed: true)
+      create(:challenge_progress, challenge: challenge_streak_of_five, user: student, completed: true, awarded: true)
     end
 
     before do
@@ -80,24 +82,30 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
     end
 
     it 'flags challenge as complete when a streak of 5 is obtained' do
-      described_class.new(quiz_streak_of_five, 'streak').call
+      described_class.new(quiz_streak_of_five).call
       expect(ChallengeProgress.first.completed).to eq(true)
     end
 
     it 'sets progress as highest acheived' do
-      described_class.new(quiz_streak_of_three, 'streak').call
+      described_class.new(quiz_streak_of_three).call
       expect(ChallengeProgress.first.progress).to eq(3)
     end
 
     it 'awards points after the challenge is complete' do
-      described_class.new(quiz_streak_of_five, 'streak').call
+      described_class.new(quiz_streak_of_five).call
       expect(ChallengeProgress.first.user.challenge_points).to eq(challenge_streak_of_five.points)
     end
 
     it 'only adds the challenge points once' do
       completed_challenge_progress
-      described_class.new(quiz_streak_of_five, 'streak').call
+      described_class.new(quiz_streak_of_five).call
       expect(ChallengeProgress.first.user.challenge_points).to eq(0)
+    end
+
+    it 'does not set completed back to false' do
+      completed_challenge_progress
+      described_class.new(quiz_streak_of_three).call
+      expect(ChallengeProgress.first.completed).to eq(true)
     end
   end
 
@@ -116,13 +124,14 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
     end
 
     it 'increases the progress by the correct amount' do
-      described_class.new(quiz_five_points, 'number_of_points', 2, topic).call
+      described_class.new(quiz_five_points, 2, topic).call
       expect(ChallengeProgress.first.progress).to eq(47)
     end
 
-    it 'flags challenge as complete when a streak of 5 is obtained' do
-      described_class.new(quiz_five_points, 'streak', 5, topic).call
+    it 'flags challenge as complete when 5 points are obtained' do
+      described_class.new(quiz_five_points, 5, topic).call
       expect(ChallengeProgress.first.completed).to eq(true)
     end
+
   end
 end
