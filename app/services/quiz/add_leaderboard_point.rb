@@ -13,7 +13,7 @@ class Quiz::AddLeaderboardPoint < ApplicationService
     multiplier = Multiplier.where('score < ?', @quiz.streak).order(score: :desc).pick(:multiplier)
     upsert_score(@question.topic.id, @user.id, multiplier)
 
-    Challenge::UpdateChallengeProgress.call(@quiz, 'number_of_points', multiplier, @question.topic)
+    Challenge::UpdateChallengeProgress.call(@quiz, multiplier, @question.topic)
     Leaderboard::BroadcastLeaderboardPoint.call(@question.topic, @user)
   end
 
@@ -21,7 +21,7 @@ class Quiz::AddLeaderboardPoint < ApplicationService
 
   def upsert_score(topic, user, score)
     binds = [[nil, score], [nil, user], [nil, topic]]
-    TopicScore.connection.exec_insert <<~SQL, "Upsert topic score", binds
+    TopicScore.connection.exec_insert <<~SQL, 'Upsert topic score', binds
       INSERT INTO "topic_scores"("score","user_id","topic_id","created_at","updated_at")
       VALUES ($1, $2, $3, current_timestamp, current_timestamp)
       ON CONFLICT ("user_id","topic_id")

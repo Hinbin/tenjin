@@ -1,79 +1,110 @@
 # frozen_string_literal: true
 
 class Challenge::UpdateChallengeProgress < ApplicationService
-  def initialize(quiz, challenge_type, number_to_add = 0, question_topic = nil)
+  def initialize(quiz, number_to_add = 0, question_topic = nil)
     @quiz = quiz
-    @challenge_type = challenge_type
     @number_to_add = number_to_add
     @question_topic = question_topic
   end
 
   def call
     challenges.find_each do |c|
-      cp = find_challenge_progress(c)
-      case c.challenge_type
-      when 'streak' then check_streak(c, cp)
-      when 'number_correct' then check_number_correct(c, cp)
-      when 'number_of_points' then check_number_of_points(c, cp)
+      result = case c.challenge_type
+               when 'number_correct' then upsert_progress(@quiz.answered_correct, c)
+               when 'streak' then upsert_progress(@quiz.streak, c)
+               when 'number_of_points' then upsert_points(@number_to_add, c)
+               end
+
+      # if updated we'll have a result
+      next if result.blank?
+
+      # Check if completed is true and awarded is false
+      if result.rows[0][1] == true && result.rows[0][2] == false
+        complete_challenge(ChallengeProgress.find(result.rows[0][0]))
       end
     end
   end
 
   protected
 
+  def upsert_progress(progress, challenge)
+    return unless @quiz.topic == challenge.topic
+
+    completed = progress >= challenge.number_required
+
+    binds = [[nil, progress], [nil, @quiz.user], [nil, challenge.id], [nil, challenge.number_required], [nil, completed]]
+    ChallengeProgress.connection.exec_query <<~SQL, 'Upsert progress', binds
+      INSERT INTO challenge_progresses("progress","user_id", "challenge_id", "completed", "created_at","updated_at")
+      values ($1, $2, $3, $5, current_timestamp, current_timestamp)
+      ON CONFLICT ("user_id", "challenge_id")
+      DO UPDATE
+        SET progress =  CASE
+                          WHEN challenge_progresses.progress > $4 THEN $1
+                          else challenge_progresses.progress
+                        END,
+            completed  = CASE
+                            WHEN challenge_progresses.progress >= $4 OR $1 >= $4
+                              OR challenge_progresses.completed = true
+                              THEN true
+                            ELSE false
+                         END
+      RETURNING id, completed, awarded
+    SQL
+  end
+
+  def upsert_points(points, challenge)
+    completed = points >= challenge.number_required
+
+    binds = [[nil, points], [nil, @quiz.user], [nil, challenge.id], [nil, completed], [nil, challenge.number_required]]
+    ChallengeProgress.connection.exec_query <<~SQL, 'Upsert points', binds
+      INSERT INTO challenge_progresses("progress", "user_id", "challenge_id", "completed", "created_at", "updated_at")
+      values ($1, $2, $3, $4, current_timestamp, current_timestamp)
+      ON CONFLICT ("user_id", "challenge_id")
+      DO UPDATE
+        SET progress = challenge_progresses.progress + $1,
+            completed = CASE
+                          WHEN challenge_progresses.progress >= $5
+                            OR (challenge_progresses.progress + $1) >= $5
+                            OR challenge_progresses.completed = true
+                            THEN true
+                          ELSE false
+                        END
+      RETURNING id, completed, awarded
+    SQL
+  end
+
   def challenges
     Challenge.joins(:topic)
              .includes(topic: :subject)
-             .where(challenge_type: Challenge.challenge_types[@challenge_type])
              .where(topics: { subject_id: @quiz.subject })
              .where('end_date > ?', Time.current)
   end
 
-  def check_number_correct(challenge, progress)
-    return unless @quiz.topic == challenge.topic
+  def check_number_correct(challenge)
+    return 0 unless @quiz.topic == challenge.topic
 
-    check_progress_percentage(@quiz.answered_correct.to_f / challenge.number_required, progress)
+    @quiz.answered_correct
   end
 
-  def check_streak(challenge, progress)
-    return unless @quiz.topic == challenge.topic
+  def check_streak(challenge)
+    return 0 unless @quiz.topic == challenge.topic
 
-    check_progress_percentage(@quiz.streak.to_f / challenge.number_required, progress)
+    @quiz.streak
   end
 
-  def check_number_of_points(challenge, progress)
+  def check_number_of_points(challenge, cp)
     unless @question_topic == challenge.topic || (challenge.daily && @question_topic.subject == challenge.topic.subject)
-      return
+      return 0
     end
 
-    progress.progress += @number_to_add
-    complete_challenge(progress) if progress.progress >= challenge.number_required
-    progress.save if progress.changed?
-  end
-
-  def check_progress_percentage(percentage, progress)
-    percentage *= 100
-    progress.progress = percentage if percentage > progress.progress
-    complete_challenge(progress) if progress.progress >= 100
-    progress.save if progress.changed?
+    cp.progress + @number_to_add
   end
 
   def complete_challenge(progress)
-    return if progress.completed == true
+    progress.awarded = true
 
-    progress.completed = true
     progress.user.challenge_points = 0 if progress.user.challenge_points.nil?
     progress.user.challenge_points += progress.challenge.points
     progress.user.save
-  end
-
-  def find_challenge_progress(challenge)
-    ChallengeProgress.where('user_id = ? AND challenge_id = ?', @quiz.user, challenge)
-                     .first_or_create! do |progress|
-      progress.challenge = challenge
-      progress.user = @quiz.user
-      progress.progress = 0
-      progress.completed = false
-    end
   end
 end

@@ -23,4 +23,9 @@ module ClassroomsHelper
       'Refresh the page to see the current sync status'
     end
   end
+
+  def report_progress(homework)
+    percent = number_to_percentage(homework.completed_count / homework.count.to_f * 100, precision: 0)
+    "#{homework.completed_count} / #{homework.count} - #{percent}"
+  end
 end

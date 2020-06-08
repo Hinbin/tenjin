@@ -16,11 +16,11 @@ class Homework::UpdateHomeworkProgress < ApplicationService
   protected
 
   def homework_progresses
-    HomeworkProgress.includes(:homework).where(user: @quiz.user)
+    HomeworkProgress.includes(:homework, :topic).where(user: @quiz.user)
   end
 
   def check_percentage_correct(progress)
-    return unless @quiz.topic == progress.homework.topic
+    return unless @quiz.topic == progress.topic
 
     check_progress_percentage(@quiz.answered_correct.to_f / @quiz.num_questions_asked, progress)
   end

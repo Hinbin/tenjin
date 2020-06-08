@@ -6,5 +6,6 @@ FactoryBot.define do
     user
     progress { 0 }
     completed { false }
+    awarded { false }
   end
 end

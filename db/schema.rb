@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 2020_03_20_122650) do
 
   # These are extensions that must be enabled in order to support this database
@@ -100,14 +101,15 @@ ActiveRecord::Schema.define(version: 2020_03_20_122650) do
   end
 
   create_table "challenge_progresses", force: :cascade do |t|
-    t.bigint "challenge_id"
-    t.bigint "user_id"
-    t.integer "progress"
-    t.boolean "completed"
-    t.datetime "created_at", null: false
+    t.bigint "challenge_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "progress", default: 0, null: false
+    t.boolean "completed", default: false
+    t.datetime "created_at", default: -> { "now()" }, null: false
     t.datetime "updated_at", null: false
+    t.boolean "awarded", default: false
     t.index ["challenge_id"], name: "index_challenge_progresses_on_challenge_id"
-    t.index ["user_id"], name: "index_challenge_progresses_on_user_id"
+    t.index ["user_id", "challenge_id"], name: "index_challenge_progresses_on_user_id_and_challenge_id", unique: true
   end
 
   create_table "challenges", force: :cascade do |t|

@@ -36,6 +36,14 @@ RSpec.describe 'User visits a classroom', type: :system, js: true, default_creat
       expect(page).to have_current_path(homework_path(homework))
     end
 
+    it 'shows the correct percentage of homeworks completed' do
+      homework
+      create_list(:homework_progress, 3, homework: homework, completed: false)
+      create_list(:homework_progress, 6, homework: homework, completed: true)
+      visit(classroom_path(classroom))
+      expect(page).to have_css('td', text: '60%')
+    end
+
     context 'when looking at the student table' do
       let(:second_homework) { HomeworkProgress.joins(:homework).order('homeworks.due_date desc').second }
       let(:different_classroom) { create(:classroom, school: school) }

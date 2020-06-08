@@ -7,9 +7,10 @@ class ClassroomsController < ApplicationController
   def show
     authorize @classroom
     @students = User.joins(enrollments: :classroom).where(role: 'student', enrollments: { classroom: @classroom })
-    @homeworks = Homework.includes(:homework_progresses).where(classroom: @classroom).order('homeworks.due_date')
+    @homeworks = @classroom.homework_counts
+
     @homework_progress = HomeworkProgress.joins(:homework)
-                                         .where(homework: @homeworks)
+                                         .where(homework: @homeworks.pluck(:id))
                                          .order('homeworks.due_date desc')
   end
 

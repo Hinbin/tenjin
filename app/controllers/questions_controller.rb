@@ -33,9 +33,12 @@ class QuestionsController < ApplicationController
     @subject = Subject.find(flagged_questions_params)
     authorize @subject, :update?
     @questions = Question.joins(:topic)
+                         .includes(:question_statistic, :lesson, :rich_text_question_text)
                          .where(topics: { subject: @subject })
                          .where(flagged_questions_count: 1..)
+                         .where(active: true)
                          .order(flagged_questions_count: :desc)
+                         .limit(20)
     render :flagged_questions
   end
 
