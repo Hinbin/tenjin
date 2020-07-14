@@ -137,5 +137,4 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
     end
   end
 
-  it 'handles deletions'
 end

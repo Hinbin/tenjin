@@ -63,7 +63,11 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
       expect(ChallengeProgress.where(challenge: challenge_different_topic).count).to eq(0)
     end
 
-    it 'only adds challenge points once'
+    it 'only adds challenge points once' do
+      described_class.new(quiz_full_marks).call
+      described_class.new(quiz_full_marks).call
+      expect(ChallengeProgress.first.progress).to eq(10)
+    end
   end
 
   context 'when updating a 5 streak challenge' do

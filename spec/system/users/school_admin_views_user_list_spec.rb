@@ -101,8 +101,4 @@ RSpec.describe 'School admin views user list', type: :system, js: true, default_
       expect(page).to have_no_link('Reset Password').and have_css('.new-password')
     end
   end
-
-  it 'does not show employees if I am an employee'
-
-  it 'lets me reset passwords for employees if I am a school admin'
 end

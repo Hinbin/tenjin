@@ -52,6 +52,7 @@ RSpec.describe 'User changes leaderboard options', type: :system, js: true, defa
     before do
       create_list(:topic_score, 50, school: school, topic: topic)
       visit(leaderboard_path(subject.name))
+      find(:css, '#leaderboardTable tbody tr:nth-child(10)')
     end
 
     it 'allows me to see all entries' do
