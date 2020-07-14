@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'support/api_data'
 require 'pry'
 
-RSpec.describe 'User views an updating leaderboard',  type: :system, js: true do
+RSpec.describe 'User views an updating leaderboard', type: :system, js: true do
   include_context 'default_creates'
 
   let(:new_entry) { create(:topic_score, topic: topic, school: school, score: 11) }
@@ -56,7 +56,7 @@ RSpec.describe 'User views an updating leaderboard',  type: :system, js: true do
 
     it 're-ranks correctly' do
       new_entry
-      Leaderboard::BroadcastLeaderboardPoint.new(topic, new_entry.user).call      
+      Leaderboard::BroadcastLeaderboardPoint.new(topic, new_entry.user).call
       expect(page).to have_css('tr:nth-child(2)#row-' + student.id.to_s)
     end
   end
@@ -66,7 +66,7 @@ RSpec.describe 'User views an updating leaderboard',  type: :system, js: true do
       create(:school, school_group: school.school_group)
       one_to_nine
       visit(leaderboard_path(subject.name))
-      find(:css, 'span#connected', visible: false)
+      find(:css, '#leaderboardTable tbody tr:nth-child(10)')
     end
 
     let(:student_another_school) { create(:student) }
@@ -75,7 +75,7 @@ RSpec.describe 'User views an updating leaderboard',  type: :system, js: true do
     let(:topic_score_different_school_group) { create(:topic_score, topic: topic) }
     let(:another_name) { initialize_name User.second }
 
-    it 'does not update if update is from an differnt school group' do
+    it 'does not update if update is from an different school group' do
       topic_score_different_school_group
       Leaderboard::BroadcastLeaderboardPoint.new(topic, student_another_school).call
       expect(page).to have_no_css('tr.score-changed')

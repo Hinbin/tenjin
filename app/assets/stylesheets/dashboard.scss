@@ -26,8 +26,8 @@ $dashboard_styles: ('red': 'athletics.jpg', 'darkred': 'darkred-ferrari.jpg', 'd
     background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), image-url(#{$image}) no-repeat;
   }
 
-  hr.primary-#{$name}{
-    @extend %hr.primary-shared;
+  hr.primary-#{$name}{    
+    @extend %hr, .primary-shared;
     border-color: unquote($name);
   }
 

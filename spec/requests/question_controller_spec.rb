@@ -23,7 +23,7 @@ RSpec.describe 'using question editing', type: :request do
 
     it 'displays the questions index page' do
       get questions_path
-      expect(response).to render_template(:index)
+      expect(response).to have_http_status(:success)
     end
   end
 end

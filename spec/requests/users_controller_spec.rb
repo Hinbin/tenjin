@@ -15,7 +15,7 @@ RSpec.describe 'user controller', default_creates: true, type: :request do
     it 'displays the new password template if sucessful' do
       sign_in school_admin
       reset_all_link
-      expect(response).to render_template('new_passwords')
+      expect(response).to have_http_status(:success)
     end
   end
 

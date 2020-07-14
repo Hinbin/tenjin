@@ -42,7 +42,6 @@ group :development, :test do
 
   # Use the following gems for rspec testing
   gem 'rspec-rails'
-  gem 'rails-controller-testing'
   
   # Fast creation of test objects
   gem 'factory_bot_rails'
@@ -91,7 +90,6 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'webdrivers'
-  gem 'action-cable-testing'
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'simplecov', require: false # For code coverage
   gem 'rspec-retry'

@@ -11,6 +11,7 @@ AllCops:
     - 'bin/**/*'
     - 'node_modules/**/*'
     - !ruby/regexp /old_and_unused\.rb$/
+  NewCops: enable  
     
 RSpec/NamedSubject:
   Enabled: false
@@ -21,9 +22,6 @@ Style/ClassAndModuleChildren:
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'lib/ext/Wondeclient/**/*.rb'
-
-Metrics/LineLength:
-  Max: 120  
 
 Metrics/MethodLength:
   Max: 12
@@ -41,4 +39,3 @@ Style/Documentation:
 
 Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
-

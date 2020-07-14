@@ -38,7 +38,7 @@ RSpec.describe 'using a quiz', default_creates: true, type: :request do
     it 'shows the topic select page for a valid subject' do
       enrollment = create(:enrollment, school: school, user: student)
       get new_quiz_path, params: { subject: enrollment.classroom.subject.name }
-      expect(response).to render_template('quizzes/select_topic', 'layouts/application')
+      expect(response).to have_http_status(:success)
     end
 
     it 'prevents me selecting a topic for a subject I am not allowed to use' do
@@ -91,19 +91,19 @@ RSpec.describe 'using a quiz', default_creates: true, type: :request do
         create(:question, topic: topic)
         post quizzes_path params: { quiz: { topic_id: topic, subject: subject } }
         follow_redirect!
-        expect(response).to render_template('quizzes/_question_top')
+        expect(response).to have_http_status(:success)
       end
 
       it 'renders a multiple choice quiz question' do
         get quiz_path(id: quiz.id)
-        expect(response).to render_template('quizzes/_multiple_choice')
+        expect(response).to have_http_status(:success)
       end
 
       it 'renders a single word answer question' do
         question = create(:question, question_type: 'short_answer')
         quiz.update_attribute(:question_order, [question.id])
         get quiz_path(id: quiz.id)
-        expect(response).to render_template('quizzes/_short_answer')
+        expect(response).to have_http_status(:success)
       end
     end
   end

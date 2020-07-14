@@ -13,9 +13,6 @@ require 'webdrivers'
 require 'webmock/rspec'
 require 'vcr'
 
-require 'action_cable/testing/rspec'
-require 'action_cable/testing/rspec/features'
-
 WebMock.disable_net_connect!(allow_localhost: true)
 # WebMock.allow_net_connect!
 
