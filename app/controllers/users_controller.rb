@@ -118,7 +118,7 @@ class UsersController < ApplicationController
   private
 
   def find_homework_progress
-    @homework_progress = HomeworkProgress.includes(:homework, homework: [topic: :subject])
+    @homework_progress = HomeworkProgress.includes(:homework, homework: [{ topic: :subject }])
                                          .where(homework: @homeworks, user: @user)
   end
 

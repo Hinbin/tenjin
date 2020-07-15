@@ -9,7 +9,7 @@ class Challenge < ApplicationRecord
   enum challenge_type: %i[number_correct streak number_of_points]
 
   def self.create_challenge(subject, challenge_type = nil, multiplier: 1, duration: 7.days, daily: false)
-    challenge = Challenge.new start_date: Time.current, end_date: duration.from_now    
+    challenge = Challenge.new start_date: Time.current, end_date: duration.from_now
     challenge.daily = daily
     challenge.topic = Topic.where(active: true).order(Arel.sql('RANDOM()')).find_by(subject: subject)
 
@@ -26,7 +26,7 @@ class Challenge < ApplicationRecord
   end
 
   class << self
-    def setup_challenge_type(challenge, challenge_type)      
+    def setup_challenge_type(challenge, challenge_type)
       challenge.challenge_type = challenge_type.presence || random_challenge_type
       challenge.challenge_type = 'number_of_points' if challenge.daily
 

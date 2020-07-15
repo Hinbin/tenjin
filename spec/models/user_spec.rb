@@ -5,7 +5,7 @@ require 'support/api_data'
 
 RSpec.describe User, type: :model do
   describe '#from_wonde' do
-    include_context 'api_data'
+    include_context 'with api_data'
 
     let(:classroom) { create(:classroom) }
 
@@ -17,6 +17,7 @@ RSpec.describe User, type: :model do
       it 'does not allow students missing a upi' do
         expect { create(:student, upi: '') }.to raise_error(ActiveRecord::RecordInvalid)
       end
+
       it 'creates students who have a classroom for a mapped subject' do
         classroom_api_data.students = user_api_data
         described_class.from_wonde(school_api_data, classroom_api_data, classroom)
@@ -25,7 +26,7 @@ RSpec.describe User, type: :model do
 
       it 'creates employees who have a classroom for a mapped subject' do
         classroom_api_data.employees = user_api_data
-        allow(school_api).to receive_message_chain(:employees, :get).and_return(contact_details_api_data)
+        allow(school_api).to receive(:get).and_return(contact_details_api_data)
         described_class.from_wonde(school_api_data, classroom_api_data, classroom)
         expect(described_class.where(role: 'employee').first.forename).to eq(user_api_data.data[0].forename)
       end
@@ -40,7 +41,7 @@ RSpec.describe User, type: :model do
       it 'accepts both employee and student data' do
         classroom_api_data.students = user_api_data
         classroom_api_data.employees = alt_user_api_data
-        allow(school_api).to receive_message_chain(:employees, :get).and_return(contact_details_api_data)
+        allow(school_api).to receive(:get).and_return(contact_details_api_data)
         described_class.from_wonde(school_api_data, classroom_api_data, classroom)
         expect(described_class.count).to eq(2)
       end
@@ -63,7 +64,7 @@ RSpec.describe User, type: :model do
       it 'does not update a username if the record already exists' do
         described_class.create(upi: user_api_data.upi, username: 'test')
         classroom_api_data.employees = user_api_data
-        allow(school_api).to receive_message_chain(:employees, :get).and_return(contact_details_api_data)
+        allow(school_api).to receive(:get).and_return(contact_details_api_data)
         described_class.from_wonde(school_api_data, classroom_api_data, classroom)
         described_class.first.username = 'test'
       end

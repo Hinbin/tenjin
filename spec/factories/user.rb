@@ -19,7 +19,6 @@ FactoryBot.define do
     oauth_provider { '' }
     oauth_uid { '' }
 
-
     trait :oauth do
       oauth_email { FFaker::Internet.email }
       oauth_provider { 'google_oauth2' }

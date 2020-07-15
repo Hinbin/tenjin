@@ -6,7 +6,7 @@ class Question < ApplicationRecord
   has_many :flagged_questions
   has_many :quizzes, through: :asked_questions
   has_one :question_statistic
-  
+
   belongs_to :lesson, optional: true
   belongs_to :topic
 

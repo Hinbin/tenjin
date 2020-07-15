@@ -4,8 +4,8 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true do
-  include_context 'api_data'
-  include_context 'wonde_test_data'
+  include_context 'with api_data'
+  include_context 'with wonde_test_data'
   include_context 'default_creates'
 
   context 'when looking at the page' do

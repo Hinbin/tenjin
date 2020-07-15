@@ -52,7 +52,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
     it 'allows me to create a lesson for a subject' do
       visit(lessons_path)
       click_link("Create #{subject.name} Lesson")
-      expect(current_path).to eq(new_lesson_path)
+      expect(page).to have_current_path(new_lesson_path, ignore_query: true)
     end
 
     it 'prevents me putting in a link to a bad website' do
@@ -99,6 +99,5 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       end
       expect(page).to have_no_css('.videoLink')
     end
-
   end
 end

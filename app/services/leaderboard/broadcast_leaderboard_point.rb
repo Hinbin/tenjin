@@ -36,23 +36,28 @@ class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
   end
 
   def scores
-    s_score = TopicScore.arel_table[:score].sum
-    t_score = TopicScore.select(s_score)
-      .where(user_id: @user, topic_id: @topic)
-      .arel
-
     TopicScore.joins(:topic)
-      .where(user_id: @user)
-      .where(subject_topics.arel.exists)
-      .pick(s_score.as('subject_score'), t_score.as('topic_score'))
+              .where(user_id: @user)
+              .where(subject_topics.arel.exists)
+              .pick(s_score.as('subject_score'), t_score.as('topic_score'))
   end
 
   private
 
+  def s_score
+    TopicScore.arel_table[:score].sum
+  end
+
+  def t_score
+    TopicScore.select(s_score)
+              .where(user_id: @user, topic_id: @topic)
+              .arel
+  end
+
   def subject_topics
     Topic.select(1)
-      .from('topics t2')
-      .where(t2: { id: @topic })
-      .where('t2.subject_id = topics.subject_id')
+         .from('topics t2')
+         .where(t2: { id: @topic })
+         .where('t2.subject_id = topics.subject_id')
   end
 end

@@ -47,5 +47,4 @@ class UserPolicy < ApplicationPolicy
 
   alias reset_password? show?
   alias unlink_oauth_account? show?
-
 end

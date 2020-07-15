@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe School::SyncSchool, '#call', :vcr do
-  include_context 'api_data'
-  include_context 'wonde_test_data'
+  include_context 'with api_data'
+  include_context 'with wonde_test_data'
 
   let(:sociology_class) { Classroom.where(client_id: classroom_client_id).first }
 
@@ -136,5 +136,4 @@ RSpec.describe School::SyncSchool, '#call', :vcr do
       expect(User.where(upi: employee_upi).first.forename).to eq(employee_name)
     end
   end
-
 end

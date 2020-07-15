@@ -37,7 +37,7 @@ end
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -106,6 +106,10 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:each, type: :system) do
+    driven_by :selenium_chrome_headless
+  end
+
   if ENV['CI']
     # show retry status in spec process
     config.verbose_retry = true
@@ -121,14 +125,6 @@ RSpec.configure do |config|
     config.retry_callback = proc do |ex|
       # run some additional clean up task - can be filtered by example metadata
       Capybara.reset! if ex.metadata[:js]
-    end
-    config.before(:each, type: :system) do
-      driven_by :selenium_chrome_headless
-    end
-  else
-
-    config.before(:each, type: :system) do
-      driven_by :selenium_chrome_headless
     end
   end
 end

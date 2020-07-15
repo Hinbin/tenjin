@@ -11,7 +11,9 @@ RSpec.describe 'Super views all statistics', type: :system, js: true, default_cr
     let(:new_stat) { create(:user_statistic, user: student, week_beginning: Date.current.beginning_of_week) }
     let(:old_stat) { create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago) }
     let(:new_stat_different_school) { create(:user_statistic, week_beginning: Date.current.beginning_of_week) }
-    let(:old_stat_different_school) { create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago) }
+    let(:old_stat_different_school) do
+      create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago)
+    end
     let(:total_answered) do
       [new_stat.questions_answered,
        old_stat.questions_answered,
@@ -38,10 +40,22 @@ RSpec.describe 'Super views all statistics', type: :system, js: true, default_cr
   end
 
   context 'when looking at homeworks completed' do
-    let(:homework_progress) { create(:homework_progress, user: student, completed: true, updated_at: Date.current.beginning_of_week) }
-    let(:old_homework_progress) { create(:homework_progress, user: student, completed: true, updated_at: two_weeks_ago) }
-    let(:homework_progress_different_school) { create(:homework_progress, completed: true, updated_at: Date.current.beginning_of_week) }
-    let(:old_homework_progress_different_school) { create(:homework_progress, completed: true, updated_at: two_weeks_ago) }
+    let(:homework_progress) do
+      create(:homework_progress, user: student,
+                                 completed: true, updated_at: Date.current.beginning_of_week)
+    end
+    let(:old_homework_progress) do
+      create(:homework_progress, user: student,
+                                 completed: true, updated_at: two_weeks_ago)
+    end
+    let(:homework_progress_different_school) do
+      create(:homework_progress,
+             completed: true, updated_at: Date.current.beginning_of_week)
+    end
+    let(:old_homework_progress_different_school) do
+      create(:homework_progress,
+             completed: true, updated_at: two_weeks_ago)
+    end
 
     before do
       homework_progress

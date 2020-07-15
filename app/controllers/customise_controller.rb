@@ -17,13 +17,16 @@ class CustomiseController < ApplicationController
     @customisation = Customisation.where('customisation_type = ? AND value = ?',
                                          Customisation.customisation_types[customisation_params[:type]],
                                          customisation_params[:value]).first
-    result = Customisation::BuyCustomisation.call(current_user, @customisation)
+    result = buy_customisation
     flash_notice(result)
-
     redirect_to dashboard_path
   end
 
   private
+
+  def buy_customisation
+    Customisation::BuyCustomisation.call(current_user, @customisation)
+  end
 
   def flash_notice(result)
     flash[:notice] = result.errors unless result.success?

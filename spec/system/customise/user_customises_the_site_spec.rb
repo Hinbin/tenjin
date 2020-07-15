@@ -102,6 +102,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
     it 'allows you to buy an icon' do
       expect(page).to have_css("[data-value='#{icon_customisation.value}']")
     end
+
     it 'shows the icon on the leaderboard' do
       create(:topic_score, user: student, topic: topic)
       find("[data-value='#{icon_customisation.value}']").click

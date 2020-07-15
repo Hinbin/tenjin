@@ -39,16 +39,16 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
 
     it 'allows me to respond to a question' do
       first(class: 'question-button').click
-      expect(page).to have_selector('.next-button', visible: true)
+      expect(page).to have_selector('.next-button', visible: :visible)
     end
 
     it 'disables all other buttons when I attempt to answer' do
       first(class: 'question-button').click
-      expect(page).to have_css('.question-button[disabled]', visible: true)
+      expect(page).to have_css('.question-button[disabled]', visible: :visible)
     end
 
     it 'hides the next question button before answering' do
-      expect(page).to have_selector('.next-button', visible: false)
+      expect(page).to have_selector('.next-button', visible: :hidden)
     end
 
     it 'indicates if the answer I gave was right' do
@@ -128,7 +128,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
     before do
       image = create_file_blob(filename: 'computer-science.jpg', content_type: 'image/jpg')
       html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>Test message</p>)
-      question = create(:question, topic: topic, question_text: html)
+      create(:question, topic: topic, question_text: html)
 
       setup_subject_database
       sign_in student
@@ -173,7 +173,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
 
     it 'allows me to respond to a question' do
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      expect(page).to have_selector('.next-button', visible: true)
+      expect(page).to have_selector('.next-button', visible: :visible)
     end
 
     it 'indicates if the answer I gave was right' do
@@ -224,7 +224,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
     it 'shows the next question button if there is no correct answer returned' do
       Answer.first.destroy
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      expect(page).to have_selector('.next-button', visible: true)
+      expect(page).to have_selector('.next-button', visible: :visible)
     end
 
     context 'when checking my multipliers' do

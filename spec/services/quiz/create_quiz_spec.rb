@@ -23,7 +23,6 @@ RSpec.describe Quiz::CreateQuiz, '#call' do
     it 'does not include inactive questions' do
       Question.first.update_attribute(:active, false)
       expect(quiz.quiz.questions).not_to include(Question.first.id)
-
     end
 
     it 'creates a lucky dip' do

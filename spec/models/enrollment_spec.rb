@@ -28,7 +28,7 @@ RSpec.describe Enrollment, type: :model do
   end
 
   describe '#from_wonde' do
-    include_context 'api_data'
+    include_context 'with api_data'
 
     before do
       school_api_data
@@ -37,7 +37,7 @@ RSpec.describe Enrollment, type: :model do
       classroom_api_data.id = 'classroom_id'
     end
 
-    context 'with api data' do
+    context 'with api_data' do
       it 'creates student enrollments' do
         classroom_api_data.students = user_api_data
         described_class.from_wonde(classroom_api_data)

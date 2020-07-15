@@ -9,30 +9,38 @@ class Challenge::UpdateChallengeProgress < ApplicationService
 
   def call
     challenges.find_each do |c|
-      result = case c.challenge_type
-               when 'number_correct' then upsert_progress(@quiz.answered_correct, c)
-               when 'streak' then upsert_progress(@quiz.streak, c)
-               when 'number_of_points' then upsert_points(@number_to_add, c)
-               end
-
+      @result = check_challenge_progress(c)
       # if updated we'll have a result
-      next if result.blank?
+      next if @result.blank?
 
-      # Check if completed is true and awarded is false
-      if result.rows[0][1] == true && result.rows[0][2] == false
-        complete_challenge(ChallengeProgress.find(result.rows[0][0]))
-      end
+      award_challenge_points?
     end
   end
 
   protected
+
+  def check_challenge_progress(challenge)
+    case challenge.challenge_type
+    when 'number_correct' then upsert_progress(@quiz.answered_correct, challenge)
+    when 'streak' then upsert_progress(@quiz.streak, challenge)
+    when 'number_of_points' then upsert_points(@number_to_add, challenge)
+    end
+  end
+
+  def award_challenge_points?
+    # Check if completed is true and awarded is false
+    return unless @result.rows[0][1] == true && @result.rows[0][2] == false
+
+    complete_challenge(ChallengeProgress.find(@result.rows[0][0]))
+  end
 
   def upsert_progress(progress, challenge)
     return unless @quiz.topic == challenge.topic
 
     completed = progress >= challenge.number_required
 
-    binds = [[nil, progress], [nil, @quiz.user], [nil, challenge.id], [nil, challenge.number_required], [nil, completed]]
+    binds = [[nil, progress], [nil, @quiz.user], [nil, challenge.id],
+             [nil, challenge.number_required], [nil, completed]]
     ChallengeProgress.connection.exec_query <<~SQL, 'Upsert progress', binds
       INSERT INTO challenge_progresses("progress","user_id", "challenge_id", "completed", "created_at","updated_at")
       values ($1, $2, $3, $5, current_timestamp, current_timestamp)
@@ -92,12 +100,12 @@ class Challenge::UpdateChallengeProgress < ApplicationService
     @quiz.streak
   end
 
-  def check_number_of_points(challenge, cp)
+  def check_number_of_points(challenge, challenge_points)
     unless @question_topic == challenge.topic || (challenge.daily && @question_topic.subject == challenge.topic.subject)
       return 0
     end
 
-    cp.progress + @number_to_add
+    challenge_points.progress + @number_to_add
   end
 
   def complete_challenge(progress)

@@ -38,13 +38,13 @@ RSpec.describe Leaderboard::BuildLeaderboard do
       create(:active_customisation, user: second_student, customisation: leaderboard_icon)
       create(:topic_score, topic: topic, user: second_student)
       expect(described_class.new(student, id: subject.name).call
-                            .select { |user| user['id'] == second_student.id }.first.icon).to eq(leaderboard_icon.value)
+                            .find { |user| user['id'] == second_student.id }.icon).to eq(leaderboard_icon.value)
     end
 
     it 'does not include a leaderboard icon for those that do not have one' do
       create(:topic_score, topic: topic, user: second_student)
       expect(described_class.new(student, id: subject.name).call
-                            .select { |user| user['id'] == second_student.id }.first.icon).to eq(nil)
+                            .find { |user| user['id'] == second_student.id }.icon).to eq(nil)
     end
   end
 

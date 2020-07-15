@@ -39,9 +39,9 @@ class Lesson < ApplicationRecord
     return nil if video_id.blank?
 
     regexes = [{ category: 'youtube',
-                 regex: %r{http(?:s?)://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?} },
+                 regex: %r{http(?:s?)://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([\w\-_]*)(&(amp;)?‌​[\w?‌​=]*)?} },
                { category: 'vimeo',
-                 regex: %r{(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|)(\d+)(?:|\/\?)} }]
+                 regex: %r{(?:http|https)?://(?:www\.)?vimeo.com/(?:channels/(?:\w+/)?|groups/(?:[^/]*)/videos/|)(\d+)(?:|/\?)} }]
 
     regexes.each do |r|
       return { category: r[:category], video_id: video_id.match(r[:regex]).captures[0] } if video_id.match(r[:regex])

@@ -112,9 +112,9 @@ class User < ApplicationRecord
       end
     end
 
-    def generate_username(u)
+    def generate_username(user)
       u.forename.strip[0].downcase.tap do |str|
-        str << u.surname.strip.downcase << u.upi[0..3]
+        str << user.surname.strip.downcase << user.upi[0..3]
         str.next! while User.where(username: str).exists?
       end
     end

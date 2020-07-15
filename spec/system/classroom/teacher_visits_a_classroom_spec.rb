@@ -122,5 +122,4 @@ RSpec.describe 'User visits a classroom', type: :system, js: true, default_creat
     page.go_back
     expect(page).to have_css('input[type="search"]', count: 1)
   end
-
 end

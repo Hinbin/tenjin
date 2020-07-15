@@ -44,7 +44,7 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
     end
     let(:quiz) { create(:new_quiz) }
 
-    context 'when completed a number of questions correct challenge' do
+    context 'when completing a number of questions challenge' do
       before do
         challenge_single_question
         question
@@ -59,7 +59,7 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
       end
     end
 
-    context 'when completed a number of questions correct challenge' do
+    context 'when completing a streak challenge' do
       before do
         challenge_single_streak
         question

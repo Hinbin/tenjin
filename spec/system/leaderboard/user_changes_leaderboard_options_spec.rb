@@ -131,9 +131,15 @@ RSpec.describe 'User changes leaderboard options', type: :system, js: true, defa
     let(:second_classroom) { create(:classroom, subject: subject, school: school) }
     let(:second_student) { create(:student, school: student.school) }
     let(:topic_score_different_classroom) { create(:topic_score, user: second_student, subject: subject) }
-    let(:different_school_same_classroom_name) { create(:classroom, name: second_classroom.name, school: second_school) }
+    let(:different_school_same_classroom_name) do
+      create(:classroom,
+             name: second_classroom.name, school: second_school)
+    end
     let(:different_school_enrollment) { create(:enrollment, classroom: different_school_same_classroom_name) }
-    let(:different_school_topic_score) { create(:topic_score, subject: subject, user: different_school_enrollment.user) }
+    let(:different_school_topic_score) do
+      create(:topic_score, subject: subject,
+                           user: different_school_enrollment.user)
+    end
     let(:same_name_different_school) do
       different_school_enrollment
       different_school_topic_score

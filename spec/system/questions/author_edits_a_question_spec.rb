@@ -9,6 +9,8 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   def add_answer
     click_link('Add Answer')
     find('#answer-text-1')
+    all('.text-answer').last.set("#{answer_text}\n")
+    click_button('Save Question')
   end
 
   def switch_to_student_account
@@ -183,8 +185,6 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       it 'allows you to add an answer' do
         visit(question_path(question))
         add_answer
-        all('.text-answer').last.set("#{answer_text}\n")
-        click_button('Save Question')
         switch_and_create_quiz
         expect(page).to have_content(answer_text)
       end

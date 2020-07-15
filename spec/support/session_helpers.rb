@@ -11,6 +11,7 @@ module SessionHelpers
     OmniAuth.config.logger = Rails.logger
     OmniAuth.config.test_mode = true
     OmniAuth.config.mock_auth[:wonde] =
+      # rubocop:disable Layout/LineLength
       OmniAuth::AuthHash.new(
         'provider' => 'wonde',
         'uid' => nil,
@@ -23,6 +24,7 @@ module SessionHelpers
            'expires' => true },
         'extra' => {}
       )
+    # rubocop:enable Layout/LineLength
   end
 
   def stub_google_omniauth
@@ -31,15 +33,15 @@ module SessionHelpers
     # then, provide a set of fake oauth data that
     # omniauth will use when a user tries to authenticate:
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-      "provider"=>"google_oauth2",
-        "uid"=>"123456123456",
-        "info"=>
-         {"name"=>"Test",
-          "email"=>"test@test.com",
-          "unverified_email"=>"test@test.com",
-          "email_verified"=>true,
-          "first_name"=>"Test",
-          "last_name"=>"Person"}
+      'provider' => 'google_oauth2',
+      'uid' => '123456123456',
+      'info' =>
+         { 'name' => 'Test',
+           'email' => 'test@test.com',
+           'unverified_email' => 'test@test.com',
+           'email_verified' => true,
+           'first_name' => 'Test',
+           'last_name' => 'Person' }
     )
   end
 

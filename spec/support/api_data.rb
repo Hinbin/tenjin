@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.shared_context 'api_data', shared_context: :metadata do
+RSpec.shared_context 'with api_data', shared_context: :metadata do
   let(:school_api_data) do
     School.from_wonde(OpenStruct.new(id: SecureRandom.hex, name: FFaker::Education.school), SecureRandom.hex)
   end
@@ -19,7 +19,8 @@ RSpec.shared_context 'api_data', shared_context: :metadata do
   let(:duplicate_user_api_data) do
     OpenStruct.new(data: [user_openstruct_data,
                           OpenStruct.new(id: SecureRandom.hex, upi: user_openstruct_data.upi.slice(0..4),
-                                         forename: user_openstruct_data.forename, surname: user_openstruct_data.surname)])
+                                         forename: user_openstruct_data.forename,
+                                         surname: user_openstruct_data.surname)])
   end
 
   let(:alt_user_api_data) do
@@ -33,7 +34,7 @@ RSpec.shared_context 'api_data', shared_context: :metadata do
     OpenStruct.new(id: SecureRandom.hex, subject: subject_api_data, code: FFaker::Lorem.word)
   end
 
-  let(:school_api) { instance_double(Wonde::Schools) }
+  let(:school_api) { instance_double(Wonde::Employees) }
   let(:employee_email) { FFaker::Internet.email }
   let(:contact_details_api_data) do
     OpenStruct.new(contact_details: OpenStruct.new(data: OpenStruct.new(emails: OpenStruct.new(email: employee_email))))
@@ -43,7 +44,7 @@ RSpec.shared_context 'api_data', shared_context: :metadata do
   end
 end
 
-RSpec.shared_context 'wonde_test_data', shared_context: :metadata do
+RSpec.shared_context 'with wonde_test_data', shared_context: :metadata do
   let(:school_token) { '2a550dc912f6a63488af42352b79c5961e87daf9' }
   let(:school_id) { 'A852030759' }
   let(:school_name) { 'Outwood Grange Academy 1532082212' }
