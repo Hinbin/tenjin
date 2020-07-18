@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe 'Super manages user roles', type: :system, js: true, default_creates: true do
   before do
     sign_in super_admin

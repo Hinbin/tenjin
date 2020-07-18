@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Employee views a user record', type: :system, js: true, default_creates: true do
-  include_context 'default_creates'
-
   let(:second_classroom) { create(:classroom, school: school) }
   let(:homework_different_class) { create(:homework, classroom: second_classroom, topic: topic) }
   let(:enrollment_different_class) { create(:enrollment, user: student, classroom: second_classroom) }

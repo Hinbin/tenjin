@@ -36,12 +36,14 @@ class Lesson < ApplicationRecord
   end
 
   def find_video_id
+    vimeo_rexp = %r{(?:http|https)?://(?:www\.)?vimeo.com/(?:channels/(?:\w+/)?|groups/(?:[^/]*)/videos/|)(\d+)(?:|/\?)}
+    youtube_rexp = %r{http(?:s?)://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([\w\-_]*)(&(amp;)?‌​[\w?‌​=]*)?}
     return nil if video_id.blank?
 
     regexes = [{ category: 'youtube',
-                 regex: %r{http(?:s?)://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([\w\-_]*)(&(amp;)?‌​[\w?‌​=]*)?} },
+                 regex: youtube_rexp },
                { category: 'vimeo',
-                 regex: %r{(?:http|https)?://(?:www\.)?vimeo.com/(?:channels/(?:\w+/)?|groups/(?:[^/]*)/videos/|)(\d+)(?:|/\?)} }]
+                 regex: vimeo_rexp }]
 
     regexes.each do |r|
       return { category: r[:category], video_id: video_id.match(r[:regex]).captures[0] } if video_id.match(r[:regex])

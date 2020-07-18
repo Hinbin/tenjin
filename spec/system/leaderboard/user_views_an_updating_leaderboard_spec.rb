@@ -4,9 +4,7 @@ require 'rails_helper'
 require 'support/api_data'
 require 'pry'
 
-RSpec.describe 'User views an updating leaderboard', type: :system, js: true do
-  include_context 'default_creates'
-
+RSpec.describe 'User views an updating leaderboard', type: :system, js: true, default_creates: true do
   let(:new_entry) { create(:topic_score, topic: topic, school: school, score: 11) }
 
   before do
@@ -93,14 +91,16 @@ RSpec.describe 'User views an updating leaderboard', type: :system, js: true do
 
     it 'shows updates from only my school by default' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic, topic_score_same_school_group.user).call
+      name = "#{topic_score_same_school_group.user.forename} #{topic_score_same_school_group.user.surname[0]}"
       expect(page).to have_no_css('td',
-                                  exact_text: "#{topic_score_same_school_group.user.forename} #{topic_score_same_school_group.user.surname[0]}")
+                                  exact_text: name)
     end
 
     it 'updates if score is from the same school group' do
       click_button('Select School')
       click_button('All')
-      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group.topic, topic_score_same_school_group.user).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group.topic,
+                                                 topic_score_same_school_group.user).call
       expect(page).to have_css('tr.score-changed')
     end
   end

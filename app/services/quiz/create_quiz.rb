@@ -43,39 +43,49 @@ class Quiz::CreateQuiz < ApplicationService
     @quiz.counts_for_leaderboard = check_if_quiz_counts_for_leaderboard
   end
 
-  def initialise_questions # rubocop:disable Metrics/MethodLength
+  def initialise_questions
     questions = if @lucky_dip
                   # We want an even distribution of topics where possible
                   question_array = []
 
-                  # Keep getting random questions, one from each topic until we have at
-                  # least 10 questions
-
-                  question_array += Question.where(active: true)
-                                            .includes(:topic).references(:topic)
-                                            .select('DISTINCT ON(questions.topic_id) questions.topic_id, questions.*')
-                                            .where(topics: { active: true, subject_id: @subject_id })
-                                            .order('questions.topic_id, random()')
+                  # Keep getting random questions, one from each topic until we have at least 10 questions
+                  question_array += topic_questions
 
                   if question_array.length < 10
                     # There are not 10 or more topics so try without getting one from each topic
-                    question_array += Question.where(active: true)
-                                              .includes(:topic).references(:topic)
-                                              .select('questions.topic_id, questions.*')
-                                              .where(topics: { active: true, subject_id: @subject_id })
-                                              .order('questions.topic_id, random()')
+                    question_array += additional_topic_questions
                   end
 
                   # Get maximum of 10 questions only
                   question_array.shuffle.sample(10)
 
                 else
-                  Question.where(active: true, topic: @topic_id)
-                          .includes(:topic)
-                          .order(Arel.sql('RANDOM()')).take(10)
+                  subject_questions
                 end
     @quiz.questions = questions
     @quiz.question_order = @quiz.questions.shuffle.pluck(:id)
+  end
+
+  def additional_topic_questions
+    Question.where(active: true)
+            .includes(:topic).references(:topic)
+            .select('questions.topic_id, questions.*')
+            .where(topics: { active: true, subject_id: @subject_id })
+            .order('questions.topic_id, random()')
+  end
+
+  def topic_questions
+    Question.where(active: true)
+            .includes(:topic).references(:topic)
+            .select('DISTINCT ON(questions.topic_id) questions.topic_id, questions.*')
+            .where(topics: { active: true, subject_id: @subject_id })
+            .order('questions.topic_id, random()')
+  end
+
+  def subject_questions
+    Question.where(active: true, topic: @topic_id)
+            .includes(:topic)
+            .order(Arel.sql('RANDOM()')).take(10)
   end
 
   def quiz_cooldown_expired?

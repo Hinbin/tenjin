@@ -2,9 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Customisation::BuyCustomisation do
-  include_context 'default_creates'
-
+RSpec.describe Customisation::BuyCustomisation, default_creates: true do
   let(:customisation) { create(:customisation, cost: 5, customisation_type: 'dashboard_style') }
   let(:old_customisation) { create(:customisation, cost: 2, customisation_type: 'dashboard_style') }
   let(:old_customisation_unlock) do

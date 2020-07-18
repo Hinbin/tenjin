@@ -59,13 +59,15 @@ RSpec.describe 'User views an updating leaderboard', type: :system, default_crea
       topic_score_same_school_group.update_attribute('score', 110)
       click_button('All')
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group, second_student).call
-      expect(page).to have_css("#leaderboardTable tbody tr td#score-#{topic_score_same_school_group.user.id}", exact_text: 10)
+      expect(page).to have_css("#leaderboardTable tbody tr td#score-#{topic_score_same_school_group.user.id}",
+                               exact_text: 10)
     end
 
     it 'allows you to filter by class' do
       click_button('Select Class')
       click_button(enrollment_different_classroom.classroom.name)
-      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_different_classroom, topic_score_different_classroom.user).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_different_classroom,
+                                                 topic_score_different_classroom.user).call
       expect(page).to have_css('.score-changed').and have_css('tbody tr', count: 1)
     end
 

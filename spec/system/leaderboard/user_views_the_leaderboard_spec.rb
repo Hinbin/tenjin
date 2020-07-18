@@ -4,9 +4,7 @@ require 'rails_helper'
 require 'support/api_data'
 require 'pry'
 
-RSpec.describe 'User views the leaderboard', type: :system, js: true do
-  include_context 'default_creates'
-
+RSpec.describe 'User views the leaderboard', type: :system, js: true, default_creates: true do
   let(:topic_score) { create(:topic_score, topic: topic, user: student) }
   let(:student) { create(:student, forename: 'Aaaron', school: school) } # Ensure first alphabetically
   let(:student_name) { initialize_name student }

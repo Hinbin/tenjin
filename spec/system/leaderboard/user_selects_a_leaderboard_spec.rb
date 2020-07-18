@@ -3,9 +3,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User selects a leaderboard', type: :system, js: true do
-  include_context 'default_creates'
-
+RSpec.describe 'User selects a leaderboard', type: :system, js: true, default_creates: true do
   before do
     setup_subject_database
     sign_in student

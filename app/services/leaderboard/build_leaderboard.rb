@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ClassLength
 class Leaderboard::BuildLeaderboard < ApplicationService
   def initialize(user, params)
     @user = user if user.present?
@@ -157,4 +157,4 @@ class Leaderboard::BuildLeaderboard < ApplicationService
   end
 end
 
-# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/ClassLength

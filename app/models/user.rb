@@ -35,7 +35,8 @@ class User < ApplicationRecord
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     if (login = conditions.delete(:login))
-      where(conditions.to_h).where(['lower(username) = :value OR lower(email) = :value', { value: login.downcase }]).first
+      where(conditions.to_h).where(['lower(username) = :value OR lower(email) = :value',
+                                    { value: login.downcase }]).first
     elsif conditions.key?(:username) || conditions.key?(:email)
       where(conditions.to_h).first
     end
@@ -113,22 +114,21 @@ class User < ApplicationRecord
     end
 
     def generate_username(user)
-      u.forename.strip[0].downcase.tap do |str|
-        str << user.surname.strip.downcase << user.upi[0..3]
-        str.next! while User.where(username: str).exists?
+      user.forename.strip[0].downcase.tap do |str|
+        add_surname_letters(user, str)
       end
+    end
+
+    def add_surname_letters(user, str)
+      str << user.surname.strip.downcase << user.upi[0..3]
+      str.next! while User.where(username: str).exists?
     end
 
     def initialize_user(user, role, school)
       u = User.where(provider: 'Wonde', upi: user.upi).first_or_initialize
-      u.school_id = school.id
-      u.role = role
-      u.provider = 'Wonde'
-      u.upi = user.upi
-      u.forename = user.forename
-      u.surname = user.surname
+      u.attributes = { school_id: school.id, role: role, provider: 'Wonde',
+                       upi: user.upi, forename: user.forename, surname: user.surname, disabled: false }
       u.challenge_points = 0 if u.challenge_points.blank?
-      u.disabled = false
       u.username = generate_username(u) if u.new_record? || u.username.blank?
       u
     end

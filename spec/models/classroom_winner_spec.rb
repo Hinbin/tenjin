@@ -5,7 +5,10 @@ require 'rails_helper'
 RSpec.describe ClassroomWinner, type: :model do
   let(:different_schools) { build(:classroom_winner, user: create(:student), classroom: create(:classroom)) }
   let(:school) { create(:school) }
-  let(:same_school) { build(:classroom_winner, user: create(:student, school: school), classroom: create(:classroom, school: school)) }
+  let(:same_school) do
+    build(:classroom_winner, user: create(:student, school: school),
+                             classroom: create(:classroom, school: school))
+  end
 
   it 'validates the user and classroom belong to the same school' do
     expect { different_schools.save! }.to raise_error(ActiveRecord::RecordInvalid)

@@ -3,9 +3,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User creates a quiz', type: :system, js: true do
-  include_context 'default_creates'
-
+RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: true do
   context 'when picking a subject' do
     let(:subject_cs) { create(:computer_science) }
     let(:classroom_cs) { create(:classroom, subject: subject_cs, school: school) }

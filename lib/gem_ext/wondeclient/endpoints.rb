@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Wonde
   class Endpoints
     # Builds get request and passes it along

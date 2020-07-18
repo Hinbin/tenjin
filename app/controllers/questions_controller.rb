@@ -32,13 +32,7 @@ class QuestionsController < ApplicationController
   def flagged_questions
     @subject = Subject.find(flagged_questions_params)
     authorize @subject, :update?
-    @questions = Question.joins(:topic)
-                         .includes(:question_statistic, :lesson, :rich_text_question_text)
-                         .where(topics: { subject: @subject })
-                         .where(flagged_questions_count: 1..)
-                         .where(active: true)
-                         .order(flagged_questions_count: :desc)
-                         .limit(20)
+    @questions = @subject.flagged_questions
     render :flagged_questions
   end
 
@@ -101,7 +95,8 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:question_text, :question_type, :lesson_id, :topic_id, answers_attributes: %i[correct id text _destroy])
+    params.require(:question).permit(:question_text, :question_type, :lesson_id,
+                                     :topic_id, answers_attributes: %i[correct id text _destroy])
   end
 
   def set_question

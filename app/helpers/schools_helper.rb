@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module SchoolsHelper
+  # rubocop:disable Metrics/MethodLength
   def sync_status_icon(status)
     case status
     when 'queued'
@@ -17,4 +18,5 @@ module SchoolsHelper
       icon('fas', 'question')
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end

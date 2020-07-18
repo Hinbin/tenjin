@@ -2,6 +2,7 @@
 
 class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
   def call
+    ClassroomWinner.destroy_all
     update_classroom_winners
     create_leaderboard_awards
     copy_points_to_all_time_scores
@@ -11,43 +12,57 @@ class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
   protected
 
   def update_classroom_winners
-    ClassroomWinner.destroy_all
-
     School.find_each do |sc|
       Classroom.where(school: sc).where.not(subject: nil).find_each do |c|
-        top = Leaderboard::BuildLeaderboard.call(nil, id: c.subject.name, school: sc.id).sort_by { |s| -s[:score] }
-        top = top.select do |elem|
-          next if elem[:classroom_names].blank?
-
-          elem[:classroom_names].include? c.name
-        end
+        top = build_leaderboard_for_subject(c.subject.name, sc.id)
+        top = filter_by_classroom_name(top, c)
 
         next unless top.present?
 
-        top_score = top[0].score
-        i = 0
-        while top[i].present? && top[i].score == top_score
-          user_id = top[i][:id]
-          ClassroomWinner.create(classroom: c, user: User.find(user_id), score: top_score)
-          i += 1
-        end
+        create_winners_for_top_scoring_students(top, c)
       end
+    end
+  end
+
+  def build_leaderboard_for_subject(subject_name, school_id)
+    Leaderboard::BuildLeaderboard.call(nil, id: subject_name, school: school_id).sort_by { |s| -s[:score] }
+  end
+
+  def filter_by_classroom_name(leaderboard, classroom)
+    leaderboard.select do |elem|
+      next if elem[:classroom_names].blank?
+
+      elem[:classroom_names].include? classroom.name
+    end
+  end
+
+  def create_winners_for_top_scoring_students(leaderboard, classroom)
+    top_score = leaderboard[0].score
+    i = 0
+    while leaderboard[i].present? && leaderboard[i].score == top_score
+      user_id = leaderboard[i][:id]
+      ClassroomWinner.create(classroom: classroom, user: User.find(user_id), score: top_score)
+      i += 1
     end
   end
 
   def create_leaderboard_awards
     School.find_each do |sc|
       Subject.find_each do |su|
-        top = Leaderboard::BuildLeaderboard.call(nil, id: su.name, school: sc.id).sort_by { |s| -s[:score] }
+        top = build_leaderboard_for_subject(su.name, sc.id)
         next unless top.present?
 
-        top_score = top[0].score
-        i = 0
-        while top[i].present? && top[i].score == top_score
-          LeaderboardAward.create(school: sc, subject: su, user: top[i])
-          i += 1
-        end
+        create_awards_for_top_scoring_students(top, su, sc)
       end
+    end
+  end
+
+  def create_awards_for_top_scoring_students(leaderboard, subject, school)
+    top_score = leaderboard[0].score
+    i = 0
+    while leaderboard[i].present? && leaderboard[i].score == top_score
+      LeaderboardAward.create(school: school, subject: subject, user: leaderboard[i])
+      i += 1
     end
   end
 

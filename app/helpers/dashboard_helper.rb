@@ -5,7 +5,7 @@ module DashboardHelper
     return '0%' if challenge_progress.nil?
     return icon('fas', 'check', style: 'color:green') if challenge_progress.completed
 
-    progress = challenge_progress.progress.to_i.to_s
+    challenge_progress.progress.to_i.to_s
   end
 
   def check_overdue(homework_progress)

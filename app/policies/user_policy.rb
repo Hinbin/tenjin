@@ -14,13 +14,10 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    if user.has_role?(:school_admin)
-      user.school == record.school
-    elsif user.employee?
-      (user.school == record.school) && (record.student? || user == record)
-    else
-      user == record
-    end
+    return true if user.has_role?(:school_admin) && user_in_same_school
+    return true if user.employee? && user_in_same_school && record.student?
+
+    user == record
   end
 
   def update?
@@ -47,4 +44,10 @@ class UserPolicy < ApplicationPolicy
 
   alias reset_password? show?
   alias unlink_oauth_account? show?
+
+  private
+
+  def user_in_same_school
+    user.school == record.school
+  end
 end

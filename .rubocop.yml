@@ -10,6 +10,7 @@ AllCops:
     - 'script/**/*'
     - 'bin/**/*'
     - 'node_modules/**/*'
+    - 'lib/gem_ext/wondeclient/endpoints.rb'
     - !ruby/regexp /old_and_unused\.rb$/
   NewCops: enable  
     

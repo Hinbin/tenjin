@@ -9,16 +9,9 @@ module ClassroomsHelper
   def sync_status_button
     case @school.sync_status
     when 'never', 'successful'
-      link_to 'Sync Classrooms & Users', sync_school_path(current_user.school),
-              method: :patch,
-              id: 'syncButton',
-              class: 'btn btn-primary btn-block my-3'
+      sync_button
     when 'failed', 'needed'
-      link_to 'School sync required. Click here to start.',
-              sync_school_path(current_user.school),
-              method: :patch,
-              id: 'syncButton',
-              class: 'btn btn-danger btn-block my-3'
+      sync_needed_button
     else
       'Refresh the page to see the current sync status'
     end
@@ -27,5 +20,20 @@ module ClassroomsHelper
   def report_progress(homework)
     percent = number_to_percentage(homework.completed_count / homework.count.to_f * 100, precision: 0)
     "#{homework.completed_count} / #{homework.count} - #{percent}"
+  end
+
+  def sync_button
+    link_to 'Sync Classrooms & Users', sync_school_path(current_user.school),
+            method: :patch,
+            id: 'syncButton',
+            class: 'btn btn-primary btn-block my-3'
+  end
+
+  def sync_needed_button
+    link_to 'School sync required. Click here to start.',
+            sync_school_path(current_user.school),
+            method: :patch,
+            id: 'syncButton',
+            class: 'btn btn-danger btn-block my-3'
   end
 end

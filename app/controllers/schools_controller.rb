@@ -55,8 +55,7 @@ class SchoolsController < ApplicationController
     authorize current_user.school
     @result = User::ResetUserPasswords.call(current_user)
     if @result.success?
-      @students = policy_scope(User).where(role: 'student').includes(enrollments: :classroom)
-      @employees = policy_scope(User).where(role: 'employee')
+      set_all_users_for_school
       render 'users/new_passwords'
     else
       flash[:alert] = @result.errors
@@ -87,5 +86,10 @@ class SchoolsController < ApplicationController
 
   def reset_all_password_params
     params.permit(:reset_all)
+  end
+
+  def set_all_users_for_school
+    @students = policy_scope(User).where(role: 'student').includes(enrollments: :classroom)
+    @employees = policy_scope(User).where(role: 'employee')
   end
 end

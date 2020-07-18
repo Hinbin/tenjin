@@ -7,15 +7,7 @@ class LessonsController < ApplicationController
   def index
     @author = current_user.has_role? :lesson_author, :any
 
-    if @author
-      @editable_subjects = Subject.with_role(:lesson_author, current_user)
-      @lessons = policy_scope(Lesson)
-                 .or(Lesson
-                  .includes(:topic)
-                  .where(topics: { subject: @editable_subjects.pluck(:id) })).order('topics.name, lessons.title')
-    else
-      @lessons = policy_scope(Lesson).order('topics.name, lessons.title')
-    end
+    set_permitted_lessons_and_subjects
 
     @subjects = Subject.joins(topics: :lessons).where(lessons: @lessons).distinct
   end
@@ -82,5 +74,17 @@ class LessonsController < ApplicationController
 
   def lesson_params
     params.require(:lesson).permit(:title, :video_id, :topic_id)
+  end
+
+  def set_permitted_lessons_and_subjects
+    if @author
+      @editable_subjects = Subject.with_role(:lesson_author, current_user)
+      @lessons = policy_scope(Lesson)
+                 .or(Lesson
+                  .includes(:topic)
+                  .where(topics: { subject: @editable_subjects.pluck(:id) })).order('topics.name, lessons.title')
+    else
+      @lessons = policy_scope(Lesson).order('topics.name, lessons.title')
+    end
   end
 end

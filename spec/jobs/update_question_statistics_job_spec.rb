@@ -14,7 +14,7 @@ RSpec.describe UpdateQuestionStatisticsJob, default_creates: true, type: :job do
   end
   let(:old_user_statistic) do
     create(:user_statistic, user: student,
-                            created_at: (Date.current - 1.month).beginning_of_week)
+                            week_beginning: (Date.current - 1.month).beginning_of_week)
   end
 
   context 'when question answered correctly' do

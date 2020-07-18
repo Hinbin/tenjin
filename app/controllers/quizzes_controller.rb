@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-# Quizzes Controller
+# rubocop:disable Metrics/ClassLength
 class QuizzesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_quiz, only: %i[show update]
   before_action :set_question, only: %i[show update]
   before_action :set_css_flavour, only: %i[new]
+  before_action :set_subject, only: %i[new]
   before_action :set_subject_and_topic, only: %i[create]
+
   rescue_from Pundit::NotAuthorizedError, with: :quiz_not_authorized
 
   def index
@@ -16,9 +18,7 @@ class QuizzesController < ApplicationController
 
   def show
     authorize @quiz
-    @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
-    calculate_percent_completed
-    @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
+    set_quiz_status_variables
     find_lesson
     return render 'show' if @quiz.active?
 
@@ -34,14 +34,12 @@ class QuizzesController < ApplicationController
   end
 
   def new
-    set_subject
     authorize Quiz.new(subject: @subject)
 
     if @subject.blank?
       @subjects = current_user.subjects
       render 'new'
     else
-      @css_flavour = find_dashboard_style
       @topics = @subject.topics.where(active: true)
                         .order(:name)
                         .pluck(:name, :id)
@@ -109,7 +107,6 @@ class QuizzesController < ApplicationController
     @subject = Subject.find(quiz_params.dig(:subject))
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
   def answer_params
     params.require(:answer).permit(:id, :short_answer)
   end
@@ -132,13 +129,16 @@ class QuizzesController < ApplicationController
     redirect_to dashboard_path
   end
 
-  def calculate_percent_completed
-    @percent_complete = (@quiz.num_questions_asked / @quiz.questions.length.to_f) * 100.to_f
-  end
-
   def calculate_percent_correct
     return 0 if @quiz.answered_correct.blank? || @quiz.questions.blank?
 
     ((@quiz.answered_correct / @quiz.questions.length.to_f) * 100.to_f).round
   end
+
+  def set_quiz_status_variables
+    @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
+    @percent_complete = (@quiz.num_questions_asked / @quiz.questions.length.to_f) * 100.to_f
+    @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
+  end
 end
+# rubocop:enable Metrics/ClassLength

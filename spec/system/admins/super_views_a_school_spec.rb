@@ -49,7 +49,10 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
 
   context 'when viewing statistics' do
     let(:statistic) { create(:user_statistic, user: student, week_beginning: Date.current.beginning_of_week) }
-    let(:older_statistic) { create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago) }
+    let(:older_statistic) do
+      create(:user_statistic, user: create(:student, school: school),
+                              week_beginning: two_weeks_ago)
+    end
     let(:two_weeks_ago) { (Date.current - 2.weeks).beginning_of_week }
     let(:total_answered) { statistic.questions_answered + older_statistic.questions_answered }
 

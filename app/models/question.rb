@@ -27,15 +27,12 @@ class Question < ApplicationRecord
 
   def boolean_true_or_false
     return unless boolean?
-    return errors[:base] << 'No first answer for boolean question' unless answers.first.present?
-    return errors[:base] << 'No second answer for boolean quesiton' unless answers.second.present?
 
-    if answers.first.text.casecmp('true').zero? && answers.second.text.casecmp('false').zero? && answers.length == 2
-      return
-    end
-    if answers.first.text.casecmp('false').zero? && answers.second.text.casecmp('true').zero? && answers.length == 2
-      return
-    end
+    answer_text = answers.pluck(:text)
+    # Check for the presence of both true and false in two answers in a case insensitive search
+    errors[:base] << 'Boolean question must contain only two answers' unless answer_text.length == 2
+
+    return if answer_text.select { |text| %w[true false].detect { |permitted| permitted.casecmp(text).zero? } }
 
     errors[:base] << 'Boolean must be true or false only'
   end

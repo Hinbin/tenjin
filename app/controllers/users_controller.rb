@@ -21,7 +21,8 @@ class UsersController < ApplicationController
     @css_flavour = find_dashboard_style
     authorize @user
     @homeworks = policy_scope(Homework)
-    find_homework_progress
+    @homework_progress = HomeworkProgress.includes(:homework, homework: [{ topic: :subject }])
+                                         .where(homework: @homeworks, user: @user)
   end
 
   def set_role
@@ -30,12 +31,7 @@ class UsersController < ApplicationController
     role = set_user_role_params[:role]
     authorize @user
 
-    if role == 'school_admin'
-      @user.add_role role
-    elsif %w[question_author lesson_author].include? role
-      @user.add_role role, Subject.find(set_user_role_params[:subject])
-    end
-
+    User::ChangeUserRole.call(@user, role, :add, set_user_role_params[:subject])
     redirect_to manage_roles_users_path(school: @user.school)
   end
 
@@ -45,11 +41,7 @@ class UsersController < ApplicationController
     role = set_user_role_params[:role]
     authorize @user
 
-    if role == 'school_admin'
-      @user.remove_role role
-    elsif %w[question_author lesson_author].include? role
-      @user.remove_role role, Subject.find(set_user_role_params[:subject])
-    end
+    User::ChangeUserRole.call(@user, role, :remove, set_user_role_params[:subject])
 
     redirect_to manage_roles_users_path(school: @user.school)
   end
@@ -77,11 +69,7 @@ class UsersController < ApplicationController
       @school_admins = User.includes(:school).with_role :school_admin, @school
     end
 
-    @school_admins = User.includes(:school).with_role :school_admin
-
-    @lesson_authors = User.with_role :lesson_author, :any
-    @question_authors = User.with_role :question_author, :any
-    @all_subjects = Subject.all
+    set_manage_roles_variables
     render 'manage_roles'
   end
 
@@ -117,11 +105,6 @@ class UsersController < ApplicationController
 
   private
 
-  def find_homework_progress
-    @homework_progress = HomeworkProgress.includes(:homework, homework: [{ topic: :subject }])
-                                         .where(homework: @homeworks, user: @user)
-  end
-
   def update_password_params
     params.require(:user).permit(:password)
   end
@@ -140,5 +123,12 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+  end
+
+  def set_manage_roles_variables
+    @school_admins = User.includes(:school).with_role :school_admin
+    @lesson_authors = User.with_role :lesson_author, :any
+    @question_authors = User.with_role :question_author, :any
+    @all_subjects = Subject.all
   end
 end

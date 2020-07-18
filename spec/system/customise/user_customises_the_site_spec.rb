@@ -87,7 +87,10 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
   end
 
   context 'when purchasing a leaderboard icon' do
-    let(:icon_customisation) { create(:customisation, customisation_type: 'leaderboard_icon', value: 'black,star', cost: 10) }
+    let(:icon_customisation) do
+      create(:customisation, customisation_type:
+      'leaderboard_icon', value: 'black,star', cost: 10)
+    end
 
     before do
       icon_customisation

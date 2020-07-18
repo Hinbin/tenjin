@@ -83,7 +83,7 @@ RSpec.configure do |config|
   config.include SessionHelpers, type: :system
   config.include ActiveJob::TestHelper
 
-  config.include_context 'default_creates', default_creates: true
+  config.include_context 'with default_creates', default_creates: true
 
   # Allow wait for ajax command
   config.include WaitForAjax, type: :system
