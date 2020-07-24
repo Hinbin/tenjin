@@ -2,20 +2,16 @@
 
 class SubjectPolicy < ApplicationPolicy
   class Scope < Scope
-    def initialize(user, scope)
-      @user = user
-      @scope = scope
-    end
-
     def resolve
-      @scope.with_role(:question_author, user)
+      scope.all
     end
   end
 
   def update?
-    user.has_role? :question_author, record
+    user.super?
   end
 
   alias create? update?
   alias destroy? update?
+  alias show? update?
 end

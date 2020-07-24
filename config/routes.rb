@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   end
   resources :answers
   resources :topics
+  resources :subjects
   resources :homeworks
   resources :users, only:[:show, :index, :update] do
       member do

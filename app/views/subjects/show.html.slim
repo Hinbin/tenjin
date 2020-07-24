@@ -1,0 +1,8 @@
+.container
+  .row
+    .col
+      h1.display-4#subject_name = @subject.name
+      = simple_form_for @subject do |f|
+       =f.input :name
+       =f.button :submit, class: "btn btn-primary btn-block"
+       

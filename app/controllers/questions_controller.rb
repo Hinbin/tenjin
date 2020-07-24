@@ -5,8 +5,7 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: %i[show update destroy reset_flags]
 
   def index
-    @subjects = policy_scope(Subject)
-    authorize @subjects.first, :update?, policy_class: SubjectPolicy
+    @subjects = policy_scope(Question)
   end
 
   def topic_questions
@@ -38,7 +37,7 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new(question_params)
-    authorize @question.topic
+    authorize @question
 
     return unless @question.topic.present?
 
@@ -48,7 +47,7 @@ class QuestionsController < ApplicationController
 
   def create
     @question = Question.new(question_params)
-    authorize @question.topic
+    authorize @question
     check_answers
 
     if @question.save
@@ -60,14 +59,14 @@ class QuestionsController < ApplicationController
 
   def show
     @question.assign_attributes(question_params) if params[:question].present?
-    authorize @question.topic
+    authorize @question
     check_answers
     build_answers
   end
 
   def update
     @question.assign_attributes(question_params)
-    authorize @question.topic
+    authorize @question
     check_answers
 
     if @question.save
@@ -78,7 +77,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    authorize @question.topic
+    authorize @question
     redirect_to topic_questions_questions_path(topic_id: @question.topic)
 
     @question.update_attribute(:active, false)
