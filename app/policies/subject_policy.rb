@@ -14,4 +14,5 @@ class SubjectPolicy < ApplicationPolicy
   alias create? update?
   alias destroy? update?
   alias show? update?
+  alias new? update?
 end

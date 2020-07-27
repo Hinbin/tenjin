@@ -107,7 +107,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless
+    driven_by :selenium_chrome
   end
 
   if ENV['CI']

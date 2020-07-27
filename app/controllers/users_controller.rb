@@ -129,6 +129,6 @@ class UsersController < ApplicationController
     @school_admins = User.includes(:school).with_role :school_admin
     @lesson_authors = User.with_role :lesson_author, :any
     @question_authors = User.with_role :question_author, :any
-    @all_subjects = Subject.all
+    @all_subjects = Subject.where(active: true)
   end
 end

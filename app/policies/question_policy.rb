@@ -3,8 +3,7 @@
 class QuestionPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      #scope.joins(topic: :subject).where(active: true, topics: { subject: Subject.with_role(:question_author, user).pluck(:id) })
-      Subject.with_role(:question_author, user)
+      Subject.with_role(:question_author, user).where(active: true)
     end
   end
 

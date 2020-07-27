@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Super manages subjects', type: :system, js: true, default_creates: true do
+  let(:new_subject_name) { FFaker::Lorem.word }
   let(:ten_questions_for_subject) { create_list(:question, 10, topic: topic) }
   let(:five_asked_questions_this_week) { create_list(:asked_question, 5, question: question) }
   let(:seven_asked_questions_previously) { create(:question_statistic, question: question, number_asked: 7) }
@@ -47,10 +48,23 @@ RSpec.describe 'Super manages subjects', type: :system, js: true, default_create
       visit(subjects_path)
       expect(page).to have_content('7')
     end
+
+    it 'allows an admin to create a subject' do
+      visit(subjects_path)
+      click_link('Add Subject')
+      fill_in('subject[name]', with: new_subject_name)
+      click_button('Create Subject')
+      expect(page).to have_content(new_subject_name)
+    end
   end
 
   context 'when managing an individual subject' do
-    let(:new_subject_name) { FFaker::Lorem.word }
+    def deactivate_subject
+      visit(subject_path(subject))
+      click_link('Deactivate Subject')
+      page.accept_alert
+      find('table#active-subjects')
+    end
 
     before do
       sign_in super_admin
@@ -70,11 +84,33 @@ RSpec.describe 'Super manages subjects', type: :system, js: true, default_create
       expect(page).to have_css('#subject_name', text: new_subject_name)
     end
 
-    it 'allows an admin to create a subject'
-    it 'allows an admin to delete a subject'
-    it 'deletes questions for a subject'
-    it 'required the admin to type in the subject name'
-    it 'allows you to upload questions for the subject'
-    it 'allows you to download questions for the subject'
+    it 'allows an admin to deactivate a subject' do
+      deactivate_subject
+      expect(page).to have_css('#deactivated-subjects tr td', text: subject.name)
+    end
+
+    context 'when deactivating a quiz' do
+      let(:enrollment) { create(:enrollment, classroom: classroom, user: student, subject: subject) }
+
+      before do
+        enrollment
+      end
+
+      it 'stops students from taking a quiz' do
+        deactivate_subject
+        sign_out super_admin
+        sign_in student
+        visit(dashboard_path)
+        expect(page).to have_no_content(subject.name)
+      end
+
+      it 'reassigns classrooms to nil' do
+        deactivate_subject
+        sign_out super_admin
+        sign_in school_admin
+        visit(classrooms_path)
+        expect(page).to have_no_content(subject.name)
+      end
+    end
   end
 end

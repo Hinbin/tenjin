@@ -8,7 +8,7 @@ class Challenge::AddNewChallenges < ApplicationService
   end
 
   def call
-    Subject.find_each do |s|
+    Subject.where(active: true).each do |s|
       Challenge.create_challenge(s, multiplier: @multiplier, duration: @duration, daily: @daily)
     end
   end

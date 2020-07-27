@@ -1,7 +1,7 @@
 .container
   span.display-4 Subjects
   .table-responsive
-    table.table
+    table.table#active-subjects
       tr
         th Name
         th Questions Available
@@ -18,3 +18,15 @@
 
     =link_to(new_subject_path)
       button.btn.btn-block.btn-primary type="button" Add Subject
+
+  .display-4.my-5 Deactivated Subjects
+  .table-responsive
+    table.table#deactivated-subjects
+      tr
+        th Name
+        th Questions Available
+
+      - @deactivated_subjects.each do |subject|
+        tr id=('subject-' + subject.id.to_s)
+          td.name = link_to(subject.name, subject)
+          td.questionsAvailable = Question.joins(topic: :subject).where(topics: {subject: subject}).count
