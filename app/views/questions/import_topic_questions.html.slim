@@ -1,0 +1,12 @@
+.container
+  = form_tag import_questions_path, multipart: true do
+    .row.mt-3
+      .custom-file
+        = file_field_tag :file, id: 'select-file', class: 'custom-file-input'
+        label for='select-file' class='custom-file-label' Choose File      
+      = hidden_field_tag :topic_id, @topic.id  
+    .row.my-2
+      .col       
+        = submit_tag "Import", class: 'btn btn-block btn-primary'
+
+

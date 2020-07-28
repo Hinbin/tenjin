@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'rails_helper'
 
 RSpec.describe 'Author edits a question', type: :system, js: true, default_creates: true do
   let(:author) { create(:question_author, subject: subject) }

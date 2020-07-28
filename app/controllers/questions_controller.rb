@@ -6,13 +6,14 @@ class QuestionsController < ApplicationController
 
   def index
     @subjects = policy_scope(Question)
+    raise Pundit::NotAuthorizedError if @subjects.blank?
   end
 
   def topic_questions
     redirect questions_path unless topic_question_params.present?
 
     @topic = Topic.find(topic_question_params)
-    authorize @topic, :update?
+    authorize @topic, :show?
     @topic_lessons = Lesson.where(topic: @topic)
     @questions = Question.with_rich_text_question_text_and_embeds
                          .includes(:question_statistic, :lesson)
@@ -81,6 +82,33 @@ class QuestionsController < ApplicationController
     redirect_to topic_questions_questions_path(topic_id: @question.topic)
 
     @question.update_attribute(:active, false)
+  end
+
+  def download_topic_questions
+    @topic = Topic.find(topic_question_params)
+    authorize @topic, :show?
+    @questions = Question.where(topic: @topic).to_json(methods: :plain_question_text,
+                                                       only: %i[external_id question_type lesson_id],
+                                                       include: { answers: { only: %i[correct text external_id] } })
+
+    send_data @questions,
+              type: 'application/json; header=present',
+              disposition: "attachment; filename=#{@topic.name}.json"
+  end
+
+  def import_topic_questions
+    @topic = Topic.find(topic_question_params)
+    authorize @topic, :update?
+  end
+
+  def import
+    @topic = Topic.find(topic_question_params)
+    authorize @topic, :update?
+
+    data = File.read(params[:file])
+    json = JSON.parse(data)
+    Question::ImportQuestions.call(json, @topic)
+    redirect_to topic_questions_questions_path(topic_id: @topic)
   end
 
   private

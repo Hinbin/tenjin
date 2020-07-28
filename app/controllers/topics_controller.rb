@@ -7,9 +7,9 @@ class TopicsController < ApplicationController
   def new
     @subject = Subject.find(new_topic_params[:subject_id])
     return unless @subject.present?
-
-    authorize @subject
+    
     @topic = Topic.create(subject: @subject, active: true, name: 'New topic.  Click here to change name')
+    authorize @topic
 
     redirect_to topic_questions_questions_path(topic_id: @topic)
   end

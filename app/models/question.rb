@@ -58,4 +58,8 @@ class Question < ApplicationRecord
     # Setup short answer.  Change all answers to correct
     answers.update_all(correct: true)
   end
+
+  def plain_question_text
+    question_text.to_plain_text
+  end
 end
