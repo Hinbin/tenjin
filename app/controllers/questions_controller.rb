@@ -87,10 +87,10 @@ class QuestionsController < ApplicationController
   def download_topic_questions
     @topic = Topic.find(topic_question_params)
     authorize @topic, :show?
-    @questions = Question.where(topic: @topic).to_json(methods: :plain_question_text,
-                                                       only: %i[external_id question_type lesson_id],
-                                                       include: { answers: { only: %i[correct text external_id] } })
-
+    @questions = Question.where(topic: @topic).to_json(only: :question_type,
+                                                       include: [{ question_text: { only: :body } },
+                                                                 { answers: { only: %i[correct text] } },
+                                                                 { lesson: { only: :title } }])
     send_data @questions,
               type: 'application/json; header=present',
               disposition: "attachment; filename=#{@topic.name}.json"
@@ -104,10 +104,8 @@ class QuestionsController < ApplicationController
   def import
     @topic = Topic.find(topic_question_params)
     authorize @topic, :update?
-
     data = File.read(params[:file])
-    json = JSON.parse(data)
-    Question::ImportQuestions.call(json, @topic)
+    Question::ImportQuestions.call(data, @topic)
     redirect_to topic_questions_questions_path(topic_id: @topic)
   end
 

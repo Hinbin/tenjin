@@ -14,7 +14,13 @@ RSpec.describe 'Author transfers question files', type: :system, js: true, defau
     it 'downloads questions' do
       visit topic_questions_questions_path(topic_id: topic.id)
       click_link('Import Questions')
-      #expect(page).to have_content('Downloaded!')
+      expect(page).to have_content('Downloaded!')
     end
+
+    it 'uploads questions'
+    it 'ignores external ids'
+    it 'allows you to delete multiple questions'
+    it 'uploads the answers'
+    it 'downloads json plaintext to question text'
   end
 end
