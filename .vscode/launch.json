@@ -60,7 +60,7 @@
           "pathToBundler": "${workspaceRoot}/bin/bundle",
           "pathToRDebugIDE": "/path/to/rubygem/gems/ruby-debug-ide-x.x.x/bin/rdebug-ide",
           "debuggerPort": "1235",
-          "program": "/path/to/rubygem/bin/rspec",
+          "program": "/home/nicholas/.rbenv/versions/2.5.1/bin/rspec",
           "args": ["${file}:${lineNumber}"]
         }
     ]

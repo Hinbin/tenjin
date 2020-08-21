@@ -87,10 +87,8 @@ class QuestionsController < ApplicationController
   def download_topic_questions
     @topic = Topic.find(topic_question_params)
     authorize @topic, :show?
-    @questions = Question.where(topic: @topic).to_json(only: :question_type,
-                                                       include: [{ question_text: { only: :body } },
-                                                                 { answers: { only: %i[correct text] } },
-                                                                 { lesson: { only: :title } }])
+    @questions = Question.where(topic: @topic).to_json(include: :answers)
+
     send_data @questions,
               type: 'application/json; header=present',
               disposition: "attachment; filename=#{@topic.name}.json"
@@ -104,8 +102,15 @@ class QuestionsController < ApplicationController
   def import
     @topic = Topic.find(topic_question_params)
     authorize @topic, :update?
+
+    if params[:file].nil?
+      flash[:alert] = 'Please attach a file'
+      return render :import_topic_questions, topic_id: @topic
+    end
+
     data = File.read(params[:file])
-    Question::ImportQuestions.call(data, @topic)
+    result = Question::ImportQuestions.call(data, @topic)
+    flash[:notice] = result.error
     redirect_to topic_questions_questions_path(topic_id: @topic)
   end
 

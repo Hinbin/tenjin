@@ -21,11 +21,18 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
 
     context 'with a lesson' do
       let(:question) { create(:question, topic: topic, lesson: lesson) }
+      let(:no_content_lesson) { create(:lesson, topic: topic, category: 'no_content', video_id: '') }
 
       it 'shows a lesson video if one is present' do
         question.lesson = lesson
         visit quizzes_path
         expect(page).to have_content(lesson.title)
+      end
+
+      it 'only shows a lesson with content' do
+        question.update_attribute(:lesson, no_content_lesson)
+        visit quizzes_path
+        expect(page).to have_no_content(lesson.title)
       end
     end
 

@@ -33,23 +33,32 @@ class Question::ImportQuestions < ApplicationService
   def build_question
     @question['answers_attributes'] = @question['answers']
     @question = @question.except('answers')
+    return false unless find_or_create_lesson
+
     question_to_import = Question.new(@question)
     question_to_import.topic = @topic
+    question_to_import.lesson = @lesson unless @lesson.nil?
 
     if question_to_import.valid?
       @questions_to_import.push(question_to_import)
     else
-      raise_error(question_to_import.errors.full_messages)
+      raise_error(question_to_import.errors.full_messages.join(', '))
     end
+  end
+
+  def find_or_create_lesson
+    @lesson = nil
+    return true if @question.dig('lesson').nil?
+
+    @lesson = Lesson.find_or_create_by(title: @question['lesson'], topic: @topic)
+    return raise_error(@lesson.errors.full_messages.join(', ')) unless @lesson.valid?
+
+    @question = @question.except('lesson')
   end
 
   def validate_question
     unless %w[question_type answers question_text].all? { |s| @question.key? s }
       return raise_error('Question missing key')
-    end
-
-    unless @question['question_text'].class == Hash && @question['question_text'].key?('body')
-      return raise_error('Question text missing body key')
     end
 
     validate_answers
