@@ -22,7 +22,7 @@ class TopicsController < ApplicationController
   def destroy
     authorize @topic
 
-    @topic.update_attribute(:active, false)
+    @topic.destroy
     redirect_to questions_path
   end
 

@@ -19,8 +19,28 @@
                 img.img-fluid.card-img-top video_id=l.video_id category=l.category src=l.generate_thumbnail_src      
               -if @subject_author
                 .card-footer
+                  p = 'Questions: '  + Question.where(lesson: l, active: true).count.to_s
                   =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
                   =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
+      -if @subject_author
+        table.table
+          thead
+            th Lesson Title
+            th Questions
+            th
+            th
+          tbody
+            - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|    
+              tr  
+                td = l.title                 
+                td = Question.where(lesson: l, active: true).count
+                td =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
+                td =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
+      -else
+        - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|    
+          .row 
+            .col =l.title
+
 
 -if @author
   .container

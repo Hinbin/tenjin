@@ -2,10 +2,10 @@
 
 class Question < ApplicationRecord
   has_many :answers, dependent: :destroy
-  has_many :asked_questions
-  has_many :flagged_questions
+  has_many :asked_questions, dependent: :destroy
+  has_many :flagged_questions, dependent: :destroy
   has_many :quizzes, through: :asked_questions
-  has_one :question_statistic
+  has_one :question_statistic, dependent: :destroy
 
   belongs_to :lesson, optional: true
   belongs_to :topic

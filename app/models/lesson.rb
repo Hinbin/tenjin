@@ -12,6 +12,7 @@ class Lesson < ApplicationRecord
   has_one :subject, through: :topic
 
   before_save :save_video_id
+  before_destroy { |record| Question.where(lesson: record).update_all(lesson_id: nil) }
 
   def generate_video_src
     return "https://www.youtube.com/embed/#{video_id}" if youtube?
