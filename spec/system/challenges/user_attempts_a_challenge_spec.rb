@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe 'User attempts a challenge', type: :system, js: true, default_creates: true do
   before do
     setup_subject_database

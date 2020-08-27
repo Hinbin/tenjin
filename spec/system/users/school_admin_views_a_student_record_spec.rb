@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe 'School admin views a student record', type: :system, js: true, default_creates: true do
   before do
     setup_subject_database
