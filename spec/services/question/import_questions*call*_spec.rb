@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Question::ImportQuestions, '#call', default_creates: true do
   context 'when importing questions' do
-    let(:lesson_name) { FFaker::Lorem.word }
+    let(:lesson_name) { FFaker::Lorem.words.join }
     let(:single_question) { build(:question_import_hash_with_lesson) }
 
     let(:single_lesson) { build_list(:question_import_hash_with_lesson, rand(1..10), lesson: lesson_name) }
