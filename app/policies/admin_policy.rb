@@ -8,4 +8,12 @@ class AdminPolicy < ApplicationPolicy
   def show_stats?
     user.super?
   end
+
+  def reset_year?
+    user.super?
+  end
+
+  def show?
+    user.super?
+  end
 end

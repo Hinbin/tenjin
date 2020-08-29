@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   resources :admins, only:[:show] do
     member do
       post 'become'
+      post 'reset_year'
     end
   end
 

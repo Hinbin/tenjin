@@ -12,6 +12,17 @@ class AdminsController < ApplicationController
     redirect_to root_url # or user_root_url
   end
 
+  def show
+    authorize current_admin
+  end
+
+  def reset_year
+    authorize current_admin
+    Admin::ResetYear.call
+    flash[:alert] = 'Reset Year Data'
+    redirect_to schools_path
+  end
+
   private
 
   def become_admin_params

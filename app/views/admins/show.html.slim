@@ -1,0 +1,9 @@
+.container
+  .row
+    .col
+      h1.display-4 Admin Page
+      =link_to 'Reset Year Data', reset_year_admin_path(current_admin),
+                  data:{ confirm: 'ARE YOU REALLY REALLY SURE?!  This will delete all current data in leaderboards, homeworks and more.' },
+                  method: :post,
+                  id: 'reset-button',
+                  class: 'btn btn-danger btn-block my-3'
