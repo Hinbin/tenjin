@@ -15,7 +15,7 @@ RSpec.describe Admin::ResetYear, '#call', default_creates: true do
   let(:homework_progress) { create(:homework_progress, homework: homework, user: first_enrollment.user) }
   let(:challenge_progress) { create(:challenge_progress, user: first_enrollment.user) }
   let(:leaderboard_award) { create(:leaderboard_award, user: first_enrollment.user, subject: first_enrollment.classroom.subject) }
-  let(:classroom_winner) { create(:classroom_winnder, user: first_enrollment.user, classroom: first_enrollment.classroom) }
+  let(:classroom_winner) { create(:classroom_winner, user: first_enrollment.user, classroom: first_enrollment.classroom) }
 
   def create_active_database
     first_enrollment
