@@ -54,7 +54,7 @@ class LeaderboardController < ApplicationController
   end
 
   def set_subject_and_topic
-    @subject = Subject.where(name: leaderboard_params[:id]).first
+    @subject = Subject.find_by(name: leaderboard_params[:id])
     @topic = Topic.find(leaderboard_params[:topic]) if leaderboard_params[:topic].present?
   end
 

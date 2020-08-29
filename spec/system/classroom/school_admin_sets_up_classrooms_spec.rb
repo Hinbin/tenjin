@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe 'School admin sets up classrooms', type: :system, js: true, default_creates: true do
   context 'when configuring classrooms' do
     let(:classroom) { create(:classroom, school: school) }

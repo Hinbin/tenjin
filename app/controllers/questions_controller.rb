@@ -5,15 +5,15 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: %i[show update destroy reset_flags]
 
   def index
-    @subjects = policy_scope(Subject)
-    authorize @subjects.first, :update?, policy_class: SubjectPolicy
+    @subjects = policy_scope(Question)
+    raise Pundit::NotAuthorizedError if @subjects.blank?
   end
 
   def topic_questions
     redirect questions_path unless topic_question_params.present?
 
     @topic = Topic.find(topic_question_params)
-    authorize @topic, :update?
+    authorize @topic, :show?
     @topic_lessons = Lesson.where(topic: @topic)
     @questions = Question.with_rich_text_question_text_and_embeds
                          .includes(:question_statistic, :lesson)
@@ -38,7 +38,7 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new(question_params)
-    authorize @question.topic
+    authorize @question
 
     return unless @question.topic.present?
 
@@ -48,7 +48,7 @@ class QuestionsController < ApplicationController
 
   def create
     @question = Question.new(question_params)
-    authorize @question.topic
+    authorize @question
     check_answers
 
     if @question.save
@@ -60,14 +60,14 @@ class QuestionsController < ApplicationController
 
   def show
     @question.assign_attributes(question_params) if params[:question].present?
-    authorize @question.topic
+    authorize @question
     check_answers
     build_answers
   end
 
   def update
     @question.assign_attributes(question_params)
-    authorize @question.topic
+    authorize @question
     check_answers
 
     if @question.save
@@ -78,10 +78,40 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    authorize @question.topic
+    authorize @question
     redirect_to topic_questions_questions_path(topic_id: @question.topic)
 
     @question.update_attribute(:active, false)
+  end
+
+  def download_topic_questions
+    @topic = Topic.find(topic_question_params)
+    authorize @topic, :show?
+    @questions = Question.where(topic: @topic).to_json(include: :answers)
+
+    send_data @questions,
+              type: 'application/json; header=present',
+              disposition: "attachment; filename=#{@topic.name}.json"
+  end
+
+  def import_topic_questions
+    @topic = Topic.find(topic_question_params)
+    authorize @topic, :update?
+  end
+
+  def import
+    @topic = Topic.find(topic_question_params)
+    authorize @topic, :update?
+
+    if params[:file].nil?
+      flash[:alert] = 'Please attach a file'
+      return render :import_topic_questions, topic_id: @topic
+    end
+
+    data = File.read(params[:file])
+    result = Question::ImportQuestions.call(data, @topic)
+    flash[:notice] = result.error
+    redirect_to topic_questions_questions_path(topic_id: @topic)
   end
 
   private

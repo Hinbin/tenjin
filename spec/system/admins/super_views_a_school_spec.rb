@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
 RSpec.describe 'Super views a school', type: :system, js: true, default_creates: true do
   let(:new_email) { FFaker::Internet.email }
   let(:save_email_notice) { "Updated email to #{school_admin.forename} #{school_admin.surname}" }

@@ -2,7 +2,7 @@
 
 class Challenge < ApplicationRecord
   belongs_to :topic
-  has_many :challenge_progresses
+  has_many :challenge_progresses, dependent: :destroy
 
   scope :by_user, ->(user) { joins(:challenge_progresses).where('challenge_progresses.user_id = ?', user) }
 

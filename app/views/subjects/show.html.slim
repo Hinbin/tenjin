@@ -1,0 +1,14 @@
+.container
+  .row
+    .col.py-2
+      h1.display-4#subject_name = @subject.name
+      = simple_form_for @subject do |f|
+       =f.input :name
+       =f.input :active
+       =f.button :submit, class: "btn btn-primary btn-block"
+      =link_to 'Deactivate Subject', 
+        subject_path(@subject),
+        method: :delete,
+        class: 'btn btn-block btn-danger my-5',
+        data: {confirm: "Are you sure?"}
+       

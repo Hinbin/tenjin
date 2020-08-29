@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe 'User visits the homepage', :vcr, default_creates: true, type: :system, js: true do
   let(:student) { create(:student) }
   let(:new_password) { FFaker::Lorem.word }

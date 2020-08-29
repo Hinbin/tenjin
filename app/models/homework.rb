@@ -3,7 +3,7 @@
 class Homework < ApplicationRecord
   belongs_to :classroom
   belongs_to :topic
-  has_many :homework_progresses
+  has_many :homework_progresses, dependent: :destroy
   has_many :users, through: :classroom
 
   validates :due_date, presence: true

@@ -24,6 +24,15 @@
   .row.my-2
     .col
       = render 'question_table'
+  .row.my-2
+    .col
+      = link_to 'Download Questions',
+          download_topic_questions_questions_path(topic_id: @topic),
+          class:'btn btn-primary btn-block'
+      = link_to 'Import Questions',
+          import_topic_questions_questions_path(topic_id: @topic),
+          class:'btn btn-primary btn-block'          
+
   .row.my-5
     .col
       =link_to 'Delete Topic',
