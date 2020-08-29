@@ -10,7 +10,10 @@ class TopicPolicy < ApplicationPolicy
     end
 
     def resolve
-      @scope.where(active: true, subject: Subject.with_role(:question_author, user).pluck(:id))
+      @scope.where(active: true,
+                   subject: Subject.with_role(:question_author, user)
+                                   .where(active: true)
+                   .pluck(:id))
     end
   end
 
@@ -20,4 +23,5 @@ class TopicPolicy < ApplicationPolicy
 
   alias create? update?
   alias destroy? update?
+  alias show? update?
 end

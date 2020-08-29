@@ -19,7 +19,10 @@ Rails.application.routes.draw do
   resources :questions do
     collection do
       get 'topic_questions' 
-      get 'flagged_questions'     
+      get 'download_topic_questions'
+      get 'import_topic_questions'
+      get 'flagged_questions' 
+      post 'import'    
     end
     member do
       patch 'reset_flags'
@@ -27,6 +30,7 @@ Rails.application.routes.draw do
   end
   resources :answers
   resources :topics
+  resources :subjects
   resources :homeworks
   resources :users, only:[:show, :index, :update] do
       member do

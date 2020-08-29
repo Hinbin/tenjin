@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe 'School admin views a teacher record', type: :system, js: true, default_creates: true do
   let(:new_password) { FFaker::Internet.password }
 

@@ -18,7 +18,7 @@ class ClassroomsController < ApplicationController
     authorize current_user.school, :sync?
     @classrooms = policy_scope(Classroom).order(:name)
     @school = current_user.school
-    @subjects = Subject.all
+    @subjects = Subject.where(active: true)
   end
 
   def update

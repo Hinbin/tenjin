@@ -18,5 +18,7 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
           a.nav-link href=manage_roles_users_path Roles
         li.nav-item.active
           a.nav-link href=show_stats_schools_path Statistics
+        li.nav-item.active
+          a.nav-link href=subjects_path Subjects          
     = link_to(destroy_admin_session_path, method: :delete) do
       button.btn.btn-light Logout

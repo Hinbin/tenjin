@@ -1,0 +1,32 @@
+.container
+  span.display-4 Subjects
+  .table-responsive
+    table.table#active-subjects
+      tr
+        th Name
+        th Questions Available
+        th Questions Asked Overall
+        th Questions Asked This Week
+
+      - @subjects.each do |subject|
+        - @subject_statistics = Subject::CompileSubjectStatistics.call(subject)
+        tr id=('subject-' + subject.id.to_s)
+          td.name = link_to(subject.name, subject)
+          td.questionsAvailable = Question.joins(topic: :subject).where(topics: {subject: subject}).count
+          td.asked_questions = @subject_statistics[:asked_questions]
+          td.asked_questions_this_week = @subject_statistics[:asked_questions_this_week]
+
+    =link_to(new_subject_path)
+      button.btn.btn-block.btn-primary type="button" Add Subject
+
+  .display-4.my-5 Deactivated Subjects
+  .table-responsive
+    table.table#deactivated-subjects
+      tr
+        th Name
+        th Questions Available
+
+      - @deactivated_subjects.each do |subject|
+        tr id=('subject-' + subject.id.to_s)
+          td.name = link_to(subject.name, subject)
+          td.questionsAvailable = Question.joins(topic: :subject).where(topics: {subject: subject}).count

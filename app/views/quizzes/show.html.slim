@@ -2,7 +2,7 @@
   title=('Quiz - ' + @quiz.subject.name)
 =render('question_top')
 .container
-  -if @lesson.present?
+  -unless @lesson.blank? || @lesson.no_content?
     .row.align-items-center
       .col-md-8
         = render_question

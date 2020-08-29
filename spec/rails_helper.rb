@@ -81,6 +81,7 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :system
+  config.include DownloadHelpers, type: :system
   config.include ActiveJob::TestHelper
 
   config.include_context 'with default_creates', default_creates: true
@@ -104,6 +105,17 @@ RSpec.configure do |config|
         end
       end
     end
+  end
+
+  Capybara.register_driver :selenium_chrome_headless_download do |app|
+    browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+      opts.args << '--headless'
+      opts.args << '--disable-site-isolation-trials'
+    end
+    browser_options.add_preference(:download, prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s)
+
+    browser_options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
   end
 
   config.before(:each, type: :system) do

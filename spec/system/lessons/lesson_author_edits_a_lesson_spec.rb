@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_creates: true do
   let(:second_subject) { create(:subject) }
   let(:lesson) { create(:lesson, topic: topic) }
