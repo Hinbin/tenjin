@@ -49,5 +49,8 @@ RSpec.describe Quiz::CreateQuiz, '#call', default_creates: true do
       student.update_attribute(:time_of_last_quiz, nil)
       expect(quiz.success?).to eq(true)
     end
+
+    it 'creates a lesson quiz with only lesson questions'
+    
   end
 end

@@ -16,6 +16,7 @@ class HomeworksController < ApplicationController
     @homework = Homework.new(homework_params)
     authorize @homework
     if @homework.save
+      set_homework_notice
       redirect_to @homework
     else
       @classroom = @homework.classroom
@@ -44,6 +45,14 @@ class HomeworksController < ApplicationController
 
   def set_homework
     @homework = Homework.find(params[:id])
+  end
+
+  def set_homework_notice
+    flash[:notice] = if @homework.lesson.blank?
+                       @homework.topic.name + ' homework set'
+                     else
+                       @homework.lesson.title + ' homework set'
+    end
   end
 
   def new_homework_params

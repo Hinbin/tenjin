@@ -9,6 +9,11 @@ export default class extends Controller {
 
     $(this.lessonSelectTarget).empty()
 
+    $(this.lessonSelectTarget)
+    .append($("<option></option>")
+      .attr("value", null)
+      .text(null));
+
     if (options.length) {
       options.forEach((i) => {
         $(this.lessonSelectTarget)
@@ -16,6 +21,7 @@ export default class extends Controller {
             .attr("value", i.id)
             .text(i.title));
       });
+
       this.lessonSelectTarget.disabled = false
     } else {
       this.lessonSelectTarget.disabled = true

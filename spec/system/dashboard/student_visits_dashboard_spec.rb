@@ -111,12 +111,11 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
 
   context 'when looking at homeworks' do
     let(:homework_future) { create(:homework, due_date: Time.now + 8.days, classroom: classroom) }
+    let(:lesson) { create(:lesson, subject: classroom.subject)}
+    let(:homework_lesson) { create(:homework, due_date: Time.now + 8.days, classroom: classroom, lesson: lesson) }
 
     before do
       homework
-    end
-
-    it 'tells me if I have completed a homework' do
     end
 
     it 'shows the homeworks I currnently have' do
@@ -168,6 +167,22 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
       find('.homework-row').click
       expect(page).to have_css('p', exact_text: homework.topic.name)
     end
+
+    it 'shows the lesson if a lesson based homework' do
+      homework_lesson
+      visit(dashboard_path)
+      expect(page).to have_content(homework_lesson.lesson.title)
+    end
+
+    it 'takes you to a lesson quiz when clicked' do
+      homework_lesson
+      visit(dashboard_path)
+      find('.homework-row', text: homework_lesson.lesson.title).click
+      expect(page).to have_css('p', exact_text: homework.lesson.title)
+    end
+
+    it 'stops points being added on third lesson attempt'
+    it 'prevents you taking a lesson homework that has already been completed'
 
     it 'only shows my homeworks' do
       create(:homework)

@@ -112,7 +112,7 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
       visit(new_homework_path(classroom: { classroom_id: classroom.id }))
       create_homework_for_lesson
       click_button 'Set Homework'
-      find('.btn-danger') # homework view page
+      find('#flash-notice') # homework view page
     end
 
     it 'shows the lesson the homework was created for if available' do

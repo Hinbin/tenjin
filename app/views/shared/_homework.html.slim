@@ -8,7 +8,7 @@ section.page-section.text-center id="homework-#{@css_flavour}"
           thead
             tr
               th.d-none.d-sm-table-cell Subject
-              th.d-none.d-sm-table-cell Topic
+              th.d-none.d-sm-table-cell Topic/Lesson
               th %
               th Due Date
               th Complete?
@@ -16,7 +16,10 @@ section.page-section.text-center id="homework-#{@css_flavour}"
             - @homework_progress.each do |h|
               tr.homework-row data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id
                 td.d-none.d-sm-table-cell = h.homework.topic.subject.name
-                td.d-none.d-sm-table-cell = h.homework.topic.name
+                -if h.homework.lesson.blank?
+                  td.d-none.d-sm-table-cell = h.homework.topic.name
+                -else
+                  td.d-none.d-sm-table-cell = h.homework.lesson.title
                 td = number_to_percentage(h.homework.required, precision:0)
                 td = h.homework.due_date.strftime('%a, %e %b')
                 td = check_overdue(h)
