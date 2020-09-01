@@ -5,5 +5,6 @@ FactoryBot.define do
     category { 'youtube' }
     title { FFaker::BaconIpsum.sentence }
     video_id { 'https://' + FFaker::Youtube.url }
+    topic
   end
 end

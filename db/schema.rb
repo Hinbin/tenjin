@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_24_073019) do
+ActiveRecord::Schema.define(version: 2020_08_29_123413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,7 +219,9 @@ ActiveRecord::Schema.define(version: 2020_07_24_073019) do
     t.integer "required"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "lesson_id"
     t.index ["classroom_id"], name: "index_homeworks_on_classroom_id"
+    t.index ["lesson_id"], name: "index_homeworks_on_lesson_id"
     t.index ["topic_id"], name: "index_homeworks_on_topic_id"
   end
 
@@ -241,6 +243,7 @@ ActiveRecord::Schema.define(version: 2020_07_24_073019) do
     t.bigint "topic_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "questions_count"
     t.index ["topic_id"], name: "index_lessons_on_topic_id"
   end
 
@@ -430,6 +433,7 @@ ActiveRecord::Schema.define(version: 2020_07_24_073019) do
   add_foreign_key "homework_progresses", "homeworks"
   add_foreign_key "homework_progresses", "users"
   add_foreign_key "homeworks", "classrooms"
+  add_foreign_key "homeworks", "lessons"
   add_foreign_key "homeworks", "topics"
   add_foreign_key "leaderboard_awards", "schools"
   add_foreign_key "leaderboard_awards", "subjects"

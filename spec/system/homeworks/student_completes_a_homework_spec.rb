@@ -25,4 +25,10 @@ RSpec.describe 'Student completes a homework', type: :system, js: true, default_
       expect(page).to have_css('.homework-row > td > svg.fa-check')
     end
   end
+
+  context 'when completing a lesson homework' do
+    it 'only gives questions assigned to that lesson'
+    it 'awards points for the first try only'
+    it 'prevents further access when homework completed'
+  end
 end

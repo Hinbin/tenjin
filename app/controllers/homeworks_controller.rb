@@ -9,6 +9,7 @@ class HomeworksController < ApplicationController
   def new
     @homework = Homework.new(due_date: 1.week.from_now, classroom: @classroom, required: 70)
     authorize @homework
+    @lessons = Lesson.where(topic: @classroom.subject.topics).where('questions_count >= ?', 10)
   end
 
   def create
@@ -50,7 +51,7 @@ class HomeworksController < ApplicationController
   end
 
   def homework_params
-    params.require(:homework).permit(:due_date, :required, :topic_id, :classroom_id)
+    params.require(:homework).permit(:due_date, :required, :topic_id, :classroom_id, :lesson_id)
   end
 
   def no_classroom_id

@@ -68,6 +68,13 @@ module SessionHelpers
     select '70', from: 'Required %'
     select topic.name, from: 'Topic'
   end
+  def create_homework_for_lesson
+    find('input#homework_due_date').click
+    find(flatpickr_one_week_from_now).click
+    select '70', from: 'Required %'
+    select topic.name, from: 'Topic'
+    select lesson.title, from: 'Lesson'
+  end  
 
   def initialize_name(user)
     user.forename + ' ' + user.surname[0]

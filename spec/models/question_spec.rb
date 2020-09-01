@@ -4,12 +4,18 @@ require 'rails_helper'
 require 'support/session_helpers'
 
 RSpec.describe Question, type: :model, default_creates: true do
+  let(:mismatched_question) { build(:question, lesson: create(:lesson), topic: topic) }
+
   context 'with validations' do
     subject { build(:question) }
 
     it { is_expected.to belong_to(:topic) }
     it { is_expected.to have_many(:answers) }
     it { is_expected.to belong_to(:lesson).optional }
+  end
+
+  it 'does not allow a mismatched lesson and topic' do
+    expect(mismatched_question).not_to be_valid
   end
 
   context 'with a boolean question' do

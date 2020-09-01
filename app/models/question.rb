@@ -6,8 +6,8 @@ class Question < ApplicationRecord
   has_many :flagged_questions, dependent: :destroy
   has_many :quizzes, through: :asked_questions
   has_one :question_statistic, dependent: :destroy
-
-  belongs_to :lesson, optional: true
+  
+  belongs_to :lesson, optional: true, counter_cache: true
   belongs_to :topic
 
   has_rich_text :question_text
@@ -24,6 +24,11 @@ class Question < ApplicationRecord
 
   validate :at_least_one_correct_answer
   validate :boolean_true_or_false
+  validate :lesson_is_for_topic
+
+  def lesson_is_for_topic
+    errors[:base] << 'Lesson topic must match question topic' unless lesson.blank? || lesson.topic == topic
+  end
 
   def boolean_true_or_false
     return unless boolean?

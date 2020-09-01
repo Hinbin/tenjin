@@ -7,6 +7,8 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
   let(:flatpickr_one_week_from_now) do
     "span.flatpickr-day[aria-label=\"#{(Time.now + 1.week).strftime('%B %-e, %Y')}\"]"
   end
+  let(:lesson) { create(:lesson, topic: topic) }
+  let(:ten_questions) { create_list(:question, 10, lesson: lesson, topic: lesson.topic) }
 
   before do
     sign_in teacher
@@ -61,6 +63,64 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
       HomeworkProgress.first.update_attribute(:progress, 50)
       visit(homework_path(homework))
       expect(page).to have_content('50%')
+    end
+  end
+
+  context 'when setting a lesson homework' do
+    let(:nine_questions) { create_list(:question, 9, lesson: lesson, topic: lesson.topic) }
+    let(:second_topic) { create(:topic, subject: subject) }
+    let(:lesson_different_topic) { create(:lesson, topic: second_topic) }
+    let(:ten_questions_different_topic) { create_list(:question, 10, lesson: lesson_different_topic, topic: second_topic) }
+
+    before do
+      lesson
+    end
+
+    it 'allows you to set a lesson specific homework' do
+      ten_questions
+      visit(new_homework_path(classroom: { classroom_id: classroom.id }))
+      create_homework_for_lesson
+      click_button('Set Homework')
+      expect(Homework.first.classroom).to eq(classroom)
+    end
+
+    it 'only shows you lessons that have at least 10 questions' do
+      nine_questions
+      visit(new_homework_path(classroom: { classroom_id: classroom.id }))
+      select topic.name, from: 'Topic'
+      expect(page).to have_no_content(lesson.title)
+    end
+
+    it 'only shows lessons when a topic has been selected' do
+      ten_questions
+      visit(new_homework_path(classroom: { classroom_id: classroom.id }))
+      expect(page).to have_no_content(lesson.title)
+    end
+
+    it 'only shows lessons for the topic selected' do
+      ten_questions
+      ten_questions_different_topic
+      visit(new_homework_path(classroom: { classroom_id: classroom.id }))
+      select topic.name, from: 'Topic'
+      expect(page).to have_no_content(lesson_different_topic.title)
+    end
+  end
+
+  context 'when viewing a homework for a lesson' do
+    before do
+      ten_questions
+      visit(new_homework_path(classroom: { classroom_id: classroom.id }))
+      create_homework_for_lesson
+      click_button 'Set Homework'
+      find('.btn-danger') # homework view page
+    end
+
+    it 'shows the lesson the homework was created for if available' do
+      expect(page).to have_content(lesson.title)
+    end
+
+    it 'shows the topic the lesson was created for' do
+      expect(page).to have_content(topic.name)
     end
   end
 end

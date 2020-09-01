@@ -3,6 +3,8 @@
 class Homework < ApplicationRecord
   belongs_to :classroom
   belongs_to :topic
+  belongs_to :lesson, optional: true
+
   has_many :homework_progresses, dependent: :destroy
   has_many :users, through: :classroom
 

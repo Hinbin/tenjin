@@ -1,13 +1,24 @@
 -content_for :title
   title=('New Homework')
 section.page-section.text-center.pt-2#set_homework
-  .container
+  .container data-controller='homework'
     h1.page-section-header.text-uppercase Set Homework
     p.lead =@classroom.name
     hr class=("small mb-5 primary-red")
+    .jsVars data={ lessons: @lessons.to_json }
     =simple_form_for @homework do |f|
       =f.input :due_date, as: :citext, label: 'Due date', input_html: { class:'datepicker col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
       =f.input :required, label: 'Required %', collection: (0..100).step(10),  input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
-      =f.association :topic, collection: @classroom.subject.topics.order(:name),  input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
+      =f.association :topic, collection: @classroom.subject.topics.order(:name),
+        input_html: { class:'col-sm-9 form-control', data: {action:'homework#loadLessons'} },
+        label_html: { class: 'col-sm-3 col-form-label' },
+        wrapper_html: { class: 'form-group row' }
+      =f.input :lesson_id,
+        as: :select,
+        disabled: true,
+        label: 'Lesson (Optional)',
+        input_html: { class:'col-sm-9 form-control', data: {target:'homework.lessonSelect'}},
+        label_html: {class: 'col-sm-3 col-form-label'}, 
+        wrapper_html: {class: 'form-group row'}
       =f.association :classroom, as: :hidden
       =f.submit "Set Homework", class: 'btn btn-primary'
