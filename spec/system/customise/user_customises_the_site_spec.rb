@@ -11,14 +11,13 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
   context 'when visiting the customisation page from the navbar' do
     it 'visits from the customise link' do
       visit(dashboard_path)
-      find('a', text: 'Customise').click
-      find('a', text: 'Styles').click
+      click_link('Customise')
       expect(page).to have_current_path(customise_path)
     end
 
     it 'visits from the challenge star' do
       visit(dashboard_path)
-      find('i.fa-star').click
+      find('svg.fa-star').click
       expect(page).to have_current_path(customise_path)
     end
 
@@ -112,7 +111,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
       create(:topic_score, user: student, topic: topic)
       find("[data-value='#{icon_customisation.value}']").click
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: black;')
+      expect(page).to have_css('td svg.fa-star', style: 'color: black;')
     end
   end
 end

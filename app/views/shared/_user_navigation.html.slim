@@ -1,7 +1,7 @@
 nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-black
   a href=dashboard_path
     .navbar-brand
-      = icon('fas', 'vihara', class: 'fa-2x d-inline-block align-middle', style: 'color: White')
+      i.fas.fa-vihara.fa-2x.d-inline-block.align-middle style='color: White'
       h1#branding-text.navbar-text.text-uppercase.align-middle style="color:white"
         | Tenjin
   button.navbar-toggler type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -14,13 +14,8 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
           | Leaderboard  
       - if current_user.student?
         li.nav-item.dropdown.active
-          a.nav-link.dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          a.nav-link href=customise_path
             | Customise
-          .dropdown-menu aria-labelledby='navbarDropdown'
-            a.dropdown-item href=customise_path(anchor: 'dashboard-styles')
-              | Styles
-            a.dropdown-item href=customise_path(anchor: 'icons')
-              | Leaderboard Icons 
       li.nav-item
         a.nav-link href=lessons_path
           | Lessons     
@@ -44,7 +39,8 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
     -if current_user.student?
       a href=customise_path
         table
-          td = icon('fas', 'star', class: 'fa', style: 'color: yellow')      
+          td
+            i.fas.fa-star.f style='color: yellow'    
           td#challenge-points.text-light = current_user.challenge_points          
     p.m-2
       a#current_user.text-light href=user_path(current_user)

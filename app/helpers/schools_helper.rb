@@ -5,17 +5,17 @@ module SchoolsHelper
   def sync_status_icon(status)
     case status
     when 'queued'
-      icon('fas', 'clock')
+      "<i class='fas fa-clock'></i>".html_safe
     when 'syncing'
-      icon('fas', 'sync')
+      "<i class='fas fa-sync'></i>".html_safe
     when 'successful'
-      icon('fas', 'check', style: 'color:green')
+      "<i class='fas fa-check' style='color:green'></i>".html_safe
     when 'failed'
-      icon('fas', 'times', style: 'color:red')
+      "<i class='fas fa-times' style='color:red'></i>".html_safe
     when 'needed'
-      icon('fas', 'exclamation-triangle', style: 'color:red')
+      "<i class='fas fa-exclamation-triangle' style='color:red'></i>".html_safe
     else
-      icon('fas', 'question')
+      "<i class='fas fa-question' style='color:red'></i>".html_safe
     end
   end
   # rubocop:enable Metrics/MethodLength

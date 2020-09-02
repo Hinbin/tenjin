@@ -13,7 +13,8 @@ section.page-section.text-center#newQuiz
         -@subjects.each_with_index do |s, i|
             .carousel-item class=('active' if i.zero?)
               a href=new_quiz_path(subject: s.name)
-                img.w-100.subject-carousel-item-image src=print_subject_image("#{s.name.parameterize}.jpg")
+                -subject_image = print_subject_image("#{s.name.parameterize}.jpg")
+                =image_pack_tag(subject_image, class: 'w-100 subject-carousel-item-image')
                 .carousel-caption
                   h3.text-uppercase = s.name
       a.carousel-control-prev href="#subjectCarousel" role="button" data-slide="prev"
@@ -43,5 +44,5 @@ section#challenges.page-section.text-center
                   td = write_challenge_progress(c.challenge_progresses.first)
                   td.d-none.d-sm-table-cell 
                     = c.points
-                    = icon('fas', 'star', class: 'fa', style: 'color: yellow')                     
+                    i.fas.fa-star style='color: yellow'
                   td = challenge_time_left(c)

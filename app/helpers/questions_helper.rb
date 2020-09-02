@@ -3,9 +3,9 @@
 module QuestionsHelper
   def flag_icon
     if @flagged_question.present? && @flagged_question.persisted?
-      icon('fas', 'flag', class: 'fa', style: 'color: red')
+      "<img class='fas fa-flag' style='color: red'></img>".html_safe
     else
-      icon('far', 'flag', class: 'fa', style: 'color: red')
+      "<img class='far fa-flag' style='color: red'></img>".html_safe
     end
   end
 

@@ -120,7 +120,7 @@ RSpec.describe 'User views the leaderboard', type: :system, js: true, default_cr
 
     it 'shows the leaderboard icon for a person' do
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: blue;')
+      expect(page).to have_css('td svg.fa-star', style: 'color: blue;')
     end
 
     it 'shows a blank space if there is no leaderboard icon' do
@@ -132,7 +132,7 @@ RSpec.describe 'User views the leaderboard', type: :system, js: true, default_cr
       ActiveCustomisation.destroy_all
       create(:active_customisation, user: student, customisation: pink_star)
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: pink;')
+      expect(page).to have_css('td svg.fa-star', style: 'color: pink;')
     end
   end
 
@@ -168,28 +168,28 @@ RSpec.describe 'User views the leaderboard', type: :system, js: true, default_cr
 
     it 'shows a star for a weekly award' do
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: red;')
+      expect(page).to have_css('td svg.fa-star', style: 'color: red;')
     end
 
     it 'shows a gold star for 5 or more wins' do
       create_list(:leaderboard_award, 5, user: topic_score.user,
                                          subject: topic_score.subject, school: topic_score.user.school)
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: gold;')
+      expect(page).to have_css('td svg.fa-star', style: 'color: gold;')
     end
 
     it 'shows a silver star for 3 or more wins' do
       create_list(:leaderboard_award, 2, user: topic_score.user, subject: topic_score.subject,
                                          school: topic_score.user.school)
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: silver;')
+      expect(page).to have_css('td svg.fa-star', style: 'color: silver;')
     end
 
     it 'shows stars for more than one user' do
       one_to_nine
       second_award
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td i.fa-star', style: 'color: red;', count: 2)
+      expect(page).to have_css('td svg.fa-star', style: 'color: red;', count: 2)
     end
   end
 

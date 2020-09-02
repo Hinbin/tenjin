@@ -22,7 +22,7 @@ RSpec.describe 'Employee views a user record', type: :system, js: true, default_
 
     it 'shows uncompleted homeworks' do
       visit(user_path(student))
-      expect(page).to have_content(homework.topic.name).and have_css('i.fa-times')
+      expect(page).to have_content(homework.topic.name).and have_css('svg.fa-times')
     end
 
     it 'shows recently completed homeworks' do

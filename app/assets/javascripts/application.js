@@ -10,12 +10,8 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require rails-ujs
 //= require activestorage
 //= require turbolinks
-//= require jquery3
-//= require popper
-//= require bootstrap-sprockets
 
 //= require_tree .
 
@@ -26,10 +22,10 @@ Page = (function () {
     this.controller = bind(this.controller, this)
   }
   Page.prototype.controller = function () {
-    return $('meta[name=psj]').attr('controller')
+    return document.querySelector('meta[name=psj]').getAttribute('controller')
   }
   Page.prototype.action = function () {
-    return $('meta[name=psj]').attr('action')
+    return document.querySelector('meta[name=psj]').getAttribute('action')
   }
   return Page
 })()

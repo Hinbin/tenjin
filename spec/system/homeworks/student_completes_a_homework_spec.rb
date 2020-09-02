@@ -22,7 +22,7 @@ RSpec.describe 'Student completes a homework', type: :system, js: true, default_
       find(:css, '.homework-row[data-homework="' + homework_ten_percent.id.to_s + '"]').click
       first(class: 'question-button').click
       first(class: 'next-button').click
-      expect(page).to have_css('.homework-row > td > i.fa-check')
+      expect(page).to have_css('.homework-row > td > svg.fa-check')
     end
   end
 end

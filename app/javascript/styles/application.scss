@@ -12,13 +12,13 @@
  *
  */
 @import "bootstrap";
-@import "font-awesome-sprockets";
-@import "font-awesome";
+@import '@fortawesome/fontawesome-free';
 @import 'pages';
 @import 'dashboard';
 @import 'actiontext';
 @import 'trix/dist/trix';
 @import 'leaderboard';
+
 
 .navbar-dark .nav-item .nav-link {
   color: theme-color("light");

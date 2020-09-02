@@ -1,9 +1,11 @@
 // config/webpack/environment.js
 const { environment } = require('@rails/webpacker')
-const customConfig = require('./custom')
 
-// Merge custom config
-environment.config.merge(customConfig)
-environment.config.merge({ devtool: 'none' })
+const webpack = require('webpack')
+environment.plugins.append('Provide', new webpack.ProvidePlugin({
+  $: 'jquery',
+  jQuery: 'jquery',
+  Popper: ['popper.js', 'default']
+}))
 
 module.exports = environment

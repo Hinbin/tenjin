@@ -33,7 +33,7 @@ function processShortResponse (serverResponse, guess) {
   $('#nextButton').focus()
 }
 
-$(document).on('ready turbolinks:load', function () {
+$(document).on('turbolinks:load', function () {
   // If someone presses enter, cause the submit answer button to be pressed
   $('#shortAnswerText').keypress((e) => {
     if (e.keyCode === 13) {

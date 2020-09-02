@@ -10,7 +10,7 @@ section.page-section.text-center#dashboard-styles
           h2.page-section-header.text-uppercase.text-white =style.name
           hr.small.mb-5 class="primary-#{style.value}"
           p.text-white#cost
-            = icon('fas', 'star', class: 'fa', style: 'color: yellow')
+            i.fas.fa-star style='color: yellow'
             = customisation_cost(style)
           button.btn.btn-light-outline.float-right.buy-btn type='submit' data-customisation-type='dashboard_style' data-value=style.value id="buy-dashboard-#{style.value}" Buy
 section.page-section.text-center#icons
@@ -22,9 +22,9 @@ section.page-section.text-center#icons
         .card
           .card-body
             p =icon.name
-            =icon('fas', icon.value.split(',')[1] , class: 'fa-2x', style: "color:#{icon.value.split(',')[0]}")
+            i class='fas fa-2x fa-#{icon.value.split(',')[1]}' style="color: #{icon.value.split(',')[0]}"
             p#cost
-              = icon('fas', 'star', class: 'fa', style: 'color: yellow')
+              i.fas.fa-star style='color: yellow'
               = customisation_cost(icon)
             button.btn.btn-dark-outline.buy-btn type='submit' data-customisation-type='leaderboard_icon' data-value=icon.value id="buy-icon-#{icon.value}"
               | Buy

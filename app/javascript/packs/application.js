@@ -11,8 +11,9 @@
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
 // or the `imagePath` JavaScript helper below.
 //
-// const images = require.context('../images', true)
-// const imagePath = (name) => images(name, true)
+import '../styles/application.scss'
+import 'bootstrap'
+import '@fortawesome/fontawesome-free/js/all'
 
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
@@ -33,15 +34,15 @@ import './questions/short_response_question'
 import './questions/import_topic_questions'
 import './lessons'
 import './questions'
+import './customise'
+import Rails from '@rails/ujs'
 
-var dt_extras = [
+const images = require.context('../images', true)
+const imagePath = (name) => images(name, true)
 
-  require('datatables.net-bs4'),
-  require('datatables.net-buttons-bs4'),
-  require('datatables.net-buttons/js/buttons.html5.js')
-]
-
-dt_extras.forEach(function (e) { e(window, $) })
+require('datatables.net-bs4')
+require('datatables.net-buttons-bs4')
+require('datatables.net-buttons/js/buttons.html5.js')
 
 require('trix')
 require('@rails/actiontext')

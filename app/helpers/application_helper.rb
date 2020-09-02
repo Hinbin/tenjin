@@ -3,22 +3,22 @@
 module ApplicationHelper
   def boolean_icon(status)
     if status
-      icon('fas', 'check', style: 'color:green')
+      "<i class='fas fa-check' style='color:green'></i>".html_safe
     else
-      icon('fas', 'times', style: 'color:red')
+      "<i class='fas fa-times' style='color:red'></i>".html_safe
     end
   end
 
   def asset_exists?(path)
-    if Rails.env.production?
-      !Rails.application.assets_manifest.find_sources(path).nil?
-    else
-      !Rails.application.assets.find_asset(path).nil?
-    end
+    Webpacker.manifest.send(:data).keys.grep (/#{path}/)
   end
 
   def print_subject_image(url)
-    asset_exists?(url) ? image_url(url) : image_url('default-subject.jpg')
+    if asset_exists?(url).empty?
+      'default-subject.jpg'
+    else
+      url
+    end
   end
 
   def render_small_separator

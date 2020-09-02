@@ -119,12 +119,6 @@ gem 'rolify'
 # Wonde client to easily access Wonde data
 gem 'wondeclient', github: 'wondeltd/ruby-client'
 
-# Pretty things!
-# Bootstrap and JQuery for Bootstrap!
-gem 'bootstrap'
-gem 'jquery-rails'
-gem 'font-awesome-sass'
-
 # Bootstrap for emails
 gem 'bootstrap-email'
 

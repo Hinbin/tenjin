@@ -10,13 +10,12 @@ html
     meta name="psj" action=action_name controller=controller_name
     = csrf_meta_tags
     = csp_meta_tag
-    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
-    = stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Raleway:300,900,900i'
-    = stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Roboto:300,900,900i'
-    = stylesheet_pack_tag 'application', media: 'all'
-    = render 'layouts/google_analytics' if Rails.env.production?
+    = stylesheet_pack_tag 'application', 'https://fonts.googleapis.com/css?family=Raleway:300,900,900i'
+    = stylesheet_pack_tag 'application', 'https://fonts.googleapis.com/css?family=Roboto:300,900,900i'
+    = render 'layouts/google_analytics' if Rails.env.production?          
+    = stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-    = javascript_pack_tag 'application'    
     - unless Rails.env.test?
       = render partial: 'layouts/cookie_consent'
     link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"

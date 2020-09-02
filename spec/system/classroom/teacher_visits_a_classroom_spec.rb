@@ -54,7 +54,7 @@ RSpec.describe 'User visits a classroom', type: :system, js: true, default_creat
         create_list(:enrollment, 10, classroom: classroom)
         create_list(:homework, 10, classroom: classroom)
         visit(classroom_path(classroom))
-        expect(page).to have_css("tr[data-id='#{student.id}'] i.fa-times", count: 5)
+        expect(page).to have_css("tr[data-id='#{student.id}'] svg.fa-times", count: 5)
       end
 
       it 'allows the user to search the student table' do
@@ -68,12 +68,12 @@ RSpec.describe 'User visits a classroom', type: :system, js: true, default_creat
         create_list(:homework, 5, classroom: classroom)
         second_homework.update_attribute(:completed, true)
         visit(classroom_path(classroom))
-        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(5) i:nth-child(2).fa-check")
+        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(5) svg:nth-child(2).fa-check")
       end
 
       it 'does not show homeworks for another classroom' do
         create(:homework, classroom: different_classroom)
-        expect(page).to have_no_css('i.fa-times')
+        expect(page).to have_no_css('svg.fa-times')
       end
 
       it 'only loads the data table once after going back in the browser' do

@@ -23,7 +23,7 @@ $dashboard_styles: ('red': 'athletics.jpg', 'darkred': 'darkred-ferrari.jpg', 'd
   
   #homework-#{$name}{
     @extend %homework;
-    background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), image-url(#{$image}) no-repeat;
+    background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('../images/#{$image}') no-repeat;
   }
 
   hr.primary-#{$name}{    
@@ -32,7 +32,7 @@ $dashboard_styles: ('red': 'athletics.jpg', 'darkred': 'darkred-ferrari.jpg', 'd
   }
 
   div.card.#{$name}{
-    background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), image-url(#{$image}) no-repeat;
+    background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('../images/#{$image}') no-repeat;
     background-size: cover !important;
     background-position: center !important; 
   }
