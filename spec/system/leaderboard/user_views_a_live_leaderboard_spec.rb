@@ -46,7 +46,7 @@ RSpec.describe 'User views an updating leaderboard', type: :system, default_crea
     end
 
     it 'resets all scores to 0 when live leaderboard selected' do
-      wait_for_ajax
+      #wait_for_ajax
       expect(page).to have_css('tbody tr', count: 0)
     end
 

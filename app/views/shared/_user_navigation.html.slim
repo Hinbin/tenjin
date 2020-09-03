@@ -14,8 +14,13 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
           | Leaderboard  
       - if current_user.student?
         li.nav-item.dropdown.active
-          a.nav-link href=customise_path
-            | Customise
+          a.nav-link.dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            | Shop
+          .dropdown-menu aria-labelledby='navbarDropdown'
+            a.dropdown-item href=customise_path(anchor: 'dashboard-styles')
+              | Styles
+            a.dropdown-item href=customise_path(anchor: 'icons')
+              | Leaderboard Icons 
       li.nav-item
         a.nav-link href=lessons_path
           | Lessons     

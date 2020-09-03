@@ -47,14 +47,14 @@ jobs:
   build:
     <<: *default_job
     docker:
-      - image: circleci/ruby:2.6-node-browsers
+      - image: circleci/ruby:2.7.1-node-browsers
         environment:
           RAILS_ENV: test
   test:
     <<: *default_job
     parallelism: 1
     docker:
-      - image: circleci/ruby:2.6.3-node-browsers
+      - image: circleci/ruby:2.7.1-node-browsers
         environment:
             PGUSER: root
             PGHOST: 127.0.0.1

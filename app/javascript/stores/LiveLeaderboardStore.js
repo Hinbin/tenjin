@@ -1,9 +1,10 @@
 import { EventEmitter } from 'events'
 
 import dispatcher from '../dispatcher'
+import consumer from '../channels/consumer'
 
 class LiveLeaderboardStore extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
     this.loading = true
     this.initialLeaderboard = {}
@@ -33,7 +34,7 @@ class LiveLeaderboardStore extends EventEmitter {
 
   listenToLeaderboard () {
     let lb = this
-    App.cable.subscriptions.create({
+    consumer.subscriptions.create({
       channel: 'LeaderboardChannel',
       subject: this.subject,
       school: this.school,
@@ -273,7 +274,7 @@ class LiveLeaderboardStore extends EventEmitter {
       if (this.schools.length > 1) {
         this.leaderboardFilterChange({ name: 'Schools', option: 'All' })
       } else {
-        this.initialLeaderboard = this.weeklyLeaderboard        
+        this.initialLeaderboard = this.weeklyLeaderboard
       }
       this.currentLeaderboard = {}
     } else {
@@ -313,10 +314,10 @@ class LiveLeaderboardStore extends EventEmitter {
         break
       }
       case 'FILTER_CHANGE':
-      {
-        this.leaderboardFilterChange(action.value)
-        break
-      }
+        {
+          this.leaderboardFilterChange(action.value)
+          break
+        }
 
       default:
     }

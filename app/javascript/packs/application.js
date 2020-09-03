@@ -1,24 +1,20 @@
-/* eslint no-console:0 */
 // This file is automatically compiled by Webpack, along with any other files
 // present in this directory. You're encouraged to place your actual application logic in
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
-//
-// To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
-// layout file, like app/views/layouts/application.html.erb
 
-// Uncomment to copy all static images under ../images to the output folder and reference
-// them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
-// or the `imagePath` JavaScript helper below.
-//
 import '../styles/application.scss'
+
+import Rails from '@rails/ujs'
+import Turbolinks from 'turbolinks'
+import * as ActiveStorage from '@rails/activestorage'
 import 'bootstrap'
 import '@fortawesome/fontawesome-free/js/all'
+import { Application } from 'stimulus'
+import { definitionsFromContext } from 'stimulus/webpack-helpers'
 
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
-import { Application } from 'stimulus'
-import { definitionsFromContext } from 'stimulus/webpack-helpers'
 
 import './classroom'
 import './homework'
@@ -35,7 +31,12 @@ import './questions/import_topic_questions'
 import './lessons'
 import './questions'
 import './customise'
-import Rails from '@rails/ujs'
+import './controller_info'
+import './google_analytics'
+
+Rails.start()
+Turbolinks.start()
+ActiveStorage.start()
 
 const images = require.context('../images', true)
 const imagePath = (name) => images(name, true)
@@ -46,6 +47,8 @@ require('datatables.net-buttons/js/buttons.html5.js')
 
 require('trix')
 require('@rails/actiontext')
+require('@rails/actioncable')
+require('turbolinks')
 
 $(document).on('turbolinks:load', function () {
   if ($('#notice').text().length) {

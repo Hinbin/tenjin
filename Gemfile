@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '~> 2.6.3'
+ruby '~> 2.7.1'
 
 # Sets environment variables
 gem 'dotenv-rails', groups: [:development, :test]
@@ -16,7 +16,6 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
 gem 'rack-cors', groups: [:production]
 gem 'rack-timeout'
-gem 'sprockets', '3.7.2' # Fix at 3.7.2 as 4.0.0 as issues with sassc compilation
 
 gem 'delayed_job_active_record'
 

@@ -15,8 +15,13 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     click_button('Save Question')
   end
 
+  def save_question
+    click_button('Save Question')
+    find('#flash-notice', text: 'Question successfully updated')
+  end
+
   def switch_to_student_account
-    wait_for_ajax
+    # wait_for_ajax
     sign_out author
     sign_in student
     visit new_quiz_path(subject: topic.subject.name)
@@ -209,11 +214,10 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       let(:question) { create(:question, question_type: 'short_answer', topic: topic) }
 
       before do
+        question
         visit(question_path(question))
         find_by_id('select-question-type').click
-        wait_for_ajax
         find('option', text: 'Short answer').click
-        wait_for_ajax
         find('table', id: 'table-answers')
       end
 
@@ -258,7 +262,6 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
       it 'allows you to set an answer as correct' do
         find('input', id: answer_check_id).click
-        wait_for_ajax
         switch_and_create_quiz
         find("#response-#{Answer.last.id}").click
         expect(page).to have_css("#response-#{Answer.last.id}.correct-answer")
@@ -278,7 +281,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       it 'allows you to assign a lesson to the question' do
         visit(question_path(question))
         select lesson.title, from: 'select-lesson'
-        click_button('Save Question')
+        save_question
         switch_and_create_quiz
         expect(page).to have_content(lesson.title)
       end

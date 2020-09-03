@@ -15,7 +15,6 @@ html
     = render 'layouts/google_analytics' if Rails.env.production?          
     = stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
-    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     - unless Rails.env.test?
       = render partial: 'layouts/cookie_consent'
     link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"

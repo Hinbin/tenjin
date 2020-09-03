@@ -11,7 +11,8 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
   context 'when visiting the customisation page from the navbar' do
     it 'visits from the customise link' do
       visit(dashboard_path)
-      click_link('Customise')
+      find('a', text: 'Shop').click
+      find('a', text: 'Styles').click
       expect(page).to have_current_path(customise_path)
     end
 
