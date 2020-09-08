@@ -48,7 +48,7 @@ class Question::ImportQuestions < ApplicationService
 
   def find_or_create_lesson
     @lesson = nil
-    return true if @question.dig('lesson').nil?
+    return true if @question['lesson'].nil?
 
     @lesson = Lesson.find_or_create_by(title: @question['lesson'], topic: @topic)
     return raise_error(@lesson.errors.full_messages.join(', ')) unless @lesson.valid?

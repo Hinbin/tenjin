@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::ResetYear < ApplicationService
-  def initialize; end
-
   def call
     remove_topic_scores
     remove_homeworks

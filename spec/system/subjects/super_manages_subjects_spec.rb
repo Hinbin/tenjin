@@ -35,14 +35,14 @@ RSpec.describe 'Super manages subjects', type: :system, js: true, default_create
       five_asked_questions_this_week
       seven_asked_questions_previously
       visit(subjects_path)
-      expect(page).to have_css('tr#subject-' + subject.id.to_s + ' td.asked_questions', text: '12')
+      expect(page).to have_css("tr#subject-#{subject.id} td.asked_questions", text: '12')
     end
 
     it 'only counts questions for this week' do
       five_asked_questions_this_week
       seven_asked_questions_previously
       visit(subjects_path)
-      expect(page).to have_css('tr#subject-' + subject.id.to_s + ' td.asked_questions_this_week', text: '5')
+      expect(page).to have_css("tr#subject-#{subject.id} td.asked_questions_this_week", text: '5')
     end
 
     it 'shows how many asked questions there are for each subject overall' do

@@ -4,8 +4,9 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe School, type: :model do
-  include_context 'with api_data'
   subject { create(:school) }
+
+  include_context 'with api_data'
 
   it { is_expected.to validate_presence_of(:client_id) }
   it { is_expected.to validate_uniqueness_of(:client_id) }
