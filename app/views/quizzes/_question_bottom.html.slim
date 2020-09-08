@@ -1,7 +1,10 @@
 .container.py-2
   .row
     .col
-      p=@question.topic.name
+      -if @quiz.lesson.blank?
+        p#quiz-name=@question.topic.name
+      -else
+        p#quiz-name=@question.lesson.title
     .col
       p.text-right
         =link_to flag_icon,

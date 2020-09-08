@@ -4,13 +4,11 @@
 class Leaderboard::BuildLeaderboard < ApplicationService
   def initialize(user, params)
     @user = user if user.present?
-    @subject = Subject.where(name: params.dig(:id)).first
-    @topic = params.dig(:topic)
-    @school = params.dig(:school)
-    if @user.present? && @user.school.school_group_id.present? && params.dig(:school_group) == 'true'
-      @school_group = true
-    end
-    @all_time = true if params.dig(:all_time) == 'true'
+    @subject = Subject.where(name: params[:id]).first
+    @topic = params[:topic]
+    @school = params[:school]
+    @school_group = true if @user.present? && @user.school.school_group_id.present? && params[:school_group] == 'true'
+    @all_time = true if params[:all_time] == 'true'
   end
 
   def call

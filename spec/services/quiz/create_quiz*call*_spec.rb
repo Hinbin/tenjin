@@ -49,8 +49,25 @@ RSpec.describe Quiz::CreateQuiz, '#call', default_creates: true do
       student.update_attribute(:time_of_last_quiz, nil)
       expect(quiz.success?).to eq(true)
     end
+  end
 
-    it 'creates a lesson quiz with only lesson questions'
-    
+  context 'when creating a lesson based quiz' do
+    let(:quiz_with_lesson) { described_class.new(user: student, topic: topic.id, subject: subject, lesson: lesson).call }
+    let(:lesson) { create(:lesson, topic: topic) }
+
+    before do
+      create_list(:question, 10, topic: topic, lesson: lesson)
+      create_list(:question, 20, topic: topic)
+    end
+
+    it 'creates a lesson quiz with only lesson questions' do
+      quiz_with_lesson
+      expect(quiz_with_lesson.quiz.questions.where(lesson: lesson).count).to eq(10)
+    end
+
+    it 'assign the lesson to the quiz' do
+      quiz_with_lesson
+      expect(quiz_with_lesson.quiz.lesson).to eq(lesson)
+    end
   end
 end

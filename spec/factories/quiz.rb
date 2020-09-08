@@ -10,6 +10,7 @@ FactoryBot.define do
     topic { nil }
     question_order { (0..num_questions_asked).to_a.shuffle }
     counts_for_leaderboard { true }
+    lesson { nil }
 
     user
     subject

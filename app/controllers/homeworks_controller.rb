@@ -49,10 +49,10 @@ class HomeworksController < ApplicationController
 
   def set_homework_notice
     flash[:notice] = if @homework.lesson.blank?
-                       @homework.topic.name + ' homework set'
+                       "#{@homework.topic.name} homework set"
                      else
-                       @homework.lesson.title + ' homework set'
-    end
+                       "#{@homework.lesson.title} homework set"
+                     end
   end
 
   def new_homework_params

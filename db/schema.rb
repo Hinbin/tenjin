@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_29_123413) do
+ActiveRecord::Schema.define(version: 2020_09_04_103119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -289,6 +289,8 @@ ActiveRecord::Schema.define(version: 2020_08_29_123413) do
     t.boolean "counts_for_leaderboard"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "lesson_id"
+    t.index ["lesson_id"], name: "index_quizzes_on_lesson_id"
     t.index ["subject_id"], name: "index_quizzes_on_subject_id"
     t.index ["topic_id"], name: "index_quizzes_on_topic_id"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
@@ -441,6 +443,7 @@ ActiveRecord::Schema.define(version: 2020_08_29_123413) do
   add_foreign_key "question_statistics", "questions"
   add_foreign_key "questions", "lessons"
   add_foreign_key "questions", "topics"
+  add_foreign_key "quizzes", "lessons"
   add_foreign_key "quizzes", "topics"
   add_foreign_key "quizzes", "users"
   add_foreign_key "schools", "school_groups"

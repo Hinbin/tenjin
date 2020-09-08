@@ -6,8 +6,11 @@ class Quiz::CreateQuiz < ApplicationService
     @user = params[:user]
     @topic_id = params[:topic]
     @subject_id = params[:subject]
+    @lesson_id = params[:lesson]
     @lucky_dip = @topic_id == 'Lucky Dip'
+    @subject = Subject.find(@subject_id)
     @topic = Topic.find(@topic_id) unless @lucky_dip
+    @lesson = Lesson.find(@lesson_id) unless @lesson_id.blank?
     @quiz = Quiz.new
   end
 
@@ -37,33 +40,39 @@ class Quiz::CreateQuiz < ApplicationService
     @quiz.streak = 0
     @quiz.answered_correct = 0
     @quiz.num_questions_asked = 0
-    @quiz.subject = @subject_id
+    @quiz.subject = @subject
     @quiz.active = true
     @quiz.topic = @lucky_dip ? nil : @topic
     @quiz.counts_for_leaderboard = check_if_quiz_counts_for_leaderboard
+    @quiz.lesson = @lesson
   end
 
   def initialise_questions
     questions = if @lucky_dip
-                  # We want an even distribution of topics where possible
-                  question_array = []
-
-                  # Keep getting random questions, one from each topic until we have at least 10 questions
-                  question_array += topic_questions
-
-                  if question_array.length < 10
-                    # There are not 10 or more topics so try without getting one from each topic
-                    question_array += additional_topic_questions
-                  end
-
-                  # Get maximum of 10 questions only
-                  question_array.shuffle.sample(10)
-
+                  lucky_dip_questions
+                elsif @lesson
+                  lesson_questions
                 else
                   subject_questions
                 end
     @quiz.questions = questions
     @quiz.question_order = @quiz.questions.shuffle.pluck(:id)
+  end
+
+  def lucky_dip_questions
+    # We want an even distribution of topics where possible
+    question_array = []
+
+    # Keep getting random questions, one from each topic until we have at least 10 questions
+    question_array += topic_questions
+
+    if question_array.length < 10
+      # There are not 10 or more topics so try without getting one from each topic
+      question_array += additional_topic_questions
+    end
+
+    # Get maximum of 10 questions only
+    question_array.shuffle.sample(10)
   end
 
   def additional_topic_questions
@@ -82,10 +91,19 @@ class Quiz::CreateQuiz < ApplicationService
             .order('questions.topic_id, random()')
   end
 
+  def lesson_questions
+    Question.where(active: true)
+            .includes(:lesson)
+            .where(lesson: @lesson)
+            .order(Arel.sql('RANDOM()'))
+            .take(10)
+  end
+
   def subject_questions
     Question.where(active: true, topic: @topic_id)
             .includes(:topic)
-            .order(Arel.sql('RANDOM()')).take(10)
+            .order(Arel.sql('RANDOM()'))
+            .take(10)
   end
 
   def quiz_cooldown_expired?

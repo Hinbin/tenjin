@@ -4,6 +4,7 @@ class Quiz < ApplicationRecord
   belongs_to :user
   belongs_to :subject
   belongs_to :topic, optional: true
+  belongs_to :lesson, optional: true
 
   has_many :asked_questions
   has_many :questions, through: :asked_questions

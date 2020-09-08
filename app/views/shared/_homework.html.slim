@@ -14,7 +14,7 @@ section.page-section.text-center id="homework-#{@css_flavour}"
               th Complete?
           tbody
             - @homework_progress.each do |h|
-              tr.homework-row data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id
+              tr.homework-row data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id data-lesson=(h.homework.lesson.id unless h.homework.lesson_id.blank?)
                 td.d-none.d-sm-table-cell = h.homework.topic.subject.name
                 -if h.homework.lesson.blank?
                   td.d-none.d-sm-table-cell = h.homework.topic.name
