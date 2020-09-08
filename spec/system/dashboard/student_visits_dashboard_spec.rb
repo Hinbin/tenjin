@@ -56,7 +56,7 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
                                   challenge: challenge_one, progress: 100, completed: true)
     end
     let(:quiz) { create(:new_quiz) }
-    let(:challenge_css_selector) { "#challenge-table tr[data-topic="#{topic.id.to_s}"]" }
+    let(:challenge_css_selector) { "#challenge-table tr[data-topic='#{topic.id}']" }
 
     before do
       challenge_one
@@ -131,34 +131,32 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
 
     it 'shows completed homeworks with a cross (times) icon' do
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row[data-homework="#{homework.id.to_s}"] > td:last-child > svg.fa-times")
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-times")
     end
 
     it 'shows completed homeworks with a tick icon' do
       HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row[data-homework="#{homework.id.to_s}"] > td:last-child > svg.fa-check")
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-check")
     end
 
     it 'shows overdue homeworks with an exclamation icon' do
       homework.update_attribute(:due_date, Time.now - 1.day)
       visit(dashboard_path)
-      expect(page).to have_css(
-        ".homework-row[data-homework="#{homework.id.to_s}"] > td:last-child > svg.fa-exclamation"
-      )
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-exclamation")
     end
 
     it 'shows homeworks completed in the last week only' do
       HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
       homework.update_attribute(:due_date, Time.now - 2.weeks)
       visit(dashboard_path)
-      expect(page).to have_no_css(".homework-row[data-homework="#{homework.id.to_s}"]")
+      expect(page).to have_no_css(".homework-row[data-homework='#{homework.id}']")
     end
 
     it 'shows the homeworks in date order' do
       homework_future
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row:first-child[data-homework="#{homework.id.to_s}"]")
+      expect(page).to have_css(".homework-row:first-child[data-homework='#{homework.id}']")
     end
 
     it 'links you to the correct quiz when clicked' do

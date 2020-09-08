@@ -103,7 +103,7 @@ class QuizzesController < ApplicationController
 
   def set_create_params
     @topic = quiz_params[:topic_id]
-    @subject = quiz_params[:subject]
+    @subject = Subject.find(quiz_params[:subject])
     @lesson = quiz_params[:lesson_id] unless quiz_params[:lesson_id].blank?
   end
 

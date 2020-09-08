@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_04_103119) do
+ActiveRecord::Schema.define(version: 2020_09_08_134322) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -362,6 +362,8 @@ ActiveRecord::Schema.define(version: 2020_09_04_103119) do
     t.integer "questions_answered"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "lesson_id"
+    t.index ["lesson_id"], name: "index_usage_statistics_on_lesson_id"
     t.index ["topic_id"], name: "index_usage_statistics_on_topic_id"
     t.index ["user_id"], name: "index_usage_statistics_on_user_id"
   end
@@ -450,6 +452,7 @@ ActiveRecord::Schema.define(version: 2020_09_04_103119) do
   add_foreign_key "topic_scores", "topics"
   add_foreign_key "topic_scores", "users"
   add_foreign_key "topics", "subjects"
+  add_foreign_key "usage_statistics", "lessons"
   add_foreign_key "usage_statistics", "topics"
   add_foreign_key "usage_statistics", "users"
   add_foreign_key "user_statistics", "users"

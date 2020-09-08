@@ -28,7 +28,7 @@ RSpec.describe 'Student completes a homework', type: :system, js: true, default_
 
   context 'when completing a lesson homework' do
     let(:lesson) { create(:lesson, topic: topic) }
-    let(:homework_with_lesson) { create(:homework, lesson: lesson, classroom: classroom, required: 10) }
+    let(:homework_with_lesson) { create(:homework, lesson: lesson, topic: lesson.topic, classroom: classroom, required: 10) }
     let(:homework_progress_complete) { create(:homework_progress, user: student, homework: homework, completed: true) }
 
     before do
@@ -43,17 +43,12 @@ RSpec.describe 'Student completes a homework', type: :system, js: true, default_
     end
 
     it 'only awards points for the first attempt' do
-      create(:usage_statistic, lesson: lesson, user: student, quzzes_started: 1, date: Date.today)
+      create(:usage_statistic, lesson: lesson, topic: lesson.topic, user: student, quizzes_started: 1, date: Date.current)
       visit(dashboard_path)
       find(:css, ".homework-row[data-homework='#{homework_with_lesson.id}']").click
+      find(:css, '.trix-content')
       expect(page).to have_content('This quiz is currently not counting towards your leaderboard points')
     end
 
-    it 'prevents further access when homework completed' do
-      homework_progress_complete
-      visit(dashboard_path)
-      find(:css, ".homework-row[data-homework='#{homework_with_lesson.id}']").click
-      expect(page).to have_content('You have already completed the homework for this lesson')
-    end
   end
 end

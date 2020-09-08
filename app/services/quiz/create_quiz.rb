@@ -5,12 +5,10 @@ class Quiz::CreateQuiz < ApplicationService
   def initialize(params)
     @user = params[:user]
     @topic_id = params[:topic]
-    @subject_id = params[:subject]
-    @lesson_id = params[:lesson]
+    @subject = params[:subject]
+    @lesson = (Lesson.find(params[:lesson]) if params[:lesson].present?)
     @lucky_dip = @topic_id == 'Lucky Dip'
-    @subject = Subject.find(@subject_id)
     @topic = Topic.find(@topic_id) unless @lucky_dip
-    @lesson = Lesson.find(@lesson_id) unless @lesson_id.blank?
     @quiz = Quiz.new
   end
 
@@ -41,10 +39,10 @@ class Quiz::CreateQuiz < ApplicationService
     @quiz.answered_correct = 0
     @quiz.num_questions_asked = 0
     @quiz.subject = @subject
+    @quiz.lesson = @lesson
     @quiz.active = true
     @quiz.topic = @lucky_dip ? nil : @topic
     @quiz.counts_for_leaderboard = check_if_quiz_counts_for_leaderboard
-    @quiz.lesson = @lesson
   end
 
   def initialise_questions
@@ -79,7 +77,7 @@ class Quiz::CreateQuiz < ApplicationService
     Question.where(active: true)
             .includes(:topic).references(:topic)
             .select('questions.topic_id, questions.*')
-            .where(topics: { active: true, subject_id: @subject_id })
+            .where(topics: { active: true, subject_id: @subject.id })
             .order('questions.topic_id, random()')
   end
 
@@ -87,7 +85,7 @@ class Quiz::CreateQuiz < ApplicationService
     Question.where(active: true)
             .includes(:topic).references(:topic)
             .select('DISTINCT ON(questions.topic_id) questions.topic_id, questions.*')
-            .where(topics: { active: true, subject_id: @subject_id })
+            .where(topics: { active: true, subject_id: @subject.id })
             .order('questions.topic_id, random()')
   end
 
@@ -114,6 +112,20 @@ class Quiz::CreateQuiz < ApplicationService
   def check_if_quiz_counts_for_leaderboard
     return true if @quiz.topic.nil?
 
+    if @quiz.lesson
+      check_lesson_attempts
+    else
+      check_topic_attempts
+    end
+  end
+
+  def check_lesson_attempts
+    !UsageStatistic.where(user: @user, topic: @quiz.topic, lesson: @quiz.lesson, date: Date.current.all_day)
+                   .where('quizzes_started >= 1')
+                   .exists?
+  end
+
+  def check_topic_attempts
     !UsageStatistic.where(user: @user, topic: @quiz.topic, date: Date.current.all_day)
                    .where('quizzes_started >= 3')
                    .exists?

@@ -52,7 +52,7 @@ RSpec.describe Quiz::CreateQuiz, '#call', default_creates: true do
   end
 
   context 'when creating a lesson based quiz' do
-    let(:quiz_with_lesson) { described_class.new(user: student, topic: topic.id, subject: subject, lesson: lesson).call }
+    let(:quiz_with_lesson) { described_class.new(user: student, topic: topic.id, subject: subject, lesson: lesson.id).call }
     let(:lesson) { create(:lesson, topic: topic) }
 
     before do
