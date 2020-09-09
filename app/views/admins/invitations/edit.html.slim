@@ -1,0 +1,13 @@
+header.masthead.masthead-container.masthead-full.text-white  
+  div.container.py-5
+    div.row.justify-content-center.align-items-center
+      div.col-6.text-center.bg-white.text-dark.rounded.py-2
+        h2= t "devise.invitations.edit.header"
+        = simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }) do |f|
+          = f.error_notification
+          = f.hidden_field :invitation_token
+          .form-inputs
+            = f.input :password
+            = f.input :password_confirmation
+          .form-actions
+            = f.button :submit, t("devise.invitations.edit.submit_button"), class: 'btn btn-primary btn-block'

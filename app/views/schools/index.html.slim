@@ -7,8 +7,9 @@
         th Students
         th Weekly Questions
         th Sync Status
-        th Permitted?
-        th School Group
+        - if current_admin.super?
+          th Permitted?
+          th School Group
 
       - @schools.each do |school|
         tr 
@@ -16,17 +17,18 @@
           td =school.users.where(role: 'student').count
           td =UserStatistic.joins(user: :school).where(users: {school: school}).sum(:questions_answered)
           td =sync_status_icon(school.sync_status)
-          td =link_to boolean_icon(school.permitted?),
-            school_path(school, school: { permitted: !school.permitted } ),
-            method: :patch            
-          td = form_with model: school do |f|
-            = f.select :school_group_id,
-              options_from_collection_for_select(@school_groups, :id, :name, school.school_group_id),
-              { include_blank: '',
-              onchange: 'Rails.fire(this.form, "submit")'},
-              id: ('school-group-select-' + school.id.to_s),
-              class: 'custom-select',             
-              data: { remote: 'true',  url: school_path(school), method: 'patch' }
-
-    =link_to(new_school_path)
-      button.btn.btn-dark type="button" Add School
+          - if current_admin.super?
+            td =link_to boolean_icon(school.permitted?),
+              school_path(school, school: { permitted: !school.permitted } ),
+              method: :patch            
+            td = form_with model: school do |f|
+              = f.select :school_group_id,
+                options_from_collection_for_select(@school_groups, :id, :name, school.school_group_id),
+                { include_blank: '',
+                onchange: 'Rails.fire(this.form, "submit")'},
+                id: ('school-group-select-' + school.id.to_s),
+                class: 'custom-select',             
+                data: { remote: 'true',  url: school_path(school), method: 'patch' }
+    -if current_admin.super?
+      =link_to(new_school_path)
+        button.btn.btn-dark type="button" Add School

@@ -100,6 +100,7 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # User authentication
 gem 'devise'
+gem 'devise_invitable'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'omniauth-wonde', :path=>"omniauth-wonde/"

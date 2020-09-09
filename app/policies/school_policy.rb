@@ -23,7 +23,7 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def show?
-    user.super?
+    user.super? || user.school_group?
   end
 
   def create?
