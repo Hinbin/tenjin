@@ -179,7 +179,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         find('table', id: 'table-answers')
         find('input', id: answer_check_id).click
         visit(question_path(question))
-        expect(page).to have_css('#' + answer_check_id)
+        expect(page).to have_css("##{answer_check_id}")
       end
 
       it 'only saves if I have selected a correct answer' do

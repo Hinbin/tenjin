@@ -50,7 +50,7 @@ RSpec.describe 'User views the leaderboard', type: :system, js: true, default_cr
     student.update(forename: 'Aaron') # Ensure first alphabetically
     one_to_ten
     visit(leaderboard_path(subject.name))
-    expect(page).to have_css('tr', text: ('6 ' + student_name).to_s)
+    expect(page).to have_css('tr', text: "6 #{student_name}".to_s)
   end
 
   it 'does not show students from another school' do

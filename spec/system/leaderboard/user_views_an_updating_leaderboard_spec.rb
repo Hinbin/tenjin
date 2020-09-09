@@ -22,7 +22,7 @@ RSpec.describe 'User views an updating leaderboard', type: :system, js: true, de
 
     it 'flashes an update if I have a score' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic, student_topic_score.user).call
-      expect(page).to have_css('tr#row-' + student.id.to_s + '.score-changed')
+      expect(page).to have_css("tr#row-#{student.id}.score-changed")
     end
 
     it 'flashes an update if someone else has a score' do
@@ -55,7 +55,7 @@ RSpec.describe 'User views an updating leaderboard', type: :system, js: true, de
     it 're-ranks correctly' do
       new_entry
       Leaderboard::BroadcastLeaderboardPoint.new(topic, new_entry.user).call
-      expect(page).to have_css('tr:nth-child(2)#row-' + student.id.to_s)
+      expect(page).to have_css("tr:nth-child(2)#row-#{student.id}")
     end
   end
 
@@ -81,12 +81,12 @@ RSpec.describe 'User views an updating leaderboard', type: :system, js: true, de
 
     it 'displays a new student with a score in the correct window' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic, new_entry.user).call
-      expect(page).to have_css('tr#row-' + new_entry.user_id.to_s + '.score-changed')
+      expect(page).to have_css("tr#row-#{new_entry.user_id}.score-changed")
     end
 
     it 'displays the name of a new student with a score ' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic, new_entry.user).call
-      expect(page).to have_css('tr#row-' + new_entry.user_id.to_s, text: new_entry.user.forename)
+      expect(page).to have_css("tr#row-#{new_entry.user_id}", text: new_entry.user.forename)
     end
 
     it 'shows updates from only my school by default' do

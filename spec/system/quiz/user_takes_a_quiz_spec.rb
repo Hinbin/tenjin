@@ -60,17 +60,17 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
 
     it 'indicates if the answer I gave was right' do
       find(id: correct_response_selector).click
-      expect(page).to have_css('button#' + correct_response_selector + '.correct-answer')
+      expect(page).to have_css("button##{correct_response_selector}.correct-answer")
     end
 
     it 'indicates if the answer I gave was wrong' do
       find(id: incorrect_response_selector).click
-      expect(page).to have_css('button#' + incorrect_response_selector + '.incorrect-answer')
+      expect(page).to have_css("button##{incorrect_response_selector}.incorrect-answer")
     end
 
     it 'indicates the correct answer if the answer I gave was wrong' do
       find(id: incorrect_response_selector).click
-      expect(page).to have_css('button#' + correct_response_selector + '.correct-answer')
+      expect(page).to have_css("button##{correct_response_selector}.correct-answer")
     end
 
     it 'uses icons to show which questions are right' do

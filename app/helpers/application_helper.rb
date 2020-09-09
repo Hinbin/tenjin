@@ -10,7 +10,7 @@ module ApplicationHelper
   end
 
   def asset_exists?(path)
-    Webpacker.manifest.send(:data).keys.grep (/#{path}/)
+    Webpacker.manifest.send(:data).keys.grep(/#{path}/)
   end
 
   def print_subject_image(url)
@@ -36,6 +36,6 @@ module ApplicationHelper
     fields = form.simple_fields_for(association, new_object, child_index: id) do |builder|
       render(association.to_s.singularize, f: builder)
     end
-    link_to(name, '#', class: 'add_fields ' + args[:class], data: { id: id, fields: fields.delete("\n") })
+    link_to(name, '#', class: "add_fields #{args[:class]}", data: { id: id, fields: fields.delete("\n") })
   end
 end

@@ -30,7 +30,7 @@ class CustomiseController < ApplicationController
 
   def flash_notice(result)
     flash[:notice] = result.errors unless result.success?
-    flash[:notice] = 'Congratulations!  You have bought ' + @customisation.name if result.success?
+    flash[:notice] = "Congratulations!  You have bought #{@customisation.name}" if result.success?
   end
 
   def customisation_params

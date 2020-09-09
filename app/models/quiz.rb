@@ -4,6 +4,7 @@ class Quiz < ApplicationRecord
   belongs_to :user
   belongs_to :subject
   belongs_to :topic, optional: true
+  belongs_to :lesson, optional: true
 
   has_many :asked_questions
   has_many :questions, through: :asked_questions
@@ -14,7 +15,7 @@ class Quiz < ApplicationRecord
   private
 
   def update_usage_statistics
-    s = UsageStatistic.where(user: user, topic: topic, date: Date.current).first_or_create!
+    s = UsageStatistic.where(user: user, topic: topic, lesson: lesson, date: Date.current).first_or_create!
     s.quizzes_started.present? ? s.increment!(:quizzes_started) : s.update_attribute(:quizzes_started, 1)
   end
 end

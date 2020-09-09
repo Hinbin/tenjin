@@ -45,19 +45,19 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
     end
 
     it 'allows you to buy a dashbord style' do
-      find('button#buy-dashboard-' + dashboard_customisation.value).click
-      expect(page).to have_css('section#homework-' + dashboard_customisation.value)
+      find("button#buy-dashboard-#{dashboard_customisation.value}").click
+      expect(page).to have_css("section#homework-#{dashboard_customisation.value}")
     end
 
     it 'deducts the required amount of challenge points' do
-      find('button#buy-dashboard-' + dashboard_customisation.value).click
+      find("button#buy-dashboard-#{dashboard_customisation.value}").click
       expect { student.reload }.to change(student, :challenge_points).by(-dashboard_customisation.cost)
     end
 
     it 'gives a notice if you do not have the required number of points' do
       dashboard_customisation_expensive
       visit(customise_path)
-      find('button#buy-dashboard-' + dashboard_customisation_expensive.value).click
+      find("button#buy-dashboard-#{dashboard_customisation_expensive.value}").click
       expect(page).to have_css('.alert', text: 'You do not have enough points')
     end
 
@@ -67,17 +67,17 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
 
     context 'when repurchasing a customisation already unlocked' do
       before do
-        find('button#buy-dashboard-' + dashboard_customisation.value).click
+        find("button#buy-dashboard-#{dashboard_customisation.value}").click
         second_customisation
         visit(customise_path)
-        find('button#buy-dashboard-' + second_customisation.value).click
+        find("button#buy-dashboard-#{second_customisation.value}").click
         student.reload
       end
 
       it 'allows you to buy a previously bought customisation at no cost' do
         visit(customise_path)
 
-        find('button#buy-dashboard-' + dashboard_customisation.value).click
+        find("button#buy-dashboard-#{dashboard_customisation.value}").click
         expect { student.reload }.to change(student, :challenge_points).by(0)
       end
 

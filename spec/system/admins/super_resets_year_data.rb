@@ -24,5 +24,4 @@ RSpec.describe 'Super resets year data', type: :system, js: true, default_create
     visit admin_path(super_admin)
     expect(page).to have_no_content('Reset Year Data')
   end
-
 end

@@ -10,5 +10,9 @@ namespace :daily_updates do
     Question.find_each do |q|
       Question.reset_counters(q.id, :flagged_questions)
     end
+
+    Lesson.find_each do |l|
+      Lesson.reset_counters(l.id, :questions)
+    end
   end
 end

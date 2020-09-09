@@ -50,11 +50,11 @@ RSpec.describe Question::ImportQuestions, '#call', default_creates: true do
 
     it 'assigns the correct lesson name' do
       described_class.new(JSON.generate(multiple_lessons), topic).call
-      expect(Lesson.first.title).to eq(multiple_lessons[0].dig('lesson'))
+      expect(Lesson.first.title).to eq(multiple_lessons[0]['lesson'])
     end
 
     it 'assigns questions to existing lessons' do
-      create(:lesson, title: single_lesson[0].dig('lesson'), topic: topic, category: :no_content, video_id: '')
+      create(:lesson, title: single_lesson[0]['lesson'], topic: topic, category: :no_content, video_id: '')
       described_class.new(JSON.generate(single_lesson), topic).call
       expect(Lesson.count).to eq(1)
     end
@@ -65,7 +65,7 @@ RSpec.describe Question::ImportQuestions, '#call', default_creates: true do
     end
 
     it 'creates questions with existing lessons' do
-      create(:lesson, title: single_lesson[0].dig('lesson'), topic: topic, category: :no_content, video_id: '')
+      create(:lesson, title: single_lesson[0]['lesson'], topic: topic, category: :no_content, video_id: '')
       described_class.new(JSON.generate(single_lesson), topic).call
       expect(Question.count).to eq(single_lesson.length)
     end

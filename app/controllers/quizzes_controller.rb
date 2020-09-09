@@ -7,7 +7,7 @@ class QuizzesController < ApplicationController
   before_action :set_question, only: %i[show update]
   before_action :set_css_flavour, only: %i[new]
   before_action :set_subject, only: %i[new]
-  before_action :set_subject_and_topic, only: %i[create]
+  before_action :set_create_params, only: %i[create]
 
   rescue_from Pundit::NotAuthorizedError, with: :quiz_not_authorized
 
@@ -51,7 +51,10 @@ class QuizzesController < ApplicationController
   def create
     return select_quiz_topic if @topic.blank?
 
-    result = Quiz::CreateQuiz.call(user: current_user, topic: @topic, subject: @subject)
+    result = Quiz::CreateQuiz.call(user: current_user,
+                                   topic: @topic,
+                                   subject: @subject,
+                                   lesson: @lesson)
     result.success? ? authorize(result.quiz) : authorize(current_user, :show?, policy_class: UserPolicy)
     return fail_quiz_creation(result) unless result.success?
 
@@ -81,9 +84,9 @@ class QuizzesController < ApplicationController
   end
 
   def select_quiz_topic
-    quiz = Quiz.new(subject: subject)
+    quiz = Quiz.new(subject: @subject)
     authorize quiz, :new?
-    redirect_to new_quiz_path(subject: subject)
+    redirect_to new_quiz_path(subject: @subject)
   end
 
   def set_quiz
@@ -91,20 +94,21 @@ class QuizzesController < ApplicationController
   end
 
   def set_subject
-    @subject = Subject.where('name = ?', params.permit(:subject).dig(:subject)).first
+    @subject = Subject.where('name = ?', params.permit(:subject)[:subject]).first
   end
 
   def set_question
     @question = Question.find(@quiz.question_order[@quiz.num_questions_asked - 1])
   end
 
-  def set_css_flavour
-    @css_flavour = find_dashboard_style
+  def set_create_params
+    @topic = quiz_params[:topic_id]
+    @subject = Subject.find(quiz_params[:subject])
+    @lesson = quiz_params[:lesson_id] unless quiz_params[:lesson_id].blank?
   end
 
-  def set_subject_and_topic
-    @topic = quiz_params.dig(:topic_id)
-    @subject = Subject.find(quiz_params.dig(:subject))
+  def set_css_flavour
+    @css_flavour = find_dashboard_style
   end
 
   def answer_params
@@ -112,7 +116,7 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:topic_id, :subject)
+    params.require(:quiz).permit(:topic_id, :subject, :lesson_id)
   end
 
   def quiz_not_authorized(exception)

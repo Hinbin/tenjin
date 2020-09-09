@@ -32,11 +32,13 @@ $(document).on('turbolinks:load', () => {
     $('#resetPasswordCheck').on('click', () => {
       $('.password-col').toggleClass('d-none')
     })
-    
+
     if (!$.fn.dataTable.isDataTable('#homework-table')) {
+      $.fn.dataTable.moment('dd/MM/YYYY HH:mm')
       $('#homework-table').DataTable({
         dom: 'rtp',
         'pageLength': 5,
+        'order' : [[2, 'desc']],
         'language': {
           'emptyTable': 'No homeworks have been found'
         }

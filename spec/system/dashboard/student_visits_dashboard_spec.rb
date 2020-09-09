@@ -56,7 +56,7 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
                                   challenge: challenge_one, progress: 100, completed: true)
     end
     let(:quiz) { create(:new_quiz) }
-    let(:challenge_css_selector) { '#challenge-table tr[data-topic="' + topic.id.to_s + '"]' }
+    let(:challenge_css_selector) { "#challenge-table tr[data-topic='#{topic.id}']" }
 
     before do
       challenge_one
@@ -111,12 +111,11 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
 
   context 'when looking at homeworks' do
     let(:homework_future) { create(:homework, due_date: Time.now + 8.days, classroom: classroom) }
+    let(:lesson) { create(:lesson, subject: classroom.subject) }
+    let(:homework_lesson) { create(:homework, due_date: Time.now + 8.days, classroom: classroom, lesson: lesson) }
 
     before do
       homework
-    end
-
-    it 'tells me if I have completed a homework' do
     end
 
     it 'shows the homeworks I currnently have' do
@@ -132,34 +131,32 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
 
     it 'shows completed homeworks with a cross (times) icon' do
       visit(dashboard_path)
-      expect(page).to have_css('.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > svg.fa-times')
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-times")
     end
 
     it 'shows completed homeworks with a tick icon' do
       HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
       visit(dashboard_path)
-      expect(page).to have_css('.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > svg.fa-check')
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-check")
     end
 
     it 'shows overdue homeworks with an exclamation icon' do
       homework.update_attribute(:due_date, Time.now - 1.day)
       visit(dashboard_path)
-      expect(page).to have_css(
-        '.homework-row[data-homework="' + homework.id.to_s + '"] > td:last-child > svg.fa-exclamation'
-      )
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-exclamation")
     end
 
     it 'shows homeworks completed in the last week only' do
       HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
       homework.update_attribute(:due_date, Time.now - 2.weeks)
       visit(dashboard_path)
-      expect(page).to have_no_css('.homework-row[data-homework="' + homework.id.to_s + '"]')
+      expect(page).to have_no_css(".homework-row[data-homework='#{homework.id}']")
     end
 
     it 'shows the homeworks in date order' do
       homework_future
       visit(dashboard_path)
-      expect(page).to have_css('.homework-row:first-child[data-homework="' + homework.id.to_s + '"]')
+      expect(page).to have_css(".homework-row:first-child[data-homework='#{homework.id}']")
     end
 
     it 'links you to the correct quiz when clicked' do
@@ -168,6 +165,23 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
       find('.homework-row').click
       expect(page).to have_css('p', exact_text: homework.topic.name)
     end
+
+    it 'shows the lesson if a lesson based homework' do
+      homework_lesson
+      visit(dashboard_path)
+      expect(page).to have_content(homework_lesson.lesson.title)
+    end
+
+    it 'takes you to a lesson quiz when clicked' do
+      homework_lesson
+      create_list(:question, 10, lesson: homework_lesson.lesson, topic: homework_lesson.lesson.topic)
+      visit(dashboard_path)
+      find('.homework-row', text: homework_lesson.lesson.title).click
+      expect(page).to have_css('p', exact_text: homework_lesson.lesson.title)
+    end
+
+    it 'stops points being added on third lesson attempt'
+    it 'prevents you taking a lesson homework that has already been completed'
 
     it 'only shows my homeworks' do
       create(:homework)

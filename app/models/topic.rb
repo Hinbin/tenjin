@@ -19,5 +19,4 @@ class Topic < ApplicationRecord
   validates :name, presence: true
 
   before_destroy { |record| UsageStatistic.where(topic: record).update_all(topic_id: nil) }
-
 end
