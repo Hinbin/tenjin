@@ -9,16 +9,18 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
 
   div#navbarSupportedContent.collapse.navbar-collapse
     ul.navbar-nav.mr-auto
+      li.nav-item.active
+        a.nav-link href=schools_path Schools
+      li.nav-item.active
+        a.nav-link href=show_stats_schools_path Statistics
+      li.nav-item.active
+        a.nav-link href=subjects_path Subjects
       - if current_admin.super?
-        li.nav-item.active
-          a.nav-link href=schools_path Schools
         li.nav-item.active
           a.nav-link href=school_groups_path School Groups
         li.nav-item.active
-          a.nav-link href=manage_roles_users_path Roles
+          a.nav-link href=manage_roles_users_path Roles    
         li.nav-item.active
-          a.nav-link href=show_stats_schools_path Statistics
-        li.nav-item.active
-          a.nav-link href=subjects_path Subjects          
+          a.nav-link href=admin_path(current_admin) Admin Options    
     = link_to(destroy_admin_session_path, method: :delete) do
       button.btn.btn-light Logout

@@ -31,7 +31,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def become?
-    user.super?
+    user.super? || user.school_group?
   end
 
   def set_role?
