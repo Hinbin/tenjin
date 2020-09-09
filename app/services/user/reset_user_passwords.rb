@@ -26,6 +26,7 @@ class User::ResetUserPasswords < ApplicationService
     @users = UserPolicy::Scope.new(@user, User).resolve.where(role: %w[student employee])
                               .where(disabled: false)
                               .where.not(id: User.with_role(:school_admin))
+                              .where(sign_in_count: 0)
                               .includes(:school)
   end
 

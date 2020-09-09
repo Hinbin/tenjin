@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe User::ResetUserPasswords do
   context 'when resetting the passwords for the whole school', default_creates: true do
     let(:reset_password) { Quiz::CreateQuiz.new(admin: school_admin).call }
@@ -68,6 +70,14 @@ RSpec.describe User::ResetUserPasswords do
       create_list(:student, 19, school: school)
       result = described_class.new(school_admin).call
       expect(result.user_data).to be_present
+    end
+
+    it 'does not reset passwords for users who have logged in previously' do
+      student.update_attribute('sign_in_count', 1)
+      old_password = student.encrypted_password
+      described_class.new(school_admin).call
+      student.reload
+      expect(student.encrypted_password).to eq(old_password)
     end
   end
 end
