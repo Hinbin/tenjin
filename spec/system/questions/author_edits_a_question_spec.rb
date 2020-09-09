@@ -13,6 +13,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     find('#answer-text-1')
     all('.text-answer').last.set("#{answer_text}\n")
     click_button('Save Question')
+    find('#flash-notice', text: 'Question successfully updated')
   end
 
   def save_question
@@ -199,6 +200,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       it 'allows you to edit an existing answer' do
         visit(question_path(question))
         fill_in(answer_id, with: "#{answer_text}\n")
+        save_question
         switch_and_create_quiz
         expect(page).to have_content(answer_text)
       end
@@ -225,6 +227,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         click_link('Add Answer')
         all('.text-answer').last.set("#{answer_text}\n")
         click_button('Save Question')
+        find('#flash-notice', text: 'Question successfully updated')
       end
 
       it 'does not let you modify if the answer is correct' do
