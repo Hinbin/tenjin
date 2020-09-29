@@ -13,8 +13,8 @@ class Admin::ResetYear < ApplicationService
   private
 
   def remove_topic_scores
-    TopicScore.destroy_all
-    AllTimeTopicScore.destroy_all
+    TopicScore.delete_all
+    AllTimeTopicScore.delete_all
   end
 
   def remove_homeworks
@@ -23,7 +23,7 @@ class Admin::ResetYear < ApplicationService
   end
 
   def remove_enrollments
-    Enrollment.destroy_all
+    Enrollment.delete_all
   end
 
   def remove_classrooms
@@ -32,11 +32,11 @@ class Admin::ResetYear < ApplicationService
   end
 
   def remove_challenges
-    ChallengeProgress.destroy_all
+    ChallengeProgress.delete_all
     Challenge.destroy_all
   end
 
   def remove_leaderboard_awards
-    LeaderboardAward.destroy_all
+    LeaderboardAward.delete_all
   end
 end
