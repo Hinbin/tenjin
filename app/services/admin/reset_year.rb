@@ -18,7 +18,7 @@ class Admin::ResetYear < ApplicationService
   end
 
   def remove_homeworks
-    HomeworkProgress.destroy_all
+    HomeworkProgress.delete_all
     Homework.destroy_all
   end
 
