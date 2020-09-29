@@ -18,7 +18,7 @@ class AdminsController < ApplicationController
 
   def reset_year
     authorize current_admin
-    Admin::ResetYear.call
+    ResetYearJob.perform_later
     flash[:alert] = 'Reset Year Data'
     redirect_to schools_path
   end
