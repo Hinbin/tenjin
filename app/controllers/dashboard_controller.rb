@@ -30,9 +30,8 @@ class DashboardController < ApplicationController
 
   def student_challenges
     @challenges = Challenge.includes(topic: :subject)
-                           .where(topics: { subject_id: [@subjects.pluck(:id)] })
-                           .includes(:challenge_progresses)
-                           .where(challenge_progresses: { user_id: [current_user, nil] })
+                           .where(topics: { subject: @subjects })
+                           .left_outer_joins(:challenge_progresses)
   end
 
   def teacher_enrollments

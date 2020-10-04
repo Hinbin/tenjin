@@ -19,7 +19,7 @@
                 img.img-fluid.card-img-top video_id=l.video_id category=l.category src=l.generate_thumbnail_src      
               -if @subject_author
                 .card-footer
-                  p = 'Questions: '  + Question.where(lesson: l, active: true).count.to_s
+                  p = 'Questions: ' + l.questions_count.to_s
                   =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
                   =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
       -if @subject_author

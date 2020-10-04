@@ -136,5 +136,10 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
       described_class.new(quiz_five_points, 5, topic).call
       expect(ChallengeProgress.first.completed).to eq(true)
     end
+
+    it 'flags challenge as awarded when points have been awarded' do
+      described_class.new(quiz_five_points, 5, topic).call
+      expect(ChallengeProgress.first.awarded).to eq(true)
+    end
   end
 end

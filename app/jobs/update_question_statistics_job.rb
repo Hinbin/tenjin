@@ -4,8 +4,13 @@ class UpdateQuestionStatisticsJob < ApplicationJob
   queue_as :default
 
   def perform(*_args)
+    flag_old_quizzes
     update_question_statistics
     clean_old_questions
+  end
+
+  def flag_old_quizzes
+    Quiz.where('updated_at < ?', 1.day.ago).update_all(active: false)
   end
 
   def update_question_statistics
@@ -13,10 +18,11 @@ class UpdateQuestionStatisticsJob < ApplicationJob
                                             .left_joins(question: :question_statistic)
                                             .where(quizzes: { active: false })
     inactive_asked_questions.each do |q|
-      next if q.correct.nil?
+      unless q.correct.nil?
+        increase_question_asked_count(q)
+        increase_question_count_for_user(q)
+      end
 
-      increase_question_asked_count(q)
-      increase_question_count_for_user(q)
       q.delete
     end
   end
@@ -47,7 +53,7 @@ class UpdateQuestionStatisticsJob < ApplicationJob
                  .destroy_all
 
     AskedQuestion.where('updated_at < ?', 1.day.ago)
-                 .destroy_all
+                 .destroy_all    
   end
 
   def calculate_correct(asked_question)

@@ -110,6 +110,7 @@ class Challenge::UpdateChallengeProgress < ApplicationService
 
   def complete_challenge(progress)
     progress.awarded = true
+    progress.save
 
     progress.user.challenge_points = 0 if progress.user.challenge_points.nil?
     progress.user.challenge_points += progress.challenge.points

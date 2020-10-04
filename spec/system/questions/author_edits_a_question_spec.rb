@@ -59,6 +59,17 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     expect(page).to have_no_css('.videoLink')
   end
 
+  context 'when checking most flagged questions' do
+    let(:flagged_question) { create(:question, topic: topic, flagged_questions_count: 5)}
+
+    it 'displays flagged questions' do
+      flagged_question
+      visit questions_path
+      click_link 'Most Flagged Questions'
+      expect(page).to have_content(flagged_question.question_text.to_plain_text)
+    end
+  end
+
   context 'when adding or removing questions' do
     let(:flagged_question) { create_list(:flagged_question, 5, question: question) }
 

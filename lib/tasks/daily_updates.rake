@@ -14,5 +14,7 @@ namespace :daily_updates do
     Lesson.find_each do |l|
       Lesson.reset_counters(l.id, :questions)
     end
+
+    UpdateQuestionStatisticsJob.perform_later
   end
 end

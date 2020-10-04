@@ -48,8 +48,6 @@ RSpec.describe 'Author transfers question files', type: :system, js: true, defau
     expect(page).to have_content('Please attach a file')
   end
 
-  it 'ignores external ids'
   it 'allows you to delete multiple questions'
-  it 'uploads the answers'
-  it 'downloads json plaintext to question text'
+  
 end

@@ -31,7 +31,7 @@ class QuestionsController < ApplicationController
 
   def flagged_questions
     @subject = Subject.find(flagged_questions_params)
-    authorize @subject, :update?
+    authorize @subject, :flagged_questions?
     @questions = @subject.flagged_questions
     render :flagged_questions
   end
