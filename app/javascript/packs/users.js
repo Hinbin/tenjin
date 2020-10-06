@@ -20,7 +20,8 @@ $(document).on('turbolinks:load', () => {
           "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         buttons: [
           'copyHtml5', 'csvHtml5', 'excelHtml5'
-        ]
+        ],
+        order: [[3, 'asc'], [0, 'asc']]
       })
     }
 
