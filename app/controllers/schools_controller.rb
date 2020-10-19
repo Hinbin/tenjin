@@ -3,7 +3,7 @@
 class SchoolsController < ApplicationController
   before_action :authenticate_admin!, only: %i[index new create update show show_stats]
   before_action :authenticate_user!, only: %i[sync]
-  before_action :set_school, only: %i[show update show_employees sync]
+  before_action :set_school, only: %i[show update show_employees sync reset_all_passwords]
 
   def index
     @schools = policy_scope(School).order(:name)
@@ -52,15 +52,10 @@ class SchoolsController < ApplicationController
   end
 
   def reset_all_passwords
-    authorize current_user.school
-    @result = User::ResetUserPasswords.call(current_user)
-    if @result.success?
-      set_all_users_for_school
-      render 'users/new_passwords'
-    else
-      flash[:alert] = @result.errors
-      redirect_to index
-    end
+    authorize @school
+    ResetUserPasswordsJob.perform_later(current_user, @school)
+    flash[:alert] = 'Request received.  You will receive an email shortly with usernames and passwords.'
+    redirect_to users_path
   end
 
   def show

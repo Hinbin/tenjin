@@ -11,14 +11,6 @@ RSpec.describe 'user controller', default_creates: true, type: :request do
     patch reset_all_passwords_school_path(student.school)
   end
 
-  context 'when submitting a password change for all' do
-    it 'displays the new password template if sucessful' do
-      sign_in school_admin
-      reset_all_link
-      expect(response).to have_http_status(:success)
-    end
-  end
-
   context 'when I am not authorized to perform this action' do
     it 'does not succeed if I am an employee' do
       sign_in teacher

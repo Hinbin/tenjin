@@ -72,5 +72,8 @@ Rails.application.configure do
     )
   end
 
+  # Perform jobs straight away 
+  config.active_job.queue_adapter = :inline
+
 
 end
