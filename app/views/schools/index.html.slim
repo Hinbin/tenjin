@@ -6,6 +6,7 @@
         th Name
         th Students
         th Weekly Questions
+        th Monthly Questions
         th Sync Status
         - if current_admin.super?
           th Permitted?
@@ -16,6 +17,7 @@
           td =link_to(school.name, school)
           td =school.users.where(role: 'student').count
           td =UserStatistic.joins(user: :school).where(users: {school: school}, week_beginning: Date.current.beginning_of_week).sum(:questions_answered)
+          td =UserStatistic.joins(user: :school).where(users: {school: school}).where(week_beginning: 1.month.ago..Date.current).sum(:questions_answered)
           td =sync_status_icon(school.sync_status)
           - if current_admin.super?
             td =link_to boolean_icon(school.permitted?),
