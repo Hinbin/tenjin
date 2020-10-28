@@ -4,7 +4,8 @@ class Challenge < ApplicationRecord
   belongs_to :topic
   has_many :challenge_progresses, dependent: :destroy
 
-  scope :by_user, ->(user) { joins(:challenge_progresses).where('challenge_progresses.user_id = ?', user) }
+  scope :has_progress, ->(user) { includes(:challenge_progresses).where('challenge_progresses.user_id = ?', user) }
+  scope :has_no_progress, -> { includes(:challenge_progresses).where(challenge_progresses: { id: nil }) }
 
   enum challenge_type: %i[number_correct streak number_of_points]
 

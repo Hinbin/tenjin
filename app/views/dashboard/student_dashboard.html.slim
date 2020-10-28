@@ -41,7 +41,7 @@ section#challenges.page-section.text-center
             - @challenges.each do |c|
                 tr.challenge-row data-challenge=c.id data-topic=(c.daily? ? 'Lucky Dip' : c.topic.id) data-subject=c.topic.subject_id
                   td.text-left = c.stringify
-                  td = write_challenge_progress(c.challenge_progresses.first)
+                  td = write_challenge_progress(c, @challenge_progresses)
                   td.d-none.d-sm-table-cell 
                     = c.points
                     i.fas.fa-star style='color: yellow'

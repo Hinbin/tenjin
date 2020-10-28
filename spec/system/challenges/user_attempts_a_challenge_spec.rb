@@ -116,6 +116,18 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
         click_through_quiz
         expect(page).to have_css('svg.fa-check')
       end
+
+      it 'only increases points for this student' do
+        second_enrollment = create(:enrollment, classroom: classroom)
+        create(:question, topic: create(:topic, subject: subject))
+        visit(dashboard_path)
+        find(:css, '#challenge-table tbody tr:nth-child(1)').click
+        click_through_quiz
+        sign_out student
+        sign_in second_enrollment.user
+        visit(dashboard_path)
+        expect(page).to have_no_css('.fa-check')
+      end
     end
   end
 end

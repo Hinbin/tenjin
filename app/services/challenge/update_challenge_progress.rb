@@ -61,6 +61,12 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   end
 
   def upsert_points(points, challenge)
+    unless challenge.topic == @quiz.topic ||
+           challenge.topic == @question_topic ||
+           (challenge.daily && challenge.topic.subject == @question_topic.subject)
+      return
+    end
+
     completed = points >= challenge.number_required
 
     binds = [[nil, points], [nil, @quiz.user], [nil, challenge.id], [nil, completed], [nil, challenge.number_required]]
@@ -98,14 +104,6 @@ class Challenge::UpdateChallengeProgress < ApplicationService
     return 0 unless @quiz.topic == challenge.topic
 
     @quiz.streak
-  end
-
-  def check_number_of_points(challenge, challenge_points)
-    unless @question_topic == challenge.topic || (challenge.daily && @question_topic.subject == challenge.topic.subject)
-      return 0
-    end
-
-    challenge_points.progress + @number_to_add
   end
 
   def complete_challenge(progress)

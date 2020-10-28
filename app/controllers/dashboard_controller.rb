@@ -31,7 +31,7 @@ class DashboardController < ApplicationController
   def student_challenges
     @challenges = Challenge.includes(topic: :subject)
                            .where(topics: { subject: @subjects })
-                           .left_outer_joins(:challenge_progresses)
+    @challenge_progresses = ChallengeProgress.where(challenge: @challenges).where(user: current_user).to_a
   end
 
   def teacher_enrollments

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 module DashboardHelper
-  def write_challenge_progress(challenge_progress)
-    return '0%' if challenge_progress.nil?
-    return '<i class="fas fa-check" style="color:green"></i>'.html_safe if challenge_progress.completed
+  def write_challenge_progress(challenge, challenge_progresses)
+    challenge_progress = challenge_progresses.select { |cp| cp.challenge_id == challenge.id }
+    return '0%' if challenge_progress.empty?
+    return '<i class="fas fa-check" style="color:green"></i>'.html_safe if challenge_progress.first.completed
 
-    challenge_progress.progress.to_i.to_s
+    challenge_progress.first.progress.to_i.to_s
   end
 
   def check_overdue(homework_progress)
