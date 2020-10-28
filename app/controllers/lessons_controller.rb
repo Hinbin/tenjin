@@ -84,7 +84,7 @@ class LessonsController < ApplicationController
                   .includes(:topic)
                   .where(topics: { subject: @editable_subjects.pluck(:id) })).order('topics.name, lessons.title')
     else
-      @lessons = policy_scope(Lesson).order('topics.name, lessons.title')
+      @lessons = policy_scope(Lesson).includes(:topic).order('topics.name, lessons.title')
     end
   end
 end

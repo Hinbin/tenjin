@@ -5,7 +5,7 @@ class LessonPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.includes(:topic)
+      scope.joins(:topic)
            .where(topics: { subject_id: user.subjects })
     end
   end
