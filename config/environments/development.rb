@@ -75,5 +75,17 @@ Rails.application.configure do
   # Perform jobs straight away 
   config.active_job.queue_adapter = :inline
 
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.alert = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.add_footer = true
+    Bullet.skip_html_injection = false
+
+    Bullet.add_whitelist :type => :unused_eager_loading, class_name: "Lesson", association: :topic
+    Bullet.add_whitelist :type => :unused_eager_loading, class_name: "Classroom", association: :subject
+    Bullet.add_whitelist :type => :unused_eager_loading, class_name: "ActionText::RichText", :association => :embeds_attachments
+  end
 
 end

@@ -80,6 +80,9 @@ group :development do
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
 
+  # Hunt for n+1
+  gem 'bullet'
+
 
 end
 
