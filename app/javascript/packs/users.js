@@ -1,5 +1,21 @@
 
 $(document).on('turbolinks:load', () => {
+
+  if (page.controller() === 'users' && document.getElementById('loginGoogle')) {
+
+    window.driver.highlight({
+      element: '#loginGoogle',
+      popover: {
+        title: 'Link your account to Google',
+        description: 'Click on the Sign in With Google button and login to link your accounts.',
+        // position can be left, left-center, left-bottom, top,
+        // top-center, top-right, right, right-center, right-bottom,
+        // bottom, bottom-center, bottom-right, mid-center
+        position: 'top'
+      }
+    })
+  }
+
   if ($('#students-table').length) {
     // Show updated password
     $(document).on('ajax:success', (event) => {

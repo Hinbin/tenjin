@@ -18,7 +18,6 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true, defaul
   end
 
   context 'when logging in' do
-    let(:student_google) { create(:student, :oauth, oauth_uid: '123456123456') }
 
     before do
       visit root_path
@@ -41,11 +40,11 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true, defaul
     end
 
     it 'logs in using Google oAuth' do
-      student_google
+      student = create(:student, oauth_uid: '123456123456')
       stub_google_omniauth
       click_button 'Login'
       find(:css, '#loginGoogle').click
-      expect(page).to have_content(student_google.forename).and have_content(student_google.surname)
+      expect(page).to have_content(student.forename).and have_content(student.surname)
     end
 
     it 'redirects to dashboard if they are already signed in' do
@@ -94,5 +93,27 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true, defaul
       visit page_path('about')
       expect(page).to have_css('#ogatAbout')
     end
+  end
+
+  context 'when being prompted to sign in with google' do
+    it 'displays a message to click on the users name' do
+      sign_in create(:student, :no_oauth)
+      visit(dashboard_path)
+      expect(page).to have_content('Lets attach your account to your Google Login')
+    end
+
+    it 'only displays the message when the account is not yet linked to Google' do
+      sign_in student
+      visit(dashboard_path)
+      expect(page).to have_no_content('Lets attach your account to your Google Login')
+    end
+
+    it 'displays the message for teachers' do
+      sign_in create(:teacher, :no_oauth)
+      visit(dashboard_path)
+      expect(page).to have_content('Lets attach your account to your Google Login')
+    end
+
+    it 'only displays the message when the MAT is Google enabled' 
   end
 end

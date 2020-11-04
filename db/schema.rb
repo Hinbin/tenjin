@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_09_124045) do
+ActiveRecord::Schema.define(version: 2020_10_29_145928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -418,6 +418,7 @@ ActiveRecord::Schema.define(version: 2020_09_09_124045) do
     t.string "oauth_provider"
     t.string "oauth_uid"
     t.string "oauth_email"
+    t.integer "tutorials", default: 0, null: false
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
     t.index ["username"], name: "index_users_on_username", unique: true
