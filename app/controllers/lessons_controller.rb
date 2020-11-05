@@ -81,7 +81,7 @@ class LessonsController < ApplicationController
       @editable_subjects = Subject.with_role(:lesson_author, current_user)
       @lessons = policy_scope(Lesson)
                  .or(Lesson
-                  .includes(:topic)
+                  .joins(:topic)
                   .where(topics: { subject: @editable_subjects.pluck(:id) })).order('topics.name, lessons.title')
     else
       @lessons = policy_scope(Lesson).includes(:topic).order('topics.name, lessons.title')
