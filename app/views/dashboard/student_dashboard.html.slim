@@ -46,5 +46,5 @@ section#challenges.page-section.text-center
                     = c.points
                     i.fas.fa-star style='color: yellow'
                   td = challenge_time_left(c)
--unless current_user.oauth_email.blank?
+-if current_user.oauth_email.blank?
   input#oAuthEmail type='hidden'

@@ -15,7 +15,7 @@ gem 'rails', '~> 6.0.0'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
 gem 'rack-cors', groups: [:production]
-gem 'rack-timeout'
+gem 'rack-timeout', groups: [:production]
 
 gem 'delayed_job_active_record'
 

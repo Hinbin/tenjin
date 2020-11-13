@@ -99,19 +99,19 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true, defaul
     it 'displays a message to click on the users name' do
       sign_in create(:student, :no_oauth)
       visit(dashboard_path)
-      expect(page).to have_content('Lets attach your account to your Google Login')
+      expect(page).to have_content("Let's get your account linked")
     end
 
     it 'only displays the message when the account is not yet linked to Google' do
       sign_in student
       visit(dashboard_path)
-      expect(page).to have_no_content('Lets attach your account to your Google Login')
+      expect(page).to have_no_content("Let's get your account linked")
     end
 
     it 'displays the message for teachers' do
       sign_in create(:teacher, :no_oauth)
       visit(dashboard_path)
-      expect(page).to have_content('Lets attach your account to your Google Login')
+      expect(page).to have_content("Let's get your account linked")
     end
 
     it 'only displays the message when the MAT is Google enabled' 

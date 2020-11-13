@@ -15,7 +15,8 @@ import { definitionsFromContext } from 'stimulus/webpack-helpers'
 
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
-import Tour from 'bootstrap-tour'
+import Shepherd from 'shepherd.js'
+import Cookies from 'js-cookie/src/js.cookie'
 
 
 import './classroom'
@@ -72,4 +73,6 @@ ReactRailsUJS.useContext(componentRequireContext)
 const application = Application.start()
 const context = require.context('./controllers', true, /\.js$/)
 application.load(definitionsFromContext(context))
-window.tour = new Toury()
+
+window.Shepherd = Shepherd
+window.Cookies = Cookies

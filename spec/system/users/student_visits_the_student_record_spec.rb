@@ -51,8 +51,9 @@ RSpec.describe 'User visits the homepage', :vcr, default_creates: true, type: :s
 
     it 'shows an appropriate flash message when linking accounts' do
       visit(user_path(student_no_oauth))
+      find('.shepherd-text')
       find(:css, '#loginGoogle').click
-      expect(student_no_oauth).to have_content('Successfully linked Google account')
+      expect(page).to have_content('Successfully linked Google account')
     end
   end
 end
