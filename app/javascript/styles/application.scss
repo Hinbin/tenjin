@@ -22,7 +22,7 @@
 @import 'actiontext';
 @import 'trix/dist/trix';
 @import 'leaderboard';
-
+@import 'shepherd';
 
 .navbar-dark .nav-item .nav-link {
   color: theme-color("light");
@@ -202,3 +202,4 @@ body {
 .error {
   @extend .text-danger
 }
+

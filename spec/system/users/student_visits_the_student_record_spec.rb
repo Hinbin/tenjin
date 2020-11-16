@@ -27,27 +27,33 @@ RSpec.describe 'User visits the homepage', :vcr, default_creates: true, type: :s
     expect(page).to have_content(student.forename).and have_content(student.surname)
   end
 
-  context 'when already linked' do
-    let(:student) { create(:student, :oauth) }
+  it 'unlinks Google accounts' do
+    visit(user_path(student))
+    page.accept_confirm { click_link "Unlink #{student.oauth_email}" }
+    expect(page).to have_css('#loginGoogle')
+  end
 
-    it 'unlinks Google accounts' do
-      visit(user_path(student))
-      page.accept_confirm { click_link "Unlink #{student.oauth_email}" }
-      expect(page).to have_css('#loginGoogle')
+  context 'when linking Google accounts' do
+    let(:student_no_oauth) { create(:student, :no_oauth) }
+
+    before do
+      sign_in student_no_oauth
+      stub_google_omniauth
     end
-  end
 
-  it 'links to Google accounts' do
-    visit(user_path(student))
-    find(:css, '#loginGoogle').click
-    find('.alert', text: 'linked')
-    log_in_via_google
-    expect(page).to have_content(student.forename).and have_content(student.surname)
-  end
+    it 'links to Google accounts' do
+      visit(user_path(student_no_oauth))
+      find(:css, '#loginGoogle').click
+      find('.alert', text: 'linked')
+      log_in_via_google
+      expect(page).to have_content(student_no_oauth.forename).and have_content(student_no_oauth.surname)
+    end
 
-  it 'shows an appropriate flash message when linking accounts' do
-    visit(user_path(student))
-    find(:css, '#loginGoogle').click
-    expect(page).to have_content('Successfully linked Google account')
+    it 'shows an appropriate flash message when linking accounts' do
+      visit(user_path(student_no_oauth))
+      find('.shepherd-text')
+      find(:css, '#loginGoogle').click
+      expect(page).to have_content('Successfully linked Google account')
+    end
   end
 end

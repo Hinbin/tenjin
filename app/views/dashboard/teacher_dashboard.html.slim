@@ -41,4 +41,6 @@ section.page-section.text-center#myClassrooms
                   td =c.name
                   td.d-none.d-lg-block =c.description
                   td =c.subject.name if c.subject.present?
-                  
+-if current_user.oauth_email.blank?
+  input#oAuthEmail type='hidden'
+

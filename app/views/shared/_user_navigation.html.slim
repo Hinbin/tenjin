@@ -47,7 +47,7 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
           td
             i.fas.fa-star.f style='color: yellow'    
           td#challenge-points.text-light = current_user.challenge_points          
-    p.m-2
+    p.m-2#current_user_paragraph
       a#current_user.text-light href=user_path(current_user)
         => current_user.forename
         = current_user.surname

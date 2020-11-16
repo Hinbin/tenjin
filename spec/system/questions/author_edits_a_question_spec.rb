@@ -22,7 +22,6 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   end
 
   def switch_to_student_account
-    # wait_for_ajax
     sign_out author
     sign_in student
     visit new_quiz_path(subject: topic.subject.name)

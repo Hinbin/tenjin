@@ -1,5 +1,4 @@
 $(document).on('turbolinks:load', () => {
-
   $('.challenge-row, .homework-row').off('click')
 
   $('.challenge-row, .homework-row').click(function (event) {

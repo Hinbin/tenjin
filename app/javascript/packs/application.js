@@ -15,6 +15,9 @@ import { definitionsFromContext } from 'stimulus/webpack-helpers'
 
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
+import Shepherd from 'shepherd.js'
+import Cookies from 'js-cookie/src/js.cookie'
+
 
 import './classroom'
 import './homework'
@@ -70,3 +73,6 @@ ReactRailsUJS.useContext(componentRequireContext)
 const application = Application.start()
 const context = require.context('./controllers', true, /\.js$/)
 application.load(definitionsFromContext(context))
+
+window.Shepherd = Shepherd
+window.Cookies = Cookies

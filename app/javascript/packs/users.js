@@ -1,5 +1,6 @@
 
 $(document).on('turbolinks:load', () => {
+
   if ($('#students-table').length) {
     // Show updated password
     $(document).on('ajax:success', (event) => {

@@ -39,3 +39,6 @@ before_fork { Barnes.start }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+# Prevent timeouts in development mode
+worker_timeout (24*60*60) if ENV['RAILS_ENV']=='development'

@@ -1,0 +1,137 @@
+@import 'shepherd.js/dist/css/shepherd.css';
+
+.shepherd-button {
+  background: #ffffff;
+  border-top: solid 4px #16202D;
+  border-radius: 0;
+  color: #16202D;
+  display: flex;
+  flex-grow: 1;
+  font-family: "GT Pressura", sans-serif;
+  font-size: 1rem;
+  justify-content: center;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.shepherd-button:hover {
+  background: #16202D;
+  color: #ffffff;
+}
+
+.shepherd-button.shepherd-button-secondary {
+  background: #CAD5D5;
+}
+
+.shepherd-button.shepherd-button-secondary:hover {
+  color: #CAD5D5;
+  background: #16202D;
+}
+
+.shepherd-cancel-icon {
+  font-family: "GT Pressura", sans-serif;
+}
+
+.shepherd-element {
+  border: solid 4px #16202D;
+}
+
+.shepherd-element,
+.shepherd-header,
+.shepherd-footer {
+  border-radius: 0;
+}
+
+.shepherd-element .shepherd-arrow {
+  border-width: 0;
+  height: auto;
+  width: auto;
+}
+
+.shepherd-arrow::before {
+  display: none;
+}
+
+.shepherd-element .shepherd-arrow:after {
+  color: rgba(255, 0, 0, 0.75);
+  content: "\F060";  /* this is your text. You can also use UTF-8 character codes as I do here */
+  font-family: 'FontAwesome';
+  display: inline-block;
+}
+
+.shepherd-element[data-popper-placement^='top'] .shepherd-arrow,
+.shepherd-element.shepherd-pinned-top .shepherd-arrow {
+  bottom: -2px;
+}
+
+.shepherd-element[data-popper-placement^='top'] .shepherd-arrow:after,
+.shepherd-element.shepherd-pinned-top .shepherd-arrow:after {
+  transform: rotate(270deg);
+}
+
+.shepherd-element[data-popper-placement^='bottom'] .shepherd-arrow {
+  top: -2px;
+}
+
+.shepherd-element[data-popper-placement^='bottom'] .shepherd-arrow:after {
+  transform: rotate(90deg);
+}
+
+.shepherd-element[data-popper-placement^='left'] .shepherd-arrow,
+.shepherd-element.shepherd-pinned-left .shepherd-arrow {
+  right: -35px;
+}
+
+.shepherd-element[data-popper-placement^='left'] .shepherd-arrow:after,
+.shepherd-element.shepherd-pinned-left .shepherd-arrow:after {
+  transform: rotate(180deg);
+}
+
+.shepherd-element[data-popper-placement^='right'] .shepherd-arrow,
+.shepherd-element.shepherd-pinned-right .shepherd-arrow {
+  left: -35px;
+}
+
+.shepherd-footer {
+  padding: 0;
+}
+
+.shepherd-footer button:not(:last-of-type) {
+  border-right: solid 4px #16202D;
+}
+
+.shepherd-has-title .shepherd-content .shepherd-cancel-icon {
+  margin-top: -7px;
+}
+
+.shepherd-has-title .shepherd-content .shepherd-header {
+  background: transparent;
+  font-family: "GT Pressura", sans-serif;
+  padding-bottom: 0;
+  padding-left: 2rem;
+}
+
+.shepherd-has-title .shepherd-content .shepherd-header .shepherd-title {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.shepherd-text {
+  font-size: 1.2rem;
+  padding: 2rem;
+}
+
+.shepherd-text a, .shepherd-text a:visited,
+.shepherd-text a:active {
+  border-bottom: 1px dotted;
+  border-bottom-color: rgba(0, 0, 0, 0.75);
+  color: rgba(0, 0, 0, 0.75);
+  text-decoration: none;
+}
+
+.shepherd-text a:hover, .shepherd-text a:visited:hover,
+.shepherd-text a:active:hover {
+  border-bottom-style: solid;
+}
