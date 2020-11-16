@@ -33,9 +33,9 @@ class Question < ApplicationRecord
   def boolean_true_or_false
     return unless boolean?
 
-    answer_text = answers.map(&:text)
+    answer_text = answers.filter_map { |i| i&.text }
     # Check for the presence of both true and false in two answers in a case insensitive search
-    errors[:base] << 'Boolean question must contain only two answers' unless answer_text.size == 2
+    return errors[:base] << 'Boolean question must contain two answers' unless answer_text.size == 2
 
     return if answer_text.select { |text| %w[true false].detect { |permitted| permitted.casecmp(text).zero? } }
 

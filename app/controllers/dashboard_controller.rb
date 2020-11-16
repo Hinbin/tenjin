@@ -4,8 +4,9 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   def show
-    authorize current_user, policy_class: DashboardPolicy # make it so that it checks if the school is permitted?
-    @subjects = current_user.subjects
+    authorize current_user, policy_class: DashboardPolicy # make it so that it checks if the school is permitted
+    @subjects = current_user.subjects.uniq
+    
     if current_user.student?
       @css_flavour = find_dashboard_style
       student_homework_progress
