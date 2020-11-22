@@ -7,16 +7,15 @@ class CustomiseController < ApplicationController
     authorize current_user # make it so that it checks if the school is permitted?
     @subjects = current_user.subjects
     @css_flavour = find_dashboard_style
-    @dashboard_styles = Customisation.where(customisation_type: 'dashboard_style')
-    @leaderboard_icons = Customisation.where(customisation_type: 'leaderboard_icon')
     @bought_customisations = CustomisationUnlock.where(user: current_user).pluck(:customisation_id)
+    @purchased_styles = Customisation.where(id: @bought_customisations)
+    @available_styles = Customisation.where(purchasable: true)
+                                     .where.not(id: @bought_customisations)
   end
 
   def update
     authorize current_user, :show?
-    @customisation = Customisation.where('customisation_type = ? AND value = ?',
-                                         Customisation.customisation_types[customisation_params[:type]],
-                                         customisation_params[:value]).first
+    @customisation = Customisation.where(id: customisation_params[:id])
     result = buy_customisation
     flash_notice(result)
     redirect_to dashboard_path
@@ -34,7 +33,7 @@ class CustomiseController < ApplicationController
   end
 
   def customisation_params
-    params.require(:customisation).permit(:type, :value)
+    params.require(:customisation).permit(:id)
   end
 
   def purchase_failed(exception)

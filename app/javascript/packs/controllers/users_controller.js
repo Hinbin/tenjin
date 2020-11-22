@@ -1,8 +1,7 @@
 // src/controllers/users_controller.js
-import { Controller } from "stimulus"
+import { Controller } from 'stimulus'
 
 export default class extends Controller {
-
   initialize () {
     if (document.getElementById('loginGoogle')) {
       const tour = new Shepherd.Tour({ useModalOverlay: true })
@@ -15,7 +14,7 @@ export default class extends Controller {
         },
         buttons: [
           {
-            text: 'Later',        
+            text: 'Later',
             action: tour.cancel
           }
         ]

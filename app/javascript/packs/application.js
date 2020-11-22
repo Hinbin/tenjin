@@ -33,7 +33,6 @@ import './questions/short_response_question'
 import './questions/import_topic_questions'
 import './lessons'
 import './questions'
-import './customise'
 import './controller_info'
 import './google_analytics'
 

@@ -1,0 +1,29 @@
+-dashboard_styles = customisations.where(customisation_type: 'dashboard_style').shuffle.each do |style|
+- if dashboard_styles.count > 0
+  section.page-section.text-center.dashboard-styles
+    .container
+      h3.text-uppercase Dashboard Styles
+      hr.hr.small.mb-3 class="primary-#{@css_flavour}"
+      -dashboard_styles.shuffle.each do |style|
+        .card class=style.value        
+          .card-body
+            h2.page-section-header.text-uppercase.text-white =style.name
+            hr.small.mb-5 class="primary-#{style.value}"
+            p.text-white#cost              
+              == customisation_cost(style)
+              == customisation_button(style)
+-leaderboard_icon_styles = customisations.where(customisation_type: 'leaderboard_icon').shuffle.each do |icon|
+- if leaderboard_icon_styles.count > 0
+  section.page-section.text-center.icons
+    .container
+      h3.text-uppercase Leaderboard Icons
+      hr.hr.small.mb-3 class="primary-#{@css_flavour}"
+      .row.col.justify-content-center
+        -leaderboard_icon_styles.shuffle.each do |icon|
+          .card
+            .card-body
+              p =icon.name
+              i class='fas fa-2x fa-#{icon.value.split(',')[1]}' style="color: #{icon.value.split(',')[0]}"
+              p#cost
+                == customisation_cost(icon)
+                == customisation_button(icon)

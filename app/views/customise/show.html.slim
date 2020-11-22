@@ -1,36 +1,19 @@
 -content_for :title
   title=('Customisations')
-section.page-section.text-center#dashboard-styles
+section.page-section.text-center.available-styles
   .container
-    h1.page-section-header.text-uppercase Dashboard Styles
-    hr.hr.small.mb-5 class="primary-#{@css_flavour}"
-    -@dashboard_styles.shuffle.each do |style|
-      .card class=style.value        
-        .card-body
-          h2.page-section-header.text-uppercase.text-white =style.name
-          hr.small.mb-5 class="primary-#{style.value}"
-          p.text-white#cost
-            i.fas.fa-star style='color: yellow'
-            = customisation_cost(style)
-          button.btn.btn-light-outline.float-right.buy-btn type='submit' data-customisation-type='dashboard_style' data-value=style.value id="buy-dashboard-#{style.value}" Buy
-section.page-section.text-center#icons
-  .container
-    h1.page-section-header.text-uppercase Leaderboard Icons
-    hr.hr.small.mb-5 class="primary-#{@css_flavour}"
-    .row.col.justify-content-center
-      -@leaderboard_icons.shuffle.each do |icon|
-        .card
-          .card-body
-            p =icon.name
-            i class='fas fa-2x fa-#{icon.value.split(',')[1]}' style="color: #{icon.value.split(',')[0]}"
-            p#cost
-              i.fas.fa-star style='color: yellow'
-              = customisation_cost(icon)
-            button.btn.btn-dark-outline.buy-btn type='submit' data-customisation-type='leaderboard_icon' data-value=icon.value id="buy-icon-#{icon.value}"
-              | Buy
-        
+    h1.page-section-header.text-uppercase Available Styles
+    hr.hr.small.mb-2 class="primary-#{@css_flavour}"
+    p.m-1 Different styles available every week!
+    =render partial: "customisations", locals: {customisations: @available_styles}    
 
-form#customisation name='customisation' method='post'
+section.page-section.text-center.purchased-styles
+  .container
+    h1.page-section-header.text-uppercase Purchased Styles
+    hr.hr.small.mb-2 class="primary-#{@css_flavour}"
+    =render partial: "customisations", locals: {customisations: @purchased_styles}
+
+
+form#customisation name='customisation' method='post' data-target="customise.customisationForm"
   = hidden_field_tag :authenticity_token, form_authenticity_token
-  input#customisation-value name='customisation[value]' type="hidden"
-  input#customisation-type name='customisation[type]' type="hidden"
+  input#customisation-id name='customisation[id]' data-target="customise.customisationId" type="hidden" 
