@@ -86,6 +86,7 @@ Rails.application.configure do
     Bullet.add_whitelist :type => :unused_eager_loading, class_name: "Lesson", association: :topic
     Bullet.add_whitelist :type => :unused_eager_loading, class_name: "Classroom", association: :subject
     Bullet.add_whitelist :type => :unused_eager_loading, class_name: "ActionText::RichText", :association => :embeds_attachments
+    Bullet.add_whitelist :type => :unused_eager_loading, class_name: "Customisation", :association => :image_attachment
   end
 
 end

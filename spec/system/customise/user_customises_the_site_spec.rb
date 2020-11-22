@@ -53,7 +53,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
 
     it 'allows you to buy a dashbord style' do
       find("button[data-customisation-id='#{dashboard_customisation.id}']").click
-      expect(page).to have_css("section#homework-#{dashboard_customisation.value}")
+      expect(page).to have_css("hr[style*=#{dashboard_customisation.value}]")
     end
 
     it 'deducts the required amount of challenge points' do

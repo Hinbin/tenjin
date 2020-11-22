@@ -3,12 +3,14 @@
   section.page-section.text-center.dashboard-styles
     .container
       h3.text-uppercase Dashboard Styles
-      hr.hr.small.mb-3 class="primary-#{@css_flavour}"
+      ==render_small_separator
       -dashboard_styles.shuffle.each do |style|
-        .card class=style.value        
+        .card.dashboard-style style=render_dashboard_style(style)
           .card-body
             h2.page-section-header.text-uppercase.text-white =style.name
-            hr.small.mb-5 class="primary-#{style.value}"
+            ==render_small_separator(style)
+          div.m-5
+          div.m-3
             p.text-white#cost              
               == customisation_cost(style)
               == customisation_button(style)
@@ -17,7 +19,7 @@
   section.page-section.text-center.icons
     .container
       h3.text-uppercase Leaderboard Icons
-      hr.hr.small.mb-3 class="primary-#{@css_flavour}"
+      ==render_small_separator
       .row.col.justify-content-center
         -leaderboard_icon_styles.shuffle.each do |icon|
           .card
@@ -26,4 +28,5 @@
               i class='fas fa-2x fa-#{icon.value.split(',')[1]}' style="color: #{icon.value.split(',')[0]}"
               p#cost
                 == customisation_cost(icon)
+                div.m-1
                 == customisation_button(icon)

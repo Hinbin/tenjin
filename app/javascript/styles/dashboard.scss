@@ -7,7 +7,7 @@
   transition: background-color 0.3s linear;
 }
 
-%homework{
+.homework-image{
   @include media-breakpoint-up(lg) {
     background-attachment: fixed !important;    
   }
@@ -16,35 +16,21 @@
   color: white;
 }
 
-$dashboard_styles: ('red': 'athletics.jpg', 'darkred': 'darkred-ferrari.jpg', 'darkblue': 'darkblue-hiking.jpg',
-                    'orange': 'orange-climbing.jpg', 'yellow' : 'yellow-cheerful.jpg', 'darkgreen' : 'darkgreen-football.jpg');
-
-@each $name, $image in $dashboard_styles {
-  
-  #homework-#{$name}{
-    @extend %homework;
-    background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('../images/#{$image}') no-repeat;
-  }
-
-  hr.primary-#{$name}{    
-    @extend %hr, .primary-shared;
-    border-color: unquote($name);
-  }
-
-  div.card.#{$name}{
-    background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('../images/#{$image}') no-repeat;
-    background-size: cover !important;
-    background-position: center !important; 
-  }
-
-}
-
 .homework-table{
   background-color:rgba(0, 0, 0, 0.3)
 }
 
 #newQuiz{
   background-color: white;
+}
+
+hr.primary{    
+  @extend %hr, .primary-shared;
+}
+
+.dashboard-style{
+  background-size: cover !important;
+  background-position: center !important; 
 }
 
 .subject-carousel-item-text {

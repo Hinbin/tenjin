@@ -5,7 +5,7 @@ class QuizzesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_quiz, only: %i[show update]
   before_action :set_question, only: %i[show update]
-  before_action :set_css_flavour, only: %i[new]
+  before_action :set_dashboard_style, only: %i[new]
   before_action :set_subject, only: %i[new]
   before_action :set_create_params, only: %i[create]
 
@@ -107,8 +107,8 @@ class QuizzesController < ApplicationController
     @lesson = quiz_params[:lesson_id] unless quiz_params[:lesson_id].blank?
   end
 
-  def set_css_flavour
-    @css_flavour = find_dashboard_style
+  def set_dashboard_style
+    @dashboard_style = find_dashboard_style
   end
 
   def answer_params

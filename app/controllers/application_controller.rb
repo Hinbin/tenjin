@@ -32,7 +32,9 @@ class ApplicationController < ActionController::Base
     style = ActiveCustomisation.joins(:customisation)
                                .find_by(user: current_user,
                                         customisations: { customisation_type: 'dashboard_style' })
-    style.present? ? style.customisation.value : 'red'
+    return style.customisation if style.present?
+
+    Customisation.find_by(customisation_type: 'dashboard_style', value: 'red')
   end
 
   def pundit_user

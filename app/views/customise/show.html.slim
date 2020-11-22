@@ -3,14 +3,14 @@
 section.page-section.text-center.available-styles
   .container
     h1.page-section-header.text-uppercase Available Styles
-    hr.hr.small.mb-2 class="primary-#{@css_flavour}"
+    ==render_small_separator
     p.m-1 Different styles available every week!
     =render partial: "customisations", locals: {customisations: @available_styles}    
 
 section.page-section.text-center.purchased-styles
   .container
     h1.page-section-header.text-uppercase Purchased Styles
-    hr.hr.small.mb-2 class="primary-#{@css_flavour}"
+    ==render_small_separator
     =render partial: "customisations", locals: {customisations: @purchased_styles}
 
 

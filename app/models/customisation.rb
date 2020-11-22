@@ -6,4 +6,6 @@ class Customisation < ApplicationRecord
 
   has_many :customisation_unlocks
   has_many :active_customisations
+
+  has_one_attached :image
 end

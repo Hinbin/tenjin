@@ -1,7 +1,7 @@
-section.page-section.text-center id="homework-#{@css_flavour}"
+section.page-section.text-center.homework-image id="homework" style=render_dashboard_style(@dashboard_style)
   .container
     h1.page-section-header.text-uppercase Homework
-    hr.small.mb-5 class="primary-#{@css_flavour}"
+    ==render_small_separator
     .row
       .col
         table.table.table-hover.text-white.homework-table

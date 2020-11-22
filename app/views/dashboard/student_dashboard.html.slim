@@ -4,7 +4,7 @@ section.page-section.text-center#newQuiz
   .container#startAQuizContainer
     h1.page-section-header.text-uppercase Start a Quiz
     p.lead Select a subject below
-    hr class=("small mb-5 primary-#{@css_flavour}")
+    ==render_small_separator
     .carousel.slide.col-md-8.col-lg-5.mx-auto#subjectCarousel data-ride="carousel"
       ol.carousel-indicators
         -@subjects.each_with_index do |s, i|
@@ -27,7 +27,7 @@ section.page-section.text-center#newQuiz
 section#challenges.page-section.text-center
   .container
     h1.page-section-header.text-uppercase Challenges
-    hr.small.mb-5 class="primary-#{@css_flavour}"
+    ==render_small_separator
     .row.justify-content-center
       .col-lg-10.col.mx-auto
         table.table.table-hover#challenge-table
@@ -38,7 +38,7 @@ section#challenges.page-section.text-center
               th.d-none.d-sm-table-cell Points
               th Expires in
           tbody
-            - @challenges.each do |c|
+            - @challenges.each do |c| 
                 tr.challenge-row data-challenge=c.id data-topic=(c.daily? ? 'Lucky Dip' : c.topic.id) data-subject=c.topic.subject_id
                   td.text-left = c.stringify
                   td = write_challenge_progress(c, @challenge_progresses)

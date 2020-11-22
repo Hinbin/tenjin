@@ -125,7 +125,7 @@ RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: 
     it 'has a separator of the correct colour' do
       active_customisation
       visit(new_quiz_path(params: { subject: subject.name }))
-      expect(page).to have_css('hr.primary-orange')
+      expect(page).to have_css("hr[style*='#{active_customisation.customisation.value}'")
     end
   end
 end
