@@ -2,7 +2,6 @@
 
 class SchoolsController < ApplicationController
   before_action :authenticate_admin!, only: %i[index new create update show show_stats]
-  before_action :authenticate_user!, only: %i[sync]
   before_action :set_school, only: %i[show update show_employees sync reset_all_passwords]
 
   def index
@@ -45,6 +44,12 @@ class SchoolsController < ApplicationController
   end
 
   def sync
+    if current_admin.present?
+      authenticate_admin!
+    else
+      authenticate_user!
+    end
+
     authorize @school
     @school.update_attribute('sync_status', 'queued')
     SyncSchoolJob.perform_later @school

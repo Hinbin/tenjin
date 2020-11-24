@@ -35,7 +35,10 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def sync?
-    user.has_role?(:school_admin) && user.school == record
+    return true if user.class == Admin && user.super?
+    return true if user.class == User && user.has_role?(:school_admin) && user.school == record
+
+    false
   end
 
   def destroy?
