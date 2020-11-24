@@ -44,7 +44,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     end
 
     it 'assigns a default lesson to a topic' do
-      visit(topic_questions_questions_path(topic_id: topic))
+      visit(topic_questions_path(topic_id: topic))
       select lesson.title, from: 'Default Lesson'
       switch_and_create_quiz
       expect(page).to have_css(".videoLink[src^=\"https://www.youtube.com/embed/#{lesson.video_id}\"]")
@@ -112,7 +112,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     end
 
     it 'prevents disabled topics from showing when taking a quiz' do
-      visit(topic_questions_questions_path(topic_id: topic))
+      visit(topic_questions_path(topic_id: topic))
       page.accept_confirm { click_link('Delete Topic') }
       find('div', exact_text: subject.name, count: 2)
       switch_to_student_account

@@ -10,7 +10,7 @@
           th Question # 
       -s.topics.where(active: true).order(:name).each do |t|
         tr    
-          td =link_to t.name, topic_questions_questions_path(topic_id: t)
+          td =link_to t.name, topic_questions_path(topic_id: t)
           td =t.questions.count
 
         

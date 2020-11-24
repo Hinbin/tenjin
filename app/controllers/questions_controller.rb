@@ -9,10 +9,10 @@ class QuestionsController < ApplicationController
     raise Pundit::NotAuthorizedError if @subjects.blank?
   end
 
-  def topic_questions
-    redirect questions_path unless topic_question_params.present?
+  def topic
+    redirect questions_path unless topic_params.present?
 
-    @topic = Topic.find(topic_question_params)
+    @topic = Topic.find(topic_params)
     authorize @topic, :show?
     @topic_lessons = Lesson.where(topic: @topic)
     @questions = Question.with_rich_text_question_text_and_embeds
@@ -20,6 +20,18 @@ class QuestionsController < ApplicationController
                          .where(topic: @topic, active: true)
 
     render 'topic_question_index'
+  end
+
+  def lesson
+    redirect lessons_path unless lesson_params.present?
+
+    @lesson = Lesson.find(lesson_params)
+    authorize @lesson, :view_questions?
+    @questions = Question.with_rich_text_question_text_and_embeds
+                         .includes(:answers)
+                         .where(lesson: @lesson, active: true)
+
+    render 'lesson_question_index'
   end
 
   def reset_flags
@@ -33,7 +45,7 @@ class QuestionsController < ApplicationController
     @subject = Subject.find(flagged_questions_params)
     authorize @subject, :flagged_questions?
     @questions = @subject.flagged_questions
-    render :flagged_questions
+    render :flagged
   end
 
   def new
@@ -43,7 +55,6 @@ class QuestionsController < ApplicationController
     return unless @question.topic.present?
 
     check_answers
-    #build_answers
   end
 
   def create
@@ -52,7 +63,7 @@ class QuestionsController < ApplicationController
     check_answers
 
     if @question.save
-      redirect_to topic_questions_questions_path(topic_id: @question.topic), notice: 'Question successfully created'
+      redirect_to topic_questions_path(topic_id: @question.topic), notice: 'Question successfully created'
     else
       render :new
     end
@@ -79,13 +90,13 @@ class QuestionsController < ApplicationController
 
   def destroy
     authorize @question
-    redirect_to topic_questions_questions_path(topic_id: @question.topic)
+    redirect_to topic_questions_path(topic_id: @question.topic)
 
     @question.update_attribute(:active, false)
   end
 
-  def download_topic_questions
-    @topic = Topic.find(topic_question_params)
+  def download_topic
+    @topic = Topic.find(topic_params)
     authorize @topic, :show?
     @questions = Question.where(topic: @topic).to_json(include: :answers)
 
@@ -94,30 +105,34 @@ class QuestionsController < ApplicationController
               disposition: "attachment; filename=#{@topic.name}.json"
   end
 
-  def import_topic_questions
-    @topic = Topic.find(topic_question_params)
+  def import_topic
+    @topic = Topic.find(topic_params)
     authorize @topic, :update?
   end
 
   def import
-    @topic = Topic.find(topic_question_params)
+    @topic = Topic.find(topic_params)
     authorize @topic, :update?
 
     if params[:file].nil?
       flash[:alert] = 'Please attach a file'
-      return render :import_topic_questions, topic_id: @topic
+      return render :import_topic, topic_id: @topic
     end
 
     data = File.read(params[:file])
     result = Question::ImportQuestions.call(data, @topic)
     flash[:notice] = result.error
-    redirect_to topic_questions_questions_path(topic_id: @topic)
+    redirect_to topic_questions_path(topic_id: @topic)
   end
 
   private
 
-  def topic_question_params
+  def topic_params
     params.require(:topic_id)
+  end
+
+  def lesson_params
+    params.require(:lesson_id)
   end
 
   def flagged_questions_params

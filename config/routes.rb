@@ -19,9 +19,10 @@ Rails.application.routes.draw do
   resources :classrooms, only: [:show, :index, :update]
   resources :questions do
     collection do
-      get 'topic_questions' 
-      get 'download_topic_questions'
-      get 'import_topic_questions'
+      get 'topic' 
+      get 'lesson' 
+      get 'download_topic'
+      get 'import_topic'
       get 'flagged_questions' 
       post 'import'    
     end
