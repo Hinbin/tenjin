@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Question::ImportQuestions < ApplicationService
-  def initialize(data, topic)
+  def initialize(data, topic, filename)
     @json = JSON.parse(data)
 
     @topic = topic
     @questions_to_import = []
+
+    @name = filename.rpartition('.').first
   end
 
   def call
@@ -27,6 +29,7 @@ class Question::ImportQuestions < ApplicationService
 
     @questions_to_import.each(&:save)
 
+    @topic.update_attribute(:name, @name)
     true
   end
 
