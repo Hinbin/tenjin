@@ -22,6 +22,7 @@ VCR.configure do |config|
   config.ignore_localhost = true # allows oAuth testing
   config.configure_rspec_metadata!
   config.ignore_hosts 'chromedriver.storage.googleapis.com'
+  config.ignore_hosts 'github.com'
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
