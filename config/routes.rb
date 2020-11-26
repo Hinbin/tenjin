@@ -56,11 +56,18 @@ Rails.application.routes.draw do
   resources :flagged_questions, only:[:create]
   resources :school_groups
   resources :lessons
+  resources :customisations do
+    collection do
+      get 'show_available'
+    end
+    member do
+      post 'buy'
+    end
+  end
 
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'
-  get 'customise/', to: 'customise#show'
-  post 'customise/', to: 'customise#update'
+
   get "/pages/*id" => 'pages#show', as: :page, format: false
 
   authenticated :user do

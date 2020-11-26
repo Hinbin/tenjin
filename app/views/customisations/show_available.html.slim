@@ -12,8 +12,3 @@ section.page-section.text-center.purchased-styles
     h1.page-section-header.text-uppercase Purchased Styles
     ==render_small_separator
     =render partial: "customisations", locals: {customisations: @purchased_styles}
-
-
-form#customisation name='customisation' method='post' data-target="customise.customisationForm"
-  = hidden_field_tag :authenticity_token, form_authenticity_token
-  input#customisation-id name='customisation[id]' data-target="customise.customisationId" type="hidden" 
