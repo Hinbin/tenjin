@@ -45,8 +45,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
     end
 
     it 'hides unpurchasable dashboard customisations' do
-      dashboard_customisation_unavailable = create(:customisation,
-                                                   customisation_type: 'dashboard_style', cost: 20, purchasable: false)
+      dashboard_customisation_unavailable = create(:dashboard_customisation, cost: 20, purchasable: false)
       visit(show_available_customisations_path)
       expect(page).to have_no_content(dashboard_customisation_unavailable.name.upcase)
     end

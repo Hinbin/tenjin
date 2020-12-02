@@ -105,11 +105,33 @@ RSpec.describe 'Admin manages customisations', type: :system, js: true, default_
     end
   end
 
+  context 'when creating a dashboard style' do
+
+    let(:name) { FFaker::Lorem.word }
+
+    before do
+      visit new_customisation_path
+    end
+    def fill_in_dashboard_form
+      fill_in('Name', with: name)
+      fill_in('Value', with: 'blue')
+      fill_in('Cost', with:'200')
+      attach_file('Image', "#{Rails.root}/spec/fixtures/files/game-pieces.jpg")
+    end
+
+    it 'creates it' do
+      fill_in_dashboard_form
+      click_button('Create Customisation')
+      expect(page).to have_content(name.upcase)
+    end
+  end
+
   context 'for randomizer' do
     it 'ignores retires customisations'
     it 'deactives old customisations'
     it 'activates six customisations randomly'
     it 'always picks sticky customisations'
+    it 'gives new accounts race red by default'
   end
 
   it 'creates leaderboard_icon customisations'

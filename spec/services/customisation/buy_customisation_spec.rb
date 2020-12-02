@@ -78,7 +78,7 @@ RSpec.describe Customisation::BuyCustomisation, default_creates: true do
 
   context 'when buying something I have already bought' do
     before do
-      create(:customisation_unlock, dashboard_customisation: customisation, user: student)
+      create(:customisation_unlock, customisation: customisation, user: student)
     end
 
     it 'does not cost anything' do

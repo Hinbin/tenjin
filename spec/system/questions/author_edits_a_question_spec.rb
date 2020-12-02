@@ -43,7 +43,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       create(:question, topic: topic, lesson: lesson)
     end
 
-    it 'assigns a default lesson to a topic' do
+    it 'assigns a default lesson to a topic', :focus do
       visit(topic_questions_questions_path(topic_id: topic))
       select lesson.title, from: 'Default Lesson'
       switch_and_create_quiz

@@ -15,6 +15,23 @@ class CustomisationsController < ApplicationController
     authorize @customisation
   end
 
+  def create
+    @customisation = Customisation.new(customisation_params)
+    authorize @customisation
+
+    if @customisation.save
+      redirect_to customisations_path, notice: "Created new customisation #{@customisation.name}"
+    else
+      render :edit
+    end
+  end
+
+  def new
+    @customisation = Customisation.new(purchasable: false, retired: false)
+    authorize @customisation
+    render 'edit'
+  end
+
   def update
     authorize @customisation
     @customisation.update(customisation_params)
@@ -30,7 +47,7 @@ class CustomisationsController < ApplicationController
     @purchased_styles = Customisation.with_attached_image.where(id: @bought_customisations)
     @available_styles = Customisation.with_attached_image.where(purchasable: true)
                                      .where.not(id: @bought_customisations)
-                                     .shuffle
+                                     .order("RANDOM()")
   end
 
   def buy
@@ -66,6 +83,6 @@ class CustomisationsController < ApplicationController
   end
 
   def customisation_params
-    params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image)
+    params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image, :customisation_type, :cost)
   end
 end

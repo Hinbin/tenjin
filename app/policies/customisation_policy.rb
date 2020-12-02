@@ -8,6 +8,8 @@ class CustomisationPolicy < ApplicationPolicy
   alias show? index?
   alias edit? index?
   alias update? index?
+  alias new? index?
+  alias create? index?
 
   class Scope < Scope
     def resolve
