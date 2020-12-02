@@ -1,8 +1,26 @@
 # frozen_string_literal: true
 
 class CustomisationsController < ApplicationController
-  before_action :authenticate_user!, only: %i[show buy]
-  before_action :authenticate_admin!, only: %i[index update new destroy]
+  before_action :authenticate_user!, only: %i[show_available buy]
+  before_action :authenticate_admin!, only: %i[index show update new destroy]
+  before_action :set_customisation, only: %i[edit update delete]
+
+  def index
+    authorize current_admin, policy_class: CustomisationPolicy
+    @customisations = policy_scope(Customisation).where(retired: false).with_attached_image
+    @retired_customisations = policy_scope(Customisation).where(retired: true).with_attached_image
+  end
+
+  def edit
+    authorize @customisation
+  end
+
+  def update
+    authorize @customisation
+    @customisation.update(customisation_params)
+    @customisation.save
+    redirect_to customisations_path
+  end
 
   def show_available
     authorize current_user, :show? # make it so that it checks if the school is permitted?
@@ -12,6 +30,7 @@ class CustomisationsController < ApplicationController
     @purchased_styles = Customisation.with_attached_image.where(id: @bought_customisations)
     @available_styles = Customisation.with_attached_image.where(purchasable: true)
                                      .where.not(id: @bought_customisations)
+                                     .shuffle
   end
 
   def buy
@@ -23,6 +42,10 @@ class CustomisationsController < ApplicationController
   end
 
   private
+
+  def set_customisation
+    @customisation = Customisation.find(params[:id])
+  end
 
   def buy_customisation
     Customisation::BuyCustomisation.call(current_user, @customisation)
@@ -40,5 +63,9 @@ class CustomisationsController < ApplicationController
   def purchase_failed(exception)
     flash[:notice] = exception.message
     redirect_to dashboard_path
+  end
+
+  def customisation_params
+    params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image)
   end
 end

@@ -17,6 +17,8 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
         a.nav-link href=subjects_path Subjects
       - if current_admin.super?
         li.nav-item.active
+          a.nav-link href=customisations_path Customisations     
+        li.nav-item.active
           a.nav-link href=school_groups_path School Groups
         li.nav-item.active
           a.nav-link href=manage_roles_users_path Roles    

@@ -1,0 +1,16 @@
+-content_for :title
+  title=("Edit #{@customisation.name}")
+section.page-section.text-center.available-customisations
+  .container
+    -if @customisation.dashboard_style?
+      .card.dashboard-style style=render_dashboard_style(@customisation)
+        .card-body.m-5
+          h2.m-5.page-section-header.text-uppercase.text-white =@customisation.name
+          ==render_small_separator(@customisation)
+      =simple_form_for @customisation do |f|
+        =f.input :name
+        =f.input :value
+        =f.input :purchasable
+        =f.input :sticky
+        =f.input :image
+        =f.submit

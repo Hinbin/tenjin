@@ -102,7 +102,7 @@ RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: 
 
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }
-    let(:customisation) { create(:customisation, customisation_type: 'dashboard_style', value: 'orange') }
+    let(:customisation) { create(:dashboard_customisation, value: 'orange') }
     let(:active_customisation) { create(:active_customisation, user: student, customisation: customisation) }
 
     before do

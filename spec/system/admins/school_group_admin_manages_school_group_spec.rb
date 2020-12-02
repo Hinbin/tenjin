@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe 'School group admin manages school group', type: :system, js: true, default_creates: true do
-  let(:school_group_admin) { create(:school_group_admin) }
 
   before do
     school

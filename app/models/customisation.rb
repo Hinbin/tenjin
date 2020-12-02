@@ -8,4 +8,13 @@ class Customisation < ApplicationRecord
   has_many :active_customisations
 
   has_one_attached :image
+
+  before_save :make_unpurchasable_if_retired
+
+  def make_unpurchasable_if_retired
+    if retired?
+      self.purchasable = false
+      self.sticky = false
+    end
+  end
 end

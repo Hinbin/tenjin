@@ -30,9 +30,9 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
   end
 
   context 'when looking at available dashboard styles' do
-    let(:dashboard_customisation) { create(:customisation, customisation_type: 'dashboard_style', cost: 6) }
-    let(:dashboard_customisation_expensive) { create(:customisation, customisation_type: 'dashboard_style', cost: 20) }
-    let(:second_customisation) { create(:customisation, customisation_type: 'dashboard_style', cost: 2) }
+    let(:dashboard_customisation) { create(:dashboard_customisation, cost: 6) }
+    let(:dashboard_customisation_expensive) { create(:dashboard_customisation, cost: 20) }
+    let(:second_customisation) { create(:dashboard_customisation, cost: 2) }
     let(:student) { create(:user, school: school, challenge_points: 10) }
 
     before do
@@ -73,7 +73,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
     end
 
     context 'when looking at purchased customisation' do
-      let(:dashboard_customisation) { create(:customisation, customisation_type: 'dashboard_style', cost: 6, purchasable: false) }
+      let(:dashboard_customisation) { create(:dashboard_customisation, cost: 6, purchasable: false) }
       let(:unlocked_customisation) { create(:customisation_unlock, user: student, customisation: dashboard_customisation) }
 
       before do

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserPolicy < ApplicationPolicy
-  attr_reader :user, :record
 
   class Scope < Scope
     def resolve
