@@ -4,9 +4,16 @@ require 'rails_helper'
 
 RSpec.describe 'Admin manages customisations', type: :system, js: true, default_creates: true do
   let(:available_customisation) { create(:dashboard_customisation, purchasable: true) }
+  let(:new_name) { FFaker::Lorem.word }
 
   before do
     sign_in super_admin
+  end
+
+  def fill_in_customisation_form
+    fill_in('Name', with: new_name)
+    fill_in('Value', with: 'blue')
+    fill_in('Cost', with: '200')
   end
 
   it 'can be accessed from the super admin navbar' do
@@ -107,37 +114,31 @@ RSpec.describe 'Admin manages customisations', type: :system, js: true, default_
 
   context 'when creating a dashboard style' do
 
-    let(:name) { FFaker::Lorem.word }
-
     before do
       visit new_customisation_path
     end
-    def fill_in_dashboard_form
-      fill_in('Name', with: name)
-      fill_in('Value', with: 'blue')
-      fill_in('Cost', with:'200')
-      attach_file('Image', "#{Rails.root}/spec/fixtures/files/game-pieces.jpg")
-    end
 
     it 'creates it' do
-      fill_in_dashboard_form
+      fill_in_customisation_form
+      attach_file('Image', "#{Rails.root}/spec/fixtures/files/game-pieces.jpg")
       click_button('Create Customisation')
-      expect(page).to have_content(name.upcase)
+      expect(page).to have_content(new_name.upcase)
     end
   end
 
-  context 'for randomizer' do
-    it 'ignores retires customisations'
-    it 'deactives old customisations'
-    it 'activates six customisations randomly'
-    it 'always picks sticky customisations'
-    it 'gives new accounts race red by default'
-  end
+  context 'when creating a leaderboard icon' do
+    before do
+      visit new_customisation_path
+    end
 
-  it 'creates leaderboard_icon customisations'
-  it 'allows me to change the colour of the icon'
-  it 'shows new, active dashboard_styles to the user'
-  it 'shows new, active leaderboard_styles  to the user'
+    it 'creates leaderboard_icon customisations' do
+      select 'Leaderboard icon', from: 'customisation_customisation_type'
+      fill_in_customisation_form
+      fill_in('Value', with: 'blue,cheese')
+      click_button('Create Customisation')
+      expect(page).to have_content(new_name)
+    end
+  end
 
   it 'prevents me from accessing customisations as a user' do
     sign_out super_admin

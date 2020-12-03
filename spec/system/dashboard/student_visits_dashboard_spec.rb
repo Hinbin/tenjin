@@ -8,6 +8,8 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
     sign_in student
   end
 
+  it 'shows the arrow for a tutorial'
+
   context 'when looking at the challenges' do
     let(:challenge_one) { create(:challenge, topic: topic, end_date: Time.now + 1.hour) }
     let(:second_subject) { create(:subject) }
