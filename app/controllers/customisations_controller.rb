@@ -47,7 +47,7 @@ class CustomisationsController < ApplicationController
     @purchased_styles = Customisation.with_attached_image.where(id: @bought_customisations)
     @available_styles = Customisation.with_attached_image.where(purchasable: true)
                                      .where.not(id: @bought_customisations)
-                                     .order("RANDOM()")
+                                     .order('RANDOM()')
   end
 
   def buy
@@ -83,6 +83,6 @@ class CustomisationsController < ApplicationController
   end
 
   def customisation_params
-    params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image, :customisation_type, :cost)
+    params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image, :customisation_type, :cost, :retired)
   end
 end
