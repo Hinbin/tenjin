@@ -55,9 +55,7 @@
 }
 
 .shepherd-element .shepherd-arrow:after {
-  color: rgba(255, 0, 0, 0.75);
-  content: "\F060";  /* this is your text. You can also use UTF-8 character codes as I do here */
-  font-family: 'FontAwesome';
+  content: url('../images/arrow.svg');
   display: inline-block;
 }
 
