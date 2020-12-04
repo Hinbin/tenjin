@@ -41,6 +41,10 @@
               i class='fas fa-2x fa-#{icon.value.split(',')[1]}' style="color: #{icon.value.split(',')[0]}"
               -if current_admin.present?
                 div.m-1
+                  -if icon.sticky?
+                    p Stickied
+                  -unless icon.purchasable?
+                    p Unavailable
                   =link_to 'Edit', edit_customisation_path(icon), class: 'btn btn-dark-outline'
               -else
                 p#cost
