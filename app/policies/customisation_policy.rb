@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
 class CustomisationPolicy < ApplicationPolicy
-  def initialize(user, customisation)
-    @user = user
-    @customisation = customisation
+  def index?
+    user.super?
   end
 
-  def show?
-    true
-  end
+  alias show? index?
+  alias edit? index?
+  alias update? index?
+  alias new? index?
+  alias create? index?
 
-  def update?
-    true
+  class Scope < Scope
+    def resolve
+      return scope.all if user.super?
+    end
   end
 end

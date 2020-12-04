@@ -1,11 +1,9 @@
 // src/controllers/dashboard_controller.js
-import { Controller } from "stimulus"
+import { Controller } from 'stimulus'
 
 export default class extends Controller {
-
   initialize () {
     if (document.getElementById('oAuthEmail')) {
-
       const tour = new Shepherd.Tour({ useModalOverlay: true })
 
       if (document.getElementById('current_user').offsetParent === null) {

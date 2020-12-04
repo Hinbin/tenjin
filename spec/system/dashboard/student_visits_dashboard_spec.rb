@@ -8,42 +8,7 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
     sign_in student
   end
 
-  context 'when changing the dashboard style' do
-    let(:customisation) { create(:customisation, customisation_type: 'dashboard_style', value: 'darkred') }
-
-    before do
-      create(:active_customisation, user: student, customisation: customisation)
-    end
-
-    it 'shows the darkgred ferrari style' do
-      visit(dashboard_path)
-      expect(page).to have_css('section#homework-darkred').and have_css('hr.primary-darkred')
-    end
-
-    it 'shows the darkblue hiking style' do
-      customisation.update_attribute(:value, 'darkblue')
-      visit(dashboard_path)
-      expect(page).to have_css('section#homework-darkblue').and have_css('hr.primary-darkblue')
-    end
-
-    it 'shows the green football style' do
-      customisation.update_attribute(:value, 'darkgreen')
-      visit(dashboard_path)
-      expect(page).to have_css('section#homework-darkgreen').and have_css('hr.primary-darkgreen')
-    end
-
-    it 'shows the orange climbing style' do
-      customisation.update_attribute(:value, 'orange')
-      visit(dashboard_path)
-      expect(page).to have_css('section#homework-orange').and have_css('hr.primary-orange')
-    end
-
-    it 'shows the yellow cheerful style' do
-      customisation.update_attribute(:value, 'yellow')
-      visit(dashboard_path)
-      expect(page).to have_css('section#homework-yellow').and have_css('hr.primary-yellow')
-    end
-  end
+  it 'shows the arrow for a tutorial'
 
   context 'when looking at the challenges' do
     let(:challenge_one) { create(:challenge, topic: topic, end_date: Time.now + 1.hour) }

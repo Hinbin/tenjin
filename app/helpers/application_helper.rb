@@ -21,9 +21,21 @@ module ApplicationHelper
     end
   end
 
-  def render_small_separator
-    @css_flavour = 'default' if @css_flavour.nil?
-    "small mb-5 primary-#{@css_flavour}"
+  def render_small_separator(style = nil)
+    return "<hr class='small mb-5 primary' style='border-color: #{style.value}'>" unless style.nil?
+
+    if @dashboard_style.nil?
+      "<hr class='small mb-5 primary' style='border-color: red'>"
+    else
+      "<hr class='small mb-5 primary' style='border-color: #{@dashboard_style.value}'>"
+    end
+  end
+
+  def render_dashboard_style(style)
+    return '' if style.nil?
+    return '' unless style.image.attached?
+
+    "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(#{rails_blob_url(style.image)}) no-repeat;"
   end
 
   def get_user_classes(student)

@@ -3,6 +3,7 @@ import { Controller } from "stimulus"
 
 export default class extends Controller {
   static targets = ["lessonSelect"]
+  
   loadLessons () {
     var topicID = $('#homework_topic_id').val()
     var options = $('.jsVars').data('lessons').filter((i) => { return i.topic_id == topicID })

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module CustomisationHelper
-  def customisation_cost(style)
-    return '0' if @bought_customisations.include? style.id
+  def customisation_cost(style, bought_customisations)
+    return if bought_customisations.include? style.id
 
-    style.cost.to_s
+    "<i class='fas fa-star' style='color: yellow'></i>#{style.cost}"
   end
 end

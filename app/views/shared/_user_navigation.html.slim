@@ -17,9 +17,9 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
           a.nav-link.dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
             | Shop
           .dropdown-menu aria-labelledby='navbarDropdown'
-            a.dropdown-item href=customise_path(anchor: 'dashboard-styles')
+            a.dropdown-item href=show_available_customisations_path(anchor: 'dashboard-styles')
               | Styles
-            a.dropdown-item href=customise_path(anchor: 'icons')
+            a.dropdown-item href=show_available_customisations_path(anchor: 'icons')
               | Leaderboard Icons 
       li.nav-item
         a.nav-link href=lessons_path
@@ -42,7 +42,7 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
               | Edit Questions      
 
     -if current_user.student?
-      a href=customise_path
+      a href=show_available_customisations_path
         table
           td
             i.fas.fa-star.f style='color: yellow'    

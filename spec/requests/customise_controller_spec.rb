@@ -13,8 +13,7 @@ RSpec.describe 'submitting a customisation', type: :request do
 
   context 'when selecting a customisation type that does not exist' do
     subject do
-      post customise_path, params: { customisation: { customisation_type: 'NOTYPE',
-                                                      value: customisation.value } }
+      post buy_customisation_path(id: rand(200..300))
     end
 
     it { is_expected.to redirect_to(dashboard_path) }
