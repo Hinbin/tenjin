@@ -17,7 +17,7 @@ class LessonPolicy < ApplicationPolicy
   def view_questions?
     return false if user.student?
 
-    true if user.subjects.include?(record.subject) || user.has_role?(:question_author, :any)
+    user.subjects.include?(record.subject) || user.has_role?(:question_author, :any)
   end
 
   alias create? new?
