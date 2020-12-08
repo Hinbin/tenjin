@@ -22,8 +22,11 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   end
 
   def switch_to_student_account
-    sign_out author
+    click_button('Logout')
+    find('button', text: 'LOGIN')
     sign_in student
+    visit dashboard_path
+    find('h3', text: subject.name.upcase)
     visit new_quiz_path(subject: topic.subject.name)
   end
 
