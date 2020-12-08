@@ -20,6 +20,7 @@
               -if @subject_author
                 .card-footer
                   p = 'Questions: ' + l.questions_count.to_s
+                  =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
                   =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
                   =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
               -elsif !@current_user.student?
@@ -33,12 +34,14 @@
             th Questions
             th
             th
+            th
           tbody
             - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|    
               tr  
                 td = l.title                 
                 td = Question.where(lesson: l, active: true).count
-                td =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
+                td =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary'
+                td =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary'
                 td =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
       -elsif !@current_user.student?
         table.table
