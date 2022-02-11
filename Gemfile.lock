@@ -222,7 +222,7 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     netrc (0.11.0)
-    nio4r (2.5.2)
+    nio4r (2.5.8)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     oauth2 (1.4.4)
@@ -259,7 +259,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.6)
-    puma (4.3.5)
+    puma (5.6.2)
       nio4r (~> 2.0)
     pundit (2.1.0)
       activesupport (>= 3.0.0)
@@ -477,7 +477,7 @@ DEPENDENCIES
   omniauth-wonde!
   pg (>= 0.18, < 2.0)
   pry-rails
-  puma (~> 4.3)
+  puma (~> 5.6)
   pundit
   rack-cors
   rack-timeout
