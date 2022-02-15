@@ -15,4 +15,4 @@
             = f.button :submit, "Login", class: 'btn btn-primary btn-block', id: 'loginModal'
         .my-3 
           =link_to image_pack_tag('btn_google_signin_dark_normal_web.png', class: 'd-flex mx-auto', id: 'loginGoogle'),
-            user_google_oauth2_omniauth_authorize_path
+            user_google_oauth2_omniauth_authorize_path, method: :post
