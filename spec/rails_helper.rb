@@ -108,7 +108,7 @@ RSpec.configure do |config|
     end
   end
 
-  Capybara.register_driver :selenium_chrome_headless_download do |app|
+  Capybara.register_driver :selenium_chrome_download do |app|
     browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
       opts.args << '--headless'
       opts.args << '--disable-site-isolation-trials'
@@ -116,11 +116,16 @@ RSpec.configure do |config|
     browser_options.add_preference(:download, prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s)
 
     browser_options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
-    Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+
+    caps = [
+      browser_options
+    ]
+
+    Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: caps)
   end
 
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless
+    driven_by :selenium_chrome
     page.driver.browser.manage.window.resize_to(1024, 768)
   end
 

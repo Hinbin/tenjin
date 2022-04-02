@@ -3,14 +3,14 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '~> 2.7.1'
+ruby '~> 3.1.1'
 
 # Sets environment variables
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'recipient_interceptor'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.0'
+gem 'rails', '~> 7.0.2'
 
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
@@ -21,9 +21,8 @@ gem 'delayed_job_active_record'
 
 # Templates & asset handling
 gem 'jbuilder', '~> 2.5'
-gem 'sassc'
 gem 'uglifier', '>= 1.3.0'
-gem 'webpacker'
+gem 'jsbundling-rails'
 
 # React-rails for react components
 gem 'react-rails'
@@ -33,7 +32,7 @@ gem 'turbolinks','~> 5.2.0'
 gem 'turbolinks_render' # Aids in rendering form validation errors using ajax
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'bootsnap', '>= 1.4.4', require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -49,11 +48,8 @@ group :development, :test do
   # Allows us to create a fake API
   gem 'vcr'
 
+  # Random strings for testing
   gem 'ffaker'
-
-  # Allow console debugging
-  gem 'ruby-debug-ide'
-  gem 'debase'
 
 end
 
@@ -76,8 +72,11 @@ group :development do
   gem 'pry-rails'
 
   # All them rules for development
-  gem 'rubocop'
-  gem 'rubocop-performance'
+  gem "rubocop", ">= 1.25.1", require: false
+  gem "rubocop-minitest", require: false
+  gem "rubocop-packaging", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
   gem 'rubocop-rspec'
 
   # Hunt for n+1

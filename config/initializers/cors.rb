@@ -1,16 +1,16 @@
-# frozen_string_literal: true
+# Be sure to restart your server when you modify this file.
 
-# Configure Rack::Cors middleware
+# Avoid CORS issues when API is called from the frontend app.
+# Handle Cross-Origin Resource Sharing (CORS) in order to accept cross-origin AJAX requests.
+
+# Read more: https://github.com/cyu/rack-cors
+
+# Rails.application.config.middleware.insert_before 0, Rack::Cors do
+#   allow do
+#     origins "example.com"
 #
-# Add CORS headers when serving assets
-# Whitelist permitted frontend origins
-if defined? Rack::Cors
-  Rails.configuration.middleware.insert_before 0, Rack::Cors do
-    allow do
-      origins(ENV.fetch('CORS_ORIGINS', '').split(',').map(&:strip))
-
-      resource '/assets/*', headers: :any, methods: %i[get head options]
-      resource '/packs/*', headers: :any, methods: %i[get head options]
-    end
-  end
-end
+#     resource "*",
+#       headers: :any,
+#       methods: [:get, :post, :put, :patch, :delete, :options, :head]
+#   end
+# end

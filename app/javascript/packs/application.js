@@ -75,3 +75,4 @@ application.load(definitionsFromContext(context))
 
 window.Shepherd = Shepherd
 window.Cookies = Cookies
+window.jQuery = $

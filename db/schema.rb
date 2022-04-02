@@ -2,16 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_22_135014) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_04_02_145823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,16 +19,16 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.text "body"
     t.string "record_type", null: false
     t.bigint "record_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_customisations", force: :cascade do |t|
     t.bigint "customisation_id", null: false
     t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["customisation_id", "user_id"], name: "index_active_customisations_on_customisation_id_and_user_id", unique: true
     t.index ["customisation_id"], name: "index_active_customisations_on_customisation_id"
     t.index ["user_id"], name: "index_active_customisations_on_user_id"
@@ -40,7 +39,7 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -51,24 +50,31 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.string "checksum"
+    t.datetime "created_at", precision: nil, null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "role", null: false
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
@@ -85,8 +91,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.integer "score"
     t.bigint "user_id"
     t.bigint "topic_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["topic_id"], name: "index_all_time_topic_scores_on_topic_id"
     t.index ["user_id"], name: "index_all_time_topic_scores_on_user_id"
   end
@@ -95,8 +101,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.bigint "question_id"
     t.string "text"
     t.boolean "correct"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "external_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
   end
@@ -105,8 +111,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.bigint "question_id"
     t.bigint "quiz_id"
     t.boolean "correct"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["question_id"], name: "index_asked_questions_on_question_id"
     t.index ["quiz_id"], name: "index_asked_questions_on_quiz_id"
   end
@@ -116,8 +122,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.bigint "user_id", null: false
     t.integer "progress", default: 0, null: false
     t.boolean "completed", default: false
-    t.datetime "created_at", default: -> { "now()" }, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, default: -> { "now()" }, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "awarded", default: false
     t.index ["challenge_id"], name: "index_challenge_progresses_on_challenge_id"
     t.index ["user_id", "challenge_id"], name: "index_challenge_progresses_on_user_id_and_challenge_id", unique: true
@@ -125,13 +131,13 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
 
   create_table "challenges", force: :cascade do |t|
     t.integer "challenge_type"
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.datetime "start_date", precision: nil
+    t.datetime "end_date", precision: nil
     t.integer "number_required"
     t.integer "points"
     t.bigint "topic_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "daily"
     t.index ["topic_id"], name: "index_challenges_on_topic_id"
   end
@@ -140,8 +146,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.bigint "user_id"
     t.bigint "classroom_id"
     t.integer "score"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["classroom_id"], name: "index_classroom_winners_on_classroom_id"
     t.index ["user_id"], name: "index_classroom_winners_on_user_id"
   end
@@ -154,8 +160,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.boolean "disabled"
     t.bigint "subject_id"
     t.bigint "school_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "enrollments_count"
     t.index ["school_id"], name: "index_classrooms_on_school_id"
     t.index ["subject_id"], name: "index_classrooms_on_subject_id"
@@ -164,8 +170,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
   create_table "customisation_unlocks", force: :cascade do |t|
     t.bigint "customisation_id", null: false
     t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["customisation_id"], name: "index_customisation_unlocks_on_customisation_id"
     t.index ["user_id"], name: "index_customisation_unlocks_on_user_id"
   end
@@ -175,8 +181,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.integer "cost"
     t.string "name"
     t.string "value"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "purchasable", default: true, null: false
     t.boolean "retired", default: false, null: false
     t.boolean "sticky", default: false, null: false
@@ -187,21 +193,21 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at", precision: 6
-    t.datetime "updated_at", precision: 6
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "enrollments", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "classroom_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["classroom_id", "user_id"], name: "index_enrollments_on_classroom_id_and_user_id", unique: true
     t.index ["classroom_id"], name: "index_enrollments_on_classroom_id"
     t.index ["user_id"], name: "index_enrollments_on_user_id"
@@ -210,8 +216,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
   create_table "flagged_questions", force: :cascade do |t|
     t.bigint "question_id", null: false
     t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["question_id"], name: "index_flagged_questions_on_question_id"
     t.index ["user_id"], name: "index_flagged_questions_on_user_id"
   end
@@ -221,8 +227,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.bigint "user_id"
     t.integer "progress"
     t.boolean "completed"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["homework_id"], name: "index_homework_progresses_on_homework_id"
     t.index ["user_id"], name: "index_homework_progresses_on_user_id"
   end
@@ -230,10 +236,10 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
   create_table "homeworks", force: :cascade do |t|
     t.bigint "classroom_id"
     t.bigint "topic_id"
-    t.datetime "due_date"
+    t.datetime "due_date", precision: nil
     t.integer "required"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "lesson_id"
     t.index ["classroom_id"], name: "index_homeworks_on_classroom_id"
     t.index ["lesson_id"], name: "index_homeworks_on_lesson_id"
@@ -244,8 +250,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.bigint "subject_id"
     t.bigint "user_id"
     t.bigint "school_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["school_id"], name: "index_leaderboard_awards_on_school_id"
     t.index ["subject_id"], name: "index_leaderboard_awards_on_subject_id"
     t.index ["user_id"], name: "index_leaderboard_awards_on_user_id"
@@ -256,8 +262,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.integer "category"
     t.string "video_id"
     t.bigint "topic_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "questions_count"
     t.index ["topic_id"], name: "index_lessons_on_topic_id"
   end
@@ -265,24 +271,24 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
   create_table "multipliers", force: :cascade do |t|
     t.integer "score"
     t.integer "multiplier"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "question_statistics", force: :cascade do |t|
     t.integer "number_asked"
     t.integer "number_correct"
     t.bigint "question_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["question_id"], name: "index_question_statistics_on_question_id", unique: true
   end
 
   create_table "questions", force: :cascade do |t|
     t.bigint "topic_id"
     t.integer "question_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "external_id"
     t.bigint "lesson_id"
     t.boolean "active", default: true
@@ -292,7 +298,7 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
   end
 
   create_table "quizzes", force: :cascade do |t|
-    t.datetime "time_last_answered"
+    t.datetime "time_last_answered", precision: nil
     t.integer "streak"
     t.integer "answered_correct"
     t.integer "num_questions_asked"
@@ -302,8 +308,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.boolean "active"
     t.integer "question_order", array: true
     t.boolean "counts_for_leaderboard"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.bigint "lesson_id"
     t.index ["lesson_id"], name: "index_quizzes_on_lesson_id"
     t.index ["subject_id"], name: "index_quizzes_on_subject_id"
@@ -315,15 +321,15 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.string "name"
     t.string "resource_type"
     t.integer "resource_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
   end
 
   create_table "school_groups", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "schools", force: :cascade do |t|
@@ -334,16 +340,16 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.integer "sync_status"
     t.boolean "permitted"
     t.bigint "school_group_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["client_id"], name: "index_schools_on_client_id", unique: true
     t.index ["school_group_id"], name: "index_schools_on_school_group_id"
   end
 
   create_table "subjects", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "external_id"
     t.boolean "active", default: true, null: false
   end
@@ -352,8 +358,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.integer "score", default: 0, null: false
     t.bigint "user_id", null: false
     t.bigint "topic_id", null: false
-    t.datetime "created_at", default: -> { "now()" }, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, default: -> { "now()" }, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["topic_id"], name: "index_topic_scores_on_topic_id"
     t.index ["user_id", "topic_id"], name: "index_topic_scores_on_user_id_and_topic_id", unique: true
   end
@@ -361,8 +367,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
   create_table "topics", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "subject_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "external_id"
     t.bigint "default_lesson_id"
     t.boolean "active", default: true
@@ -372,11 +378,11 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
   create_table "usage_statistics", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "topic_id"
-    t.datetime "date"
+    t.datetime "date", precision: nil
     t.integer "quizzes_started"
     t.integer "questions_answered"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "lesson_id"
     t.index ["lesson_id"], name: "index_usage_statistics_on_lesson_id"
     t.index ["topic_id"], name: "index_usage_statistics_on_topic_id"
@@ -387,8 +393,8 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.integer "questions_answered", default: 0, null: false
     t.bigint "user_id", null: false
     t.date "week_beginning", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id", "week_beginning"], name: "index_user_statistics_on_user_id_and_week_beginning", unique: true
     t.index ["user_id"], name: "index_user_statistics_on_user_id"
   end
@@ -397,15 +403,15 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.bigint "school_id"
     t.integer "role", null: false
     t.string "provider"
@@ -415,7 +421,7 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
     t.string "photo"
     t.string "type"
     t.integer "challenge_points"
-    t.datetime "time_of_last_quiz"
+    t.datetime "time_of_last_quiz", precision: nil
     t.string "username"
     t.boolean "disabled"
     t.string "oauth_provider"
@@ -436,6 +442,7 @@ ActiveRecord::Schema.define(version: 2020_11_22_135014) do
   add_foreign_key "active_customisations", "customisations"
   add_foreign_key "active_customisations", "users"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "all_time_topic_scores", "topics"
   add_foreign_key "all_time_topic_scores", "users"
   add_foreign_key "answers", "questions"
