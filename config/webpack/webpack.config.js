@@ -1,20 +1,7 @@
-const path = require('path')
-const webpack = require('webpack')
+const { webpackConfig } = require('shakapacker')
 
-module.exports = {
-  mode: 'production',
-  devtool: 'source-map',
-  entry: {
-    application: './app/javascript/application.js'
-  },
-  output: {
-    filename: '[name].js',
-    sourceMapFilename: '[name].js.map',
-    path: path.resolve(__dirname, "__dirname, '..', '..', 'app/assets/builds'")
-  },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1
-    })
-  ]
-}
+// See the shakacode/shakapacker README and docs directory for advice on customizing your webpackConfig.
+
+
+
+module.exports = webpackConfig
