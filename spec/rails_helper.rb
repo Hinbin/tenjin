@@ -94,7 +94,7 @@ RSpec.configure do |config|
   # or feature testing will not work
 
   config.after :each, :js do
-    errors = page.driver.browser.manage.logs.get(:browser)
+    errors = page.driver.browser.logs.get(:browser)
     if errors.present?
       aggregate_failures 'javascript errors' do
         errors.each do |error|
@@ -108,7 +108,7 @@ RSpec.configure do |config|
     end
   end
 
-  Capybara.register_driver :selenium_chrome_download do |app|
+  Capybara.register_driver :selenium_chrome_headless_download do |app|
     browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
       opts.args << '--headless'
       opts.args << '--disable-site-isolation-trials'
@@ -125,7 +125,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome
+    driven_by :selenium_chrome_headless
     page.driver.browser.manage.window.resize_to(1024, 768)
   end
 

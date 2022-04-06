@@ -2,16 +2,24 @@
   "name": "csquiz",
   "private": true,
   "dependencies": {
-    "@babel/preset-react": "^7.0.0",
+    "@babel/core": "7",
+    "@babel/plugin-transform-runtime": "7",
+    "@babel/preset-env": "7",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/runtime": "7",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@rails/actioncable": "^7.0.2",
     "@rails/actiontext": "^7.0.2",
     "@rails/activestorage": "^7.0.2",
     "@rails/ujs": "^7.0.2-2",
     "actiontext": "rails/actiontext",
+    "babel-loader": "8",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-preset-react": "^6.24.1",
     "bootstrap": "^4.5.2",
+    "compression-webpack-plugin": "9",
+    "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^3.4.1",
     "datatables.net-bs4": "^1.10.19",
     "datatables.net-buttons-bs4": "^1.5.6",
     "datatables.net-responsive-bs4": "^2.2.3",
@@ -21,23 +29,38 @@
     "imports-loader": "^0.8.0",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
+    "mini-css-extract-plugin": "^2.6.0",
     "moment": "^2.27.0",
     "popper.js": "^1.16.1",
     "postcss-cssnext": "^3.1.0",
     "prop-types": "^15.7.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react_ujs": "^2.6.0",
     "reactstrap": "^8.0.1",
     "recompose": "^0.30.0",
+    "sass": "^1.49.11",
+    "sass-loader": "^12.6.0",
+    "shakapacker": "6.2.0",
     "shepherd.js": "^8.1.0",
     "stimulus": "^1.1.1",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "5",
     "trix": "^1.1.1",
     "turbolinks": "^5.2.0",
-    "webpack": "^5.71.0",
-    "webpack-cli": "^4.9.2"
+    "webpack": "5",
+    "webpack-assets-manifest": "5",
+    "webpack-cli": "4",
+    "webpack-merge": "5"
+  },
+  "version": "0.1.0",
+  "babel": {
+    "presets": [
+      "./node_modules/shakapacker/package/babel/preset.js"
+    ]
   },
   "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
     "eslint": "^5.11.1",
     "eslint-config-google": "^0.11.0",
     "eslint-config-standard": "^12.0.0",
@@ -45,9 +68,8 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "webpack-dev-server": "^3.2.1"
-  },
-  "scripts": {
-    "build": "webpack --config ./config/webpack/webpack.config.js"
+    "expose-loader": "^3.1.0",
+    "react-refresh": "^0.12.0",
+    "webpack-dev-server": "^4.7.4"
   }
 }

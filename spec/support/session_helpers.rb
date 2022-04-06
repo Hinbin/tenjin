@@ -46,7 +46,7 @@ module SessionHelpers
   end
 
   def setup_subject_database
-    create(:enrollment, classroom: classroom, user: student)
+    create(:enrollment, classroom:, user: student)
     create(:multiplier)
   end
 
@@ -97,7 +97,7 @@ module SessionHelpers
   end
 
   def create_file_blob(filename:, content_type:, metadata: nil)
-    ActiveStorage::Blob.create_after_upload! io: file_fixture(filename).open, filename: filename,
-                                             content_type: content_type, metadata: metadata
+    ActiveStorage::Blob.create_and_upload! io: file_fixture(filename).open, filename:,
+                                           content_type:, metadata:
   end
 end

@@ -39,25 +39,21 @@ class Challenge::UpdateChallengeProgress < ApplicationService
 
     completed = progress >= challenge.number_required
 
-    binds = [[nil, progress], [nil, @quiz.user], [nil, challenge.id],
-             [nil, challenge.number_required], [nil, completed]]
-    ChallengeProgress.connection.exec_query <<~SQL, 'Upsert progress', binds
-      INSERT INTO challenge_progresses("progress","user_id", "challenge_id", "completed", "created_at","updated_at")
-      values ($1, $2, $3, $5, current_timestamp, current_timestamp)
-      ON CONFLICT ("user_id", "challenge_id")
-      DO UPDATE
-        SET progress =  CASE
-                          WHEN challenge_progresses.progress > $4 THEN $1
-                          else challenge_progresses.progress
-                        END,
-            completed  = CASE
-                            WHEN challenge_progresses.progress >= $4 OR $1 >= $4
-                              OR challenge_progresses.completed = true
-                              THEN true
-                            ELSE false
-                         END
-      RETURNING id, completed, awarded
-    SQL
+    ChallengeProgress.upsert_all([
+      { progress: progress, user_id: @quiz.user.id, challenge_id: challenge.id, completed: }
+    ],
+                                 unique_by: %w[user_id challenge_id],
+                                 on_duplicate: Arel.sql("progress =  CASE
+                                  WHEN challenge_progresses.progress > #{challenge.number_required} THEN #{progress}
+                                  else challenge_progresses.progress
+                                END,
+                                completed  = CASE
+                                    WHEN challenge_progresses.progress >= #{challenge.number_required} OR #{progress} >= #{challenge.number_required}
+                                      OR challenge_progresses.completed = true
+                                      THEN true
+                                    ELSE false
+                                 END"),
+                                 returning: %w[id completed awarded])
   end
 
   def upsert_points(points, challenge)
@@ -69,22 +65,19 @@ class Challenge::UpdateChallengeProgress < ApplicationService
 
     completed = points >= challenge.number_required
 
-    binds = [[nil, points], [nil, @quiz.user], [nil, challenge.id], [nil, completed], [nil, challenge.number_required]]
-    ChallengeProgress.connection.exec_query <<~SQL, 'Upsert points', binds
-      INSERT INTO challenge_progresses("progress", "user_id", "challenge_id", "completed", "created_at", "updated_at")
-      values ($1, $2, $3, $4, current_timestamp, current_timestamp)
-      ON CONFLICT ("user_id", "challenge_id")
-      DO UPDATE
-        SET progress = challenge_progresses.progress + $1,
-            completed = CASE
-                          WHEN challenge_progresses.progress >= $5
-                            OR (challenge_progresses.progress + $1) >= $5
-                            OR challenge_progresses.completed = true
-                            THEN true
-                          ELSE false
-                        END
-      RETURNING id, completed, awarded
-    SQL
+    ChallengeProgress.upsert_all([
+      { progress: points, user_id: @quiz.user.id, challenge_id: challenge.id, completed: }
+    ],
+                                 unique_by: %w[user_id challenge_id],
+                                 on_duplicate: Arel.sql("progress = challenge_progresses.progress + #{points},
+                                  completed = CASE
+                                                WHEN challenge_progresses.progress >= #{challenge.number_required}
+                                                  OR (challenge_progresses.progress + #{points}) >= #{challenge.number_required}
+                                                  OR challenge_progresses.completed = true
+                                                  THEN true
+                                                ELSE false
+                                              END"),
+                                 returning: %w[id completed awarded])
   end
 
   def challenges

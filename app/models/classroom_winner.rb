@@ -12,6 +12,6 @@ class ClassroomWinner < ApplicationRecord
   def user_and_classroom_schools_match
     return if classroom.school_id == user.school_id
 
-    errors[:base] << 'Classroom school does not match user school'
+    errors.add(:base, 'Classroom school does not match user school')
   end
 end

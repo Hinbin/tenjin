@@ -28,7 +28,7 @@ class Lesson < ApplicationRecord
   def check_video_id
     result = find_video_id
 
-    errors[:video_id] << 'Must be a YouTube or Vimeo link e.g https://youtu.be/z1aIdcb43RE' if result.blank?
+    errors.add(:video_id, 'Must be a YouTube or Vimeo link e.g https://youtu.be/z1aIdcb43RE') if result.blank?
   end
 
   def save_video_id

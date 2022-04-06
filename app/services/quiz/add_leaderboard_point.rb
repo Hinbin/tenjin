@@ -19,13 +19,11 @@ class Quiz::AddLeaderboardPoint < ApplicationService
 
   protected
 
-  def upsert_score(topic, user, score)
-    binds = [[nil, score], [nil, user], [nil, topic]]
-    TopicScore.connection.exec_insert <<~SQL, 'Upsert topic score', binds
-      INSERT INTO "topic_scores"("score","user_id","topic_id","created_at","updated_at")
-      VALUES ($1, $2, $3, current_timestamp, current_timestamp)
-      ON CONFLICT ("user_id","topic_id")
-      DO UPDATE SET "score"=topic_scores.score + $1,"updated_at"=excluded."updated_at"
-    SQL
+  def upsert_score(topic_id, user_id, score)
+    TopicScore.upsert_all([
+      { topic_id:, user_id:, score: }
+    ],
+                          unique_by: %w[user_id topic_id],
+                          on_duplicate: Arel.sql("score=topic_scores.score + #{score}"))
   end
 end

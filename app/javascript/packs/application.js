@@ -3,11 +3,15 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
+//Workaround for jQury 
+import $ from "expose-loader?exposes=$,jQuery!jquery";
+
 import '../styles/application.scss'
 
 import Rails from '@rails/ujs'
 import Turbolinks from 'turbolinks'
 import * as ActiveStorage from '@rails/activestorage'
+
 import 'bootstrap'
 import '@fortawesome/fontawesome-free/js/all'
 import { Application } from 'stimulus'
@@ -43,15 +47,28 @@ ActiveStorage.start()
 const images = require.context('../images', true)
 const imagePath = (name) => images(name, true)
 
+
 require('datatables.net-bs4')
 require('datatables.net-buttons-bs4')
 require('datatables.net-buttons/js/buttons.html5.js')
 require('datetime-moment')
 
-require('trix')
-require('@rails/actiontext')
-require('@rails/actioncable')
 require('turbolinks')
+require('trix')
+require('@rails/actioncable')
+
+// Workaround for actiontext issue
+//require('@rails/actiontext')
+import { AttachmentUpload } from "@rails/actiontext/app/javascript/actiontext/attachment_upload"
+
+addEventListener("trix-attachment-add", event => {
+  const { attachment, target } = event
+
+  if (attachment.file) {
+    const upload = new AttachmentUpload(attachment, target)
+    upload.start()
+  }
+})
 
 $(document).on('turbolinks:load', function () {
   if ($('#notice').text().length) {
@@ -76,3 +93,4 @@ application.load(definitionsFromContext(context))
 window.Shepherd = Shepherd
 window.Cookies = Cookies
 window.jQuery = $
+

@@ -27,7 +27,7 @@ class Question < ApplicationRecord
   validate :lesson_is_for_topic
 
   def lesson_is_for_topic
-    errors[:base] << 'Lesson topic must match question topic' unless lesson.blank? || lesson.topic == topic
+    errors.add(:base, 'Lesson topic must match question topic') unless lesson.blank? || lesson.topic == topic
   end
 
   def boolean_true_or_false
@@ -35,20 +35,22 @@ class Question < ApplicationRecord
 
     answer_text = answers.filter_map { |i| i&.text }
     # Check for the presence of both true and false in two answers in a case insensitive search
-    return errors[:base] << 'Boolean question must contain two answers' unless answer_text.size == 2
+    return errors.add(:base, 'Boolean question must contain two answers') unless answer_text.size == 2
 
     return if answer_text.select { |text| %w[true false].detect { |permitted| permitted.casecmp(text).zero? } }
 
-    errors[:base] << 'Boolean must be true or false only'
+    errors.add(:base, 'Boolean must be true or false only')
   end
 
   def at_least_one_correct_answer
-    errors[:base] << 'Question must have at least one correct answer.' unless answers.each.pluck(:correct).include? true
+    return if answers.each.pluck(:correct).include? true
+
+    errors.add(:base, 'Question must have at least one correct answer.')
   end
 
   def as_json(*)
     json = { question_text: question_text.body,
-             question_type: question_type,
+             question_type:,
              answers: answers.as_json(only: %i[text correct]) }
     json[:lesson] = lesson.title if lesson
     json

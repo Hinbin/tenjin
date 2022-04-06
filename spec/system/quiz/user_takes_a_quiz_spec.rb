@@ -4,24 +4,24 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: true do
-  let(:lesson) { create(:lesson, topic: topic) }
+  let(:lesson) { create(:lesson, topic:) }
 
   context 'when answering a multiple choice question' do
-    let(:question) { create(:question, topic: topic) }
+    let(:question) { create(:question, topic:) }
     let(:correct_response) { Answer.where(correct: true).first }
     let(:correct_response_selector) { "response-#{correct_response.id}" }
     let(:incorrect_response_selector) { "response-#{question.answers.where(correct: false).first.id}" }
 
     before do
       setup_subject_database
-      create_list(:answer, 3, question: question, correct: false)
+      create_list(:answer, 3, question:, correct: false)
       sign_in student
       navigate_to_quiz
     end
 
     context 'with a lesson' do
-      let(:question) { create(:question, topic: topic, lesson: lesson) }
-      let(:no_content_lesson) { create(:lesson, topic: topic, category: 'no_content', video_id: '') }
+      let(:question) { create(:question, topic:, lesson:) }
+      let(:no_content_lesson) { create(:lesson, topic:, category: 'no_content', video_id: '') }
 
       it 'shows a lesson video if one is present' do
         question.lesson = lesson
@@ -84,7 +84,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
     end
 
     context 'when flagging unfair questions' do
-      let(:flagged_question) { create(:flagged_question, user: student, question: question) }
+      let(:flagged_question) { create(:flagged_question, user: student, question:) }
 
       it 'shows an option to flag a problem with a question' do
         expect(page).to have_css('svg.fa-flag')
@@ -111,8 +111,8 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
   end
 
   context 'with more than two quesitons in a quiz' do
-    let(:question) { create(:question, topic: topic) }
-    let(:next_question) { create(:question, topic: topic) }
+    let(:question) { create(:question, topic:) }
+    let(:next_question) { create(:question, topic:) }
 
     before do
       setup_subject_database
@@ -135,7 +135,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
     before do
       image = create_file_blob(filename: 'computer-science.jpg', content_type: 'image/jpg')
       html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>Test message</p>)
-      create(:question, topic: topic, question_text: html)
+      create(:question, topic:, question_text: html)
 
       setup_subject_database
       sign_in student
@@ -148,10 +148,10 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
   end
 
   context 'when answering a short answer question' do
-    let(:question) { create(:short_answer_question, topic: topic) }
+    let(:question) { create(:short_answer_question, topic:) }
     let(:incorrect_response) { FFaker::Lorem.word }
     let(:correct_response) { Answer.first.text }
-    let(:second_correct_answer) { create(:answer, question: question, correct: true) }
+    let(:second_correct_answer) { create(:answer, question:, correct: true) }
 
     before do
       setup_subject_database
@@ -161,7 +161,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
     end
 
     context 'with a lesson' do
-      let(:question) { create(:short_answer_question, topic: topic, lesson: lesson) }
+      let(:question) { create(:short_answer_question, topic:, lesson:) }
 
       it 'shows a lesson video if one is present' do
         question.lesson = lesson
@@ -236,7 +236,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
 
     context 'when checking my multipliers' do
       before do
-        create(:asked_question, question: question, quiz: Quiz.first, user: student)
+        create(:asked_question, question:, quiz: Quiz.first, user: student)
       end
 
       it 'shows the current multiplier' do
@@ -261,8 +261,8 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
       let(:quiz) { Quiz.first }
 
       before do
-        create(:asked_question, question: question, quiz: quiz, user: student)
-        create(:asked_question, question: question, quiz: quiz, user: student)
+        create(:asked_question, question:, quiz:, user: student)
+        create(:asked_question, question:, quiz:, user: student)
         quiz.streak = 3
         quiz.save
       end

@@ -144,3 +144,5 @@ gem 'scout_apm'
 gem 'hirefire-resource'
 gem 'barnes'
 #skylight for response metrics?
+
+gem "shakapacker", "= 6.2"

@@ -1,67 +1,22 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Start Rails server",
-            "type": "Ruby",
-            "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "program": "${workspaceRoot}/bin/rails",
-            "args": [
-                "server",
-                "-p",
-                "3000"
-            ]
-        },
-        {
-            "name": "Debug Rails server",
-            "type": "Ruby",
-            "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "useBundler": true,
-            "pathToBundler": "${workspaceRoot}/bin/bundle",
-            "pathToRDebugIDE": "/home/nicholas/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/ruby-debug-ide-0.6.1",
-            "program": "${workspaceRoot}/bin/rails",
-            "args": [
-                "server",
-                "-p",
-                "3000"
-            ]
-        },
-        {
-            "name": "Run RSpec - all",
-            "type": "Ruby",
-            "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "useBundler": true,
-            "pathToRDebugIDE": "/home/nicholas/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/ruby-debug-ide-0.6.1",
-            "program": "/home/nicholas/.rbenv/versions/2.5.1/bin/rspec",
-            "args": [
-                "--pattern",
-                "${workspaceRoot}/spec/**/*_spec.rb"
-            ]
-        },
-        {
-            "name": "Debug RSpec - open spec file",
-            "type": "Ruby",
-            "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "program": "/home/nicholas/.rbenv/versions/2.5.1/bin/rspec",
-            "args": [
-                "${file}"
-            ]
-        },
-        {
-          "name": "Debug RSpec - open spec file on a certain line",
-          "type": "Ruby",
-          "request": "launch",
-          "cwd": "${workspaceRoot}",
-          "useBundler": true,
-          "pathToBundler": "${workspaceRoot}/bin/bundle",
-          "pathToRDebugIDE": "/path/to/rubygem/gems/ruby-debug-ide-x.x.x/bin/rdebug-ide",
-          "debuggerPort": "1235",
-          "program": "/home/nicholas/.rbenv/versions/2.5.1/bin/rspec",
-          "args": ["${file}:${lineNumber}"]
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+          {
+                  "type": "rdbg",
+                  "name": "Debug current file with rdbg",
+                  "request": "launch",
+                  "command": "rspec",
+                  "script": "${file}",
+                  "args": [],
+                  "askParameters": false                  
+          },
+          {
+                  "type": "rdbg",
+                  "name": "Attach with rdbg",
+                  "request": "attach"
+          }
+  ]
 }
