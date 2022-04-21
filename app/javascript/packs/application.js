@@ -3,9 +3,6 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
-//Workaround for jQury 
-import $ from "expose-loader?exposes=$,jQuery!jquery";
-
 import '../styles/application.scss'
 
 import Rails from '@rails/ujs'
@@ -92,5 +89,4 @@ application.load(definitionsFromContext(context))
 
 window.Shepherd = Shepherd
 window.Cookies = Cookies
-window.jQuery = $
 

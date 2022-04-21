@@ -1,7 +1,18 @@
-const { webpackConfig } = require('shakapacker')
+// config/webpack/webpack.config.js
+// Expose jQuery through expose-loader config included
+const { webpackConfig, merge } = require('shakapacker')
+const customConfig = {
+  module: {
+    rules: [
+      {
+        test: require.resolve('jquery'),
+        loader: 'expose-loader',
+        options: {
+          exposes: ['$', 'jQuery']
+        }
+      }
+    ]
+  }
+}
 
-// See the shakacode/shakapacker README and docs directory for advice on customizing your webpackConfig.
-
-
-
-module.exports = webpackConfig
+module.exports = merge(webpackConfig, customConfig)
