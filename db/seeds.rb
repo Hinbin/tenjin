@@ -76,7 +76,7 @@ CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
 
     response = http_conn.get new_google_loc
 
-    image = create_file_blob(data: StringIO.new(response.body), filename: filename, content_type: 'image/jpg')
+    image = create_file_blob(data: StringIO.new(response.body), filename: filename, content_type: 'image/jpeg')
     html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
     q = Question.new(external_id: row['id'], topic: topic, question_text: html , question_type: row['question_type'] )
     q.save!(validate: false)
