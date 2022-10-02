@@ -1,5 +1,5 @@
 
-$(document).on('turbolinks:load', function () {
+$(document).on('turbo:load', function () {
   if (page.controller() === 'questions' && page.action() === 'import_topic_questions') {
     document.querySelector('.custom-file-input').addEventListener('change', function (e) {
       var fileName = document.getElementById('select-file').files[0].name

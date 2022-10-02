@@ -1,4 +1,4 @@
-$(document).on('turbolinks:load', () => {
+$(document).on('turbo:load', () => {
   if (page.controller() === 'classrooms') {
     $('.custom-select').on('change', () => {
       $('#syncStatus').text('Needed')
@@ -13,7 +13,7 @@ $(document).on('turbolinks:load', () => {
         const controller = $(event.target.parentNode).data('controller')
         const id = $(event.target.parentNode).data('id')
 
-        Turbolinks.visit(`/${controller}/${id}`)
+        Turbo.visit(`/${controller}/${id}`)
       }
     })
 
@@ -56,7 +56,7 @@ $(document).on('turbolinks:load', () => {
   }
 })
 
-$(document).on('turbolinks:before-cache', () => {
+$(document).on('turbo:before-cache', () => {
   $('tr[data-controller]').off('click')
   $('#classroom-table').DataTable().destroy()
   $('#homework-table').DataTable().destroy()

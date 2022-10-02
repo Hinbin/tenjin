@@ -1,4 +1,4 @@
-$(document).on('turbolinks:load', function () {
+$(document).on('turbo:load', function () {
   if (page.controller() === 'schools') {
     $('.select_input').on('change', (change) => {
       var subjectMapId = change.target.id

@@ -26,7 +26,7 @@ function processMultipleChoiceResponse (serverResponse, guess) {
   $('#nextButton').focus()
 }
 
-$(document).on('turbolinks:load', function () {
+$(document).on('turbo:load', function () {
   $('.multiple-choice-button').click((click) => {
     if ($(click.target).hasClass('disabled')) {
       return

@@ -1,4 +1,4 @@
-$(document).on('turbolinks:load', () => {
+$(document).on('turbo:load', () => {
   $('.videoLink').click((click) => {
     var $videoSource = $(click.currentTarget).attr('src')
     $('iframe#video').attr('src', $videoSource + '?autoplay=1&rel=0')

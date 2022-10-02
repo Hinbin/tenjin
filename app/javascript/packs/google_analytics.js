@@ -1,5 +1,5 @@
 
-$(document).on('turbolinks:load', function () {
+$(document).on('turbo:load', function () {
   if (typeof gtag === 'function') {
     gtag('config', '<%= ENV[GOOGLE_ANALYTICS_ID] %>', {
       'page_location': event.data.url

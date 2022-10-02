@@ -1,5 +1,5 @@
 
-$(document).on('turbolinks:load', () => {
+$(document).on('turbo:load', () => {
 
   if ($('#students-table').length) {
     // Show updated password
@@ -59,7 +59,7 @@ $(document).on('turbolinks:load', () => {
   }
 })
 
-$(document).on('turbolinks:before-cache', () => {
+$(document).on('turbo:before-cache', () => {
   $('#employees-table').DataTable().destroy()
   $('#students-table').DataTable().destroy()
   $('#users-table').DataTable().destroy()

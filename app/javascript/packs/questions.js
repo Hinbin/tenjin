@@ -1,4 +1,4 @@
-$(document).on('turbolinks:load', () => {
+$(document).on('turbo:load', () => {
   if (page.controller() === 'questions') {
     if (!$.fn.dataTable.isDataTable('#questionTable')) {
       $('#questionTable').DataTable({
@@ -15,7 +15,7 @@ $(document).on('turbolinks:load', () => {
 
     $('.check-and-save').click((event) => {
       const paths = $(event.target).data()
-      validateAndSave(() => { Turbolinks.visit(paths['redirect']) }, paths['update'])
+      validateAndSave(() => { Turbo.visit(paths['redirect']) }, paths['update'])
     })
 
     $('.reload-page').on('change', (target) => {
@@ -23,7 +23,7 @@ $(document).on('turbolinks:load', () => {
       $('input[name=authenticity_token').remove()
       let form = $('#questionForm')
       const formParams = form.serialize()
-      Turbolinks.visit(currentPath + '?' + formParams)
+      Turbo.visit(currentPath + '?' + formParams)
     })
 
     $('form').on('click', '.remove_record', function (event) {
@@ -43,7 +43,7 @@ $(document).on('turbolinks:load', () => {
   }
 })
 
-$(document).on('turbolinks:before-cache', () => {
+$(document).on('turbo:before-cache', () => {
   $('#questionTable').DataTable().destroy()
 })
 

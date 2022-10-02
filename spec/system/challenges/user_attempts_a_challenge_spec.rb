@@ -17,28 +17,28 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
 
   context 'when looking at the challenges' do
     let(:challenge_single_question) do
-      create(:challenge, topic: topic, challenge_type: 'number_correct',
+      create(:challenge, topic:, challenge_type: 'number_correct',
                          number_required: 1, end_date: Time.now + 1.hour)
     end
 
     let(:challenge_single_point) do
-      create(:challenge, topic: topic, challenge_type: 'number_of_points',
+      create(:challenge, topic:, challenge_type: 'number_of_points',
                          number_required: 1, end_date: Time.now + 1.hour)
     end
 
     let(:challenge_single_streak) do
-      create(:challenge, topic: topic, challenge_type: 'streak',
+      create(:challenge, topic:, challenge_type: 'streak',
                          number_required: 1, end_date: Time.now + 1.hour)
     end
 
     let(:challenge_daily) do
-      create(:challenge, challenge_type: 'number_of_points', daily: true, topic: topic,
+      create(:challenge, challenge_type: 'number_of_points', daily: true, topic:,
                          number_required: 1, end_date: Time.now + 1.hour)
     end
     let(:second_subject) { create(:subject) }
     let(:second_topic) { create(:topic, subject: second_subject) }
-    let(:challenge_two) { create(:challenge, topic: create(:topic, subject: subject)) }
-    let(:question) { create(:question, topic: topic) }
+    let(:challenge_two) { create(:challenge, topic: create(:topic, subject:)) }
+    let(:question) { create(:question, topic:) }
     let(:progressed_challenge) { create(:challenge_progress, user: student, challenge: challenge_one, progress: 70) }
     let(:completed_challenge) do
       create(:challenge_progress, user: student, challenge: challenge_one, progress: 100,
@@ -110,7 +110,7 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
       end
 
       it 'flags the challenge complete' do
-        create(:question, topic: create(:topic, subject: subject))
+        create(:question, topic: create(:topic, subject:))
         visit(dashboard_path)
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         click_through_quiz
@@ -118,8 +118,8 @@ RSpec.describe 'User attempts a challenge', type: :system, js: true, default_cre
       end
 
       it 'only increases points for this student' do
-        second_enrollment = create(:enrollment, classroom: classroom)
-        create(:question, topic: create(:topic, subject: subject))
+        second_enrollment = create(:enrollment, classroom:)
+        create(:question, topic: create(:topic, subject:))
         visit(dashboard_path)
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         click_through_quiz

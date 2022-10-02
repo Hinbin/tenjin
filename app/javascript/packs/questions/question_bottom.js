@@ -1,4 +1,4 @@
-$(document).on('turbolinks:load', function () {
+$(document).on('turbo:load', function () {
   $('#unfairFlag').on('ajax:success', (event) => {
     if ($('#unfairFlag svg').data('prefix') === 'far') {
       $('#unfairFlag svg').addClass('fas')
