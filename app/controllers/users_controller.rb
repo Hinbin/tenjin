@@ -88,19 +88,16 @@ class UsersController < ApplicationController
     @user.email = update_email_params[:email]
     @user.save
 
-    flash.now[:notice] = "Updated email to #{@user.forename} #{@user.surname}"
-
-    render template: 'shared/flash'
+    redirect_to @user.school, notice: "Updated email to #{@user.email}"
   end
 
   def send_welcome_email
     authorize @user
-    flash.now[:notice] = "Setup email sent to #{@user.forename} #{@user.surname} (#{@user.email})"
 
     UserMailer.with(user: @user).setup_email.deliver_later
     @user.send_reset_password_instructions
 
-    render template: 'shared/flash'
+    redirect_to @user.school, notice: "Setup email sent to #{@user.forename} #{@user.surname} (#{@user.email})"
   end
 
   private

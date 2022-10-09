@@ -11,8 +11,8 @@ html
     = csrf_meta_tags
     = csp_meta_tag
     = render 'layouts/google_analytics' if Rails.env.production?          
-    = stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
-    = javascript_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = stylesheet_pack_tag 'application', media: 'all', 'data-turbo-track': 'reload', defer: true
+    = javascript_pack_tag 'application', media: 'all', 'data-turbo-track': 'reload', defer: true
     - unless Rails.env.test?
       = render partial: 'layouts/cookie_consent'
     link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"
@@ -26,6 +26,7 @@ html
     = render('shared/user_navigation') if current_user.present?  
     = render('shared/admin_navigation') if current_admin.present?
     = render('shared/logged_out_navigation') if current_user.nil? && current_admin.nil?
-    = render('shared/notice_notification') if flash[:notice].present? && (current_user.present? || current_admin.present?)
+    turbo-frame id=flash
+      = render('shared/notice_notification') if flash[:notice].present? && (current_user.present? || current_admin.present?)
     = yield
     = render('shared/alert_modal')

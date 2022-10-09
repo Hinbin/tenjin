@@ -3,22 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe 'Author edits a question', type: :system, js: true, default_creates: true do
-  let(:author) { create(:question_author, subject: subject) }
-  let(:question) { create(:question, topic: topic) }
-  let(:lesson) { create(:lesson, topic: topic) }
+  let(:author) { create(:question_author, subject:) }
+  let(:question) { create(:question, topic:) }
+  let(:lesson) { create(:lesson, topic:) }
   let(:new_topic_name) { FFaker::Lorem.word }
 
   def add_answer
     click_link('Add Answer')
-    find('#answer-text-1')
+    find_by_id('answer-text-1')
     all('.text-answer').last.set("#{answer_text}\n")
     click_button('Save Question')
-    find('#flash-notice', text: 'Question successfully updated')
+    find_by_id('flash-notice', text: 'Question successfully updated')
   end
 
   def save_question
     click_button('Save Question')
-    find('#flash-notice', text: 'Question successfully updated')
+    find_by_id('flash-notice', text: 'Question successfully updated')
   end
 
   def switch_to_student_account
@@ -43,7 +43,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   context 'when assigning default lessons' do
     before do
       lesson
-      create(:question, topic: topic, lesson: lesson)
+      create(:question, topic:, lesson:)
     end
 
     it 'assigns a default lesson to a topic' do
@@ -62,7 +62,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   end
 
   context 'when checking most flagged questions' do
-    let(:flagged_question) { create(:question, topic: topic, flagged_questions_count: 5)}
+    let(:flagged_question) { create(:question, topic:, flagged_questions_count: 5) }
 
     it 'displays flagged questions' do
       flagged_question
@@ -73,7 +73,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   end
 
   context 'when adding or removing questions' do
-    let(:flagged_question) { create_list(:flagged_question, 5, question: question) }
+    let(:flagged_question) { create_list(:flagged_question, 5, question:) }
 
     before do
       question
@@ -165,7 +165,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
   context 'when editing a question' do
     let(:answer_text) { FFaker::Lorem.word }
-    let(:answer) { create(:answer, question: question) }
+    let(:answer) { create(:answer, question:) }
     let(:answer_id) { 'answer-text-0' }
     let(:answer_check_id) { 'answer-check-0' }
 
@@ -182,7 +182,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
     context 'when showing a multiple choice question' do
       before do
-        create_list(:answer, 3, correct: false, question: question)
+        create_list(:answer, 3, correct: false, question:)
         visit(question_path(question))
         find_by_id('select-question-type').click
         find('option', text: 'Multiple').click
@@ -219,14 +219,14 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       end
 
       it 'allows you to delete an existing answer' do
-        create_list(:answer, 2, question: question)
+        create_list(:answer, 2, question:)
         visit(question_path(question))
         expect { first('.btn-danger').click }.to change(Answer, :count).by(-1)
       end
     end
 
     context 'when showing a short answer question' do
-      let(:question) { create(:question, question_type: 'short_answer', topic: topic) }
+      let(:question) { create(:question, question_type: 'short_answer', topic:) }
 
       before do
         question
@@ -240,7 +240,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         click_link('Add Answer')
         all('.text-answer').last.set("#{answer_text}\n")
         click_button('Save Question')
-        find('#flash-notice', text: 'Question successfully updated')
+        find_by_id('flash-notice', text: 'Question successfully updated')
       end
 
       it 'does not let you modify if the answer is correct' do
@@ -248,7 +248,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       end
 
       it 'changes any existing answers for the question to be correct' do
-        expect(Answer.first.correct).to eq(true)
+        expect(Answer.first.correct).to be(true)
       end
 
       it 'allows me to save without saying I need to select a correct answer' do
@@ -291,7 +291,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     context 'when assigning a lesson' do
       before do
         lesson
-        create_list(:answer, 3, question: question)
+        create_list(:answer, 3, question:)
       end
 
       it 'allows you to assign a lesson to the question' do
@@ -305,7 +305,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
     context 'when resetting question flags' do
       before do
-        create(:flagged_question, question: question)
+        create(:flagged_question, question:)
       end
 
       it 'shows the number of question flags' do

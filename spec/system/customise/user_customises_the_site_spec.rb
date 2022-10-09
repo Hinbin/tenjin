@@ -24,7 +24,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
 
     it 'visits from the number of points' do
       visit(dashboard_path)
-      find('#challenge-points').click
+      find_by_id('challenge-points').click
       expect(page).to have_current_path(show_available_customisations_path)
     end
   end
@@ -33,7 +33,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
     let(:dashboard_customisation) { create(:dashboard_customisation, cost: 6) }
     let(:dashboard_customisation_expensive) { create(:dashboard_customisation, cost: 20) }
     let(:second_customisation) { create(:dashboard_customisation, cost: 2) }
-    let(:student) { create(:user, school: school, challenge_points: 10) }
+    let(:student) { create(:user, school:, challenge_points: 10) }
 
     before do
       dashboard_customisation
@@ -73,7 +73,9 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
 
     context 'when looking at purchased customisation' do
       let(:dashboard_customisation) { create(:dashboard_customisation, cost: 6, purchasable: false) }
-      let(:unlocked_customisation) { create(:customisation_unlock, user: student, customisation: dashboard_customisation) }
+      let(:unlocked_customisation) do
+        create(:customisation_unlock, user: student, customisation: dashboard_customisation)
+      end
 
       before do
         unlocked_customisation
@@ -108,7 +110,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
       it 'allows you to buy a previously bought customisation at no cost' do
         visit(show_available_customisations_path)
         find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
-        expect { student.reload }.to change(student, :challenge_points).by(0)
+        expect { student.reload }.not_to change(student, :challenge_points)
       end
     end
   end
@@ -141,7 +143,7 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
     end
 
     it 'shows the icon on the leaderboard' do
-      create(:topic_score, user: student, topic: topic)
+      create(:topic_score, user: student, topic:)
       find("form[action='#{buy_customisation_path(icon_customisation)}'] input.btn").click
       visit(leaderboard_path(subject.name))
       expect(page).to have_css('td svg.fa-star', style: 'color: black;')

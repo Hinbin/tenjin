@@ -5,7 +5,6 @@
 
 import '../styles/application.scss'
 
-import Rails from '@rails/ujs'
 import '@hotwired/turbo-rails'
 import * as ActiveStorage from '@rails/activestorage'
 
@@ -37,12 +36,10 @@ import './questions'
 import './controller_info'
 import './google_analytics'
 
-Rails.start()
 ActiveStorage.start()
 
 const images = require.context('../images', true)
 const imagePath = (name) => images(name, true)
-
 
 require('datatables.net-bs4')
 require('datatables.net-buttons-bs4')
@@ -52,17 +49,7 @@ require('trix')
 require('@rails/actioncable')
 
 // Workaround for actiontext issue
-//require('@rails/actiontext')
-import { AttachmentUpload } from "@rails/actiontext/app/javascript/actiontext/attachment_upload"
-
-addEventListener("trix-attachment-add", event => {
-  const { attachment, target } = event
-
-  if (attachment.file) {
-    const upload = new AttachmentUpload(attachment, target)
-    upload.start()
-  }
-})
+require('@rails/actiontext')
 
 $(document).on('turbo:load', function () {
   if ($('#notice').text().length) {

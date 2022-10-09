@@ -30,10 +30,10 @@
                 tr.school-admin-data
                   td =sa.username
                   -if current_admin.super?
-                    td =text_field_tag 'user[email]', sa.email, class: 'form-control', id: ('user-email-' + sa.id.to_s)
-                    td =submit_tag 'Save Email', class: 'btn btn-primary', id: ('save-email-' + sa.id.to_s)
-                    td =link_to 'Send Setup Email', send_welcome_email_user_path(sa), class: 'btn btn-primary', method: :post, remote: true
-                  td =link_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary', method: :post
+                    td =f.text_field :email, class: 'form-control', id: ('user-email-' + sa.id.to_s)
+                    td =f.submit 'Save Email', class: 'btn btn-primary', id: ('save-email-' + sa.id.to_s)
+                    td =link_to 'Send Setup Email', send_welcome_email_user_path(sa), class: 'btn btn-primary', data: {turbo_method: "post"}, remote: true
+                  td =link_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary', data: {turbo_method: "post"}
       -if current_admin.super?
         .d-flex.justify-content-center
           =link_to 'Manage User Roles', manage_roles_users_path(school: @school), class: 'btn btn-dark'

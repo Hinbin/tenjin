@@ -27,9 +27,8 @@ gem 'jsbundling-rails'
 # React-rails for react components
 gem 'react-rails'
 
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks','~> 5.2.0'
-gem 'turbolinks_render' # Aids in rendering form validation errors using ajax
+# Turbo-rails replaces Turbolinks
+gem 'turbo-rails'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false

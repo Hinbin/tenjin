@@ -3,7 +3,6 @@
 require 'rails_helper'
 RSpec.describe 'Super views a school', type: :system, js: true, default_creates: true do
   let(:new_email) { FFaker::Internet.email }
-  let(:save_email_notice) { "Updated email to #{school_admin.forename} #{school_admin.surname}" }
   let(:email_notice) do
     "Setup email sent to #{school_admin.forename} #{school_admin.surname} (#{school_admin.email})"
   end
@@ -30,7 +29,7 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
   it 'links to role management for that school' do
     visit(school_path(school))
     click_link 'Manage User Roles'
-    expect(page).to have_current_path(manage_roles_users_path(school: school))
+    expect(page).to have_current_path(manage_roles_users_path(school:))
   end
 
   it 'saves email addresses of school admins' do
@@ -38,7 +37,7 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
     visit(school_path(school))
     fill_in "user-email-#{school_admin.id}", with: new_email
     find("#save-email-#{school_admin.id}").click
-    expect(page).to have_css('#flash-notice', text: save_email_notice)
+    expect(page).to have_css('#flash-notice', text: "Updated email to #{new_email}")
   end
 
   it 'notifies users that a setup email has been sent' do
@@ -47,11 +46,11 @@ RSpec.describe 'Super views a school', type: :system, js: true, default_creates:
     click_link 'Send Setup Email'
     expect(page).to have_css('#flash-notice', text: email_notice, wait: 6)
   end
-
+  
   context 'when viewing statistics' do
     let(:statistic) { create(:user_statistic, user: student, week_beginning: Date.current.beginning_of_week) }
     let(:older_statistic) do
-      create(:user_statistic, user: create(:student, school: school),
+      create(:user_statistic, user: create(:student, school:),
                               week_beginning: two_weeks_ago)
     end
     let(:two_weeks_ago) { (Date.current - 2.weeks).beginning_of_week }

@@ -3,7 +3,7 @@ header.masthead.masthead-container.masthead-full.text-white
     div.row.justify-content-center.align-items-center
       div.col-6.text-center.bg-white.text-dark.rounded
         h2 Log in
-        = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+        = simple_form_for(resource, as: resource_name, data:{turbo: false}, url: session_path(resource_name)) do |f|
           .form-inputs
             - if resource.class.name == 'Admin'
               = f.input :email,                       \

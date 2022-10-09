@@ -1,6 +1,0 @@
-if ( $("#flash-notice").length ) {
-  $('#flash-notice').text('<%= escape_javascript(flash[:notice]) %>')
-}
-else {
-  $("<%= escape_javascript(render 'shared/notice_notification') %>").prependTo(".container");
-}

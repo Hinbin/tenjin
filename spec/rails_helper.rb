@@ -125,7 +125,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless
+    driven_by :selenium_chrome
     page.driver.browser.manage.window.resize_to(1024, 768)
   end
 

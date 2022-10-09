@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Super manages subjects', type: :system, js: true, default_creates: true do
+RSpec.describe 'Super manages subjects', type: :system, js: true, focus: true, default_creates: true do
   let(:new_subject_name) { FFaker::Lorem.word }
   let(:ten_questions_for_subject) { create_list(:question, 10, topic: topic) }
   let(:five_asked_questions_this_week) { create_list(:asked_question, 5, question: question) }

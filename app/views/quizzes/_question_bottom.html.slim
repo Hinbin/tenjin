@@ -11,7 +11,7 @@
           flagged_questions_path(flagged_question: {user_id: current_user.id, question_id: @question.id }),
           class: 'btn',
           id: 'unfairFlag',
-          data: {method: :post},
+          data: {turbo_method: "post"},
           remote: true
 
 -unless @quiz.counts_for_leaderboard
