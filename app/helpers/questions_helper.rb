@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 module QuestionsHelper
-  def flag_icon
-    if @flagged_question.present? && @flagged_question.persisted?
-      "<img class='fas fa-flag' style='color: red'></img>".html_safe
-    else
-      "<img class='far fa-flag' style='color: red'></img>".html_safe
-    end
-  end
 
   def percentage_correct(question)
     qs = question.question_statistic
