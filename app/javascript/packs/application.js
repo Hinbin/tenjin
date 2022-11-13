@@ -27,7 +27,6 @@ import './student_dashboard'
 import './teacher_dashboard'
 import './users'
 import './questions/multiple_choice_question'
-import './questions/question_bottom'
 import './questions/question_top'
 import './questions/short_response_question'
 import './questions/import_topic_questions'
@@ -65,6 +64,12 @@ $(document).on('turbo:load', function () {
 var componentRequireContext = require.context('components', true)
 var ReactRailsUJS = require('react_ujs')
 ReactRailsUJS.useContext(componentRequireContext)
+
+// Fix for leaderboard not loading
+ReactRailsUJS.handleEvent('turbo:frame-load', ReactRailsUJS.handleMount)
+ReactRailsUJS.handleEvent('turbo:frame-render', ReactRailsUJS.handleUnmount)
+ReactRailsUJS.handleEvent('turbo:load', ReactRailsUJS.handleMount)
+ReactRailsUJS.handleEvent('turbo:before-render', ReactRailsUJS.handleUnmount)
 
 // Stimulus
 const application = Application.start()

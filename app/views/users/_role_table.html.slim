@@ -26,6 +26,6 @@ h3.h3 =role.humanize
           td = button_to 'Remove',
             remove_role_user_path(id: r.id),
             class: 'btn btn-danger',
-            method: :delete,
+            data: { turbo_method: 'delete' },
             params: {user: { role: role} },
             form: {id: "form-#{role}-#{r.id}" }

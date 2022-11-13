@@ -16,6 +16,6 @@ RSpec.describe 'submitting a customisation', type: :request do
       post buy_customisation_path(id: rand(200..300))
     end
 
-    it { is_expected.to redirect_to(dashboard_path) }
+    it { is_expected.to redirect_to(show_available_customisations_path) }
   end
 end

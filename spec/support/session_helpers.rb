@@ -54,6 +54,7 @@ module SessionHelpers
     visit(new_quiz_path(subject: subject.name))
     select Topic.last.name, from: 'quiz_topic_id'
     click_button('Create Quiz')
+    find('.trix-content')
   end
 
   def navigate_to_lucky_dip
@@ -67,6 +68,7 @@ module SessionHelpers
     find(flatpickr_one_week_from_now).click
     select '70', from: 'Required %'
     select topic.name, from: 'Topic'
+    click_button('Set Homework')
   end
 
   def create_homework_for_lesson
@@ -75,6 +77,7 @@ module SessionHelpers
     select '70', from: 'Required %'
     select topic.name, from: 'Topic'
     select lesson.title, from: 'Lesson'
+    click_button('Set Homework')
   end
 
   def initialize_name(user)
@@ -91,7 +94,7 @@ module SessionHelpers
   end
 
   def update_password(new_password)
-    find('#user_password').set(new_password)
+    find_by_id('user_password').set(new_password)
     click_button('Update Password')
     find('.alert')
   end

@@ -2,7 +2,7 @@
   -@subjects.each do |s|
     .display-3.my-3 =s.name
     =link_to 'Add Topic', new_topic_path(subject: {subject_id: s.id}), class: 'btn btn-primary btn-block'
-    =link_to 'Most Flagged Questions', flagged_questions_questions_path( subject_id: s.id), class: 'btn btn-info btn-block' 
+    =link_to 'Most Flagged Questions', flagged_questions_topics_path( subject_id: s.id), class: 'btn btn-info btn-block' 
     table.table
       thead
         tr
@@ -10,7 +10,7 @@
           th Question # 
       -s.topics.where(active: true).order(:name).each do |t|
         tr    
-          td =link_to t.name, topic_questions_path(topic_id: t)
+          td =link_to t.name, topic_path(t)
           td =t.questions.count
 
         

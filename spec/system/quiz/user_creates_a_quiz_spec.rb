@@ -3,10 +3,10 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: true do
+RSpec.describe 'User creates a quiz', default_creates: true, js: true, type: :system do
   context 'when picking a subject' do
     let(:subject_cs) { create(:computer_science) }
-    let(:classroom_cs) { create(:classroom, subject: subject_cs, school: school) }
+    let(:classroom_cs) { create(:classroom, subject: subject_cs, school:) }
 
     it 'shows a subject image when there is one available' do
       create(:enrollment, classroom: classroom_cs, user: student)
@@ -31,11 +31,13 @@ RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: 
   context 'when creating two quizzes in quick succession' do
     before do
       setup_subject_database
-      create_list(:answer, 3, question: question)
+      create_list(:answer, 3, question:)
       sign_in student
       navigate_to_quiz
       visit(dashboard_path)
-      navigate_to_quiz
+      visit(new_quiz_path(subject: subject.name))
+      select Topic.last.name, from: 'quiz_topic_id'
+      click_button('Create Quiz')
     end
 
     it 'prevents you from taking a quiz if 40 seconds have not passed' do
@@ -48,9 +50,9 @@ RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: 
   end
 
   context 'when creating a quiz for the same topic multiple times' do
-    let(:user_topic_score) { TopicScore.where(user: student, topic: topic).first.score }
-    let(:two_quizzes_started) { create(:usage_statistic, user: student, topic: topic, quizzes_started: 2) }
-    let(:three_quizzes_started) { create(:usage_statistic, user: student, topic: topic, quizzes_started: 3) }
+    let(:user_topic_score) { TopicScore.where(user: student, topic:).first.score }
+    let(:two_quizzes_started) { create(:usage_statistic, user: student, topic:, quizzes_started: 2) }
+    let(:three_quizzes_started) { create(:usage_statistic, user: student, topic:, quizzes_started: 3) }
 
     before do
       setup_subject_database
@@ -80,7 +82,7 @@ RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: 
     end
 
     context 'when you should not be allowed to score' do
-      let(:three_quizzes_started) { create(:usage_statistic, user: student, topic: topic, quizzes_started: 3) }
+      let(:three_quizzes_started) { create(:usage_statistic, user: student, topic:, quizzes_started: 3) }
 
       before do
         three_quizzes_started
@@ -88,7 +90,7 @@ RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: 
       end
 
       it 'does not allow you to score points for the fourth attempt' do
-        create(:topic_score, user: student, topic: topic, score: 3)
+        create(:topic_score, user: student, topic:, score: 3)
         first(class: 'question-button').click
         find('.correct-answer')
         expect(user_topic_score).to eq(3)
@@ -103,11 +105,11 @@ RSpec.describe 'User creates a quiz', type: :system, js: true, default_creates: 
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }
     let(:customisation) { create(:dashboard_customisation, value: 'orange') }
-    let(:active_customisation) { create(:active_customisation, user: student, customisation: customisation) }
+    let(:active_customisation) { create(:active_customisation, user: student, customisation:) }
 
     before do
       setup_subject_database
-      create(:question, topic: topic)
+      create(:question, topic:)
       log_in
     end
 

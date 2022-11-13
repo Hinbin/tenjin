@@ -46,9 +46,15 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       create(:question, topic:, lesson:)
     end
 
-    it 'assigns a default lesson to a topic' do
-      visit(topic_questions_path(topic_id: topic))
+    def edit_default_lesson_in_topic
+      visit(topic_path(topic))
+      click_on('Edit Topic')
       select lesson.title, from: 'Default Lesson'
+      click_on('Update Topic')
+    end
+
+    it 'assigns a default lesson to a topic' do
+      edit_default_lesson_in_topic
       switch_and_create_quiz
       expect(page).to have_css(".videoLink[src^=\"https://www.youtube.com/embed/#{lesson.video_id}\"]")
     end
@@ -66,7 +72,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
     it 'displays flagged questions' do
       flagged_question
-      visit questions_path
+      visit topics_path
       click_link 'Most Flagged Questions'
       expect(page).to have_content(flagged_question.question_text.to_plain_text)
     end
@@ -78,7 +84,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     before do
       question
       flagged_question
-      visit(questions_path)
+      visit(topics_path)
       click_link(question.topic.name)
     end
 
@@ -100,7 +106,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
   context 'when adding or removing topics' do
     before do
-      visit(questions_path)
+      visit(topics_path)
     end
 
     it 'allows you to create a topic' do
@@ -115,7 +121,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     end
 
     it 'prevents disabled topics from showing when taking a quiz' do
-      visit(topic_questions_path(topic_id: topic))
+      visit(topic_path(topic))
       page.accept_confirm { click_link('Delete Topic') }
       find('div', exact_text: subject.name, count: 2)
       switch_to_student_account
@@ -126,13 +132,18 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   context 'when visiting the topic index page' do
     before do
       question
-      visit(questions_path)
+      visit(topics_path)
       click_link(question.topic.name)
     end
 
-    it 'allows you to edit a topic name' do
+    def update_topic_name
+      click_on('Edit Topic')
       fill_in('Topic Name', with: new_topic_name)
-      find('label', text: 'Topic Name').click
+      click_on('Update Topic')
+    end
+
+    it 'allows you to edit a topic name' do
+      update_topic_name
       switch_to_student_account
       navigate_to_quiz
       expect(page).to have_content(new_topic_name)
@@ -151,7 +162,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
   context 'when visiting the subject index page' do
     before do
       question
-      visit(questions_path)
+      visit(topics_path)
     end
 
     it 'shows each subject' do

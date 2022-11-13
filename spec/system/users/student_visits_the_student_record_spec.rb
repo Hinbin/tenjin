@@ -23,6 +23,7 @@ RSpec.describe 'User visits the homepage', :vcr, default_creates: true, type: :s
     visit(user_path(student))
     fill_in('user[password]', with: new_password)
     click_button('Update Password')
+    find("#alert", text: 'You need to sign in or sign up before continuing.')
     log_in_through_front_page(student.username, new_password)
     expect(page).to have_content(student.forename).and have_content(student.surname)
   end

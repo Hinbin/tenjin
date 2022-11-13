@@ -24,7 +24,6 @@ section.page-section.text-center
           =link_to "Unlink #{current_user.oauth_email}",
             unlink_oauth_account_user_path(current_user),
             class: 'btn btn-danger',
-            data: { confirm: 'Are you sure?' },
-            method: :delete
+            data: { turbo_confirm: 'Are you sure?', turbo_method: "delete" }
   - if @user.student?
     = render('shared/homework')

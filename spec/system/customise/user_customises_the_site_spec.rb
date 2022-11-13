@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'User customises the site', type: :system, js: true, default_creates: true do
+RSpec.describe 'User customises the site', default_creates: true, js: true, type: :system do
   before do
     setup_subject_database
     sign_in student
@@ -57,7 +57,8 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
 
     it 'deducts the required amount of challenge points' do
       find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
-      expect { student.reload }.to change(student, :challenge_points).by(-dashboard_customisation.cost)
+      expect(page).to have_css('td#challenge-points',
+                               exact_text: student.challenge_points - dashboard_customisation.cost)
     end
 
     it 'gives a notice if you do not have the required number of points' do
@@ -104,13 +105,14 @@ RSpec.describe 'User customises the site', type: :system, js: true, default_crea
         second_customisation
         visit(show_available_customisations_path)
         find("form[action='#{buy_customisation_path(second_customisation)}'] input.btn").click
-        student.reload
+        find('.alert', text: 'Congratulations!')
       end
 
       it 'allows you to buy a previously bought customisation at no cost' do
         visit(show_available_customisations_path)
         find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
-        expect { student.reload }.not_to change(student, :challenge_points)
+        expect(page).to have_css('td#challenge-points',
+                                 exact_text: student.challenge_points - dashboard_customisation.cost)
       end
     end
   end

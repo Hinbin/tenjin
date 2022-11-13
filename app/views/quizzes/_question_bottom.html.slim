@@ -5,14 +5,9 @@
         p#quiz-name=@question.topic.name
       -else
         p#quiz-name=@question.lesson.title
-    .col
-      p.text-right
-        =link_to flag_icon,
-          flagged_questions_path(flagged_question: {user_id: current_user.id, question_id: @question.id }),
-          class: 'btn',
-          id: 'unfairFlag',
-          data: {turbo_method: "post"},
-          remote: true
+    .col         
+      =render "flagged_question_icon"
+            
 
 -unless @quiz.counts_for_leaderboard
   .row.col-lg-8.mx-auto.alert.alert-warning 

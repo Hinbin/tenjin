@@ -58,7 +58,7 @@ class UsersController < ApplicationController
     new_password = Devise.friendly_token(6)
     @user.reset_password(new_password, new_password)
     @user.save
-    render json: { id: @user.id, password: new_password }
+    render turbo_stream: turbo_stream.replace(@user, partial: 'new_password', locals: { new_password: })
   end
 
   def manage_roles

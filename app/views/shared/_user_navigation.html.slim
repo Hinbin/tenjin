@@ -38,7 +38,7 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
               | Setup Classrooms    
         -if current_user.has_role? :question_author, :any
           li.nav-item
-            a.nav-link href=questions_path
+            a.nav-link href=topics_path
               | Edit Questions      
 
     -if current_user.student?
@@ -51,5 +51,5 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
       a#current_user.text-light href=user_path(current_user)
         => current_user.forename
         = current_user.surname
-    = link_to(destroy_user_session_path, method: :delete) do
-      button.btn.btn-light-outline Logout
+    = button_to "Logout", destroy_user_session_path, method: :delete, class: "button btn btn-light-outline", data: {turbo: "false"}
+      

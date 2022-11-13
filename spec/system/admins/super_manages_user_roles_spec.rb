@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Super manages user roles', type: :system, js: true, default_creates: true do
+RSpec.describe 'Super manages user roles', default_creates: true, js: true, type: :system do
   before do
     sign_in super_admin
     school
@@ -21,7 +21,7 @@ RSpec.describe 'Super manages user roles', type: :system, js: true, default_crea
     teacher.add_role :school_admin
     visit(manage_roles_users_path(school: teacher.school))
     click_button('Remove')
-    expect(page).to have_no_css('#school_admin-table')
+    expect(page).not_to have_css('#school_admin-table')
   end
 
   it 'adds a question author role' do
@@ -35,7 +35,7 @@ RSpec.describe 'Super manages user roles', type: :system, js: true, default_crea
     teacher.add_role :question_author, subject
     visit(manage_roles_users_path(school: teacher.school))
     click_button('Remove')
-    expect(page).to have_no_css('#question_author-table')
+    expect(page).not_to have_css('#question_author-table')
   end
 
   it 'adds a lesson author role' do
@@ -49,7 +49,7 @@ RSpec.describe 'Super manages user roles', type: :system, js: true, default_crea
     teacher.add_role :lesson_author, subject
     visit(manage_roles_users_path(school: teacher.school))
     click_button('Remove')
-    expect(page).to have_no_css('#lesson_author-table')
+    expect(page).not_to have_css('#lesson_author-table')
   end
 
   it 'shows employees' do

@@ -8,7 +8,6 @@
        =f.button :submit, class: "btn btn-primary btn-block"
       =link_to 'Deactivate Subject', 
         subject_path(@subject),
-        method: :delete,
         class: 'btn btn-block btn-danger my-5',
-        data: {confirm: "Are you sure?"}
+        data: {turbo_confirm: "Are you sure?", turbo_method: "delete"}
        

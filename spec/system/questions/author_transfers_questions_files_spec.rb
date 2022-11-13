@@ -19,14 +19,14 @@ RSpec.describe 'Author transfers question files', type: :system, js: true, defau
 
   it 'downloads questions' do
     skip if ENV['CI'] # Flakes out in CircleCI
-    visit topic_questions_path(topic_id: topic.id)
+    visit topic_path(topic.id)
     click_link('Download Questions')
     wait_for_download
     expect(download).to match("#{topic.name}.json")
   end
 
   it 'uploads questions' do
-    visit topic_questions_path(topic_id: topic.id)
+    visit topic_path(topic.id)
     click_link('Import Questions')
     attach_file('file', 'spec/fixtures/files/example_import.json', visible: false)
     click_button('Import')
@@ -34,7 +34,7 @@ RSpec.describe 'Author transfers question files', type: :system, js: true, defau
   end
 
   it 'reports upload issues' do
-    visit topic_questions_path(topic_id: topic.id)
+    visit topic_path(topic.id)
     click_link('Import Questions')
     attach_file('file', 'spec/fixtures/files/example_import_invalid.json', visible: false)
     click_button('Import')
@@ -42,7 +42,7 @@ RSpec.describe 'Author transfers question files', type: :system, js: true, defau
   end
 
   it 'tells the user if they have not attached a file' do
-    visit topic_questions_path(topic_id: topic.id)
+    visit topic_path(topic.id)
     click_link('Import Questions')
     click_button('Import')
     expect(page).to have_content('Please attach a file')

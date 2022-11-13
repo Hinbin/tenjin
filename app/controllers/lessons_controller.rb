@@ -58,9 +58,9 @@ class LessonsController < ApplicationController
     unless @lesson.valid?
       @topics = policy_scope(Topic).where(subject: @lesson.topic.subject)
 
-      return render 'edit' if @lesson.persisted?
+      return render :edit, status: :unprocessable_entity if @lesson.persisted?
 
-      return render 'new'
+      return render :new, status: :unprocessable_entity
     end
 
     @lesson.save!

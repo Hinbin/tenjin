@@ -15,4 +15,9 @@ hr.small.mb-5.primary-red
             = e.surname
           td = e.username
           td.d-none.d-lg-block = get_user_classes(e)
-          td =link_to('Reset Password', reset_password_user_path(id: e.id), class: 'btn btn-dark reset-password reset-password-student', remote: true, method: :patch)
+          td =link_to('Reset Password',
+                reset_password_user_path(id: e.id),
+                class: 'btn btn-dark reset-password reset-password-student',
+                remote: true, 
+                id: dom_id(e),
+                data: { turbo_method: :patch })

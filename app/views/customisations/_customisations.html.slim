@@ -20,7 +20,7 @@
             -else
               p.text-white#cost              
                 == customisation_cost(style, bought_customisations)
-                =form_for(style, url: buy_customisation_path(style), method: :post) do |f|
+                =form_with url: buy_customisation_path(style) do |f|
                   -if bought_customisations.include? style.id
                     =f.submit 'Switch', class: 'btn btn-light-outline float-right buy-btn' 
                   -else
@@ -50,7 +50,7 @@
                 p#cost
                   == customisation_cost(icon, bought_customisations)
                   div.m-1
-                    =form_for(icon, url: buy_customisation_path(icon), method: :post) do |f|
+                    =form_with url: buy_customisation_path(icon) do |f|
                       -if bought_customisations.include? icon.id
                         =f.submit 'Switch', class: 'btn btn-dark-outline buy-btn'
                       -else

@@ -17,7 +17,7 @@ class HomeworksController < ApplicationController
     authorize @homework
     if @homework.save
       set_homework_notice
-      redirect_to @homework
+      redirect_to @homework.classroom
     else
       @classroom = @homework.classroom
       @classroom.present? ? render('new') : redirect_to(dashboard_path)

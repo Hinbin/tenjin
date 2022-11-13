@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 require 'support/api_data'
-require 'pry'
 
 RSpec.describe 'User views an updating leaderboard', type: :system, default_creates: true, js: true do
   before do

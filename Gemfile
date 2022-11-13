@@ -145,3 +145,6 @@ gem 'barnes'
 #skylight for response metrics?
 
 gem "shakapacker", "= 6.2"
+
+# New image manipulator gem
+gem "ruby-vips"

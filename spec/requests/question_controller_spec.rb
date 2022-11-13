@@ -11,7 +11,7 @@ RSpec.describe 'using question editing', type: :request do
   context 'when I am a student' do
     it 'redirects me to the dashboard' do
       sign_in student
-      get questions_path
+      get topics_path
       expect(response).to redirect_to(root_path)
     end
   end
@@ -22,7 +22,7 @@ RSpec.describe 'using question editing', type: :request do
     end
 
     it 'displays the questions index page' do
-      get questions_path
+      get topics_path
       expect(response).to have_http_status(:success)
     end
   end

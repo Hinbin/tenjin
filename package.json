@@ -57,11 +57,12 @@
   "version": "0.1.0",
   "babel": {
     "presets": [
-      "./node_modules/shakapacker/package/babel/preset.js"
+      "./node_modules/shakapacker/package/babel/preset.js",
+      "@babel/preset-react"
     ]
   },
   "devDependencies": {
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.8",
     "eslint": "^5.11.1",
     "eslint-config-google": "^0.11.0",
     "eslint-config-standard": "^12.0.0",
@@ -69,7 +70,7 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "react-refresh": "^0.12.0",
+    "react-refresh": "^0.14.0",
     "webpack-dev-server": "^4.7.4"
   },
   "scripts": {

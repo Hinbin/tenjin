@@ -1,16 +1,5 @@
 
 $(document).on('turbo:load', () => {
-
-  if ($('#students-table').length) {
-    // Show updated password
-    $(document).on('ajax:success', (event) => {
-      const response = event.detail[0]
-      let table = $(`tr[data-id="${response.id}"] .reset-password`).closest('table').DataTable()
-      let oldCell = $(`tr[data-id="${response.id}"] .reset-password`).parent('td')
-      table.cell(oldCell).data(`<div class="new-password">${response.password}</div>`).draw()
-    })
-  }
-
   if (page.controller() === 'users' || page.controller() === 'schools') {
     // Data tables initialisation
     if (!$.fn.dataTable.isDataTable('#students-table')) {

@@ -22,14 +22,14 @@ class CustomisationsController < ApplicationController
     if @customisation.save
       redirect_to customisations_path, notice: "Created new customisation #{@customisation.name}"
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def new
     @customisation = Customisation.new(purchasable: false, retired: false)
     authorize @customisation
-    render 'edit'
+    render :edit
   end
 
   def update
@@ -55,7 +55,7 @@ class CustomisationsController < ApplicationController
     @customisation = Customisation.find_by(id: buy_params)
     result = buy_customisation
     flash_notice(result)
-    redirect_to dashboard_path
+    redirect_to show_available_customisations_path
   end
 
   private

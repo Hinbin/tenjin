@@ -17,6 +17,15 @@
                   "type": "rdbg",
                   "name": "Attach with rdbg",
                   "request": "attach"
+          },
+          {
+                "type": "rdbg",
+                "name": "Debug current spec with rdbg",
+                "request": "launch",
+                "command": "rspec",
+                "script": "${file}:${lineNumber}",
+                "args": [],
+                "askParameters": false     
           }
   ]
 }

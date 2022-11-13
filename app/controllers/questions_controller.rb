@@ -4,24 +4,6 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: %i[show update destroy reset_flags]
 
-  def index
-    @subjects = policy_scope(Question)
-    raise Pundit::NotAuthorizedError if @subjects.blank?
-  end
-
-  def topic
-    redirect questions_path unless topic_params.present?
-
-    @topic = Topic.find(topic_params)
-    authorize @topic, :show?
-    @topic_lessons = Lesson.where(topic: @topic)
-    @questions = Question.with_rich_text_question_text_and_embeds
-                         .includes(:question_statistic, :lesson)
-                         .where(topic: @topic, active: true)
-
-    render 'topic_question_index'
-  end
-
   def lesson
     redirect lessons_path unless lesson_params.present?
 
@@ -32,20 +14,6 @@ class QuestionsController < ApplicationController
                          .where(lesson: @lesson, active: true)
 
     render 'lesson_question_index'
-  end
-
-  def reset_flags
-    authorize current_user, :update?
-    FlaggedQuestion.where(question: @question).delete_all
-    Question.reset_counters @question.id, :flagged_questions_count
-    redirect_to @question
-  end
-
-  def flagged_questions
-    @subject = Subject.find(flagged_questions_params)
-    authorize @subject, :flagged_questions?
-    @questions = @subject.flagged_questions
-    render :flagged
   end
 
   def new
@@ -63,7 +31,7 @@ class QuestionsController < ApplicationController
     check_answers
 
     if @question.save
-      redirect_to topic_questions_path(topic_id: @question.topic), notice: 'Question successfully created'
+      redirect_to topic_path(@question.topic), notice: 'Question successfully created'
     else
       render :new
     end
@@ -84,13 +52,13 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: 'Question successfully updated'
     else
-      render :show
+      render :show, status: :unprocessable_entity
     end
   end
 
   def destroy
     authorize @question
-    redirect_to topic_questions_path(topic_id: @question.topic)
+    redirect_to topic_path(@question.topic)
 
     @question.update_attribute(:active, false)
   end
@@ -116,13 +84,20 @@ class QuestionsController < ApplicationController
 
     if params[:file].nil?
       flash[:alert] = 'Please attach a file'
-      return render :import_topic, topic_id: @topic
+      return redirect_to import_topic_questions_path(topic_id: @topic)
     end
 
     data = File.read(params[:file])
     result = Question::ImportQuestions.call(data, @topic, params[:file].original_filename)
     flash[:notice] = result.error
-    redirect_to topic_questions_path(topic_id: @topic)
+    redirect_to topic_path(@topic)
+  end
+
+  def reset_flags
+    authorize current_user, :update?
+    FlaggedQuestion.where(question: @question).delete_all
+    Question.reset_counters @question.id, :flagged_questions_count
+    redirect_to @question
   end
 
   private
@@ -133,10 +108,6 @@ class QuestionsController < ApplicationController
 
   def lesson_params
     params.require(:lesson_id)
-  end
-
-  def flagged_questions_params
-    params.require(:subject_id)
   end
 
   def question_params

@@ -91,7 +91,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       click_link('Edit')
       fill_in_form(new_lesson)
       click_button('Update Lesson')
-      expect(page).to have_css(".videoLink[src=\"#{Lesson.last.generate_video_src}\"]")
+      expect(page).to have_css(".videoLink[src$=\"#{new_lesson.video_id[-8..]}\"]")
     end
 
     it 'deletes lessons' do

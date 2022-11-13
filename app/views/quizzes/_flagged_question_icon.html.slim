@@ -1,0 +1,16 @@
+        
+        
+=turbo_frame_tag "unfairFlag"     
+  =form_with url: flagged_questions_path(flagged_question: {user_id: current_user.id, question_id: @question.id }), class: "text-right" do |f|
+    - if @flagged_question.present? && @flagged_question.persisted?
+      =f.button"<img class='fas fa-flag' style='color: red'></img>".html_safe,
+        class: 'btn',
+        alt: 'Flag unfair question',
+        title:'Flag unfair question',
+        data: {toggle:"tooltip", toggle:"modal", target:"#feedbackModal"}
+    - else
+      =f.button"<img class='far fa-flag' style='color: red'></img>".html_safe,
+        class: 'btn',
+        alt: 'Flag unfair question',
+        title:'Flag unfair question',
+        data: {toggle:"tooltip", toggle:"modal", target:"#feedbackModal"}

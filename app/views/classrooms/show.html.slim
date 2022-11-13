@@ -17,7 +17,10 @@
           tbody
             -@homeworks.each do |h|
               tr.homework-data data-controller='homeworks' data-id=h.id
-                td =h.topic.name
+                -if h.lesson.present?
+                  td =h.lesson.title
+                -else
+                  td =h.topic.name
                 td =report_progress(h)
                 td =h.due_date.strftime("%d/%m/%y %H:%M")
   section.page-section.text-center.pt-2#students                            
@@ -37,6 +40,10 @@
               td =s.forename
               td =s.surname
               td =s.username
-              td.password-col.d-none =link_to('Reset Password', reset_password_user_path(id: s.id), class: 'btn btn-dark reset-password reset-password-student', remote: true, method: :patch )
+              td.password-col.d-none =link_to('Reset Password',
+                                        reset_password_user_path(id: s.id),
+                                        id: dom_id(s),
+                                        class: 'btn btn-dark reset-password reset-password-student',
+                                        data: {turbo_method: :patch} )
               td =link_to(s) do
                 ==student_homeworks(s, @homework_progress)

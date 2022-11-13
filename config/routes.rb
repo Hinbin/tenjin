@@ -23,7 +23,6 @@ Rails.application.routes.draw do
       get 'lesson' 
       get 'download_topic'
       get 'import_topic'
-      get 'flagged_questions' 
       post 'import'    
     end
     member do
@@ -31,7 +30,11 @@ Rails.application.routes.draw do
     end
   end
   resources :answers
-  resources :topics
+  resources :topics do
+    collection do
+      get 'flagged_questions' 
+    end
+  end
   resources :subjects
   resources :homeworks
   resources :users, only:[:show, :index, :update] do
@@ -40,7 +43,7 @@ Rails.application.routes.draw do
         patch 'reset_password'
         patch 'update_email'
         post 'send_welcome_email'
-        delete 'remove_role'
+        post 'remove_role'
         delete 'unlink_oauth_account'
       end
       collection do

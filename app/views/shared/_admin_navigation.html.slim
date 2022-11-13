@@ -24,5 +24,4 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
           a.nav-link href=manage_roles_users_path Roles    
         li.nav-item.active
           a.nav-link href=admin_path(current_admin) Admin Options    
-    = link_to(destroy_admin_session_path, method: :delete) do
-      button.btn.btn-light Logout
+  = button_to "Logout", destroy_admin_session_path, method: :delete, class: "button btn btn-light-outline", data: {turbo: "false"}

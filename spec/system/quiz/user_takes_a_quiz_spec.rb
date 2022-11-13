@@ -4,13 +4,13 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: true do
+
   let(:lesson) { create(:lesson, topic:) }
 
   context 'when answering a multiple choice question' do
     let(:question) { create(:question, topic:) }
     let(:correct_response) { Answer.where(correct: true).first }
     let(:correct_response_selector) { "response-#{correct_response.id}" }
-    let(:incorrect_response_selector) { "response-#{question.answers.where(correct: false).first.id}" }
 
     before do
       setup_subject_database
@@ -36,51 +36,55 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
       end
     end
 
-    it 'only shows a lesson video if one is present' do
-      expect(page).to have_no_css('.videoLink')
-    end
+    context 'when selecting a response' do
+      let(:incorrect_response_selector) { "response-#{question.answers.where(correct: false).first.id}" }
 
-    it 'displays the question text' do
-      expect(page).to have_content(question.question_text.to_plain_text)
-    end
+      it 'only shows a lesson video if one is present' do
+        expect(page).to have_no_css('.videoLink')
+      end
 
-    it 'allows me to respond to a question' do
-      first(class: 'question-button').click
-      expect(page).to have_selector('.next-button', visible: :visible)
-    end
+      it 'displays the question text' do
+        expect(page).to have_content(question.question_text.to_plain_text)
+      end
 
-    it 'disables all other buttons when I attempt to answer' do
-      first(class: 'question-button').click
-      expect(page).to have_css('.question-button[disabled]', visible: :visible)
-    end
+      it 'allows me to respond to a question' do
+        first(class: 'question-button').click
+        expect(page).to have_selector('.next-button', visible: :visible)
+      end
 
-    it 'hides the next question button before answering' do
-      expect(page).to have_selector('.next-button', visible: :hidden)
-    end
+      it 'disables all other buttons when I attempt to answer' do
+        first(class: 'question-button').click
+        expect(page).to have_css('.question-button[disabled]', visible: :visible)
+      end
 
-    it 'indicates if the answer I gave was right' do
-      find(id: correct_response_selector).click
-      expect(page).to have_css("button##{correct_response_selector}.correct-answer")
-    end
+      it 'hides the next question button before answering' do
+        expect(page).to have_selector('.next-button', visible: :hidden)
+      end
 
-    it 'indicates if the answer I gave was wrong' do
-      find(id: incorrect_response_selector).click
-      expect(page).to have_css("button##{incorrect_response_selector}.incorrect-answer")
-    end
+      it 'indicates if the answer I gave was right' do
+        find(id: correct_response_selector).click
+        expect(page).to have_css("button##{correct_response_selector}.correct-answer")
+      end
 
-    it 'indicates the correct answer if the answer I gave was wrong' do
-      find(id: incorrect_response_selector).click
-      expect(page).to have_css("button##{correct_response_selector}.correct-answer")
-    end
+      it 'indicates if the answer I gave was wrong' do
+        find(id: incorrect_response_selector).click
+        expect(page).to have_css("button##{incorrect_response_selector}.incorrect-answer")
+      end
 
-    it 'uses icons to show which questions are right' do
-      find(id: correct_response_selector).click
-      expect(page).to have_css('svg.fa-check')
-    end
+      it 'indicates the correct answer if the answer I gave was wrong' do
+        find(id: incorrect_response_selector).click
+        expect(page).to have_css("button##{correct_response_selector}.correct-answer")
+      end
 
-    it 'uses icons to show which questions are wrong' do
-      find(id: incorrect_response_selector).click
-      expect(page).to have_css('svg.fa-times')
+      it 'uses icons to show which questions are right' do
+        find(id: correct_response_selector).click
+        expect(page).to have_css('svg.fa-check')
+      end
+
+      it 'uses icons to show which questions are wrong' do
+        find(id: incorrect_response_selector).click
+        expect(page).to have_css('svg.fa-times')
+      end
     end
 
     context 'when flagging unfair questions' do
@@ -92,18 +96,19 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
 
       it 'allows me to flag a question' do
         find(:css, 'svg.fa-flag').click
-        expect(page).to have_css('svg.fa-flag[data-prefix="fas"]').and have_content('You have flagged this question as unfair')
+        expect(page).to have_css('svg.fa-flag[data-prefix="fas"]')
+                    .and have_content('You have flagged this question as unfair')
       end
 
       it 'shows if I have already flagged a particular question' do
         flagged_question
-        visit current_path # refresh page
+        visit quiz_path(Quiz.first)
         expect(page).to have_css('svg.fa-flag[data-prefix="fas"]')
       end
 
       it 'allows me to unflag a question' do
         flagged_question
-        visit current_path # refresh page
+        visit quiz_path(Quiz.first)
         find(:css, 'svg.fa-flag').click
         expect(page).to have_css('svg.fa-flag[data-prefix="far"]')
       end
