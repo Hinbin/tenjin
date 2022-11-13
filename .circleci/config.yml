@@ -43,7 +43,7 @@ commands:
           paths:
             - ~/.cache/yarn
 
-      - run: sudo apt install libvips libvips-dev
+      - run: sudo apt-get install libvips libvips-dev
 
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
