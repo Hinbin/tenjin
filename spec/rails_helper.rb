@@ -99,6 +99,7 @@ RSpec.configure do |config|
       aggregate_failures 'javascript errors' do
         errors.each do |error|
           next if error.message.include? '422 (Unprocessable Entity)' # Ignore for turbo
+          next if error.message.include? 'Failed to fetch' # Ignore for turbo
 
           expect(error.level).not_to eq('SEVERE'), error.message
           next unless error.level == 'WARNING'
