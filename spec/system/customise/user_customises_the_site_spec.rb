@@ -111,6 +111,7 @@ RSpec.describe 'User customises the site', default_creates: true, js: true, type
       it 'allows you to buy a previously bought customisation at no cost' do
         visit(show_available_customisations_path)
         find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
+        find('.alert', text: 'Congratulations!')
         expect(page).to have_css('td#challenge-points',
                                  exact_text: student.challenge_points - dashboard_customisation.cost)
       end
