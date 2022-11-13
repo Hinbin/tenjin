@@ -42,7 +42,8 @@ commands:
           key: tenjin-yarn-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
-
+            
+      - run: sudo apt update
       - run: sudo apt-get install libvips libvips-dev
 
       - browser-tools/install-chrome
