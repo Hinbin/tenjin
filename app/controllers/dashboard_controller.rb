@@ -15,6 +15,7 @@ class DashboardController < ApplicationController
     else
       teacher_enrollments
       render 'teacher_dashboard'
+      current_user
     end
   end
 
