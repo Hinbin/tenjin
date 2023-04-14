@@ -10,11 +10,13 @@ $(document).on('turbo:load', () => {
     $('iframe#video').attr('src', $('iframe#video').attr('src').replace('autoplay=1', 'autoplay=0'))
   })
 
-  $('img[category="vimeo"]').each((i, video) => {
-    let vimeoVideoID = $(video).attr('video_id')
-    $.getJSON('https://www.vimeo.com/api/v2/video/' + vimeoVideoID + '.json?callback=?',
-      { format: 'json' }, function (data) {
-        $(video).attr('src', data[0].thumbnail_large)
+  $('img[category="vimeo"]').each((i, image) => {
+    let img = $(image)
+    const embedUrl = "https://vimeo.com/api/oembed.json?url="
+    const vidUrl = "https://vimeo.com/" + img.attr('video_id')
+    $.getJSON(embedUrl + encodeURI(vidUrl),
+      function (data) {
+        img.attr('src', data.thumbnail_url)
       })
   })
 })
