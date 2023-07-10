@@ -3,14 +3,14 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '~> 3.1.1'
+ruby '~> 3.2.2'
 
 # Sets environment variables
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'recipient_interceptor'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.3'
+gem 'rails', '~> 7.0.5'
 
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
@@ -144,7 +144,8 @@ gem 'hirefire-resource'
 gem 'barnes'
 #skylight for response metrics?
 
-gem "shakapacker", "= 6.2"
 
 # New image manipulator gem
 gem "ruby-vips"
+
+gem "shakapacker", "~> 6.6"

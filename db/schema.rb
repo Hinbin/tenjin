@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_02_145823) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_02_135014) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -122,7 +122,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_02_145823) do
     t.bigint "user_id", null: false
     t.integer "progress", default: 0, null: false
     t.boolean "completed", default: false
-    t.datetime "created_at", precision: nil, default: -> { "now()" }, null: false
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "awarded", default: false
     t.index ["challenge_id"], name: "index_challenge_progresses_on_challenge_id"
@@ -358,7 +358,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_02_145823) do
     t.integer "score", default: 0, null: false
     t.bigint "user_id", null: false
     t.bigint "topic_id", null: false
-    t.datetime "created_at", precision: nil, default: -> { "now()" }, null: false
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["topic_id"], name: "index_topic_scores_on_topic_id"
     t.index ["user_id", "topic_id"], name: "index_topic_scores_on_user_id_and_topic_id", unique: true
