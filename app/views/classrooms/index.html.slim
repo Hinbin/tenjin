@@ -26,6 +26,9 @@
                   include_blank: '',
                   id: ('classroom-' + c.id.to_s),
                   class: 'custom-select',
-                  data: { remote: 'true',  url: classroom_path(c.id), turbo_method: 'patch' }
+                  data: {controller: 'classroom',
+                  action: 'change->classroom#updateSubject',
+                  classroom_target:"subject",
+                  classroom_url_value: classroom_path(c.id)}
         
         

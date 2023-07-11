@@ -23,7 +23,7 @@ class ClassroomsController < ApplicationController
 
   def update
     authorize @classroom
-    @classroom.update(subject_id: update_classroom_params[:subject])
+    @classroom.update(subject_id: update_classroom_params[:id])
     @classroom.school.update(sync_status: 'needed')
   end
 
@@ -34,6 +34,6 @@ class ClassroomsController < ApplicationController
   end
 
   def update_classroom_params
-    params.permit(:subject, :id)
+    params.require(:subject).permit(:id)
   end
 end

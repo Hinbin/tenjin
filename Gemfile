@@ -30,6 +30,9 @@ gem 'react-rails'
 # Turbo-rails replaces Turbolinks
 gem 'turbo-rails'
 
+# Stimulus for Javascript
+gem 'stimulus-rails'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 

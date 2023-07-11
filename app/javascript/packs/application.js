@@ -10,14 +10,13 @@ import * as ActiveStorage from '@rails/activestorage'
 
 import 'bootstrap'
 import '@fortawesome/fontawesome-free/js/all'
-import { Application } from 'stimulus'
+import { Application } from '@hotwired/stimulus'
 import { definitionsFromContext } from 'stimulus/webpack-helpers'
 
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
 import Shepherd from 'shepherd.js'
 import Cookies from 'js-cookie/src/js.cookie'
-
 
 import './classroom'
 import './homework'
@@ -73,9 +72,15 @@ ReactRailsUJS.handleEvent('turbo:before-render', ReactRailsUJS.handleUnmount)
 
 // Stimulus
 const application = Application.start()
-const context = require.context('./controllers', true, /\.js$/)
+
+// Configure Stimulus development experience
+application.debug = false
+window.Stimulus = application
+
+const context = require.context('../controllers', true, /\.js$/)
 application.load(definitionsFromContext(context))
+
+export { application }
 
 window.Shepherd = Shepherd
 window.Cookies = Cookies
-
