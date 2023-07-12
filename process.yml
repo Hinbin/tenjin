@@ -75,7 +75,7 @@ jobs:
     - run:
         name: precompile assets
         command: |
-          bin/rails webpacker:compile
+          bin/rails shakapacker:compile
     - run:
         command: dockerize -wait tcp://localhost:5432 -timeout 1m
     - run:
@@ -190,7 +190,7 @@ workflows:
 #       - run:
 #           name: precompile assets
 #           command: |
-#             bin/rails webpacker:compile
+#             bin/rails shakapacker:compile
 # 
 #       # Wait for DB
 #       - run: dockerize -wait tcp://localhost:5432 -timeout 1m

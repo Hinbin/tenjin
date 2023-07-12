@@ -10,7 +10,7 @@ module ApplicationHelper
   end
 
   def asset_exists?(path)
-    Webpacker.manifest.send(:data).keys.grep(/#{path}/)
+    Shakapacker.manifest.send(:data).keys.grep(/#{path}/)
   end
 
   def print_subject_image(url)
