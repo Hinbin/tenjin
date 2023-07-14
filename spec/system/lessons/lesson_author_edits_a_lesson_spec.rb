@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_creates: true do
   let(:second_subject) { create(:subject) }
-  let(:lesson) { create(:lesson, topic: topic) }
+  let!(:lesson) { create(:lesson, topic: topic) }
   let(:new_lesson) { build(:lesson, topic: topic) }
 
   def fill_in_form(lesson)
@@ -15,7 +15,6 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
 
   before do
     sign_in teacher
-    lesson
   end
 
   it 'shows an option to edit lessons when I allowed to' do
