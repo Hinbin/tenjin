@@ -2,12 +2,12 @@ import React from 'react'
 import { Table, Row, Button, FormGroup, Input, Label, Col } from 'reactstrap'
 import { compose } from 'recompose'
 
-import LiveLeaderboardStore from '../stores/LiveLeaderboardStore'
-import * as LiveLeaderboardActions from '../actions/LiveLeaderboardActions'
+import LiveLeaderboardStore from './stores/LiveLeaderboardStore'
+import * as LiveLeaderboardActions from './actions/LiveLeaderboardActions'
 import Entry from './live_leaderboard/Entry'
 import Filters from './live_leaderboard/Filters'
 import ClassroomWinner from './live_leaderboard/ClassroomWinner'
-import withLoading from '../hoc/withLoading'
+import withLoading from './hoc/withLoading'
 
 class LiveLeaderboard extends React.Component {
   constructor () {

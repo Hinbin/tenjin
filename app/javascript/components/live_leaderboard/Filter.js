@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import * as FilterActions from '../../actions/LiveLeaderboardActions'
+import * as FilterActions from '../actions/LiveLeaderboardActions'
 import { Dropdown, DropdownItem, DropdownToggle, DropdownMenu, Label, FormGroup, Col } from 'reactstrap'
 
 export default class Filter extends React.Component {
