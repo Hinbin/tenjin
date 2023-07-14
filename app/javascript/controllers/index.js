@@ -4,5 +4,20 @@
 
 import { application } from "../packs/application"
 
+import ApplicationController from "./application_controller"
+application.register("application", ApplicationController)
+
 import ClassroomController from "./classroom_controller"
 application.register("classroom", ClassroomController)
+
+import DashboardController from "./dashboard_controller"
+application.register("dashboard", DashboardController)
+
+import FormController from "./form_controller"
+application.register("form", FormController)
+
+import HomeworkController from "./homework_controller"
+application.register("homework", HomeworkController)
+
+import UsersController from "./users_controller"
+application.register("users", UsersController)

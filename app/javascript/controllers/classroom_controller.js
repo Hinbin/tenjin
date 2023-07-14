@@ -1,22 +1,21 @@
-import { Controller } from "@hotwired/stimulus";
+import ApplicationController from "./application_controller";
 
 // Connects to data-controller="classroom"
-export default class extends Controller {
-  static targets = ["subject"];
-  static values = { url: String };
+export default class extends ApplicationController {
+  static targets = ['subject']
+  static values = { url: String }
 
   updateSubject() {
-    const subjectID = this.subjectTarget.value;
-    const url = this.urlValue;
-    const token = document.getElementsByName("csrf-token")[0].content;
+    const subjectID = this.subjectTarget.value
+    const url = this.urlValue
 
-    let formData = new FormData();
-    formData.append("subject[id]", subjectID);
+    let formData = new FormData()
+    formData.append('subject[id]', subjectID)
 
     fetch(url, {
-      method: "PATCH",
-      headers: { "X-CSRF-Token": token },
+      method: 'PATCH',
+      headers: { 'X-CSRF-Token': super.getCsrfToken() },
       body: formData,
-    });
+    })
   }
 }

@@ -32,7 +32,7 @@ class TopicsController < ApplicationController
     authorize @topic
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace(@topic, partial: 'topic_edit') }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace(@topic, partial: 'topics/topic_update') }
       format.html         { render 'edit' }
     end
   end
@@ -42,6 +42,7 @@ class TopicsController < ApplicationController
     @topic.update(topic_params)
 
     respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace(@topic, partial: 'topics/topic_show') }
       format.html         { redirect_to topic_path(@topic) }
     end
   end
