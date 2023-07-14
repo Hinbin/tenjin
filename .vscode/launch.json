@@ -26,6 +26,14 @@
                 "script": "${file}:${lineNumber}",
                 "args": [],
                 "askParameters": false     
-          }
+          },
+          {
+                "type": "rdbg",
+                "name": "Launch Rails server with rdbg",
+                "request": "launch",
+                "script": "./blog/bin/rails s",
+                "useBundler": false,
+                "command": "ruby"
+              },
   ]
 }

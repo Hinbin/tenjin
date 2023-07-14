@@ -1,4 +1,4 @@
-.container 
+=turbo_frame_tag(@topic)
   =form_with model: @topic do |f|
     .row.mt-3.form-group
       .col-sm-3
@@ -9,12 +9,13 @@
           class: 'form-control')      
     .row
       .col-sm-3
-        label for="select-default-lesson" class='form-label' Select Default Lesson
+        label for="select-default-lesson" class='form-label' Default Lesson
       .col-sm-9
         =f.select(:default_lesson_id,
           options_from_collection_for_select(Lesson.where(topic: @topic), :id, :title, selected: @topic.default_lesson_id),
           {include_blank: 'No default lesson'},
           {class: 'custom-select',id: 'select-default-lesson'} )
     .row.mt-3
-      =f.submit class: 'btn btn-block btn-primary'
+      .col
+        =f.submit class: 'btn btn-block btn-primary'
       

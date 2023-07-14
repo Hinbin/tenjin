@@ -15,7 +15,7 @@ module ApplicationHelper
 
   def print_subject_image(url)
     if asset_exists?(url).empty?
-      'default-subject.jpg'
+      'images/default-subject.jpg'
     else
       url
     end

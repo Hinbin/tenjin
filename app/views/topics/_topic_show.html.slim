@@ -1,0 +1,29 @@
+=turbo_frame_tag(@topic)
+  .row.mt-3.form-group
+    .col-sm-3
+      label for='topic-name' class='form-label' Topic Name: 
+    .col-sm-9
+      =text_field_tag('topic[name]',
+        @topic.name,
+        id: 'topic-name',
+        class: 'form-control-plaintext',
+        disabled: true)
+  .row.form-group
+    .col-sm-3
+      label for="select-default-lesson" class='form-label' Default Lesson:
+    .col-sm-6
+      -if @topic.default_lesson.nil?
+          =text_field_tag('topic[default_lesson_id]',
+          "None",
+          id: 'topic-name',
+          class: 'form-control-plaintext',
+          disabled: true)
+      -else        
+        =text_field_tag('topic[default_lesson_id]',
+          @topic.default_lesson.title,
+          id: 'topic-name',
+          class: 'form-control-plaintext',
+          disabled: true)
+  .row
+    .col
+      =link_to 'Edit Topic', edit_topic_path(@topic), class: 'btn btn-primary btn-block', data: {turbo_stream: ''}

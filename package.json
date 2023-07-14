@@ -9,7 +9,7 @@
     "@babel/runtime": "7",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@hotwired/stimulus": "^3.2.1",
-    "@hotwired/turbo-rails": "^7.2.0",
+    "@hotwired/turbo-rails": "^7.3.0",
     "@rails/actioncable": "^7.0.2",
     "@rails/actiontext": "^7.0.2",
     "@rails/activestorage": "^7.0.2",
@@ -37,8 +37,8 @@
     "popper.js": "^1.16.1",
     "postcss-cssnext": "^3.1.0",
     "prop-types": "^15.7.2",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react_ujs": "^2.7.1",
     "reactstrap": "^8.0.1",
     "recompose": "^0.30.0",
@@ -56,13 +56,8 @@
     "webpack-merge": "5"
   },
   "version": "0.1.0",
-  "babel": {
-    "presets": [
-      "./node_modules/shakapacker/package/babel/preset.js",
-      "@babel/preset-react"
-    ]
-  },
   "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "eslint": "^5.11.1",
     "eslint-config-google": "^0.11.0",
     "eslint-config-standard": "^12.0.0",

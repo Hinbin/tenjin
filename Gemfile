@@ -84,6 +84,7 @@ group :development do
   # Hunt for n+1
   gem 'bullet'
 
+  gem 'debug'
 
 end
 
