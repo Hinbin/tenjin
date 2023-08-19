@@ -13,7 +13,7 @@ gem 'recipient_interceptor'
 gem 'rails', '~> 7.0.5'
 
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 4.3'
+gem 'puma', '~> 6.3'
 gem 'rack-cors', groups: [:production]
 gem 'rack-timeout', groups: [:production]
 
