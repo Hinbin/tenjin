@@ -12,7 +12,7 @@ class Question < ApplicationRecord
 
   has_rich_text :question_text
 
-  enum question_type: %i[short_answer boolean multiple]
+  enum :question_type, %i[short_answer boolean multiple]
 
   before_update :check_boolean
   before_update :check_short_answer

@@ -1,5 +1,5 @@
 .container 
-  =form_with model: @topic do |f|
+  =form_with model: @topic, data: { turbo: false } do |f|
     .row.mt-3.form-group
       .col-sm-3
         label for='topic-name' class='form-label' Topic Name: 

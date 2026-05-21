@@ -3,14 +3,21 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '~> 3.2.2'
+ruby '3.4.9'
+
+# Ruby 3.4 no longer ships these as default gems for all callers, but current
+# dependencies still require them during boot in development/test.
+gem 'csv'
+gem 'mutex_m'
+gem 'observer'
+gem 'ostruct'
 
 # Sets environment variables
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'recipient_interceptor'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.5'
+gem 'rails', '~> 7.2.3', '>= 7.2.3.1'
 
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
@@ -88,8 +95,6 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara'
   gem 'selenium-webdriver'
-  # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'webdrivers'
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'simplecov', require: false # For code coverage
   gem 'rspec-retry'

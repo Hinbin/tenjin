@@ -8,7 +8,6 @@ require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-require 'webdrivers'
 
 require 'webmock/rspec'
 require 'vcr'
@@ -50,7 +49,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -120,11 +119,7 @@ RSpec.configure do |config|
 
     browser_options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
 
-    caps = [
-      browser_options
-    ]
-
-    Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: caps)
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
   end
 
   config.before(:each, type: :system) do

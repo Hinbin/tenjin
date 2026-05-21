@@ -10,5 +10,5 @@ class Admin < ApplicationRecord
 
   validates :role, presence: true
 
-  enum role: %i[super school_group]
+  enum :role, %i[super school_group]
 end

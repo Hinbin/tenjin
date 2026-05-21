@@ -7,7 +7,7 @@ class Challenge < ApplicationRecord
   scope :has_progress, ->(user) { includes(:challenge_progresses).where('challenge_progresses.user_id = ?', user) }
   scope :has_no_progress, -> { includes(:challenge_progresses).where(challenge_progresses: { id: nil }) }
 
-  enum challenge_type: %i[number_correct streak number_of_points]
+  enum :challenge_type, %i[number_correct streak number_of_points]
 
   def self.create_challenge(subject, challenge_type = nil, multiplier: 1, duration: 7.days, daily: false)
     challenge = Challenge.new start_date: Time.current, end_date: duration.from_now

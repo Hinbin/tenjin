@@ -27,7 +27,7 @@
             disabled: true)
     .row
       .col
-        =link_to 'Edit Topic', edit_topic_path(@topic), class: 'btn btn-primary btn-block'
+        =link_to 'Edit Topic', edit_topic_path(@topic), class: 'btn btn-primary btn-block', data: { turbo: false }
   .row.my-2
     .col
       =link_to 'Add Question', new_question_path(question: { topic_id: @topic }), class:'btn btn-primary btn-block'

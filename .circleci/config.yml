@@ -44,7 +44,7 @@ commands:
             - ~/.cache/yarn
             
       - run: sudo apt update
-      - run: sudo apt-get install libvips libvips-dev
+      - run: sudo apt-get install libvips42t64 libvips-dev
 
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
@@ -64,19 +64,19 @@ jobs:
   build:
     <<: *default_job
     docker:
-      - image: cimg/ruby:3.2.2-browsers
+      - image: cimg/ruby:3.4.9-browsers
         environment:
           RAILS_ENV: test
   test:
     <<: *default_job
     parallelism: 4
     docker:
-      - image: cimg/ruby:3.2.2-browsers
+      - image: cimg/ruby:3.4.9-browsers
         environment:
             PGUSER: root
             PGHOST: 127.0.0.1
             RAILS_ENV: test
-      - image: circleci/postgres:10.9
+      - image: cimg/postgres:16.4
         environment:
           POSTGRES_USER: root
 

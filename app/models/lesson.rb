@@ -4,7 +4,7 @@ class Lesson < ApplicationRecord
   validates_length_of :title, minimum: 3
   validate :check_video_id
 
-  enum category: %i[youtube vimeo no_content]
+  enum :category, %i[youtube vimeo no_content]
   has_many :questions
   has_many :default_lessons
   belongs_to :topic
