@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  FLASH_CLASSES = {
+    "success" => "alert-success",
+    "error" => "alert-danger",
+    "alert" => "alert-danger",
+    "notice" => "alert-info"
+  }.freeze
+
+  def bootstrap_flash_class(type)
+    FLASH_CLASSES.fetch(type, "alert-warning")
+  end
+
   def boolean_icon(status)
     if status
       "<i class='fas fa-check' style='color:green'></i>".html_safe

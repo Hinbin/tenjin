@@ -35,16 +35,6 @@ import "@rails/actiontext";
 import "@rails/actioncable";
 import "turbolinks";
 
-$(document).on("turbolinks:load", function () {
-  if ($("#notice").text().length) {
-    $("#noticeModal").modal();
-  }
-
-  if ($("#alert").text().length) {
-    $("#alertModal").modal();
-  }
-});
-
 // Support component names relative to this directory:
 var componentRequireContext = require.context("components", true);
 var ReactRailsUJS = require("react_ujs");

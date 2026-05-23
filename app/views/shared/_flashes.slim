@@ -1,0 +1,6 @@
+- flash.each do |type, msg|
+  - if msg.is_a?(String)
+    .alert.alert-dismissible.fade.show.py-1.my-0 class=bootstrap_flash_class(type) role="alert"
+      p.my-1.pb-0 id=("flash-notice" if type.to_s == "notice") = msg
+      button.close type="button" data-dismiss="alert" aria-label="Close"
+        span aria-hidden=true &times
