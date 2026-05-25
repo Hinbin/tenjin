@@ -9,18 +9,6 @@ module ApplicationHelper
     end
   end
 
-  def asset_exists?(path)
-    Webpacker.manifest.send(:data).keys.grep(/#{path}/)
-  end
-
-  def print_subject_image(url)
-    if asset_exists?(url).empty?
-      "default-subject.jpg"
-    else
-      url
-    end
-  end
-
   def render_small_separator(style = nil)
     return "<hr class='small mb-5 primary' style='border-color: #{style.value}'>" unless style.nil?
 

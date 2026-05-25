@@ -13,8 +13,7 @@ section.page-section.text-center#newQuiz
         -@subjects.each_with_index do |s, i|
             .carousel-item class=('active' if i.zero?)
               a href=new_quiz_path(subject: s.name)
-                -subject_image = print_subject_image("#{s.name.parameterize}.jpg")
-                =image_pack_tag(subject_image, class: 'w-100 subject-carousel-item-image')
+                =image_pack_tag(subject_image(s), class: 'w-100 subject-carousel-item-image')
                 .carousel-caption
                   h3.text-uppercase = s.name
       a.carousel-control-prev href="#subjectCarousel" role="button" data-slide="prev"
@@ -38,11 +37,11 @@ section#challenges.page-section.text-center
               th.d-none.d-sm-table-cell Points
               th Expires in
           tbody
-            - @challenges.each do |c| 
+            - @challenges.each do |c|
                 tr.challenge-row data-challenge=c.id data-topic=(c.daily? ? 'Lucky Dip' : c.topic.id) data-subject=c.topic.subject_id
                   td.text-left = c.stringify
                   td = write_challenge_progress(c, @challenge_progresses)
-                  td.d-none.d-sm-table-cell 
+                  td.d-none.d-sm-table-cell
                     = c.points
                     i.fas.fa-star style='color: yellow'
                   td = challenge_time_left(c)

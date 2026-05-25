@@ -281,6 +281,7 @@ GEM
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     orm_adapter (0.5.0)
+    package_json (0.1.0)
     parallel (1.24.0)
     parser (3.3.2.0)
       ast (~> 2.4.1)
@@ -412,14 +413,18 @@ GEM
     sass-embedded (1.53.0)
       google-protobuf (~> 3.19)
       rake (>= 10.0.0)
-    sassc (2.4.0)
-      ffi (~> 1.9)
     scout_apm (5.3.8)
       parser
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     semantic_range (2.3.0)
+    shakapacker (7.2.3)
+      activesupport (>= 5.2)
+      package_json
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.2)
+      semantic_range (>= 2.3.0)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
     simple_form (5.3.1)
@@ -465,8 +470,6 @@ GEM
       turbolinks-source (~> 5.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unicode-display_width (2.5.0)
     uniform_notifier (1.16.0)
     vcr (6.0.0)
@@ -486,11 +489,6 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webpacker (5.2.1)
-      activesupport (>= 5.2)
-      rack-proxy (>= 0.6.1)
-      railties (>= 5.2)
-      semantic_range (>= 2.3.0)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -545,9 +543,9 @@ DEPENDENCIES
   rspec-retry
   rspec_junit_formatter
   sass-embedded (~> 1.53.0)
-  sassc
   scout_apm
   selenium-webdriver
+  shakapacker (= 7.2.3)
   shoulda-matchers (~> 5.3)
   simple_form
   simplecov
@@ -559,12 +557,10 @@ DEPENDENCIES
   turbolinks (~> 5.2.0)
   turbolinks_render
   tzinfo-data
-  uglifier (>= 1.3.0)
   vcr
   web-console (>= 3.3.0)
   webdrivers
   webmock
-  webpacker
   wondeclient (~> 0.1.3)
 
 RUBY VERSION

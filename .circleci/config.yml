@@ -20,6 +20,19 @@ commands:
             - tenjin-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
             - tenjin-bundle-{{ arch }}-
       - run: bundle install --jobs=4 --retry=3 --clean --path vendor/bundle
+      - run:
+          name: Swap node versions
+          command: |
+            set +e
+            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+            nvm install v18.20.3
+            nvm alias default 18.20.3
+
+            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
       - save_cache:
           name: Store bundle cache
           key: tenjin-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
@@ -68,7 +81,7 @@ jobs:
       - run:
           name: precompile assets
           command: |
-            bin/rails webpacker:compile
+            bin/rails shakapacker:compile
           environment:
             NODE_OPTIONS: --openssl-legacy-provider
 

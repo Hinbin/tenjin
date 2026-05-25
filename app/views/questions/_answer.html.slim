@@ -1,7 +1,7 @@
 tr
   td
-    =f.text_field(:text, id: "answer-text-#{f.index}", 
-                    placeholder: "Click here to add answer", 
+    =f.text_field(:text, id: "answer-text-#{f.index}",
+                    placeholder: "Click here to add answer",
                     class: 'form-control text-answer',
                     readonly: (@question.boolean? ? true : false))
     -unless @question.short_answer? || @question.question_type.nil?
@@ -11,11 +11,8 @@ tr
             id: "answer-check-#{f.index}",
             class: 'form-control')
     -unless @question.boolean?
-      td      
+      td
         - if @question.persisted?
-          =link_to 'Remove', '#', class: 'btn btn-danger',
-            onclick: "$('<input>').attr({type: 'hidden', name: '#{f.object_name}[_destroy]', value: 'true'}).appendTo('form'); $(this).closest('form').submit()"         
-        - else        
-          =link_to 'Remove', '#', class: 'btn btn-danger remove_record'
-          
-        
+          = link_to 'Remove', '#', class: 'btn btn-danger remove-record', data: { object_name: f.object_name }
+        - else
+          = link_to 'Remove', '#', class: 'btn btn-danger remove-row'

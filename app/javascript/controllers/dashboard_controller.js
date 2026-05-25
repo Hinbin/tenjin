@@ -1,48 +1,49 @@
 // src/controllers/dashboard_controller.js
-import { Controller } from 'stimulus'
+import { Controller } from "stimulus";
+import Shepherd from "shepherd.js";
 
 export default class extends Controller {
-  initialize () {
-    if (document.getElementById('oAuthEmail')) {
-      const tour = new Shepherd.Tour({ useModalOverlay: true })
+  initialize() {
+    if (document.getElementById("oAuthEmail")) {
+      const tour = new Shepherd.Tour({ useModalOverlay: true });
 
-      if (document.getElementById('current_user').offsetParent === null) {
+      if (document.getElementById("current_user").offsetParent === null) {
         tour.addStep({
-          id: 'Click Menu',
-          text: 'To get started, click here to expand the menu',
+          id: "Click Menu",
+          text: "To get started, click here to expand the menu",
           attachTo: {
-            element: '.navbar-toggler',
-            on: 'bottom'
+            element: ".navbar-toggler",
+            on: "bottom",
           },
           buttons: [
             {
-              text: 'Next',
-              action: tour.next
+              text: "Next",
+              action: tour.next,
             },
             {
-              text: 'Later',
-              action: tour.cancel
-            }
-          ]
-        })
+              text: "Later",
+              action: tour.cancel,
+            },
+          ],
+        });
       }
 
       tour.addStep({
-        id: 'Link to Google',
+        id: "Link to Google",
         text: "Let's get your account linked to Google, so you don't have remember another username and password!  Click on your name",
         attachTo: {
-          element: '#current_user',
-          on: 'bottom'
+          element: "#current_user",
+          on: "bottom",
         },
         buttons: [
           {
-            text: 'Later',
-            action: tour.cancel
-          }
-        ]
-      })
+            text: "Later",
+            action: tour.cancel,
+          },
+        ],
+      });
 
-      tour.start()
+      tour.start();
     }
   }
 }

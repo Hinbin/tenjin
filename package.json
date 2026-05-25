@@ -1,53 +1,71 @@
 {
-  "name": "csquiz",
+  "name": "tenjin",
   "private": true,
-  "engines": {
-    "node": "18.x"
-  },
   "dependencies": {
-    "@babel/plugin-proposal-private-methods": "^7.18.6",
-    "@babel/preset-react": "^7.18.6",
-    "@fortawesome/fontawesome-free": "^5.14.0",
-    "@rails/actioncable": "^6.1.7",
-    "@rails/actiontext": "^6.1.7",
-    "@rails/activestorage": "^6.1.7",
-    "@rails/ujs": "^6.1.7",
-    "@rails/webpacker": "^5.0.1",
-    "actiontext": "rails/actiontext",
+    "@babel/core": "7",
+    "@babel/plugin-transform-runtime": "7",
+    "@babel/preset-env": "7",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/runtime": "7",
+    "@fortawesome/fontawesome-free": "5",
+    "@rails/actioncable": "6.1.7",
+    "@rails/actiontext": "6.1.7",
+    "@rails/activestorage": "6.1.7",
+    "@rails/ujs": "6.1.7",
+    "@types/babel__core": "7",
+    "@types/webpack": "5",
+    "babel-loader": "8",
     "bootstrap": "^4.5.2",
+    "compression-webpack-plugin": "9",
+    "css-loader": "^7.1.2",
     "datatables.net-bs4": "^1.10.19",
     "datatables.net-buttons-bs4": "^1.5.6",
     "datatables.net-responsive-bs4": "^2.2.3",
     "datetime-moment": "^1.0.0",
-    "expose-loader": "^4.1.0",
-    "flatpickr": "^4.5.7",
+    "flatpickr": "^4.6.13",
     "flux": "^3.1.3",
-    "imports-loader": "^0.8.0",
-    "jquery": "^3.5.1",
-    "js-cookie": "^2.2.1",
+    "jquery": "^3.7.1",
+    "mini-css-extract-plugin": "^2.9.0",
     "moment": "^2.29.4",
     "popper.js": "^1.16.1",
-    "postcss-cssnext": "^3.1.0",
-    "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react_ujs": "^2.6.0",
+    "react_ujs": "^3.2.1",
     "reactstrap": "^8.0.1",
     "recompose": "^0.30.0",
-    "sass": "^1.62.0",
+    "sass": "^1.77.6",
+    "sass-loader": "^14.2.1",
+    "shakapacker": "7.2.3",
     "shepherd.js": "^8.1.0",
     "stimulus": "^1.1.1",
+    "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "5",
     "trix": "^1.3.2",
-    "turbolinks": "^5.2.0"
+    "turbolinks": "^5.2.0",
+    "webpack": "5",
+    "webpack-assets-manifest": "5",
+    "webpack-cli": "4",
+    "webpack-merge": "5"
   },
+  "version": "0.1.0",
+  "babel": {
+    "presets": [
+      "./node_modules/shakapacker/package/babel/preset.js",
+      "@babel/preset-react"
+    ]
+  },
+  "browserslist": [
+    "defaults"
+  ],
   "devDependencies": {
-    "eslint": "^5.11.1",
-    "eslint-config-google": "^0.11.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "webpack-dev-server": "^4.13.2"
+    "@babel/eslint-parser": "^7.24.7",
+    "eslint": "^9.5.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.3.2",
+    "webpack-dev-server": "4"
+  },
+  "scripts": {
+    "lint": "eslint app"
   }
 }

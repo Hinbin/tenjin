@@ -28,14 +28,13 @@ gem "aws-sdk-rails", "~> 3"
 # Wonde API client
 gem "wondeclient", "~> 0.1.3"
 
-# Templates & asset handling
+# Templates
 gem "slim"
 gem "jbuilder", "~> 2.5"
-gem "sassc"
-gem "uglifier", ">= 1.3.0"
-gem "webpacker"
-# Handle static pages
 gem "high_voltage"
+
+# Assets
+gem "shakapacker", "= 7.2.3"
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem "turbolinks", "~> 5.2.0"
