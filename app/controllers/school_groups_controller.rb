@@ -27,8 +27,7 @@ class SchoolGroupsController < ApplicationController
 
   def update
     school_group = authorize find_school_group
-    school_group.update_attributes(school_group_params)
-    school_group.save
+    school_group.update(school_group_params)
 
     redirect_to school_groups_path
   end

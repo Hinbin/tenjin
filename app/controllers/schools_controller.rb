@@ -43,7 +43,7 @@ class SchoolsController < ApplicationController
 
   def update
     school = authorize find_school
-    school.update_attributes(update_school_params)
+    school.update(update_school_params)
     return head :ok if request.xhr?
 
     redirect_to schools_path
