@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe School::SyncSchool, :vcr do
   include ActiveJob::TestHelper
+
   include_context "with api_data"
   include_context "with wonde_test_data"
 
