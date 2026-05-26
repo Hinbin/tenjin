@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "~> 3.1.7"
 
 # Sets environment variables
-gem "dotenv-rails", groups: [:development, :test]
+gem "dotenv", groups: [:development, :test]
 gem "recipient_interceptor"
 
 gem "rails", "~> 6.1.7"

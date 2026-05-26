@@ -177,9 +177,6 @@ GEM
     docile (1.4.1)
     domain_name (0.6.20240107)
     dotenv (3.2.0)
-    dotenv-rails (3.2.0)
-      dotenv (= 3.2.0)
-      railties (>= 6.1)
     erubi (1.13.1)
     execjs (2.9.1)
     factory_bot (6.6.0)
@@ -541,7 +538,7 @@ DEPENDENCIES
   delayed_job_active_record
   devise
   devise_invitable
-  dotenv-rails
+  dotenv
   factory_bot_rails
   ffaker
   high_voltage
