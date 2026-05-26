@@ -80,7 +80,7 @@ RSpec.describe "User changes leaderboard options", :default_creates, :js do
     before { visit(leaderboard_path(quiz_subject.name)) }
 
     it "adds up the overall score correctly" do
-      find_by_id("allTime").click
+      find("#allTime label").click
       expect(page).to have_css("td", exact_text: (all_time_score.score + weekly_score).to_s)
     end
 
@@ -92,7 +92,7 @@ RSpec.describe "User changes leaderboard options", :default_creates, :js do
       let!(:second_all_time_score) { create(:all_time_topic_score, user: student, topic: second_topic) }
 
       it "adds up a subject score across multiple topics correctly" do
-        find_by_id("allTime").click
+        find("#allTime label").click
         expect(page).to have_css("td", exact_text: (weekly_score + all_time_score.score + second_all_time_score.score).to_s)
       end
     end
@@ -101,8 +101,8 @@ RSpec.describe "User changes leaderboard options", :default_creates, :js do
       let!(:second_subject_all_time_score) { create(:all_time_topic_score, user: student, topic: second_subject_topic) }
 
       it "adds up scores only for that subject" do
-        find_by_id("allTime").click
-        expect(page).to have_css("td", exact_text: weekly_score.to_s)
+        find("#allTime label").click
+        expect(page).to have_css("td", exact_text: (weekly_score + all_time_score.score).to_s)
       end
     end
 
@@ -112,7 +112,7 @@ RSpec.describe "User changes leaderboard options", :default_creates, :js do
       before { visit(leaderboard_path(quiz_subject.name, topic: second_topic)) }
 
       it "adds up scores only for that topic" do
-        find_by_id("allTime").click
+        find("#allTime label").click
         expect(page).to have_css("td", exact_text: second_topic_all_time_score.score)
       end
     end
@@ -123,7 +123,7 @@ RSpec.describe "User changes leaderboard options", :default_creates, :js do
       before { all_time_score.destroy }
 
       it "shows other users' scores" do
-        find_by_id("allTime").click
+        find("#allTime label").click
         expect(page).to have_css("td", exact_text: second_student_all_time_score.score)
       end
     end
@@ -132,7 +132,7 @@ RSpec.describe "User changes leaderboard options", :default_creates, :js do
       before { topic.topic_scores.find_by!(user: student).destroy }
 
       it "works with only an all time score" do
-        find_by_id("allTime").click
+        find("#allTime label").click
         expect(page).to have_css("td", exact_text: all_time_score.score)
       end
     end
