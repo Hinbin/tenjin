@@ -3,6 +3,10 @@
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
 version: 2.1
+
+orbs:
+  node: circleci/node@6
+
 commands:
   shared_steps:
     steps:
@@ -20,19 +24,8 @@ commands:
             - tenjin-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
             - tenjin-bundle-{{ arch }}-
       - run: bundle install --jobs=4 --retry=3 --clean --path vendor/bundle
-      - run:
-          name: Swap node versions
-          command: |
-            set +e
-            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-            nvm install v18.20.3
-            nvm alias default 18.20.3
-
-            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+      - node/install:
+          node-version: "22.21.1"
       - save_cache:
           name: Store bundle cache
           key: tenjin-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
@@ -82,8 +75,6 @@ jobs:
           name: precompile assets
           command: |
             bin/rails shakapacker:compile
-          environment:
-            NODE_OPTIONS: --openssl-legacy-provider
 
       # Wait for DB
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m

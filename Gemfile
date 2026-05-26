@@ -34,7 +34,7 @@ gem "jbuilder", "~> 2.5"
 gem "high_voltage"
 
 # Assets
-gem "shakapacker", "= 7.2.3"
+gem "shakapacker", "= 8.0.0"
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem "turbolinks", "~> 5.2.0"
