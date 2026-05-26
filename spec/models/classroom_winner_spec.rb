@@ -14,7 +14,7 @@ RSpec.describe ClassroomWinner do
     expect(build(:classroom_winner)).to be_valid
   end
 
-  it "validates the user and classroom belong to the same school" do
+  it "raises when user and classroom schools differ" do
     expect { different_schools.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 

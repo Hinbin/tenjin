@@ -2,14 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe ResetUserPasswordsJob do
-  context "when resetting the passwords for the whole school", :default_creates do
-    let(:reset_password) { Quiz::CreateQuiz.new(admin: school_admin).call }
+RSpec.describe ResetUserPasswordsJob, :default_creates do
+  let!(:student) { create(:student, school: school) }
 
-    before do
-      student
-    end
-
+  describe "performing the job" do
     it "resets passwords for students of that school" do
       old_password = student.encrypted_password
       described_class.perform_now(school_admin)
@@ -38,12 +34,15 @@ RSpec.describe ResetUserPasswordsJob do
       expect(second_school_student.encrypted_password).to eq(old_password)
     end
 
-    it "does not reset passwords for users who have logged in previously" do
-      student.update_attribute("sign_in_count", 1)
-      old_password = student.encrypted_password
-      described_class.perform_now(school_admin)
-      student.reload
-      expect(student.encrypted_password).to eq(old_password)
+    context "when the student has previously signed in" do
+      before { student.update!(sign_in_count: 1) }
+
+      it "does not reset the password" do
+        old_password = student.encrypted_password
+        described_class.perform_now(school_admin)
+        student.reload
+        expect(student.encrypted_password).to eq(old_password)
+      end
     end
   end
 end

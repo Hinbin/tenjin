@@ -15,7 +15,7 @@ FactoryBot.define do
     factory :boolean_question do
       question_type { "boolean" }
       after(:build) do |q|
-        q.answers.first.update_attribute(:text, "true")
+        q.answers.first.update!(text: "true")
         q.answers << create(:answer, question: q, text: "false")
       end
     end

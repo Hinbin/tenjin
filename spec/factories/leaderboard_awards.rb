@@ -5,5 +5,9 @@ FactoryBot.define do
     school
     user
     subject
+
+    trait :without_user do
+      user { nil }
+    end
   end
 end

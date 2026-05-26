@@ -12,15 +12,13 @@ RSpec.describe "Super resets year data", :default_creates, :js do
   end
 
   it "prevents students from accessing the page" do
-    super_admin
-    sign_in students
+    sign_in student
     visit admin_path(super_admin)
     expect(page).to have_no_content("Reset Year Data")
   end
 
   it "only allows super admins to access the page" do
-    super_admin
-    sign_in admin
+    sign_in school_group_admin
     visit admin_path(super_admin)
     expect(page).to have_no_content("Reset Year Data")
   end

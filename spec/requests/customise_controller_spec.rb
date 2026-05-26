@@ -5,8 +5,6 @@ require "rails_helper"
 RSpec.describe "submitting a customisation" do
   let(:school) { create(:school) }
   let(:student) { create(:student, school: school, challenge_points: 100) }
-  let(:customisation) { create(:customisation) }
-
   before do
     sign_in student
   end
@@ -17,5 +15,9 @@ RSpec.describe "submitting a customisation" do
     end
 
     it { is_expected.to redirect_to(dashboard_path) }
+  end
+
+  context "when selecting a customisation that exists" do
+    it "redirects to the dashboard" # pending — counterpart missing
   end
 end

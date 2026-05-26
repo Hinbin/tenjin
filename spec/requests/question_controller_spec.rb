@@ -3,25 +3,24 @@
 require "rails_helper"
 
 RSpec.describe "using question editing" do
-  let(:subject) { create(:subject) }
-  let(:school) { create(:school) }
-  let(:student) { create(:student) }
-  let(:author) { create(:question_author, subject: subject) }
+  describe "as a student" do
+    let(:student) { create(:student) }
 
-  context "when I am a student" do
-    it "redirects me to the dashboard" do
-      sign_in student
+    before { sign_in student }
+
+    it "redirects to the dashboard" do
       get questions_path
       expect(response).to redirect_to(root_path)
     end
   end
 
-  context "when viewing questions for a topic" do
-    before do
-      sign_in author
-    end
+  describe "as a question author" do
+    let(:quiz_subject) { create(:subject) }
+    let(:author) { create(:question_author, subject: quiz_subject) }
 
-    it "displays the questions index page" do
+    before { sign_in author }
+
+    it "returns a success response" do
       get questions_path
       expect(response).to have_http_status(:success)
     end

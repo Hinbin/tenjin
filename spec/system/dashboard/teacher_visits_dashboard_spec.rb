@@ -3,66 +3,68 @@
 require "rails_helper"
 
 RSpec.describe "Teacher visits the dashboard", :default_creates, :js do
-  let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
-  let(:other_classroom) { create(:classroom, school: school) }
+  let(:classroom) { create(:classroom, subject: quiz_subject, school: teacher.school) }
 
   before do
     setup_subject_database
   end
 
-  context "when logging in as a teacher" do
+  describe "as a teacher" do
     before do
       create(:enrollment, classroom: classroom, user: teacher)
       sign_in teacher
+      visit(dashboard_path)
     end
 
-    it "shows which classes they are currently assigned to" do
-      visit(dashboard_path)
+    it "shows assigned classrooms" do
       expect(page).to have_content(classroom.name)
     end
 
-    it "allows you to go to a selected classroom" do
-      visit(dashboard_path)
+    it "navigates to a selected classroom" do
       find("tr[data-classroom='#{classroom.id}']").click
       expect(page).to have_current_path(classroom_path(classroom))
     end
 
-    it "allows you to go to set homework for the classroom" do
-      visit(dashboard_path)
+    it "navigates to the set homework form" do
       click_link("Set Homework")
       expect(page).to have_current_path(new_homework_path(classroom: {classroom_id: classroom.id}))
     end
 
     it "shows a link to the classrooms in the nav bar" do
-      visit(dashboard_path)
       expect(page).to have_link("Classrooms", href: dashboard_path)
     end
 
+    it "shows challenge points"
+
     it "does not show challenge points" do
-      visit(dashboard_path)
-      expect(page).to have_no_content("i.fa-star")
+      expect(page).to have_no_css("i.fa-star")
     end
 
-    it "shows other classes in a school with a subject assigned" do
-      create(:enrollment, classroom: other_classroom, user: create(:teacher, school: school))
-      visit(dashboard_path)
-      expect(page).to have_css("#otherClassrooms tr[data-classroom='#{other_classroom.id}']")
+    it "does not show other classrooms"
+
+    context "when another teacher's classroom exists in the school" do
+      let(:other_classroom) { create(:classroom, school: school) }
+      let!(:other_enrollment) { create(:enrollment, classroom: other_classroom, user: create(:teacher, school: school)) }
+      before { visit(dashboard_path) }
+
+      it "shows the other classroom" do
+        expect(page).to have_css("#otherClassrooms tr[data-classroom='#{other_classroom.id}']")
+      end
     end
   end
 
-  context "when logging in as a school admin" do
+  describe "as a school admin" do
     before do
       create(:enrollment, classroom: classroom, user: school_admin)
       sign_in school_admin
+      visit(dashboard_path)
     end
 
     it "shows a link to the classrooms in the nav bar" do
-      visit(dashboard_path)
       expect(page).to have_link("Classrooms", href: dashboard_path)
     end
 
     it "shows a link to school admin in the nav bar" do
-      visit(dashboard_path)
       expect(page).to have_link("User Admin", href: users_path)
     end
   end

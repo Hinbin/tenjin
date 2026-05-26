@@ -18,6 +18,10 @@ RSpec.describe Homework do
     it { is_expected.to validate_presence_of(:topic) }
     it { is_expected.to validate_presence_of(:required) }
 
+    it "is valid with a future due_date" do
+      expect(subject).to be_valid
+    end
+
     context "when due_date is in the past" do
       let(:due_on) { 1.day.ago }
 
@@ -27,16 +31,18 @@ RSpec.describe Homework do
 
   describe "#save" do
     let(:homework) { build(:homework, classroom: classroom) }
-    let(:teacher) { create(:teacher) }
 
-    it "increases user progresses after being created" do
-      expect { homework.save }.to change(HomeworkProgress, :count).by 2
+    it "creates a progress record for each enrolled student" do
+      expect { homework.save }.to change(HomeworkProgress, :count).by(2)
     end
 
     context "with a teacher enrolled in the class" do
-      it "does not create an additional progress for them" do
-        create(:enrollment, classroom: classroom, user: teacher)
-        expect { homework.save }.to change(HomeworkProgress, :count).by 2
+      let(:teacher) { create(:teacher) }
+
+      before { create(:enrollment, classroom: classroom, user: teacher) }
+
+      it "does not create a progress record for teachers" do
+        expect { homework.save }.to change(HomeworkProgress, :count).by(2)
       end
     end
   end
@@ -44,7 +50,7 @@ RSpec.describe Homework do
   describe "#destroy" do
     let!(:homework) { create(:homework, classroom: classroom) }
 
-    it "deletes user progresses after being destroyed" do
+    it "deletes all progress records when destroyed" do
       expect { homework.destroy }.to change(HomeworkProgress, :count).by(-2)
     end
   end

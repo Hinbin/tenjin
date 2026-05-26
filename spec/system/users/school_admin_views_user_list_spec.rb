@@ -5,102 +5,139 @@ require "rails_helper"
 RSpec.describe "School admin views user list", :default_creates, :js do
   before do
     setup_subject_database
-    sign_in school_admin
   end
 
-  it "does not allow a teacher to view the page" do
-    sign_out school_admin
-    sign_in teacher
-    visit(users_path)
-    expect(page).to have_text("You are not authorized to perform this action.")
-  end
+  describe "as a teacher" do
+    before do
+      sign_in teacher
+      visit(users_path)
+    end
 
-  it "does not allow a student to view the page" do
-    sign_out school_admin
-    sign_in student
-    visit(users_path)
-    expect(page).to have_text("You are not authorized to perform this action.")
-  end
-
-  it "gives a clear warning when an admin resets all passwords that this is dangerous" do
-    visit(users_path)
-    find_by_id("resetPrintModalButton").click
-    expect(page).to have_text("This action cannot be undone.")
-  end
-
-  it "enables the reset all password confirmation button with the school name" do
-    visit(users_path)
-    find_by_id("resetPrintModalButton").click
-    find_by_id("confirmAllPasswordResetTextbox").set("test")
-    expect(page).to have_link("Confirm", class: "disabled")
-  end
-
-  it "makes a user type in their school name to reset all usernames" do
-    visit(users_path)
-    click_button("Reset and print all passwords")
-    find_by_id("confirmAllPasswordResetTextbox").set(school.name)
-    expect(page).to have_link("Confirm")
-  end
-
-  it "allows an admin to reset all passwords and save a list of username and passwords" do
-    visit(users_path)
-    click_button("Reset and print all passwords")
-    find_by_id("confirmAllPasswordResetTextbox").set(school.name)
-    click_link("Confirm")
-    expect(page).to have_content("Password").and have_content("CSV")
-  end
-
-  it "shows a list of students belonging to the school" do
-    create(:enrollment, classroom: classroom, user: teacher)
-    create_list(:enrollment, 5, classroom: classroom, school: school)
-    visit(users_path)
-    expect(page).to have_text(User.where(role: "student", school: school).first.surname)
-  end
-
-  it "does not shows students that belong to another school" do
-    create(:enrollment, school: second_school)
-    visit(users_path)
-    expect(page).to have_no_text(User.where(role: "student", school: second_school).first.surname)
-  end
-
-  it "allows you to search for a student" do
-    create_list(:enrollment, 32, classroom: classroom)
-    visit(users_path)
-    find("#students-table_filter input").set("#{student.forename} #{student.surname}")
-    expect(page).to have_css(".student-row", count: 1).and have_content("#{student.forename} #{student.surname}")
-  end
-
-  it "paginates the student table" do
-    create_list(:enrollment, 100, classroom: classroom)
-    visit(users_path)
-    expect(page).to have_css(".student-row", count: 10)
-  end
-
-  it "shows employees if I am a school admin" do
-    create(:teacher, school: school)
-    visit(users_path)
-    expect(page).to have_css(".employee-row", count: 2)
-  end
-
-  it "shows other school admins if I am a school admin" do
-    create(:school_admin, school: school)
-    visit(users_path)
-    expect(page).to have_css(".employee-row", count: 2)
-  end
-
-  it "resets a student password and then shows the result" do
-    visit(users_path)
-    within "#students-table" do
-      click_link("Reset Password")
-      expect(page).to have_no_link("Reset Password").and have_css(".new-password")
+    it "is not authorized to view the page" do
+      expect(page).to have_text("You are not authorized to perform this action.")
     end
   end
 
-  it "resets an employee password and then shows the result" do
-    visit(users_path)
-    within "#employees-table" do
-      click_link("Reset Password")
-      expect(page).to have_no_link("Reset Password").and have_css(".new-password")
+  describe "as a student" do
+    before do
+      sign_in student
+      visit(users_path)
+    end
+
+    it "is not authorized to view the page" do
+      expect(page).to have_text("You are not authorized to perform this action.")
+    end
+  end
+
+  describe "as a school admin" do
+    before do
+      sign_in school_admin
+      visit(users_path)
+    end
+
+    it "warns that resetting all passwords cannot be undone" do
+      find_by_id("resetPrintModalButton").click
+      expect(page).to have_text("This action cannot be undone.")
+    end
+
+    it "does not enable the confirmation button until the school name matches" do
+      find_by_id("resetPrintModalButton").click
+      find_by_id("confirmAllPasswordResetTextbox").set("test")
+      expect(page).to have_link("Confirm", class: "disabled")
+    end
+
+    it "enables the confirmation button when the school name is entered" do
+      click_button("Reset and print all passwords")
+      find_by_id("confirmAllPasswordResetTextbox").set(school.name)
+      expect(page).to have_link("Confirm")
+    end
+
+    it "resets all passwords and presents a download link" do
+      click_button("Reset and print all passwords")
+      find_by_id("confirmAllPasswordResetTextbox").set(school.name)
+      click_link("Confirm")
+      expect(page).to have_content("Password").and have_content("CSV")
+    end
+
+    context "with students enrolled in the school" do
+      before do
+        create(:enrollment, classroom: classroom, user: teacher)
+        create_list(:enrollment, 5, classroom: classroom, school: school)
+        visit(users_path)
+      end
+
+      it "shows students belonging to the school" do
+        expect(page).to have_text(school.users.find_by!(role: "student").surname)
+      end
+    end
+
+    context "with students from another school" do
+      let!(:other_enrollment) { create(:enrollment, school: second_school) }
+
+      before { visit(users_path) }
+
+      it "does not show students from another school" do
+        expect(page).to have_no_text(second_school.users.find_by!(role: "student").surname)
+      end
+    end
+
+    context "with more than one page of students" do
+      before do
+        create_list(:enrollment, 32, classroom: classroom)
+        visit(users_path)
+      end
+
+      it "filters students by name" do
+        find("#students-table_filter input").set("#{student.forename} #{student.surname}")
+        expect(page).to have_css(".student-row", count: 1).and have_content("#{student.forename} #{student.surname}")
+      end
+    end
+
+    context "with 100 enrolled students" do
+      before do
+        create_list(:enrollment, 100, classroom: classroom)
+        visit(users_path)
+      end
+
+      it "paginates the student table" do
+        expect(page).to have_css(".student-row", count: 10)
+      end
+    end
+
+    context "with an additional teacher" do
+      before do
+        create(:teacher, school: school)
+        visit(users_path)
+      end
+
+      it "shows all employees for the school" do
+        expect(page).to have_css(".employee-row", count: 2)
+      end
+    end
+
+    context "with an additional school admin" do
+      before do
+        create(:school_admin, school: school)
+        visit(users_path)
+      end
+
+      it "shows school admins in the employee list" do
+        expect(page).to have_css(".employee-row", count: 2)
+      end
+    end
+
+    it "resets a student password and shows the new password" do
+      within "#students-table" do
+        click_link("Reset Password")
+        expect(page).to have_no_link("Reset Password").and have_css(".new-password")
+      end
+    end
+
+    it "resets an employee password and shows the new password" do
+      within "#employees-table" do
+        click_link("Reset Password")
+        expect(page).to have_no_link("Reset Password").and have_css(".new-password")
+      end
     end
   end
 end

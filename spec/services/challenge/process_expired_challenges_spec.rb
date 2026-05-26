@@ -3,31 +3,44 @@
 require "rails_helper"
 
 RSpec.describe Challenge::ProcessExpiredChallenges, :default_creates do
-  context "when finding expired challenges" do
-    let(:current) { create(:challenge, end_date: 1.hour.from_now) }
-    let(:expired) { create(:challenge, end_date: 1.hour.ago) }
-    let(:not_completed_expired) { create(:challenge, end_date: 1.hour.ago) }
+  let!(:challenge) { create(:challenge, end_date: expiry) }
+  let!(:progress) { create(:challenge_progress, challenge: challenge, user: student, completed: completed) }
 
-    let(:completed) { create(:challenge_progress, challenge: expired, user: student, completed: true) }
-    let(:not_completed) do
-      create(:challenge_progress, challenge: not_completed_expired,
-        user: student, completed: false)
+  subject { described_class.call }
+
+  context "when end_date is in the past" do
+    let(:expiry) { 1.hour.ago }
+
+    context "with a completed challenge" do
+      let(:completed) { true }
+
+      it("deletes the progress") { expect { subject }.to change(ChallengeProgress, :count).by(-1) }
+      it("deletes the challenge") { expect { subject }.to change(Challenge, :count).by(-1) }
     end
 
-    it "deletes old challenges" do
-      expired
-      expect { described_class.new.call }.to change(Challenge, :count).by(-1)
+    context "with an incomplete challenge" do
+      let(:completed) { false }
+
+      it("deletes the progress") { expect { subject }.to change(ChallengeProgress, :count).by(-1) }
+      it("deletes the challenge") { expect { subject }.to change(Challenge, :count).by(-1) }
+    end
+  end
+
+  context "when end_date is in the future" do
+    let(:expiry) { 1.hour.from_now }
+
+    context "with a completed challenge" do
+      let(:completed) { true }
+
+      it("does not delete the progress") { expect { subject }.not_to change(ChallengeProgress, :count) }
+      it("does not delete the challenge") { expect { subject }.not_to change(Challenge, :count) }
     end
 
-    it "deletes old challenge progress" do
-      completed
-      not_completed
-      expect { described_class.new.call }.to change(ChallengeProgress, :count).by(-2)
-    end
+    context "with an incomplete challenge" do
+      let(:completed) { false }
 
-    it "keeps_current_challenges" do
-      current
-      expect { described_class.new.call }.not_to change(Challenge, :count)
+      it("does not delete the progress") { expect { subject }.not_to change(ChallengeProgress, :count) }
+      it("does not delete the challenge") { expect { subject }.not_to change(Challenge, :count) }
     end
   end
 end

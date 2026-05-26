@@ -3,8 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "School admin views a teacher record", :default_creates, :js do
-  let(:new_password) { FFaker::Internet.password }
-
   before do
     setup_subject_database
   end
@@ -15,7 +13,7 @@ RSpec.describe "School admin views a teacher record", :default_creates, :js do
       visit(user_path(teacher))
     end
 
-    it "shows the user password reset option for a school_admin" do
+    it "shows the password reset option" do
       expect(page).to have_button("Update Password")
     end
 
@@ -27,9 +25,14 @@ RSpec.describe "School admin views a teacher record", :default_creates, :js do
     end
   end
 
-  it "shows the user password reset option for an employee" do
-    sign_in teacher
-    visit(user_path(teacher))
-    expect(page).to have_button("Update Password")
+  describe "as a teacher viewing their own record" do
+    before do
+      sign_in teacher
+      visit(user_path(teacher))
+    end
+
+    it "shows the password reset option" do
+      expect(page).to have_button("Update Password")
+    end
   end
 end

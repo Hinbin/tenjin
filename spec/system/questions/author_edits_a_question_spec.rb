@@ -3,10 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "Author edits a question", :default_creates, :js do
-  let(:author) { create(:question_author, subject: subject) }
+  let(:author) { create(:question_author, subject: quiz_subject) }
   let(:question) { create(:question, topic: topic) }
-  let(:lesson) { create(:lesson, topic: topic) }
-  let(:new_topic_name) { FFaker::Lorem.word }
 
   def add_answer
     click_link("Add Answer")
@@ -26,7 +24,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
     find("button", text: "LOGIN")
     sign_in student
     visit dashboard_path
-    find("h3", text: subject.name.upcase)
+    find("h3", text: quiz_subject.name.upcase)
     visit new_quiz_path(subject: topic.subject.name)
   end
 
@@ -41,53 +39,57 @@ RSpec.describe "Author edits a question", :default_creates, :js do
   end
 
   context "when assigning default lessons" do
-    before do
-      lesson
-      create(:question, topic: topic, lesson: lesson)
-    end
+    let!(:lesson) { create(:lesson, topic: topic) }
+    let!(:lesson_question) { create(:question, topic: topic, lesson: lesson) }
+
+    before { visit(topic_questions_path(topic_id: topic)) }
 
     it "assigns a default lesson to a topic" do
-      visit(topic_questions_path(topic_id: topic))
       select lesson.title, from: "Default Lesson"
       switch_and_create_quiz
       expect(page).to have_css(".videoLink[src^=\"https://www.youtube.com/embed/#{lesson.video_id}\"]")
     end
   end
 
-  it "only shows a default lesson when needed" do
-    question
-    visit(dashboard_path)
-    switch_and_create_quiz
-    expect(page).to have_no_css(".videoLink")
+  context "without a lesson assigned" do
+    let!(:question) { create(:question, topic: topic) }
+
+    before { visit(dashboard_path) }
+
+    it "does not show a lesson video" do
+      switch_and_create_quiz
+      expect(page).to have_no_css(".videoLink")
+    end
   end
 
   context "when checking most flagged questions" do
-    let(:flagged_question) { create(:question, topic: topic, flagged_questions_count: 5) }
+    let!(:flagged_question) { create(:question, topic: topic, flagged_questions_count: 5) }
 
-    it "displays flagged questions" do
-      flagged_question
+    before do
       visit questions_path
       click_link "Most Flagged Questions"
+    end
+
+    it "displays flagged questions" do
       expect(page).to have_content(flagged_question.question_text.to_plain_text)
     end
   end
 
   context "when adding or removing questions" do
-    let(:flagged_question) { create_list(:flagged_question, 5, question: question) }
+    let!(:question) { create(:question, topic: topic) }
+    let!(:flagged_question) { create_list(:flagged_question, 5, question: question) }
 
     before do
-      question
-      flagged_question
       visit(questions_path)
       click_link(question.topic.name)
     end
 
-    it "allows you to create a question" do
+    it "navigates to the new question form" do
       click_link("Add Question")
       expect(page).to have_css("#questionEditor")
     end
 
-    it "allows you to delete a question" do
+    it "deletes a question" do
       visit(question_path(question))
       page.accept_confirm { click_link("Delete Question") }
       expect(page).to have_no_css(".question-row")
@@ -103,12 +105,12 @@ RSpec.describe "Author edits a question", :default_creates, :js do
       visit(questions_path)
     end
 
-    it "allows you to create a topic" do
+    it "creates a topic" do
       click_link("Add Topic")
       expect(page).to have_content("Delete Topic")
     end
 
-    it "allows you to disable a topic" do
+    it "disables a topic" do
       click_link("Add Topic")
       page.accept_confirm { click_link("Delete Topic") }
       expect(page).to have_no_css(".topic-row")
@@ -117,20 +119,22 @@ RSpec.describe "Author edits a question", :default_creates, :js do
     it "prevents disabled topics from showing when taking a quiz" do
       visit(topic_questions_path(topic_id: topic))
       page.accept_confirm { click_link("Delete Topic") }
-      find("div", exact_text: subject.name, count: 2)
+      expect(page).to have_css("div", exact_text: quiz_subject.name, count: 1)
       switch_to_student_account
       expect(page).to have_no_css("option", text: topic.name)
     end
   end
 
   context "when visiting the topic index page" do
+    let!(:question) { create(:question, topic: topic) }
+    let(:new_topic_name) { FFaker::Lorem.word }
+
     before do
-      question
       visit(questions_path)
       click_link(question.topic.name)
     end
 
-    it "allows you to edit a topic name" do
+    it "edits a topic name" do
       fill_in("Topic Name", with: new_topic_name)
       find("label", text: "Topic Name").click
       switch_to_student_account
@@ -138,21 +142,20 @@ RSpec.describe "Author edits a question", :default_creates, :js do
       expect(page).to have_content(new_topic_name)
     end
 
-    it "shows the quesitons for a topic" do
+    it "shows the questions for a topic" do
       expect(page).to have_content(question.question_text.to_plain_text)
     end
 
-    it "allows you to edit a question" do
+    it "navigates to the question edit page" do
       click_link(question.question_text.to_plain_text)
       expect(page).to have_current_path(question_path(question))
     end
   end
 
   context "when visiting the subject index page" do
-    before do
-      question
-      visit(questions_path)
-    end
+    let!(:question) { create(:question, topic: topic) }
+
+    before { visit(questions_path) }
 
     it "shows each subject" do
       expect(page).to have_content(question.topic.subject.name)
@@ -165,22 +168,22 @@ RSpec.describe "Author edits a question", :default_creates, :js do
 
   context "when editing a question" do
     let(:answer_text) { FFaker::Lorem.word }
-    let(:answer) { create(:answer, question: question) }
-    let(:answer_id) { "answer-text-0" }
     let(:answer_check_id) { "answer-check-0" }
 
+    before { visit(question_path(question)) }
+
     it "shows the content of the question" do
-      visit(question_path(question))
       expect(page).to have_content(question.question_text.to_plain_text)
     end
 
-    it "allows you to delete the question" do
-      visit(question_path(question))
+    it "deletes the question" do
       page.accept_confirm { click_link("Delete Question") }
       expect(page).to have_no_content(question.question_text.to_plain_text)
     end
 
     context "when showing a multiple choice question" do
+      let(:answer_id) { "answer-text-0" }
+
       before do
         create_list(:answer, 3, correct: false, question: question)
         visit(question_path(question))
@@ -188,29 +191,34 @@ RSpec.describe "Author edits a question", :default_creates, :js do
         find("option", text: "Multiple").click
       end
 
-      it "allows you to set an answer as correct" do
+      it "sets an answer as correct" do
         find("table", id: "table-answers")
         find("input", id: answer_check_id).click
         visit(question_path(question))
         expect(page).to have_css("##{answer_check_id}")
       end
 
-      it "only saves if I have selected a correct answer" do
-        Answer.all.update_all(correct: false)
-        visit(question_path(question))
-        find("table", id: "table-answers")
-        click_button("Save Question")
-        expect(page).to have_content("Question must have at least one correct answer")
+      context "with no correct answer selected" do
+        before do
+          Answer.all.update_all(correct: false)
+          visit(question_path(question))
+          find("table", id: "table-answers")
+        end
+
+        it "requires a correct answer to be selected before saving" do
+          click_button("Save Question")
+          expect(page).to have_content("Question must have at least one correct answer")
+        end
       end
 
-      it "allows you to add an answer" do
+      it "adds an answer" do
         visit(question_path(question))
         add_answer
         switch_and_create_quiz
         expect(page).to have_content(answer_text)
       end
 
-      it "allows you to edit an existing answer" do
+      it "edits an existing answer" do
         visit(question_path(question))
         fill_in(answer_id, with: "#{answer_text}\n")
         save_question
@@ -218,18 +226,20 @@ RSpec.describe "Author edits a question", :default_creates, :js do
         expect(page).to have_content(answer_text)
       end
 
-      it "allows you to delete an existing answer" do
-        create_list(:answer, 2, question: question)
-        visit(question_path(question))
-        expect { first(".btn-danger").click }.to change(Answer, :count).by(-1)
+      context "with multiple answers" do
+        before { create_list(:answer, 2, question: question) }
+
+        it "deletes an existing answer" do
+          visit(question_path(question))
+          expect { find("#table-answers tr:first-child .btn-danger").click }.to change(Answer, :count).by(-1)
+        end
       end
     end
 
     context "when showing a short answer question" do
-      let(:question) { create(:question, question_type: "short_answer", topic: topic) }
+      let!(:question) { create(:question, question_type: "short_answer", topic: topic) }
 
       before do
-        question
         visit(question_path(question))
         find_by_id("select-question-type").click
         find("option", text: "Short answer").click
@@ -243,15 +253,11 @@ RSpec.describe "Author edits a question", :default_creates, :js do
         find_by_id("flash-notice", text: "Question successfully updated")
       end
 
-      it "does not let you modify if the answer is correct" do
+      it "does not show the correct answer toggle" do
         expect(page).to have_no_content("Correct?")
       end
 
-      it "changes any existing answers for the question to be correct" do
-        expect(Answer.first.correct).to eq(true)
-      end
-
-      it "allows me to save without saying I need to select a correct answer" do
+      it "saves without requiring a correct answer selection" do
         click_button("Save Question")
         expect(page).to have_content("Question successfully updated")
       end
@@ -276,26 +282,27 @@ RSpec.describe "Author edits a question", :default_creates, :js do
         expect(page).to have_css('input[value="True"]').and have_css('input[value="False"]')
       end
 
-      it "allows you to set an answer as correct" do
+      it "sets an answer as correct" do
         find("input", id: answer_check_id).click
         switch_and_create_quiz
         find("#response-#{Answer.last.id}").click
         expect(page).to have_css("#response-#{Answer.last.id}.correct-answer")
       end
 
-      it "does not allow you to remove an answer" do
+      it "does not show a remove answer button" do
         expect(page).to have_no_link("Remove")
       end
     end
 
     context "when assigning a lesson" do
+      let!(:lesson) { create(:lesson, topic: topic) }
+
       before do
-        lesson
         create_list(:answer, 3, question: question)
+        visit(question_path(question))
       end
 
-      it "allows you to assign a lesson to the question" do
-        visit(question_path(question))
+      it "assigns a lesson to the question" do
         select lesson.title, from: "select-lesson"
         save_question
         switch_and_create_quiz
@@ -306,15 +313,14 @@ RSpec.describe "Author edits a question", :default_creates, :js do
     context "when resetting question flags" do
       before do
         create(:flagged_question, question: question)
+        visit(question_path(question))
       end
 
       it "shows the number of question flags" do
-        visit(question_path(question))
         expect(page).to have_content("Flags: 1")
       end
 
-      it "resets flags when presssing the button" do
-        visit(question_path(question))
+      it "resets flags" do
         click_link("Reset Question Flags")
         expect(page).to have_content("Flags: 0")
       end

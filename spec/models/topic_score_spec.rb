@@ -14,7 +14,6 @@ RSpec.describe TopicScore do
   describe "validations" do
     subject { build(:topic_score) }
 
-    it { is_expected.to allow_value(0).for(:score) }
-    it { is_expected.not_to allow_value(-1).for(:score) }
+    it { is_expected.to validate_numericality_of(:score).is_greater_than_or_equal_to(0) }
   end
 end

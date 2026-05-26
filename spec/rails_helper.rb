@@ -14,7 +14,6 @@ require "webmock/rspec"
 require "vcr"
 
 WebMock.disable_net_connect!(allow_localhost: true)
-# WebMock.allow_net_connect!
 
 VCR.configure do |config|
   config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
@@ -22,7 +21,8 @@ VCR.configure do |config|
   config.ignore_localhost = true # allows oAuth testing
   config.configure_rspec_metadata!
   config.ignore_hosts "chromedriver.storage.googleapis.com"
-  config.ignore_hosts "github.com"
+  config.ignore_hosts "googlechromelabs.github.io"
+  config.ignore_hosts "storage.googleapis.com"
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -49,21 +49,25 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 
-Capybara.register_driver :selenium_chrome_headless_download do |app|
-  browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << "--headless"
-    opts.args << "--disable-site-isolation-trials"
-  end
-  browser_options.add_preference(:download, prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s)
+Capybara.register_driver :selenium_chrome_headless do |app|
+  browser_options = Selenium::WebDriver::Chrome::Options.new
+  browser_options.args << "--headless"
+  browser_options.args << "--disable-site-isolation-trials"
+  browser_options.args << "--window-size=1024,768"
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+end
 
+Capybara.register_driver :selenium_chrome_headless_download do |app|
+  browser_options = Selenium::WebDriver::Chrome::Options.new
+  browser_options.args << "--headless"
+  browser_options.args << "--disable-site-isolation-trials"
+  browser_options.args << "--window-size=1024,768"
+  browser_options.add_preference(:download, prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s)
   browser_options.add_preference(:browser, set_download_behavior: {behavior: "allow"})
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
 
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = Rails.root.join("spec/fixtures").to_s
-
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -95,18 +99,24 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :system
   config.include DownloadHelpers, type: :system
-  config.include ActiveJob::TestHelper
+  config.include ActiveJob::TestHelper, type: :job
 
   config.include_context "with default_creates", default_creates: true
 
   # Required to use database cleaner with action cable
   # or feature testing will not work
 
-  config.after(:each, :js) do
-    errors = page.driver.browser.manage.logs.get(:browser)
+  config.after(:each, type: :system) do
+    next unless page.driver.browser.respond_to?(:logs)
+
+    errors = page.driver.browser.logs.get(:browser)
     if errors.present?
       aggregate_failures "javascript errors" do
         errors.each do |error|
+          # console.error in Chrome is reported as SEVERE, including React deprecation
+          # warnings. Skip those to avoid false positives.
+          next if error.message.include?('"Warning:')
+
           expect(error.level).not_to eq("SEVERE"), error.message
           next unless error.level == "WARNING"
 
@@ -118,8 +128,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless_download
-    page.driver.browser.manage.window.resize_to(1024, 768)
+    driven_by :selenium_chrome_headless
   end
 
   if ENV["CI"]
@@ -152,4 +161,4 @@ Shoulda::Matchers.configure do |config|
 end
 
 Capybara.server = :puma, {Silent: true}
-Capybara.default_max_wait_time = 15 if ENV["CI"]
+Capybara.default_max_wait_time = ENV["CI"] ? 15 : 5

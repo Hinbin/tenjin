@@ -3,115 +3,124 @@
 require "rails_helper"
 
 RSpec.describe "Super manages subjects", :default_creates, :js do
-  let(:new_subject_name) { FFaker::Lorem.word }
-  let(:ten_questions_for_subject) { create_list(:question, 10, topic: topic) }
-  let(:five_asked_questions_this_week) { create_list(:asked_question, 5, question: question) }
-  let(:seven_asked_questions_previously) { create(:question_statistic, question: question, number_asked: 7) }
+  let!(:quiz_subject) { create(:subject) }
+
+  before do
+    sign_in super_admin
+  end
 
   context "when viewing all subjects" do
-    before do
-      sign_in super_admin
-      subject
+    it "lists subjects" do
+      visit(subjects_path)
+      expect(page).to have_content(quiz_subject.name)
     end
 
-    it "allows an admin to view subjects" do
-      visit(subjects_path)
-      expect(page).to have_content(subject.name)
+    context "with questions in the subject" do
+      let!(:ten_questions_for_subject) { create_list(:question, 10, topic: topic) }
+
+      before { visit(subjects_path) }
+
+      it "shows question count" do
+        expect(page).to have_content("10")
+      end
     end
 
-    it "shows how many questions are in each subject" do
-      ten_questions_for_subject
-      visit(subjects_path)
-      expect(page).to have_content("10")
+    context "with asked questions this week" do
+      let!(:five_asked_questions_this_week) { create_list(:asked_question, 5, question: question) }
+
+      before { visit(subjects_path) }
+
+      it "shows this week's asked question count" do
+        expect(page).to have_content("5")
+      end
+
+      context "with previous week statistics" do
+        let!(:seven_asked_questions_previously) { create(:question_statistic, question: question, number_asked: 7) }
+
+        before { visit(subjects_path) }
+
+        it "totals current and previous asked questions" do
+          expect(page).to have_css("tr#subject-#{quiz_subject.id} td.asked_questions", text: "12")
+        end
+
+        it "counts only this week's asked questions separately" do
+          expect(page).to have_css("tr#subject-#{quiz_subject.id} td.asked_questions_this_week", text: "5")
+        end
+      end
     end
 
-    it "shows how many asked questions there are for each subject this week" do
-      five_asked_questions_this_week
-      visit(subjects_path)
-      expect(page).to have_content("5")
+    context "with previous week statistics only" do
+      let!(:seven_asked_questions_previously) { create(:question_statistic, question: question, number_asked: 7) }
+
+      before { visit(subjects_path) }
+
+      it "shows overall asked question count" do
+        expect(page).to have_content("7")
+      end
     end
 
-    it "totals this week and previous weeks question data" do
-      five_asked_questions_this_week
-      seven_asked_questions_previously
-      visit(subjects_path)
-      expect(page).to have_css("tr#subject-#{subject.id} td.asked_questions", text: "12")
-    end
+    context "when creating a subject" do
+      let(:new_subject_name) { FFaker::Lorem.word }
 
-    it "only counts questions for this week" do
-      five_asked_questions_this_week
-      seven_asked_questions_previously
-      visit(subjects_path)
-      expect(page).to have_css("tr#subject-#{subject.id} td.asked_questions_this_week", text: "5")
-    end
+      before { visit(subjects_path) }
 
-    it "shows how many asked questions there are for each subject overall" do
-      seven_asked_questions_previously
-      visit(subjects_path)
-      expect(page).to have_content("7")
-    end
-
-    it "allows an admin to create a subject" do
-      visit(subjects_path)
-      click_link("Add Subject")
-      fill_in("subject[name]", with: new_subject_name)
-      click_button("Create Subject")
-      expect(page).to have_content(new_subject_name)
+      it "creates and displays the new subject" do
+        click_link("Add Subject")
+        fill_in("subject[name]", with: new_subject_name)
+        click_button("Create Subject")
+        expect(page).to have_content(new_subject_name)
+      end
     end
   end
 
   context "when managing an individual subject" do
     def deactivate_subject
-      visit(subject_path(subject))
+      visit(subject_path(quiz_subject))
       click_link("Deactivate Subject")
       page.accept_alert
       find("table#active-subjects")
     end
 
-    before do
-      sign_in super_admin
-      subject
-    end
-
-    it "allows admin to visit a subject page" do
+    it "shows the subject heading when navigating to the subject" do
       visit(subjects_path)
-      click_link(subject.name)
-      expect(page).to have_css(".display-4", text: subject.name)
+      click_link(quiz_subject.name)
+      expect(page).to have_css(".display-4", text: quiz_subject.name)
     end
 
-    it "allows admin to change name of the subject" do
-      visit(subject_path(subject))
-      fill_in("subject[name]", with: new_subject_name)
-      click_button("Update")
-      expect(page).to have_css("#subject_name", text: new_subject_name)
-    end
+    context "when editing the subject name" do
+      let(:new_subject_name) { FFaker::Lorem.word }
 
-    it "allows an admin to deactivate a subject" do
-      deactivate_subject
-      expect(page).to have_css("#deactivated-subjects tr td", text: subject.name)
-    end
+      before { visit(subject_path(quiz_subject)) }
 
-    context "when deactivating a quiz" do
-      let(:enrollment) { create(:enrollment, classroom: classroom, user: student, subject: subject) }
-
-      before do
-        enrollment
+      it "updates the displayed name" do
+        fill_in("subject[name]", with: new_subject_name)
+        click_button("Update")
+        expect(page).to have_css("#subject_name", text: new_subject_name)
       end
+    end
 
-      it "stops students from taking a quiz" do
+    it "moves subject to deactivated list" do
+      deactivate_subject
+      expect(page).to have_css("#deactivated-subjects tr td", text: quiz_subject.name)
+    end
+
+    context "when deactivating a subject with enrolled students" do
+      let!(:enrollment) { create(:enrollment, classroom: classroom, user: student, subject: quiz_subject) }
+
+      it "hides subject from student dashboard" do
         deactivate_subject
         sign_out super_admin
         sign_in student
         visit(dashboard_path)
-        expect(page).to have_no_content(subject.name)
+        expect(page).to have_no_content(quiz_subject.name)
       end
 
-      it "reassigns classrooms to nil" do
+      it "hides subject from classroom list" do
         deactivate_subject
         sign_out super_admin
         sign_in school_admin
         visit(classrooms_path)
-        expect(page).to have_no_content(subject.name)
+        expect(page).to have_no_content(quiz_subject.name)
       end
     end
   end

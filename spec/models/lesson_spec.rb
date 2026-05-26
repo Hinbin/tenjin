@@ -42,11 +42,11 @@ RSpec.describe Lesson do
   end
 
   describe "validations" do
-    let(:lesson) { build(:lesson) }
-
     it { is_expected.to validate_length_of(:title).is_at_least(3) }
 
     describe "video links" do
+      let(:lesson) { build(:lesson) }
+
       it "accepts a valid YouTube link", :aggregate_failures do
         prepend_schemes(YOUTUBE_VALID).each do |url, _|
           lesson.video_link = url
@@ -80,7 +80,7 @@ RSpec.describe Lesson do
     end
 
     context "with a matching vimeo URL" do
-      it "defines video_id and category" do
+      it "sets video_id and category" do
         expect { lesson.video_link = "vimeo.com/122054187" }
           .to change(lesson, :video_id).to("122054187")
           .and change(lesson, :category).to("vimeo")
@@ -88,14 +88,10 @@ RSpec.describe Lesson do
     end
 
     context "with an unsupported URL" do
-      it "does not change video_id" do
+      it "does not change video_id but sets category to no_content" do
         expect { lesson.video_link = "badtu.be/VFZNvj-HfBU" }
           .not_to change(lesson, :video_id)
-      end
-
-      it "sets category as no_content" do
-        expect { lesson.video_link = "badtu.be/VFZNvj-HfBU" }
-          .to change(lesson, :category).to("no_content")
+        expect(lesson.category).to eq("no_content")
       end
     end
   end
@@ -123,16 +119,14 @@ RSpec.describe Lesson do
       let(:category) { "youtube" }
       let(:vid) { "abc123" }
 
-      it { is_expected.to include(vid) }
-      it { is_expected.to include("youtu") }
+      it { is_expected.to include(vid).and include("youtu") }
     end
 
     context "with a video_id and vimeo category" do
       let(:category) { "vimeo" }
       let(:vid) { "abc123" }
 
-      it { is_expected.to include(vid) }
-      it { is_expected.to include("vimeo") }
+      it { is_expected.to include(vid).and include("vimeo") }
     end
 
     context "with no_content category" do
@@ -150,8 +144,7 @@ RSpec.describe Lesson do
       let(:category) { "youtube" }
       let(:vid) { "abc123" }
 
-      it { is_expected.to include(vid) }
-      it { is_expected.to include("youtu") }
+      it { is_expected.to include(vid).and include("youtu") }
     end
 
     context "with a video_id and vimeo category" do
