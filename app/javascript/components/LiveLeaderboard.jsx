@@ -100,7 +100,7 @@ class LiveLeaderboard extends React.Component {
       // If the user is close enough to the top of the table, display the top only
       return tableData.slice(0, (maxUsersToDisplay))
       // Otherwise snip the 5 around the user
-    } else if ((userRowIndex + (maxUsersToDisplay / 2)) > tableSize) {
+    } else if ((userRowIndex + (maxUsersToDisplay / 2)) >= tableSize) {
       // If the user is too close to the bottom - display from the bottom of the table up
       return tableData.slice(tableSize - maxUsersToDisplay)
     } else {
