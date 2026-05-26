@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "~> 2.7.1"
+ruby "~> 3.1.7"
 
 # Sets environment variables
 gem "dotenv-rails", groups: [:development, :test]
@@ -61,7 +61,7 @@ gem "simple_form"
 
 # Bootstrap for emails
 gem "bootstrap-email"
-gem "sass-embedded", "~> 1.53.0"
+gem "sass-embedded", "~> 1"
 
 # Dyno scaling
 gem "hirefire-resource"
@@ -92,7 +92,7 @@ group :development do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring"
-  gem "spring-watcher-listen", "~> 2.0.0"
+  gem "spring-watcher-listen"
 
   # Debugging
   gem "better_errors"
@@ -114,7 +114,6 @@ group :test do
   gem "rspec-retry"
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 5.3"
-  gem "webdrivers"
 
   gem "simplecov", require: false
   gem "rspec_junit_formatter"

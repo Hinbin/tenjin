@@ -20,9 +20,6 @@ VCR.configure do |config|
   config.hook_into :webmock
   config.ignore_localhost = true # allows oAuth testing
   config.configure_rspec_metadata!
-  config.ignore_hosts "chromedriver.storage.googleapis.com"
-  config.ignore_hosts "googlechromelabs.github.io"
-  config.ignore_hosts "storage.googleapis.com"
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -51,7 +48,7 @@ end
 
 Capybara.register_driver :selenium_chrome_headless do |app|
   browser_options = Selenium::WebDriver::Chrome::Options.new
-  browser_options.args << "--headless"
+  browser_options.args << "--headless=new"
   browser_options.args << "--disable-site-isolation-trials"
   browser_options.args << "--window-size=1024,768"
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
@@ -59,7 +56,7 @@ end
 
 Capybara.register_driver :selenium_chrome_headless_download do |app|
   browser_options = Selenium::WebDriver::Chrome::Options.new
-  browser_options.args << "--headless"
+  browser_options.args << "--headless=new"
   browser_options.args << "--disable-site-isolation-trials"
   browser_options.args << "--window-size=1024,768"
   browser_options.add_preference(:download, prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s)
