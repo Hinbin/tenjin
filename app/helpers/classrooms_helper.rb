@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module ClassroomsHelper
+  SYNC_REFRESH_MESSAGE = "Refresh the page to see the current sync status"
+
   def student_homeworks(student, homework_progress)
-    entries = homework_progress.find_all { |hp| hp.user_id == student.id }
-    entries.take(5).map! { |e| boolean_icon(e.completed?) }.join
+    entries = homework_progress.select { |hp| hp.user_id == student.id }
+    safe_join(entries.take(5).map { |e| boolean_icon(e.completed?) })
   end
 
   def sync_status_button
@@ -12,17 +14,22 @@ module ClassroomsHelper
       sync_button
     when "failed", "needed"
       sync_needed_button
-    when @school.sync_status == "syncing" && (Time.current - School.first.updated_at) < 240
-      sync_timeout_button
+    when "syncing"
+      ((Time.current - @school.updated_at) < 240) ? sync_timeout_button : SYNC_REFRESH_MESSAGE
     else
-      "Refresh the page to see the current sync status"
+      SYNC_REFRESH_MESSAGE
     end
   end
 
   def report_progress(homework)
-    percent = number_to_percentage(homework.completed_count / homework.count.to_f * 100, precision: 0)
-    "#{homework.completed_count} / #{homework.count} - #{percent}"
+    count = homework.count
+    return "0 / 0 - 0%" if count.zero?
+
+    percent = number_to_percentage(homework.completed_count / count.to_f * 100, precision: 0)
+    "#{homework.completed_count} / #{count} - #{percent}"
   end
+
+  private
 
   def sync_button
     link_to "Sync Classrooms & Users", sync_school_path(current_user.school),

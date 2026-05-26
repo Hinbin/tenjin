@@ -14,20 +14,15 @@ module ApplicationHelper
 
   def boolean_icon(status)
     if status
-      "<i class='fas fa-check' style='color:green'></i>".html_safe
+      content_tag(:i, nil, class: "fas fa-check", style: "color:green")
     else
-      "<i class='fas fa-times' style='color:red'></i>".html_safe
+      content_tag(:i, nil, class: "fas fa-times", style: "color:red")
     end
   end
 
   def render_small_separator(style = nil)
-    return "<hr class='small mb-5 primary' style='border-color: #{style.value}'>" unless style.nil?
-
-    if @dashboard_style.nil?
-      "<hr class='small mb-5 primary' style='border-color: red'>"
-    else
-      "<hr class='small mb-5 primary' style='border-color: #{@dashboard_style.value}'>"
-    end
+    color = style&.value || @dashboard_style&.value || "red"
+    content_tag(:hr, nil, class: "small mb-5 primary", style: "border-color: #{color}")
   end
 
   def render_dashboard_style(style)
@@ -37,7 +32,7 @@ module ApplicationHelper
     "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(#{rails_blob_url(style.image)}) no-repeat;"
   end
 
-  def get_user_classes(student)
+  def user_class_names(student)
     student.enrollments.map { |e| e.classroom.name }.join(", ")
   end
 

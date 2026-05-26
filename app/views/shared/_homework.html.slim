@@ -22,4 +22,4 @@ section.page-section.text-center.homework-image id="homework" style=render_dashb
                   td.d-none.d-sm-table-cell = h.homework.lesson.title
                 td = number_to_percentage(h.homework.required, precision:0)
                 td = h.homework.due_date.strftime('%a, %e %b')
-                td = check_overdue(h)
+                td = homework_status_icon(h)

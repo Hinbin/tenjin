@@ -1,22 +1,16 @@
 # frozen_string_literal: true
 
 module SchoolsHelper
-  # rubocop:disable Metrics/MethodLength
+  SYNC_STATUS_ICONS = {
+    "queued" => ["fas fa-clock", nil],
+    "syncing" => ["fas fa-sync", nil],
+    "successful" => ["fas fa-check", "color:green"],
+    "failed" => ["fas fa-times", "color:red"],
+    "needed" => ["fas fa-exclamation-triangle", "color:red"]
+  }.freeze
+
   def sync_status_icon(status)
-    case status
-    when "queued"
-      "<i class='fas fa-clock'></i>".html_safe
-    when "syncing"
-      "<i class='fas fa-sync'></i>".html_safe
-    when "successful"
-      "<i class='fas fa-check' style='color:green'></i>".html_safe
-    when "failed"
-      "<i class='fas fa-times' style='color:red'></i>".html_safe
-    when "needed"
-      "<i class='fas fa-exclamation-triangle' style='color:red'></i>".html_safe
-    else
-      "<i class='fas fa-question' style='color:red'></i>".html_safe
-    end
+    icon_class, style = SYNC_STATUS_ICONS.fetch(status, ["fas fa-question", "color:red"])
+    content_tag(:i, nil, class: icon_class, style: style)
   end
-  # rubocop:enable Metrics/MethodLength
 end
