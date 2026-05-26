@@ -61,11 +61,7 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   end
 
   def upsert_points(points, challenge)
-    unless challenge.topic == @quiz.topic ||
-        challenge.topic == @question_topic ||
-        (challenge.daily && challenge.topic.subject == @question_topic.subject)
-      return
-    end
+    return unless topic_matches_quiz?(challenge)
 
     completed = points >= challenge.number_required
 
@@ -85,6 +81,12 @@ class Challenge::UpdateChallengeProgress < ApplicationService
                         END
       RETURNING id, completed, awarded
     SQL
+  end
+
+  def topic_matches_quiz?(challenge)
+    challenge.topic == @quiz.topic ||
+      challenge.topic == @question_topic ||
+      (challenge.daily && challenge.topic.subject == @question_topic.subject)
   end
 
   def challenges
