@@ -46,10 +46,6 @@ class User < ApplicationRecord
     end
   end
 
-  def set_default_role
-    self.role ||= :student
-  end
-
   def self.from_omniauth(auth, current_user = nil)
     user = find_by(provider: auth["provider"], upi: auth["upi"])
     user = find_by(oauth_provider: auth["provider"], oauth_uid: auth["uid"]) if user.nil?
@@ -68,14 +64,14 @@ class User < ApplicationRecord
     current_user.oauth_uid = auth["uid"]
     current_user.oauth_provider = auth["provider"]
     current_user.oauth_email = auth["info"]["email"]
-    current_user.save
+    current_user.save!
     current_user
   end
 
-  def self.unlink_account
-    current_user.oauth_uid = ""
-    current_user.oauth_provider = ""
-    current_user.save
+  def unlink_account
+    self.oauth_uid = ""
+    self.oauth_provider = ""
+    save
   end
 
   def self.from_wonde(school, classroom, classroom_db)
@@ -101,8 +97,8 @@ class User < ApplicationRecord
       return if classroom.students.data.blank?
 
       classroom.students.data.each do |student|
-        u = initialize_user(student, "student", school)
-        u.save
+        u = initialize_user(student, :student, school)
+        u.save # invalid records are silently skipped
       end
     end
 
@@ -112,20 +108,15 @@ class User < ApplicationRecord
       return if classroom.employees.data.blank?
 
       classroom.employees.data.each do |employee|
-        u = initialize_user(employee, "employee", school)
-        u.save
+        u = initialize_user(employee, :employee, school)
+        u.save # invalid records are silently skipped
       end
     end
 
     def generate_username(user)
-      user.forename.strip[0].downcase.tap do |str|
-        add_surname_letters(user, str)
-      end
-    end
-
-    def add_surname_letters(user, str)
-      str << user.surname.strip.downcase << user.upi[0..3]
+      str = "#{user.forename.strip[0].downcase}#{user.surname.strip.downcase}#{user.upi[0..3]}"
       str.next! while User.where(username: str).exists?
+      str
     end
 
     def initialize_user(user, role, school)

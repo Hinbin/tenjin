@@ -8,7 +8,7 @@ class Quiz < ApplicationRecord
 
   has_many :asked_questions
   has_many :questions, through: :asked_questions
-  attr_accessor :topic_id, :picked_subject
+  attr_accessor :picked_subject
 
   after_create :update_usage_statistics
 
@@ -16,6 +16,6 @@ class Quiz < ApplicationRecord
 
   def update_usage_statistics
     s = UsageStatistic.where(user: user, topic: topic, lesson: lesson, date: Date.current).first_or_create!
-    s.quizzes_started.present? ? s.increment!(:quizzes_started) : s.update_attribute(:quizzes_started, 1)
+    s.increment!(:quizzes_started)
   end
 end

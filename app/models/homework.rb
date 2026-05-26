@@ -22,7 +22,7 @@ class Homework < ApplicationRecord
   end
 
   def create_homework_progresses
-    users.where(role: "student").find_each do |u|
+    users.where(role: :student).find_each do |u|
       homework_progresses.create(user: u, progress: 0, completed: false)
     end
   end

@@ -15,31 +15,29 @@ class School < ApplicationRecord
     school = where(client_id: client_school.id).first_or_initialize
     school.name = client_school.name
     school.token = token
-    school.sync_status = "never"
-    school.save
+    school.sync_status = :never
+    school.save!
     school
   end
 
-  def self.from_wonde_sync_start(school)
-    school.sync_status = "syncing"
-    school.save
+  def start_sync
+    update!(sync_status: :syncing)
 
-    User.where(school: school)
+    User.where(school: self)
       .where.not(id: User.with_role(:school_admin))
       .update_all(disabled: true)
     Enrollment.joins(:classroom)
-      .where("school_id = ?", school.id)
+      .where(classrooms: {school_id: id})
       .destroy_all
-    Classroom.where("school_id = ?", school.id)
+    Classroom.where(school: self)
       .update_all(disabled: true)
   end
 
-  def self.from_wonde_sync_end(school)
-    User.where(school: school, role: "employee").find_each do |e|
-      e.update_attribute("disabled", true) unless e.enrollments.exists?
-    end
+  def finish_sync
+    User.where(school: self, role: :employee)
+      .where.not(id: Enrollment.joins(:classroom).where(classrooms: {school_id: id}).select(:user_id))
+      .update_all(disabled: true)
 
-    school.sync_status = "successful"
-    school.save
+    update!(sync_status: :successful)
   end
 end

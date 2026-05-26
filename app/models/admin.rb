@@ -5,7 +5,6 @@ class Admin < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :invitable, :database_authenticatable,
     :recoverable, :rememberable, :validatable,
-    :invitable,
     authentication_keys: [:email]
 
   validates :role, presence: true

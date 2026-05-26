@@ -11,18 +11,14 @@ class Classroom < ApplicationRecord
   validates :name, presence: true
 
   def self.from_wonde(school, classroom)
-    create_classroom(classroom, school)
-  end
-
-  def self.create_classroom(classroom, school)
-    c = Classroom.where(client_id: classroom.id).first_or_initialize
+    c = where(client_id: classroom.id).first_or_initialize
     c.client_id = classroom.id
     c.name = classroom.name
     c.description = classroom.description
     c.code = classroom.code
     c.school_id = school.id
     c.disabled = false
-    c.save
+    c.save!
     c
   end
 

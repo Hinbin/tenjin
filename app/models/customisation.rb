@@ -15,10 +15,6 @@ class Customisation < ApplicationRecord
   validates :value, presence: true
   validates :image, presence: true, if: :dashboard_style?
 
-  def dashboard_style?
-    customisation_type == "dashboard_style"
-  end
-
   def make_unpurchasable_if_retired
     return unless retired?
 

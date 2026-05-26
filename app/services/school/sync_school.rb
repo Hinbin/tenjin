@@ -14,10 +14,10 @@ class School::SyncSchool < ApplicationService
     # Assume timed out if more than two minutes syncing.  Adjust or put as env var?
     return if @school.sync_status == "syncing" && (Time.current - School.first.updated_at) < 240
 
-    School.from_wonde_sync_start(@school)
+    @school.start_sync
     fetch_class_data
     fetch_deletion_data
-    School.from_wonde_sync_end(@school)
+    @school.finish_sync
   end
 
   protected

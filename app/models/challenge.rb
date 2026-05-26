@@ -16,7 +16,7 @@ class Challenge < ApplicationRecord
 
     setup_challenge_type(challenge, challenge_type)
     setup_point_value(challenge, multiplier: multiplier)
-    challenge.save
+    challenge.save!
     challenge
   end
 

@@ -29,24 +29,22 @@ class Enrollment < ApplicationRecord
     def create_classroom_enrollments(students_data, classroom)
       return if students_data.data.blank?
 
-      students = students_data.data
-      students.each do |s|
-        student = User.find_by(upi: s.upi)
+      users_by_upi = User.where(upi: students_data.data.map(&:upi)).index_by(&:upi)
+      students_data.data.each do |s|
+        student = users_by_upi[s.upi]
+        next unless student
+
         create_enrollment(classroom, student)
       end
 
-      classroom.update_attribute("disabled", !classroom.enrollments.exists?)
-    end
-
-    def destroy_classroom_enrollments(classroom)
-      Enrollment.where(classroom: classroom).destroy_all
+      classroom.update_attribute(:disabled, !classroom.enrollments.exists?)
     end
 
     def create_enrollment(classroom, student)
       e = Enrollment.where(classroom: classroom, user: student).first_or_initialize
       e.user = student
       e.classroom = classroom
-      e.save
+      e.save!
     end
   end
 end

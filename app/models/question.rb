@@ -37,13 +37,13 @@ class Question < ApplicationRecord
     # Check for the presence of both true and false in two answers in a case insensitive search
     return errors.add :base, "Boolean question must contain two answers" unless answer_text.size == 2
 
-    return if answer_text.select { |text| %w[true false].detect { |permitted| permitted.casecmp(text).zero? } }
+    return if answer_text.all? { |text| %w[true false].any? { |permitted| permitted.casecmp(text).zero? } }
 
     errors.add :base, "Boolean must be true or false only"
   end
 
   def at_least_one_correct_answer
-    return if answers.each.pluck(:correct).include? true
+    return if answers.any?(&:correct)
 
     errors.add :base, "Question must have at least one correct answer."
   end
@@ -59,18 +59,16 @@ class Question < ApplicationRecord
   private
 
   def check_boolean
-    return unless question_type_changed? && question_type == "boolean"
+    return unless question_type_changed? && boolean?
 
-    # Setup boolean question.  Only true and false allowed.
     answers.destroy_all
     Answer.create(question: self, correct: false, text: "False")
     Answer.create(question: self, correct: false, text: "True")
   end
 
   def check_short_answer
-    return unless question_type_changed? && question_type == "short_answer"
+    return unless question_type_changed? && short_answer?
 
-    # Setup short answer.  Change all answers to correct
     answers.update_all(correct: true)
   end
 
