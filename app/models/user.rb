@@ -8,12 +8,16 @@ class User < ApplicationRecord
   devise :database_authenticatable, :rememberable, :trackable, :recoverable,
     :omniauthable, omniauth_providers: %i[wonde google_oauth2], authentication_keys: [:login]
 
-  has_many :quizzes
+  has_many :all_time_topic_scores
+  has_many :challenge_progresses
   has_many :enrollments
-  has_many :classrooms, through: :enrollments
-  has_many :subjects, through: :classrooms
+  has_many :homework_progresses
+  has_many :quizzes
   has_many :topic_scores
+
+  has_many :classrooms, through: :enrollments
   has_many :homeworks, through: :classrooms
+  has_many :subjects, through: :classrooms
 
   belongs_to :school
 

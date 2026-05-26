@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class School < ApplicationRecord
-  has_many :users
   belongs_to :school_group, optional: true
+  has_many :classrooms
+  has_many :users
+
   validates :client_id, presence: true, uniqueness: true
   validates :name, presence: true
   validates :token, presence: true

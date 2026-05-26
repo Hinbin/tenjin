@@ -16,8 +16,12 @@ class Lesson < ApplicationRecord
   }.freeze
 
   enum category: {youtube: 0, vimeo: 1, no_content: 2}
-  has_many :questions
+
   belongs_to :topic
+  has_many :homeworks
+  has_many :questions
+  has_many :quizzes
+
   has_one :subject, through: :topic
 
   attribute :video_link, :string
