@@ -279,7 +279,6 @@ Devise.setup do |config|
     provider_ignores_state: true,
     redirect_uri: ENV["WONDE_CALLBACK_URL"],
     setup: (lambda do |env|
-      request = Rack::Request.new(env)
       env["omniauth.strategy"].options["token_params"] = {redirect_uri: ENV["WONDE_CALLBACK_URL"]}
     end)
 
