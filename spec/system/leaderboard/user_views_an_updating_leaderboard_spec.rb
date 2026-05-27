@@ -122,12 +122,12 @@ RSpec.describe "User views an updating leaderboard", :default_creates, :js do
     end
 
     it "updates if someone from the same schools has a score" do
-      Leaderboard::BroadcastLeaderboardPoint.new(another_student_score, another_student_score.user).call
+      Leaderboard::BroadcastLeaderboardPoint.new(another_student_score.topic, another_student_score.user).call
       expect(page).to have_css("tr#row-#{another_student_score.user_id}.score-changed")
     end
 
     it "flashes an update when the student's school has a score" do
-      Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score, student_topic_score.user).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic, student_topic_score.user).call
       expect(page).to have_css("tr#row-#{student.id}.score-changed")
     end
   end
@@ -143,7 +143,7 @@ RSpec.describe "User views an updating leaderboard", :default_creates, :js do
     let(:different_subject_score) { create(:topic_score, school: school, score: 11, subject: different_subject) }
 
     it "does not update for a different subject" do
-      Leaderboard::BroadcastLeaderboardPoint.new(different_subject_score, different_subject_score.user).call
+      Leaderboard::BroadcastLeaderboardPoint.new(different_subject_score.topic, different_subject_score.user).call
       expect(page).to have_no_css("tr.score-changed")
     end
   end
@@ -159,18 +159,18 @@ RSpec.describe "User views an updating leaderboard", :default_creates, :js do
     let(:different_topic_score) { create(:topic_score, school: school, score: 11, topic: different_topic) }
 
     it "updates for the current topic" do
-      Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score, student_topic_score.user).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic, student_topic_score.user).call
       expect(page).to have_css("tr.score-changed")
     end
 
     it "updates with the topic score and not the total score" do
       different_topic_score
-      Leaderboard::BroadcastLeaderboardPoint.new(student_topic_score, student_topic_score.user).call
+      Leaderboard::BroadcastLeaderboardPoint.new(topic, student_topic_score.user).call
       expect(page).to have_css("td", exact_text: student_topic_score.score)
     end
 
     it "does not update for a different topic" do
-      Leaderboard::BroadcastLeaderboardPoint.new(different_topic_score, different_topic_score.user).call
+      Leaderboard::BroadcastLeaderboardPoint.new(different_topic, different_topic_score.user).call
       expect(page).to have_no_css("tr.score-changed")
     end
   end
