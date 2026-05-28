@@ -23,6 +23,8 @@ class Quiz::CreateQuiz < ApplicationService
     end
 
     initialise_questions
+    return OpenStruct.new(success?: false, errors: "No questions are available for this topic") if @quiz.questions.empty?
+
     check_if_quiz_counts_for_leaderboard
     @quiz.save!
     @user.time_of_last_quiz = Time.current

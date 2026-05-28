@@ -12,6 +12,7 @@ RSpec.describe Quiz::CreateQuiz, :default_creates do
       topics.each do |t|
         create(:question, topic: t)
       end
+      create(:question, topic: topic)
     end
 
     it "includes 10 questions" do
@@ -58,6 +59,18 @@ RSpec.describe Quiz::CreateQuiz, :default_creates do
 
       it "creates a quiz" do
         expect(result).to be_success
+      end
+    end
+
+    context "when no questions are available" do
+      let(:result) { described_class.call(user: student, topic: "Lucky Dip", subject: create(:subject)) }
+
+      it "returns an error" do
+        expect(result.errors).to eq("No questions are available for this topic")
+      end
+
+      it "does not save the quiz" do
+        expect { result }.not_to change(Quiz, :count)
       end
     end
   end
