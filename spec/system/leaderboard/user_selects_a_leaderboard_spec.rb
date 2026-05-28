@@ -20,19 +20,19 @@ RSpec.describe "User selects a leaderboard", :default_creates, :js do
 
     it "allows selecting a topic leaderboard" do
       click_link(quiz_subject.name)
-      click_link(topic.name)
+      within(".collapse.show") { click_link(topic.name) }
       expect(page).to have_css("h1", text: topic.name)
     end
 
     it "allows selecting the overall subject leaderboard" do
       click_link(quiz_subject.name)
-      click_link("All")
+      within(".collapse.show") { click_link("All") }
       expect(page).to have_css("h1", text: quiz_subject.name)
     end
 
     it "shows leaderboards for multiple subjects" do
       click_link(second_subject.name)
-      click_link("All")
+      within(".collapse.show") { click_link("All") }
       expect(page).to have_css("h1", text: second_subject.name)
     end
   end
@@ -45,7 +45,7 @@ RSpec.describe "User selects a leaderboard", :default_creates, :js do
 
     it "highlights the current user" do # javascript/turbolinks bug
       click_link(quiz_subject.name)
-      click_link("All")
+      within(".collapse.show") { click_link("All") }
       expect(page).to have_css("tr.current-user")
     end
   end
