@@ -32,7 +32,6 @@ class CustomisationsController < ApplicationController
   def update
     customisation = authorize find_customisation
     customisation.update(customisation_params)
-    customisation.save
     redirect_to customisations_path
   end
 

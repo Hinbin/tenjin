@@ -13,7 +13,7 @@ class LessonsController < ApplicationController
 
   def new
     first_topic = Topic.where(active: true, subject: Subject.find(new_lesson_params)).first
-    redirect_to lessons_path flash: {error: "No topics found for subject"} if first_topic.blank?
+    return redirect_to lessons_path, flash: {error: "No topics found for subject"} if first_topic.blank?
 
     @lesson = Lesson.new(topic: first_topic)
     @topics = Topic.where(active: true, subject: Subject.find(new_lesson_params)).order(:name)

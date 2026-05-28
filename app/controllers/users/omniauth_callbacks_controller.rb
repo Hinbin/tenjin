@@ -7,7 +7,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     # the provided bearer token to retrieve user information
 
     # Setup the GraphQL query that will return all essential information
-    query = File.read("app/graphql/user_graphql_query")
+    query = File.read(Rails.root.join("app/graphql/user_graphql_query"))
 
     # The bearer token can be found in the response callback
     bearer_token = request.env["omniauth.auth"].credentials["token"]

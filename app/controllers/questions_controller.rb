@@ -9,7 +9,7 @@ class QuestionsController < ApplicationController
   end
 
   def topic
-    redirect questions_path if topic_params.blank?
+    redirect_to questions_path if topic_params.blank?
 
     @topic = Topic.find(topic_params)
     authorize @topic, :show?
@@ -22,7 +22,7 @@ class QuestionsController < ApplicationController
   end
 
   def lesson
-    redirect lessons_path if lesson_params.blank?
+    redirect_to lessons_path if lesson_params.blank?
 
     @lesson = Lesson.find(lesson_params)
     authorize @lesson, :view_questions?
@@ -34,8 +34,8 @@ class QuestionsController < ApplicationController
   end
 
   def reset_flags
-    authorize current_user, :update?
     question = find_question
+    authorize question, :update?
     FlaggedQuestion.where(question: question).delete_all
     Question.reset_counters question.id, :flagged_questions_count
     redirect_to question
@@ -91,9 +91,9 @@ class QuestionsController < ApplicationController
 
   def destroy
     question = authorize find_question
-    redirect_to topic_questions_path(topic_id: question.topic)
-
+    topic = question.topic
     question.update_attribute(:active, false)
+    redirect_to topic_questions_path(topic_id: topic)
   end
 
   def download_topic
@@ -120,7 +120,7 @@ class QuestionsController < ApplicationController
       return render :import_topic, topic_id: @topic
     end
 
-    data = File.read(params[:file])
+    data = params[:file].read
     result = Question::ImportQuestions.call(data, @topic, params[:file].original_filename)
     flash[:notice] = result.error
     redirect_to topic_questions_path(topic_id: @topic)

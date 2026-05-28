@@ -25,15 +25,20 @@ class HomeworksController < ApplicationController
       redirect_to @homework
     else
       @classroom = @homework.classroom
-      @classroom.present? ? render(:new) : redirect_to(dashboard_path)
+      if @classroom.present?
+        @lessons = Lesson.where(topic: @classroom.subject.topics).where(questions_count: 10..)
+        render(:new)
+      else
+        redirect_to(dashboard_path)
+      end
     end
   end
 
   def destroy
     homework = authorize find_homework
-    redirect_to classroom_path(homework.classroom)
-
+    classroom = homework.classroom
     homework.destroy
+    redirect_to classroom_path(classroom)
   end
 
   private

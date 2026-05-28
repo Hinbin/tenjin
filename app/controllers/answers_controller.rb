@@ -18,7 +18,6 @@ class AnswersController < ApplicationController
     answer = find_answer
     authorize answer.question.topic
     answer.update(answer_params)
-    answer.save
   end
 
   def destroy

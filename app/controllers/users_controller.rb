@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     authorize current_user
     @students = policy_scope(User).includes(enrollments: [:classroom]).where(role: "student")
 
-    return unless @current_user.has_role? :school_admin
+    return unless current_user.has_role? :school_admin
 
     @employees = policy_scope(User)
       .includes(enrollments: [:classroom])
@@ -64,7 +64,6 @@ class UsersController < ApplicationController
     if manage_roles_params[:school].present?
       @school = School.find(manage_roles_params[:school])
       @employees = User.where(school: @school, role: "employee")
-      @school_admins = User.includes(:school).with_role :school_admin, @school
     end
 
     @school_admins = User.includes(:school).with_role :school_admin
