@@ -11,19 +11,13 @@ class HomeworkPolicy < ApplicationPolicy
     end
   end
 
-  def new?
-    @user.employee? && @record.classroom.school == @user.school
-  end
-
   def create?
-    @user.employee? && @record.classroom.school == @user.school
-  end
-
-  def destroy?
-    @user.employee? && @record.classroom.school == @user.school
+    user.employee? && record.classroom.school == user.school
   end
 
   def show?
-    @record.classroom.school == @user.school
+    record.classroom.school == user.school
   end
+
+  alias_method :destroy?, :create?
 end

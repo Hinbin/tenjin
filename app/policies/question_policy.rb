@@ -4,7 +4,7 @@ class QuestionPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.joins(topic: :subject)
-        .where(topics: {active: true}, subjects: {active: true, id: Subject.with_role(:question_author, user)})
+        .where(topics: {active: true}, subjects: {active: true, id: Subject.with_role(:question_author, user).select(:id)})
     end
   end
 

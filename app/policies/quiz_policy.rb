@@ -1,37 +1,25 @@
 # frozen_string_literal: true
 
 class QuizPolicy < ApplicationPolicy
-  def initialize(user, quiz)
-    @user = user
-    @quiz = quiz
-  end
-
   def show?
-    @user.id == @quiz.user_id
+    user.id == record.user_id
   end
 
   def update?
-    @user.id == @quiz.user_id && @quiz.active
+    user.id == record.user_id && record.active
   end
 
   def new?
-    return false if @quiz.subject.nil?
+    return false if record.subject.nil?
 
-    (@user.subjects.include? @quiz.subject) && @user.school.permitted?
+    user.subjects.include?(record.subject) && user.school.permitted?
   end
 
-  def create?
-    @user.id == @quiz.user_id && @quiz.active
-  end
+  alias_method :create?, :update?
 
-  class Scope
-    def initialize(user, scope)
-      @user = user
-      @scope = scope
-    end
-
+  class Scope < Scope
     def resolve
-      @scope.where("active = ? and user_id = ?", true, @user.id)
+      scope.where(active: true, user_id: user.id)
     end
   end
 end
