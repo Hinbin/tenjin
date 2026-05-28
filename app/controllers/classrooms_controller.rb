@@ -25,6 +25,7 @@ class ClassroomsController < ApplicationController
     classroom = authorize find_classroom
     classroom.update(subject_id: update_classroom_params[:subject])
     classroom.school.update(sync_status: "needed")
+    head :ok
   end
 
   private

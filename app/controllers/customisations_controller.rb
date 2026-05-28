@@ -64,11 +64,6 @@ class CustomisationsController < ApplicationController
     result.success? ? "Congratulations! You have bought #{customisation.name}" : result.errors
   end
 
-  def purchase_failed(exception)
-    flash[:notice] = exception.message
-    redirect_to dashboard_path
-  end
-
   def customisation_params
     params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image, :customisation_type, :cost, :retired)
   end

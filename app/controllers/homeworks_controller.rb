@@ -14,7 +14,7 @@ class HomeworksController < ApplicationController
     @classroom = find_classroom
     @homework = Homework.new(due_date: 1.week.from_now, classroom: @classroom, required: 70)
     authorize @homework
-    @lessons = Lesson.where(topic: @classroom.subject.topics).where(questions_count: 10..)
+    @lessons = lessons_for_classroom(@classroom)
   end
 
   def create
@@ -26,7 +26,7 @@ class HomeworksController < ApplicationController
     else
       @classroom = @homework.classroom
       if @classroom.present?
-        @lessons = Lesson.where(topic: @classroom.subject.topics).where(questions_count: 10..)
+        @lessons = lessons_for_classroom(@classroom)
         render(:new)
       else
         redirect_to(dashboard_path)
@@ -65,6 +65,10 @@ class HomeworksController < ApplicationController
 
   def homework_params
     params.require(:homework).permit(:due_date, :required, :topic_id, :classroom_id, :lesson_id)
+  end
+
+  def lessons_for_classroom(classroom)
+    Lesson.where(topic: classroom.subject.topics).where(questions_count: 10..)
   end
 
   def no_classroom_id

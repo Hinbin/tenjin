@@ -2,6 +2,7 @@
 
 class SchoolsController < ApplicationController
   before_action :authenticate_admin!, only: %i[index new create update show show_stats]
+  before_action :authenticate_user_or_admin!, only: :sync
 
   def index
     @schools = policy_scope(School).order(:name)
@@ -32,8 +33,8 @@ class SchoolsController < ApplicationController
 
   def create
     @school = School::AddSchool.call(school_params)
+    authorize @school
     if @school.persisted?
-      authorize @school
       redirect_to @school
       SyncSchoolJob.perform_later @school
     else
@@ -50,14 +51,8 @@ class SchoolsController < ApplicationController
   end
 
   def sync
-    if current_admin.present?
-      authenticate_admin!
-    else
-      authenticate_user!
-    end
-
     school = authorize find_school
-    school.update_attribute("sync_status", "queued")
+    school.update_attribute(:sync_status, "queued")
     SyncSchoolJob.perform_later school
     redirect_to classrooms_path
   end
@@ -83,7 +78,7 @@ class SchoolsController < ApplicationController
     params.require(:school).permit(:school_group_id, :permitted)
   end
 
-  def reset_all_password_params
-    params.permit(:reset_all)
+  def authenticate_user_or_admin!
+    current_admin.present? ? authenticate_admin! : authenticate_user!
   end
 end

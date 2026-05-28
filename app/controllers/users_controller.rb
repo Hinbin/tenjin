@@ -76,10 +76,7 @@ class UsersController < ApplicationController
 
   def unlink_oauth_account
     user = authorize find_user
-    user.oauth_uid = ""
-    user.oauth_email = ""
-    user.oauth_provider = ""
-    user.save
+    user.update(oauth_uid: "", oauth_email: "", oauth_provider: "")
 
     redirect_to user
   end

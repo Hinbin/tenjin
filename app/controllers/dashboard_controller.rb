@@ -5,7 +5,7 @@ class DashboardController < ApplicationController
 
   def show
     authorize current_user, policy_class: DashboardPolicy # make it so that it checks if the school is permitted
-    @subjects = current_user.subjects.uniq
+    @subjects = current_user.subjects.distinct
 
     if current_user.student?
       @dashboard_style = find_dashboard_style

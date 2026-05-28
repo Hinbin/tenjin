@@ -12,11 +12,12 @@ class LessonsController < ApplicationController
   end
 
   def new
-    first_topic = Topic.where(active: true, subject: Subject.find(new_lesson_params)).first
+    subject = Subject.find(new_lesson_params)
+    first_topic = Topic.where(active: true, subject: subject).first
     return redirect_to lessons_path, flash: {error: "No topics found for subject"} if first_topic.blank?
 
     @lesson = Lesson.new(topic: first_topic)
-    @topics = Topic.where(active: true, subject: Subject.find(new_lesson_params)).order(:name)
+    @topics = Topic.where(active: true, subject: subject).order(:name)
     authorize @lesson
   end
 
@@ -28,13 +29,13 @@ class LessonsController < ApplicationController
 
   def create
     @lesson = Lesson.new(lesson_params)
+    authorize @lesson
     save_lesson
   end
 
   def update
     @lesson = authorize find_lesson
     @lesson.assign_attributes(lesson_params)
-
     save_lesson
   end
 
@@ -51,8 +52,6 @@ class LessonsController < ApplicationController
   end
 
   def save_lesson
-    authorize @lesson
-
     unless @lesson.valid?
       @topics = policy_scope(Topic).where(subject: @lesson.topic.subject)
 

@@ -4,8 +4,7 @@ class LeaderboardController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @subjects = policy_scope(Subject)
-    @subjects = current_user.subjects.uniq
+    @subjects = policy_scope(current_user.subjects).distinct
     @dashboard_style = find_dashboard_style
     render "subject_select"
   end
@@ -65,7 +64,7 @@ class LeaderboardController < ApplicationController
   end
 
   def set_leaderboard_variables
-    @subjects = current_user.subjects.uniq
+    @subjects = current_user.subjects.distinct
     @school = current_user.school
     cookies.encrypted[:user_id] = current_user.id
   end
