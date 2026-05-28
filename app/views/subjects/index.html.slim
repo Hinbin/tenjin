@@ -9,12 +9,11 @@
         th Questions Asked This Week
 
       - @subjects.each do |subject|
-        - @subject_statistics = Subject::CompileSubjectStatistics.call(subject)
         tr id=('subject-' + subject.id.to_s)
           td.name = link_to(subject.name, subject)
-          td.questionsAvailable = Question.joins(topic: :subject).where(topics: {subject: subject}).count
-          td.asked_questions = @subject_statistics[:asked_questions]
-          td.asked_questions_this_week = @subject_statistics[:asked_questions_this_week]
+          td.questionsAvailable = @question_counts[subject.id].to_i
+          td.asked_questions = @subject_statistics[subject.id][:asked_questions]
+          td.asked_questions_this_week = @subject_statistics[subject.id][:asked_questions_this_week]
     -if current_admin.super?
       =link_to(new_subject_path)
         button.btn.btn-block.btn-primary type="button" Add Subject
@@ -29,4 +28,4 @@
         - @deactivated_subjects.each do |subject|
           tr id=('subject-' + subject.id.to_s)
             td.name = link_to(subject.name, subject)
-            td.questionsAvailable = Question.joins(topic: :subject).where(topics: {subject: subject}).count
+            td.questionsAvailable = @question_counts[subject.id].to_i

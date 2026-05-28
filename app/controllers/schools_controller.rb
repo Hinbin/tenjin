@@ -7,6 +7,14 @@ class SchoolsController < ApplicationController
   def index
     @schools = policy_scope(School).order(:name)
     @school_groups = policy_scope(SchoolGroup).order(:name)
+    school_ids = @schools.map(&:id)
+    @student_counts = User.where(school_id: school_ids, role: "student").group(:school_id).count
+    @weekly_questions = UserStatistic.joins(:user)
+      .where(users: {school_id: school_ids}, week_beginning: Date.current.beginning_of_week)
+      .group("users.school_id").sum(:questions_answered)
+    @monthly_questions = UserStatistic.joins(:user)
+      .where(users: {school_id: school_ids}, week_beginning: 1.month.ago..Date.current)
+      .group("users.school_id").sum(:questions_answered)
   end
 
   def show_stats

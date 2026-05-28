@@ -8,7 +8,7 @@
         tr
           th Topic Name
           th Question #
-      -s.topics.where(active: true).order(:name).each do |t|
+      - s.topics.select(&:active?).sort_by(&:name).each do |t|
         tr
           td =link_to t.name, topic_questions_path(topic_id: t)
-          td =t.questions.count
+          td =t.questions.size

@@ -4,3 +4,7 @@ export default function updateQuizStatistics(serverResponse) {
   $("#answeredCorrect").text(answeredCorrect);
   $("#streak").text(streak);
 }
+
+$(document).on("click", "#nextButton", function () {
+  location.reload();
+});

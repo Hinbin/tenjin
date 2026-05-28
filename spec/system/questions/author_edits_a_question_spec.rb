@@ -20,7 +20,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
   end
 
   def switch_to_student_account
-    click_button("Logout")
+    click_link("Logout")
     find("button", text: "LOGIN")
     sign_in student
     visit dashboard_path
