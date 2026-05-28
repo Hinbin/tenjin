@@ -15,12 +15,12 @@
           remote: true
 
 -unless @quiz.counts_for_leaderboard
-  .row.col-lg-8.mx-auto.alert.alert-warning 
+  .row.col-lg-8.mx-auto.alert.alert-warning
     | This quiz is currently not counting towards your leaderboard points.  The first attempt at a lesson homework will count, or the first four quizzes for a particular topic.
 
 #feedbackModal.modal.fade
   .modal-dialog role="document"
-    .modal-content 
+    .modal-content
       .modal-body
         p#feedback You have flagged this question as unfair.  Thanks for your feedback!
       .modal-footer
@@ -29,7 +29,7 @@
 
 .modal.fade#videoModal
   .modal-dialog.modal-dialog-centered.modal-lg role="document"
-    .modal-content 
+    .modal-content
       .modal-body.p-0.p-md-2
         button.close type="button" data-dismiss="modal" aria-label="Close"
           span aria-hidden="true"&times;

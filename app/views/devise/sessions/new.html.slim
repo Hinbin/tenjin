@@ -1,4 +1,4 @@
-header.masthead.masthead-container.masthead-full.text-white  
+header.masthead.masthead-container.masthead-full.text-white
   div.container.py-5
     div.row.justify-content-center.align-items-center
       div.col-6.text-center.bg-white.text-dark.rounded
@@ -9,19 +9,18 @@ header.masthead.masthead-container.masthead-full.text-white
               = f.input :email,                       \
                 required: false,                      \
                 autofocus: true,                      \
-                input_html: { autocomplete: "email" } 
+                input_html: { autocomplete: "email" }
             - else
               = f.input :login,                       \
                 required: false,                      \
                 autofocus: true,                      \
-                input_html: { autocomplete: "email" }      
+                input_html: { autocomplete: "email" }
             = f.input :password,                               \
               required: false,                                 \
-              input_html: { autocomplete: "current-password" } 
+              input_html: { autocomplete: "current-password" }
             = f.input :remember_me, as: :boolean if devise_mapping.rememberable?
           .form-actions
             = f.button :submit, "Log in", class: 'btn btn-primary'
         = render "devise/shared/links"
-footer.fixed-bottom.text-right.px-3.py-3.text-white 
+footer.fixed-bottom.text-right.px-3.py-3.text-white
   =link_to 'About', page_path('about'), class: 'text-light'
-  

@@ -6,9 +6,8 @@
        =f.input :name
        =f.input :active
        =f.button :submit, class: "btn btn-primary btn-block"
-      =link_to 'Deactivate Subject', 
+      =link_to 'Deactivate Subject',
         subject_path(@subject),
         method: :delete,
         class: 'btn btn-block btn-danger my-5',
         data: {confirm: "Are you sure?"}
-       

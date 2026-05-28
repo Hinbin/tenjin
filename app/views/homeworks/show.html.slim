@@ -11,7 +11,7 @@ section.page-section.text-center.pt-2#HomeworkTitle
         => @homework.lesson.title
       ' -
       => number_to_percentage(@homework.required, precision: 0)
-      | required 
+      | required
     hr.small.mb-5.primary-red
     h3.display-4 =report_progress(@homework_counts)
 section.page-section.text-center.pt-2#StudentProgress
@@ -34,4 +34,3 @@ section.page-section.text-center.pt-2#StudentProgress
                 | %
     .row.col.mt-5
       =link_to 'Delete Homework', homework_path(@homework), method: :delete, class: 'btn btn-block btn-danger'
- 

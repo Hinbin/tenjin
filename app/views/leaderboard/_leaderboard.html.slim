@@ -1,7 +1,7 @@
 div id='leaderboard'
 .container-fluid#tableContainer
   .d-flex#optionFlex name="Toggle Options" data-toggle="collapse" data-target="#leaderboardOptions"
-      p.mx-2 style="font-size: 1rem" Options  
+      p.mx-2 style="font-size: 1rem" Options
       i.fas.fa-sort-down
   .row.justify-content-around.my-2.collapse#leaderboardOptions
     =render('school_option') if @school.school_group_id.present?
@@ -21,13 +21,13 @@ div id='leaderboard'
       tr
         th#rankColumn data-sort="int" data-sort-default="asc" Rank
         th.d-none.d-sm-table-cell data-sort="int" data-sort-default="asc"
-        th#nameColumn data-sort="string" data-sort-default="asc" Name 
+        th#nameColumn data-sort="string" data-sort-default="asc" Name
         th#iconColumn
         th.d-none.d-sm-table-cell School
         th#scoreColumn data-sort="int" data-sort-default="desc" data-sort-multicolumn="rankColumn" Score
     tbody#tableData
-  
+
   .row#loading
     .d-flex.spinner
       div.double-bounce1
-      div.double-bounce2    
+      div.double-bounce2

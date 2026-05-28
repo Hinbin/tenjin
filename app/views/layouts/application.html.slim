@@ -10,7 +10,7 @@ html
     meta name="psj" action=action_name controller=controller_name
     = csrf_meta_tags
     = csp_meta_tag
-    = render 'layouts/google_analytics' if Rails.env.production?          
+    = render 'layouts/google_analytics' if Rails.env.production?
     = stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     - unless Rails.env.test?
@@ -23,7 +23,7 @@ html
     = content_for(:page_meta)
 
   body data-action=action_name data-controller=controller_name
-    = render('shared/user_navigation') if current_user.present?  
+    = render('shared/user_navigation') if current_user.present?
     = render('shared/admin_navigation') if current_admin.present?
     = render('shared/logged_out_navigation') if current_user.nil? && current_admin.nil?
     = render('shared/flashes')

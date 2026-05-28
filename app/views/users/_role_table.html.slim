@@ -6,8 +6,8 @@ h3.h3 =role.humanize
       th Username
       - if role == 'school_admin'
         th School
-      - else 
-        th Subject 
+      - else
+        th Subject
       th Remove
     tbody
       - role_collection.uniq.each do |r|
@@ -16,13 +16,13 @@ h3.h3 =role.humanize
             => r.forename
             = r.surname
           td = r.username
-          - if role == 'school_admin' 
+          - if role == 'school_admin'
             td = r.school.name
           - else
             td =select_tag 'user[subject]',
                 options_from_collection_for_select(Subject.with_role(role, r), :id, :name),
                 class: 'custom-select',
-                form: "form-#{role}-#{r.id}"       
+                form: "form-#{role}-#{r.id}"
           td = button_to 'Remove',
             remove_role_user_path(id: r.id),
             class: 'btn btn-danger',

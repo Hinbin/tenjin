@@ -18,15 +18,15 @@
                 h2.text-uppercase.text-white Unavailable
               =link_to 'Edit', edit_customisation_path(style), class: 'btn btn-light-outline'
             -else
-              p.text-white#cost              
+              p.text-white#cost
                 == customisation_cost(style, bought_customisations)
                 =form_for(style, url: buy_customisation_path(style), method: :post) do |f|
                   -if bought_customisations.include? style.id
-                    =f.submit 'Switch', class: 'btn btn-light-outline float-right buy-btn' 
+                    =f.submit 'Switch', class: 'btn btn-light-outline float-right buy-btn'
                   -else
                     =f.submit 'Buy', class: 'btn btn-light-outline float-right buy-btn'
-              
-                
+
+
 -leaderboard_icon_styles = customisations.where(customisation_type: 'leaderboard_icon').each do |icon|
 - if leaderboard_icon_styles.count > 0
   section.page-section.text-center.icons
@@ -55,6 +55,3 @@
                         =f.submit 'Switch', class: 'btn btn-dark-outline buy-btn'
                       -else
                         =f.submit 'Buy', class: 'btn btn-dark-outline buy-btn'
-
-
-              

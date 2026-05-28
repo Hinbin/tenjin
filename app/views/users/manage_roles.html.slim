@@ -1,5 +1,5 @@
 section.page-section.pt-2#Users
-  .container    
+  .container
     h1.page-section-header.text-uppercase.text-center Manage Roles
     hr.text-center class=("small mb-5 primary-red")
     =render partial: 'role_table',
@@ -12,10 +12,10 @@ section.page-section.pt-2#Users
       locals: {role: 'question_author',
       role_collection: @question_authors} if @question_authors.present?
     -if @employees.present?
-      .col        
+      .col
         h1.text-center =link_to @school.name, school_path(@school)
         h2.h2.text-center.text-uppercase School Users
-        hr.text-center class=("small mb-5 primary-red")          
+        hr.text-center class=("small mb-5 primary-red")
         .table-responsive
           table.table#employees-table
             thead
@@ -31,7 +31,7 @@ section.page-section.pt-2#Users
                     => e.forename
                     = e.surname
                   td = e.username
-                  td 
+                  td
                     = select_tag 'user[subject]',
                       options_from_collection_for_select(@all_subjects, :id, :name),
                       id: "role-select-user-#{e.id}",

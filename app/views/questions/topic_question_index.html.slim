@@ -1,13 +1,13 @@
 .container
   .row.mt-3.form-group
     .col-sm-3
-      label for='topic-name' class='form-label' Topic Name: 
+      label for='topic-name' class='form-label' Topic Name:
     .col-sm-9
       =text_field_tag('topic[name]',
       @topic.name,
       id: 'topic-name',
       class: 'form-control',
-      data: { remote: 'true',  url: topic_path(@topic), method: 'patch' })      
+      data: { remote: 'true',  url: topic_path(@topic), method: 'patch' })
   .row.form-group
     .col-sm-3
       label for="select-default-lesson" class='form-label' Select Default Lesson
@@ -31,7 +31,7 @@
           class:'btn btn-primary btn-block'
       = link_to 'Import Questions',
           import_topic_questions_path(topic_id: @topic),
-          class:'btn btn-primary btn-block'          
+          class:'btn btn-primary btn-block'
 
   .row.my-5
     .col

@@ -2,7 +2,7 @@
   title=('Classroom - ' + @classroom.name)
 .container
   h1.h1.mt-3.text-center =@classroom.name
-  section.page-section.text-center.pt-2#homework  
+  section.page-section.text-center.pt-2#homework
     h1.page-section-header.text-uppercase Homework
     hr class=("small mb-5 primary-red")
     .row.justify-content-center
@@ -20,9 +20,9 @@
                 td =h.topic.name
                 td =report_progress(h)
                 td =h.due_date.strftime("%d/%m/%y %H:%M")
-  section.page-section.text-center.pt-2#students                            
+  section.page-section.text-center.pt-2#students
     h1.page-section-header.text-uppercase Students
-    hr class=("small mb-5 primary-red")      
+    hr class=("small mb-5 primary-red")
     .row.justify-content-center
       table.table#students-table style="width:100%"
         thead
