@@ -1,18 +1,15 @@
 import React from 'react'
-import { Table, Row, Button, FormGroup, Input, Label, Col } from 'reactstrap'
-import { compose } from 'recompose'
+import { Table, Row, FormGroup, Input, Label, Col } from 'reactstrap'
 
 import LiveLeaderboardStore from '../stores/LiveLeaderboardStore'
 import * as LiveLeaderboardActions from '../actions/LiveLeaderboardActions'
 import Entry from './live_leaderboard/Entry'
 import Filters from './live_leaderboard/Filters'
 import ClassroomWinner from './live_leaderboard/ClassroomWinner'
-import withLoading from '../hoc/withLoading'
 
 class LiveLeaderboard extends React.Component {
-  constructor () {
-    super()
-    this.state = {
+  static getStateFromStore () {
+    return {
       leaderboard: LiveLeaderboardStore.getCurrentLeaderboard(),
       loading: LiveLeaderboardStore.getLoading(),
       filters: LiveLeaderboardStore.getFilters(),
@@ -25,8 +22,15 @@ class LiveLeaderboard extends React.Component {
       winners: LiveLeaderboardStore.getWinners(),
       connected: LiveLeaderboardStore.getConnected()
     }
-    this.getLeaderboard = this.getLeaderboard.bind(this)
+  }
 
+  constructor (props) {
+    super(props)
+    this.state = LiveLeaderboard.getStateFromStore()
+    this.getLeaderboard = this.getLeaderboard.bind(this)
+  }
+
+  componentDidMount () {
     LiveLeaderboardActions.loadLeaderboard()
     LiveLeaderboardStore.on('change', this.getLeaderboard)
   }
@@ -36,19 +40,7 @@ class LiveLeaderboard extends React.Component {
   }
 
   getLeaderboard () {
-    this.setState({
-      leaderboard: LiveLeaderboardStore.getCurrentLeaderboard(),
-      loading: LiveLeaderboardStore.getLoading(),
-      filters: LiveLeaderboardStore.getFilters(),
-      currentFilters: LiveLeaderboardStore.getCurrentFilters(),
-      user: LiveLeaderboardStore.getUser(),
-      showAll: LiveLeaderboardStore.getShowAll(),
-      allTime: LiveLeaderboardStore.getAllTime(),
-      live: LiveLeaderboardStore.getLive(),
-      name: LiveLeaderboardStore.getName(),
-      winners: LiveLeaderboardStore.getWinners(),
-      connected: LiveLeaderboardStore.getConnected()
-    })
+    this.setState(LiveLeaderboard.getStateFromStore())
   }
 
   toggleLiveLeaderboard () {
@@ -63,25 +55,21 @@ class LiveLeaderboard extends React.Component {
     LiveLeaderboardActions.toggleAllTime()
   }
 
-  // Converts the leaderboard object into a sorted array, sorted by score.
   sortLeaderboard () {
-    // Build the array to be sorted that will contain all the leaderboard information
     let sortedLeaderboard = []
     const leaderboard = this.state.leaderboard
 
-    for (var key in leaderboard) {
-      if (leaderboard.hasOwnProperty(key)) {
-        if (this.checkFilters(leaderboard[key])) {
-          sortedLeaderboard.push(leaderboard[key])
-        }
+    for (const [, entry] of Object.entries(leaderboard)) {
+      if (this.checkFilters(entry)) {
+        sortedLeaderboard.push(entry)
       }
     }
 
     sortedLeaderboard.sort((a, b) => b.score - a.score)
 
-    for (var i in sortedLeaderboard) {
-      sortedLeaderboard[i].position = parseInt(i, 10) + 1
-    }
+    sortedLeaderboard.forEach((entry, i) => {
+      entry.position = i + 1
+    })
     if (!this.state.showAll) {
       sortedLeaderboard = this.snipTableData(sortedLeaderboard)
     }
@@ -115,8 +103,7 @@ class LiveLeaderboard extends React.Component {
     const userSchool = this.state.user.school
     let schoolFilterSet = false
 
-    for (let i in filters) {
-      let filter = filters[i]
+    for (const filter of filters) {
       if (filter.name === 'Schools' && filter.option !== 'All' &&
           entry.school_name !== filter.option) return false
       if ((filter.name === 'Class' && filter.option !== 'All') &&
@@ -131,8 +118,12 @@ class LiveLeaderboard extends React.Component {
   }
 
   render () {
+    if (this.state.loading) {
+      return <div className='loader'>Loading...</div>
+    }
+
     const leaderboard = this.sortLeaderboard()
-    const { loading, filters, currentFilters, user, showAll, allTime, live, name, winners, connected } = this.state
+    const { filters, currentFilters, user, showAll, allTime, live, name, winners, connected } = this.state
     const classFilter = currentFilters.filter((f) => { return f.name === 'Class' })
 
     let winnerClassroom
@@ -143,7 +134,6 @@ class LiveLeaderboard extends React.Component {
       winnerClassroom = user.classrooms[0]
     }
 
-    // Map every entry in the current leaderboard array into an entry component
     const Entries = leaderboard.map((entry) => {
       return <Entry key={entry.id} currentFilters={currentFilters} user={user} {...entry} />
     })
@@ -179,14 +169,14 @@ class LiveLeaderboard extends React.Component {
                   id='liveSwitch'
                   checked={live}
                   onChange={() => this.toggleLiveLeaderboard()}/>
-                <Label className='custom-control-label' for='liveSwitch'>Live Leaderboard</Label>
+                <Label className='custom-control-label' htmlFor='liveSwitch'>Live Leaderboard</Label>
               </FormGroup>
             </Col>
           </Row>
         }
 
         <Row className='form-row align-items-center d-flex justify-content-around'>
-          {<Filters filters={filters} currentFilters={currentFilters}/>}
+          <Filters filters={filters} currentFilters={currentFilters}/>
           {!live &&
           <Col>
             <FormGroup className='custom-control custom-switch' id='showAll'>
@@ -196,7 +186,7 @@ class LiveLeaderboard extends React.Component {
                 id='showAllSwitch'
                 checked={showAll}
                 onChange={() => this.toggleShowAll()}/>
-              <Label className='custom-control-label' for='showAllSwitch'>Show all</Label>
+              <Label className='custom-control-label' htmlFor='showAllSwitch'>Show all</Label>
             </FormGroup>
           </Col>
           }
@@ -209,7 +199,7 @@ class LiveLeaderboard extends React.Component {
                 id='allTimeSwitch'
                 checked={allTime}
                 onChange={() => this.toggleAllTime()}/>
-              <Label className='custom-control-label' for='allTimeSwitch'>All Time</Label>
+              <Label className='custom-control-label' htmlFor='allTimeSwitch'>All Time</Label>
             </FormGroup>
           </Col>
           }
@@ -239,6 +229,4 @@ class LiveLeaderboard extends React.Component {
   }
 }
 
-export default compose(
-  withLoading
-)(LiveLeaderboard)
+export default LiveLeaderboard

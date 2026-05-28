@@ -1,6 +1,6 @@
 $(document).on("turbolinks:load", () => {
   $("tr[data-classroom]").click((event) => {
-    const pickedClassroom = $(event.target.parentNode).data("classroom");
+    const pickedClassroom = $(event.currentTarget).data("classroom");
     if (event.target.classList.contains("btn")) return;
 
     Turbolinks.visit("/classrooms/" + pickedClassroom);

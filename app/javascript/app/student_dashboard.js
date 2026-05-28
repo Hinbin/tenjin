@@ -2,10 +2,10 @@ $(document).on("turbolinks:load", () => {
   $(".challenge-row, .homework-row").off("click");
 
   $(".challenge-row, .homework-row").click(function (event) {
-    const pickedSubject = $(event.target.parentNode).data("subject");
-    const pickedTopic = $(event.target.parentNode).data("topic");
-    const pickedLesson = $(event.target.parentNode).data("lesson");
-    $(event.target).prop("disabled", true);
+    const pickedSubject = $(event.currentTarget).data("subject");
+    const pickedTopic = $(event.currentTarget).data("topic");
+    const pickedLesson = $(event.currentTarget).data("lesson");
+    $(event.currentTarget).prop("disabled", true);
 
     $.ajax({
       type: "post",

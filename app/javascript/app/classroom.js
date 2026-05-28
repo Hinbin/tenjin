@@ -9,8 +9,8 @@ $(document).on("turbolinks:load", () => {
 
     $("tr[data-controller]").click((event) => {
       if (!event.target.classList.contains("btn")) {
-        const controller = $(event.target.parentNode).data("controller");
-        const id = $(event.target.parentNode).data("id");
+        const controller = $(event.currentTarget).data("controller");
+        const id = $(event.currentTarget).data("id");
 
         Turbolinks.visit(`/${controller}/${id}`);
       }

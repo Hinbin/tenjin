@@ -25,9 +25,9 @@ export default class Filter extends React.Component {
 
   render () {
     let { options } = this.props
-    const dropDownID = this.props.name.replace(' ', '-') + '-dropdown'
+    const dropDownID = this.props.name.replace(/ /g, '-') + '-dropdown'
     let DropdownItems = options.map((option, index) => {
-      const idName = this.props.name + '-' + option.replace(' ', '-')
+      const idName = this.props.name + '-' + option.replace(/ /g, '-')
       return <DropdownItem key={index} id={idName} onClick={() => this.selectFilter(this.props.name, option)}>{option}</DropdownItem>
     })
     return (

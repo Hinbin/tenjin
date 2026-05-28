@@ -1,36 +1,36 @@
 // Place all the styles related to the dashboard controller here.
 // They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/ 
+// You can use Sass (SCSS) here: http://sass-lang.com/
 
-.table-hover > tbody> tr:hover{
+.table-hover > tbody > tr:hover {
   background-color: #ef4035;
   transition: background-color 0.3s linear;
 }
 
-.homework-image{
+.homework-image {
   @include media-breakpoint-up(lg) {
-    background-attachment: fixed !important;    
+    background-attachment: fixed !important;
   }
   background-size: cover !important;
-  background-position: center !important; 
+  background-position: center !important;
   color: white;
 }
 
-.homework-table{
-  background-color:rgba(0, 0, 0, 0.3)
+.homework-table {
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
-#newQuiz{
+#newQuiz {
   background-color: white;
 }
 
-hr.primary{    
+hr.primary {
   @extend %hr, .primary-shared;
 }
 
-.dashboard-style{
+.dashboard-style {
   background-size: cover !important;
-  background-position: center !important; 
+  background-position: center !important;
 }
 
 .subject-carousel-item-text {

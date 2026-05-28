@@ -7,6 +7,7 @@ class LiveLeaderboardStore extends EventEmitter {
   constructor() {
     super();
     this.loading = true;
+    this.currentLeaderboard = {};
     this.initialLeaderboard = {};
     this.weeklyLeaderboard = {};
     this.allTimeLeaderboard = {};
@@ -14,7 +15,7 @@ class LiveLeaderboardStore extends EventEmitter {
     this.awards = {};
     this.name = "";
     this.currentFilters = [];
-    this.filters = [];
+    this.filters = {};
     this.schools = {};
     this.classrooms = {};
     this.user = {};
@@ -31,7 +32,8 @@ class LiveLeaderboardStore extends EventEmitter {
     this.school_group = $(".jsVars[data-school_group-name]").attr(
       "data-school_group-name",
     );
-    this.topic = $(".jsVars[data-topic-id]").attr("data-topic-id");
+    const topicAttr = $(".jsVars[data-topic-id]").attr("data-topic-id");
+    this.topic = topicAttr !== undefined ? parseInt(topicAttr, 10) : undefined;
   }
 
   listenToLeaderboard() {
@@ -54,11 +56,8 @@ class LiveLeaderboardStore extends EventEmitter {
         // Called when the subscription has been terminated by the server
 
         received(data) {
-          // If this isn't for the topic being shown, return and do nothing
-          if (this.topic === undefined) {
-            lb.leaderboardChange(data, "ALL");
-          } else if (data.topic === this.topic) {
-            lb.leaderboardChange(data, "TOPIC");
+          if (lb.topic === undefined || data.topic === lb.topic) {
+            lb.leaderboardChange(data);
           }
         },
       },
@@ -84,6 +83,7 @@ class LiveLeaderboardStore extends EventEmitter {
       type: "GET",
       url: path,
       success: (result) => {
+        this.loading = false;
         this.processLeaderboardLoad(result);
         this.processScores();
         this.processFilterLoad(result);
@@ -143,7 +143,7 @@ class LiveLeaderboardStore extends EventEmitter {
     const classroomArray = [];
 
     classroomArray.push("All");
-    this.classrooms.map((classroom) => {
+    this.classrooms.forEach((classroom) => {
       classroomArray.push(classroom);
     });
 
@@ -155,7 +155,7 @@ class LiveLeaderboardStore extends EventEmitter {
 
     if (this.schools.length > 1) {
       schoolArray.push("All");
-      this.schools.map((school) => {
+      this.schools.forEach((school) => {
         schoolArray.push(school);
       });
 
@@ -261,6 +261,7 @@ class LiveLeaderboardStore extends EventEmitter {
       setTimeout(() => {
         this.leaderboardChange(data);
       }, 1000);
+      return;
     }
 
     let score = data.subject_score;

@@ -22,7 +22,7 @@ $(document).on("turbolinks:load", () => {
 
     $(".reload-page").on("change", (target) => {
       const currentPath = window.location.href.split("?")[0];
-      $("input[name=authenticity_token").remove();
+      $("input[name=authenticity_token]").remove();
       const form = $("#questionForm");
       const formParams = form.serialize();
       Turbolinks.visit(currentPath + "?" + formParams);
@@ -76,7 +76,7 @@ function validateAndSave(successCallback, updatePath) {
   }
 }
 
-function saveQuestionText(successCallback, updatePath) {
+export function saveQuestionText(successCallback, updatePath) {
   const questionText = $("#question_question_text").val();
 
   $.ajax({
@@ -89,6 +89,6 @@ function saveQuestionText(successCallback, updatePath) {
       );
     },
     data: { question: { question_text: questionText } },
-    success: successCallback(),
+    success: successCallback,
   });
 }

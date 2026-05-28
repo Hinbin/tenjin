@@ -69,5 +69,9 @@ Entry.propTypes = {
   name: PropTypes.string,
   score: PropTypes.number,
   school: PropTypes.string,
-  lastChanged: PropTypes.bool
+  school_name: PropTypes.string,
+  classroom_names: PropTypes.arrayOf(PropTypes.string),
+  icon: PropTypes.string,
+  awards: PropTypes.number,
+  lastChanged: PropTypes.bool,
 }

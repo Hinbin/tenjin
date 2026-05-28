@@ -11,18 +11,18 @@
  * It is generally better to create a new file per style scope.
  *
  */
- @import url('https://fonts.googleapis.com/css?family=Raleway:300,900,900i');
- @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,900;1,400;1,900&display=swap');
- 
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,900,900i");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,900;1,400;1,900&display=swap");
+
 @import "bootstrap";
 @import "~bootstrap/scss/bootstrap";
-@import '@fortawesome/fontawesome-free';
-@import 'pages';
-@import 'dashboard';
-@import 'actiontext';
-@import 'trix/dist/trix';
-@import 'leaderboard';
-@import 'shepherd';
+@import "@fortawesome/fontawesome-free";
+@import "pages";
+@import "dashboard";
+@import "actiontext";
+@import "trix/dist/trix";
+@import "leaderboard";
+@import "shepherd";
 
 .navbar-dark .nav-item .nav-link {
   color: theme-color("light");
@@ -30,12 +30,12 @@
 
 a {
   color: #212529;
-  text-decoration: none
+  text-decoration: none;
 }
 
 a:hover {
   color: grey;
-  text-decoration: none
+  text-decoration: none;
 }
 
 .spinner {
@@ -46,7 +46,8 @@ a:hover {
   margin: 100px auto;
 }
 
-.double-bounce1, .double-bounce2 {
+.double-bounce1,
+.double-bounce2 {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -55,28 +56,35 @@ a:hover {
   position: absolute;
   top: 0;
   left: 0;
-  
-  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
-  animation: sk-bounce 2.0s infinite ease-in-out;
+
+  -webkit-animation: sk-bounce 2s infinite ease-in-out;
+  animation: sk-bounce 2s infinite ease-in-out;
 }
 
 .double-bounce2 {
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s;
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
 }
 
 @-webkit-keyframes sk-bounce {
-  0%, 100% { -webkit-transform: scale(0.0) }
-  50% { -webkit-transform: scale(1.0) }
+  0%,
+  100% {
+    -webkit-transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
 }
 
 @keyframes sk-bounce {
-  0%, 100% { 
-    transform: scale(0.0);
-    -webkit-transform: scale(0.0);
-  } 50% { 
-    transform: scale(1.0);
-    -webkit-transform: scale(1.0);
+  0%,
+  100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
   }
 }
 .score-changed {
@@ -85,27 +93,39 @@ a:hover {
 }
 
 @-webkit-keyframes flash {
-  0%  {background-color:inherit};
-  50% {background-color:red};
-  100%{background-color:inherit};
+  0% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: inherit;
+  }
 }
 
 @keyframes flash {
-  0%  {background-color:inherit};
-  50% {background-color:red};
-  100%{background-color:inherit};
+  0% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: inherit;
+  }
 }
 
 .incorrect-answer {
   background-color: darkred !important;
   color: white !important;
-  opacity: 1.0 !important;
+  opacity: 1 !important;
 }
 
 .correct-answer {
   background-color: darkgreen !important;
   color: white !important;
-  opacity: 1.0 !important;
+  opacity: 1 !important;
 }
 
 .question-button {
@@ -137,24 +157,44 @@ hr.secondary {
   border-color: white;
 }
 
-.page-section
-{
+.page-section {
   padding-top: 3.25rem;
   padding-bottom: 3.25rem;
 }
 
-.page-section-header
-{
+.page-section-header {
   font-size: 3rem;
   @include media-breakpoint-down(sm) {
     font-size: 2rem;
   }
 }
 
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   margin-bottom: 0.5rem;
-  font-family: "Raleway", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family:
+    "Raleway",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
   font-weight: 900;
   line-height: 1.2;
   color: inherit;
@@ -173,15 +213,17 @@ h1#branding-text {
   min-height: 66px;
 }
 
-#navbar-btn {  
+#navbar-btn {
   @include media-breakpoint-up(md) {
     font-size: 2rem;
   }
 }
 
-h1, h3, #branding-text, .fa-2x {
+h1,
+h3,
+#branding-text,
+.fa-2x {
   font-size: 2rem;
-
 }
 
 .navbar {
@@ -196,10 +238,21 @@ h1, h3, #branding-text, .fa-2x {
 body {
   font-size: 1.25rem;
   font-weight: 300;
-  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family:
+    "Roboto",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
 }
 
 .error {
-  @extend .text-danger
+  @extend .text-danger;
 }
-

@@ -15,9 +15,15 @@ class Filters extends React.Component {
     }
   }
 
-  componentDidUpdate (prevProps, prevState, snapshot) {
-    if (this.props.currentFilters !== prevProps.currentFilters) {
-      this.setState(this.props)
+  componentDidUpdate (prevProps) {
+    if (
+      this.props.currentFilters !== prevProps.currentFilters ||
+      this.props.filters !== prevProps.filters
+    ) {
+      this.setState({
+        filters: this.props.filters,
+        currentFilters: this.props.currentFilters,
+      })
     }
   }
 
@@ -33,8 +39,7 @@ class Filters extends React.Component {
     let filterArray = []
 
     // Display all filters that are currently defined.
-    for (let i in filters) {
-      let filter = filters[i]
+    for (const filter of Object.values(filters)) {
       let selected = currentFilters.filter((selectedFilter) => {
         return selectedFilter.name === filter.name
       })[0]
@@ -53,8 +58,8 @@ class Filters extends React.Component {
 }
 
 Filters.propTypes = {
-  getFilters: PropTypes.func,
-  selectFilter: PropTypes.func
+  filters: PropTypes.object.isRequired,
+  currentFilters: PropTypes.array.isRequired,
 }
 
 export default Filters

@@ -9,7 +9,7 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.element.removeEventListener("blur", this.onBlur);
+    this.element.removeEventListener("blur", this.onBlur, true);
     this.element.removeEventListener("submit", this.onSubmit);
     this.element.removeEventListener("ajax:beforeSend", this.onSubmit);
   }
