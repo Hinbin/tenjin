@@ -231,7 +231,9 @@ RSpec.describe "Author edits a question", :default_creates, :js do
 
         it "deletes an existing answer" do
           visit(question_path(question))
-          expect { find("#table-answers tr:first-child .btn-danger").click }.to change(Answer, :count).by(-1)
+          initial_count = all("#table-answers tbody tr").count
+          find("#table-answers tr:first-child .btn-danger").click
+          expect(page).to have_css("#table-answers tbody tr", count: initial_count - 1)
         end
       end
     end
