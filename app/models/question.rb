@@ -14,6 +14,10 @@ class Question < ApplicationRecord
 
   enum question_type: {short_answer: 0, boolean: 1, multiple: 2}
 
+  def self.counts_by_subject
+    joins(topic: :subject).group("topics.subject_id").count
+  end
+
   before_update :check_boolean
   before_update :check_short_answer
 

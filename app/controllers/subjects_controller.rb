@@ -4,13 +4,8 @@ class SubjectsController < ApplicationController
   before_action :authenticate_admin!
 
   def index
-    @subjects = policy_scope(Subject).order(:name).where(active: true)
-    @deactivated_subjects = Subject.where(active: false)
-    all_subject_ids = (@subjects + @deactivated_subjects).map(&:id)
-    @question_counts = Question.joins(topic: :subject)
-      .where(topics: {subject_id: all_subject_ids})
-      .group("topics.subject_id")
-      .count
+    @subjects, @deactivated_subjects = policy_scope(Subject).order(:name).partition(&:active?)
+    @question_counts = Question.counts_by_subject
     @subject_statistics = @subjects.each_with_object({}) do |subject, h|
       h[subject.id] = Subject::CompileSubjectStatistics.call(subject)
     end
