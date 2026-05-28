@@ -13,7 +13,7 @@ class QuizzesController < ApplicationController
   def show
     @quiz = authorize find_quiz
     @question = question_for_quiz(@quiz)
-    @multiplier = Multiplier.where(score: ..@quiz.streak).last
+    @multiplier = Multiplier.for_streak(@quiz.streak)
     @percent_complete = (@quiz.num_questions_asked / @quiz.questions.length.to_f) * 100.to_f
     @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
     @lesson = lesson_for_question(@question)
@@ -43,7 +43,7 @@ class QuizzesController < ApplicationController
       @topics = @subject.topics.where(active: true)
         .order(:name)
         .pluck(:name, :id)
-      @topics.prepend(["Lucky Dip", "Lucky Dip"])
+      @topics.prepend([Quiz::LUCKY_DIP, Quiz::LUCKY_DIP])
       render "select_topic"
     end
   end

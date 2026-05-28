@@ -6,45 +6,48 @@ class School::CompileSchoolStatistics < ApplicationService
   end
 
   def call
-    compile_asked_questions
-    compile_homeworks_completed
-    compile_customisation_unlocks
-    OpenStruct.new(success?: true,
-      asked_questions: @a_q,
-      asked_questions_weekly: @a_q_w,
-      homeworks_completed: @h_c,
-      homeworks_completed_weekly: @h_c_w,
-      customisation_unlocks: @c_u,
-      customisation_unlocks_weekly: @c_u_w)
+    OpenStruct.new(
+      success?: true,
+      asked_questions: asked_questions_total,
+      asked_questions_weekly: asked_questions_weekly,
+      homeworks_completed: homeworks_completed_total,
+      homeworks_completed_weekly: homeworks_completed_weekly,
+      customisation_unlocks: customisation_unlocks_total,
+      customisation_unlocks_weekly: customisation_unlocks_weekly
+    )
   end
 
-  def compile_asked_questions
-    @a_q = UserStatistic
-    @a_q = @a_q.joins(user: :school).where(users: {school: @school}) if @school.present?
-    @a_q = @a_q.sum(:questions_answered)
+  private
 
-    @a_q_w = UserStatistic
-    @a_q_w = @a_q_w.joins(user: :school).where(users: {school: @school}) if @school.present?
-    @a_q_w = @a_q_w.where(week_beginning: Date.current.beginning_of_week).sum(:questions_answered)
+  def school_scope(relation)
+    return relation unless @school.present?
+
+    relation.joins(user: :school).where(users: {school: @school})
   end
 
-  def compile_homeworks_completed
-    @h_c = HomeworkProgress.where(completed: true)
-    @h_c = @h_c.joins(user: :school).where(users: {school: @school}) if @school.present?
-    @h_c = @h_c.count
-
-    @h_c_w = HomeworkProgress.where(completed: true, updated_at: Date.current.beginning_of_week..Date.current)
-    @h_c_w = @h_c_w.joins(user: :school).where(users: {school: @school}) if @school.present?
-    @h_c_w = @h_c_w.count
+  def asked_questions_total
+    school_scope(UserStatistic).sum(:questions_answered)
   end
 
-  def compile_customisation_unlocks
-    @c_u = CustomisationUnlock
-    @c_u = @c_u.joins(user: :school).where(users: {school: @school}) if @school.present?
-    @c_u = @c_u.count
+  def asked_questions_weekly
+    school_scope(UserStatistic)
+      .where(week_beginning: Date.current.beginning_of_week)
+      .sum(:questions_answered)
+  end
 
-    @c_u_w = CustomisationUnlock.where(updated_at: Date.current.beginning_of_week..Date.current)
-    @c_u_w = @c_u_w.joins(user: :school).where(users: {school: @school}) if @school.present?
-    @c_u_w = @c_u_w.count
+  def homeworks_completed_total
+    school_scope(HomeworkProgress.where(completed: true)).count
+  end
+
+  def homeworks_completed_weekly
+    school_scope(HomeworkProgress.where(completed: true, updated_at: Date.current.beginning_of_week..Time.current)).count
+  end
+
+  def customisation_unlocks_total
+    school_scope(CustomisationUnlock).count
+  end
+
+  def customisation_unlocks_weekly
+    school_scope(CustomisationUnlock.where(updated_at: Date.current.beginning_of_week..Time.current)).count
   end
 end

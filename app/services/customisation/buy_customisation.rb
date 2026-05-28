@@ -15,11 +15,15 @@ class Customisation::BuyCustomisation < ApplicationService
       return error_openstruct("You do not have enough points") unless funds_present?
 
       unlock.user = @user
-      deduct_challenge_points
     end
-    destroy_old_active_customisation
-    create_new_active_customisation
-    unlock.save!
+
+    ApplicationRecord.transaction do
+      deduct_challenge_points if unlock.new_record?
+      destroy_old_active_customisation
+      create_new_active_customisation
+      unlock.save!
+    end
+
     OpenStruct.new(success?: true, user: @user, errors: nil)
   end
 

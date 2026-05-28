@@ -13,11 +13,9 @@ class Challenge::ProcessExpiredChallenges < ApplicationService
   protected
 
   def delete_challenge_progresses
-    @expired_challenges.each do |c|
-      completed_challenges = ChallengeProgress.where("challenge_id = ?", c)
-      Rails.logger.debug { "Removing... #{c.stringify}" }
-      completed_challenges.delete_all
-    end
+    ids = @expired_challenges.pluck(:id)
+    Rails.logger.debug { "Removing challenge progresses for expired challenges: #{ids}" }
+    ChallengeProgress.where(challenge_id: ids).delete_all
   end
 
   def delete_challenges

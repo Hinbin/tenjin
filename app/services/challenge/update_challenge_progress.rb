@@ -28,10 +28,10 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   end
 
   def award_challenge_points?
-    # Check if completed is true and awarded is false
-    return unless @result.rows[0][1] == true && @result.rows[0][2] == false
+    id, completed, awarded = @result.rows[0]
+    return unless completed == true && awarded == false
 
-    complete_challenge(ChallengeProgress.find(@result.rows[0][0]))
+    complete_challenge(ChallengeProgress.find(id))
   end
 
   def upsert_progress(progress, challenge)

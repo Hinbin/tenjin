@@ -17,7 +17,7 @@ class Quiz::CheckAnswer < ApplicationService
       answer: Answer.where(question: @question, correct: true),
       streak: @quiz.streak,
       answeredCorrect: @quiz.answered_correct,
-      multiplier: Multiplier.where(score: ..@quiz.streak).order(score: :desc).pick(:multiplier)
+      multiplier: Multiplier.for_streak(@quiz.streak)
     }
   end
 

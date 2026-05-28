@@ -13,6 +13,7 @@ class School::AddSchool < ApplicationService
     school_from_client = client.schools.get(@school_id)
     school = School.from_wonde(school_from_client, @client_token)
     school.permitted = true
+    school.save!
     school
   end
 end

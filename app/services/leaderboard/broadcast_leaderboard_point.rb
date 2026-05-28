@@ -31,7 +31,7 @@ class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
       topic: @topic.id,
       topic_score: @topic_score,
       subject_score: @subject_score,
-      classroom_names: @user.classrooms.all.pluck(:name)
+      classroom_names: @user.classrooms.pluck(:name)
     }
   end
 

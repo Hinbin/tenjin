@@ -38,11 +38,8 @@ class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
 
   def create_winners_for_top_scoring_students(leaderboard, classroom)
     top_score = leaderboard[0].score
-    i = 0
-    while leaderboard[i].present? && leaderboard[i].score == top_score
-      user_id = leaderboard[i][:id]
-      ClassroomWinner.create(classroom: classroom, user: User.find(user_id), score: top_score)
-      i += 1
+    top_scorers(leaderboard).each do |entry|
+      ClassroomWinner.create(classroom: classroom, user_id: entry.id, score: top_score)
     end
   end
 
@@ -58,12 +55,14 @@ class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
   end
 
   def create_awards_for_top_scoring_students(leaderboard, subject, school)
-    top_score = leaderboard[0].score
-    i = 0
-    while leaderboard[i].present? && leaderboard[i].score == top_score
-      LeaderboardAward.create(school: school, subject: subject, user: leaderboard[i])
-      i += 1
+    top_scorers(leaderboard).each do |entry|
+      LeaderboardAward.create(school: school, subject: subject, user_id: entry.id)
     end
+  end
+
+  def top_scorers(leaderboard)
+    top_score = leaderboard.first.score
+    leaderboard.take_while { |entry| entry.score == top_score }
   end
 
   def copy_points_to_all_time_scores

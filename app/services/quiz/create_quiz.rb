@@ -7,7 +7,7 @@ class Quiz::CreateQuiz < ApplicationService
     @topic_id = params[:topic]
     @subject = params[:subject]
     @lesson = (Lesson.find(params[:lesson]) if params[:lesson].present?)
-    @lucky_dip = @topic_id == "Lucky Dip"
+    @lucky_dip = @topic_id == Quiz::LUCKY_DIP
     @topic = Topic.find(@topic_id) unless @lucky_dip
     @quiz = Quiz.new
   end
@@ -55,7 +55,7 @@ class Quiz::CreateQuiz < ApplicationService
       subject_questions
     end
     @quiz.questions = questions
-    @quiz.question_order = @quiz.questions.map(&:id).shuffle
+    @quiz.question_order = questions.map(&:id).shuffle
   end
 
   def lucky_dip_questions
@@ -99,7 +99,7 @@ class Quiz::CreateQuiz < ApplicationService
   end
 
   def subject_questions
-    Question.where(active: true, topic: @topic_id)
+    Question.where(active: true, topic: @topic)
       .includes(:topic)
       .order(Arel.sql("RANDOM()"))
       .take(10)

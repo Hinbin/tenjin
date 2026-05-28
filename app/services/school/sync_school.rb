@@ -11,7 +11,7 @@ class School::SyncSchool < ApplicationService
 
   def call
     # Assume timed out if more than two minutes syncing.  Adjust or put as env var?
-    return if @school.sync_status == "syncing" && (Time.current - @school.updated_at) < 240
+    return if @school.syncing? && (Time.current - @school.updated_at) < 240
 
     @school.start_sync
     fetch_class_data

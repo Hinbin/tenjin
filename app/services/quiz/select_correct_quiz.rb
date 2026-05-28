@@ -7,7 +7,7 @@ class Quiz::SelectCorrectQuiz < ApplicationService
   end
 
   def call
-    if @quizzes.length.zero?
+    if @quizzes.empty?
       "/quizzes/new"
     elsif @quizzes.length == 1
       @quizzes.first

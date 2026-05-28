@@ -4,7 +4,7 @@
 class Leaderboard::BuildLeaderboard < ApplicationService
   def initialize(user, params)
     @user = user if user.present?
-    @subject = Subject.where(name: params[:id]).first
+    @subject = Subject.find_by(name: params[:id])
     @topic = params[:topic]
     @school = params[:school]
     @school_group = true if @user.present? && @user.school.school_group_id.present? && params[:school_group] == "true"
