@@ -12,7 +12,7 @@ class SchoolGroupPolicy < ApplicationPolicy
     end
 
     def resolve
-      return nil unless user.super? || user.school_group?
+      return scope.none unless user.super? || user.school_group?
 
       scope.all
     end
