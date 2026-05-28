@@ -25,7 +25,6 @@ class Quiz::CreateQuiz < ApplicationService
     initialise_questions
     return OpenStruct.new(success?: false, errors: "No questions are available for this topic") if @quiz.questions.empty?
 
-    check_if_quiz_counts_for_leaderboard
     @quiz.save!
     @user.time_of_last_quiz = Time.current
     @user.save!
@@ -56,7 +55,7 @@ class Quiz::CreateQuiz < ApplicationService
       subject_questions
     end
     @quiz.questions = questions
-    @quiz.question_order = @quiz.questions.shuffle.pluck(:id)
+    @quiz.question_order = @quiz.questions.map(&:id).shuffle
   end
 
   def lucky_dip_questions

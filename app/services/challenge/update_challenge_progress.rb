@@ -86,7 +86,7 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   def topic_matches_quiz?(challenge)
     challenge.topic == @quiz.topic ||
       challenge.topic == @question_topic ||
-      (challenge.daily && challenge.topic.subject == @question_topic.subject)
+      (@question_topic.present? && challenge.daily && challenge.topic.subject == @question_topic.subject)
   end
 
   def challenges
@@ -94,18 +94,6 @@ class Challenge::UpdateChallengeProgress < ApplicationService
       .includes(topic: :subject)
       .where(topics: {subject_id: @quiz.subject})
       .where("end_date > ?", Time.current)
-  end
-
-  def check_number_correct(challenge)
-    return 0 unless @quiz.topic == challenge.topic
-
-    @quiz.answered_correct
-  end
-
-  def check_streak(challenge)
-    return 0 unless @quiz.topic == challenge.topic
-
-    @quiz.streak
   end
 
   def complete_challenge(progress)

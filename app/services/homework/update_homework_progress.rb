@@ -6,11 +6,11 @@ class Homework::UpdateHomeworkProgress < ApplicationService
   end
 
   def call
-    completed_homework = false
+    @completed_homework = false
     homework_progresses.find_each do |progress|
       check_percentage_correct(progress)
     end
-    OpenStruct.new(success?: true, completed?: completed_homework, errors: nil)
+    OpenStruct.new(success?: true, completed?: @completed_homework, errors: nil)
   end
 
   protected
@@ -28,7 +28,10 @@ class Homework::UpdateHomeworkProgress < ApplicationService
   def check_progress_percentage(percentage, progress)
     percentage *= 100
     progress.progress = percentage if percentage > progress.progress
-    progress.completed = true if progress.progress >= progress.homework.required && progress.completed == false
+    if progress.progress >= progress.homework.required && !progress.completed
+      progress.completed = true
+      @completed_homework = true
+    end
     progress.save if progress.changed?
   end
 end

@@ -6,17 +6,15 @@ class School::SyncSchool < ApplicationService
   def initialize(school)
     @school = school
     @client = Wonde::Client.new(school.token)
-    @school_from_client = @client.schools.get(school.client_id)
     @school_api = @client.school(school.client_id)
   end
 
   def call
     # Assume timed out if more than two minutes syncing.  Adjust or put as env var?
-    return if @school.sync_status == "syncing" && (Time.current - School.first.updated_at) < 240
+    return if @school.sync_status == "syncing" && (Time.current - @school.updated_at) < 240
 
     @school.start_sync
     fetch_class_data
-    fetch_deletion_data
     @school.finish_sync
   end
 
@@ -27,10 +25,6 @@ class School::SyncSchool < ApplicationService
       @sync_data = data
       sync_all_data
     end
-  end
-
-  def fetch_deletion_data
-    @deletion_data = @school_api.deletions.all
   end
 
   def sync_all_data

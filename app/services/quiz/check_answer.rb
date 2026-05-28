@@ -17,14 +17,14 @@ class Quiz::CheckAnswer < ApplicationService
       answer: Answer.where(question: @question, correct: true),
       streak: @quiz.streak,
       answeredCorrect: @quiz.answered_correct,
-      multiplier: Multiplier.where(score: ..@quiz.streak).order(id: :desc).pick(:multiplier)
+      multiplier: Multiplier.where(score: ..@quiz.streak).order(score: :desc).pick(:multiplier)
     }
   end
 
   protected
 
   def already_answered?
-    @asked_question.correct.present?
+    !@asked_question.correct.nil?
   end
 
   def check_answer_correct
@@ -50,7 +50,7 @@ class Quiz::CheckAnswer < ApplicationService
     raise "no valid answer given to multiple choice" if @answer_given[:id].blank?
 
     answer = Answer.where(id: @answer_given[:id]).pick(:correct)
-    return if answer.blank?
+    return if answer.nil?
 
     if answer
       process_correct_answer

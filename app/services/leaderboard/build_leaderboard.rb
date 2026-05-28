@@ -92,19 +92,19 @@ class Leaderboard::BuildLeaderboard < ApplicationService
   def join_leaderboard_icons
     @query = @query.join(leaderboard_icon_subquery, Arel::Nodes::OuterJoin)
       .on(leaderboard_icon_subquery[:user_id].eq(users[:id]))
-    @query.group("n1.value")
+    @query = @query.group("n1.value")
   end
 
   def join_classrooms
     @query = @query.join(classrooms_subquery, Arel::Nodes::OuterJoin)
       .on(classrooms_subquery[:user_id].eq(users[:id]))
-    @query.group("n2.name")
+    @query = @query.group("n2.name")
   end
 
   def join_awards
     @query = @query.join(awards_subquery, Arel::Nodes::OuterJoin)
       .on(awards_subquery[:user_id].eq(users[:id]))
-    @query.group("n3.awards")
+    @query = @query.group("n3.awards")
   end
 
   def users_and_schools

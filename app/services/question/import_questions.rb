@@ -72,7 +72,7 @@ class Question::ImportQuestions < ApplicationService
     return raise_error("Answers for question not in array") unless answers.respond_to? :each
 
     answers.each do |a|
-      return raise_error("Text key missing for answer") if a.key?("body")
+      return raise_error("Text key missing for answer") unless a.key?("text")
     end
 
     true

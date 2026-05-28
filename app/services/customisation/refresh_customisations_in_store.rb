@@ -5,7 +5,7 @@ class Customisation::RefreshCustomisationsInStore < ApplicationService
     disable_all_customisations
     make_six_purchasable("dashboard_style")
     make_six_purchasable("leaderboard_icon")
-    OpenStruct.new(success?: true, user: @user, errors: nil)
+    OpenStruct.new(success?: true, errors: nil)
   end
 
   def disable_all_customisations
