@@ -2,13 +2,14 @@ h3.h3 =role.humanize
 .table-responsive
   table.table id="#{role}-table"
     thead
-      th Name
-      th Username
-      - if role == 'school_admin'
-        th School
-      - else
-        th Subject
-      th Remove
+      tr
+        th Name
+        th Username
+        - if role == 'school_admin'
+          th School
+        - else
+          th Subject
+        th Remove
     tbody
       - role_collection.uniq.each do |r|
         tr

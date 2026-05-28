@@ -3,10 +3,11 @@ hr.small.mb-5.primary-red
 .col.table-responsive
   table.table#employees-table
     thead
-      th Name
-      th Username
-      th.d-none.d-lg-block Classes
-      th Reset Password?
+      tr
+        th Name
+        th Username
+        th.d-none.d-lg-block Classes
+        th Reset Password?
     tbody
       - @employees.each do |e|
         tr.employee-row data-id=e.id

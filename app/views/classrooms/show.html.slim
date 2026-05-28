@@ -26,11 +26,12 @@
     .row.justify-content-center
       table.table#students-table style="width:100%"
         thead
-          th First Name
-          th Last Name
-          th Username
-          th.password-col.d-none Reset Password
-          th Homeworks
+          tr
+            th First Name
+            th Last Name
+            th Username
+            th.password-col.d-none Reset Password
+            th Homeworks
         tbody
           -@students.each do |s|
             tr.student-data data-id=s.id

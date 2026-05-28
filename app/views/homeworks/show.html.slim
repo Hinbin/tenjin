@@ -19,9 +19,10 @@ section.page-section.text-center.pt-2#StudentProgress
     .row.col
       table.table
         thead
-          th Name
-          th Complete?
-          th Progress
+          tr
+            th Name
+            th Complete?
+            th Progress
         tbody
           - @homework_progress.each do |h|
             tr.student-row data-user=h.user.id
