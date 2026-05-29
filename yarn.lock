@@ -3420,6 +3420,11 @@ core-js-compat@^3.31.0, core-js-compat@^3.36.1:
   dependencies:
     browserslist "^4.23.0"
 
+core-js@3:
+  version "3.49.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.49.0.tgz#8b4d520ac034311fa21aa616f017ada0e0dbbddd"
+  integrity sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==
+
 core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
