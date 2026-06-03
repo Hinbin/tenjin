@@ -2,36 +2,16 @@
 
 require 'rails_helper'
 
+# JS-only Selenium smoke tests for lesson viewing flows.
+# Non-interactive tests have been converted to spec/requests/lessons_request_spec.rb.
 RSpec.describe 'User views lessons', :vcr, type: :system, js: true, default_creates: true do
-  let(:lesson) { create(:lesson, topic: topic) }
+  let(:lesson) { create(:lesson, topic:) }
 
   context 'when a student' do
-    let(:second_subject) { create(:subject) }
-    let(:second_topic) { create(:topic, subject: second_subject) }
-    let(:not_enrolled_lesson) { create(:lesson, topic: second_topic) }
-    let(:lesson_no_content) { create(:lesson, topic: topic, category: 'no_content', video_id: nil) }
-
     before do
       setup_subject_database
       sign_in student
       lesson
-    end
-
-    it 'shows videos for subjects I am enrolled for' do
-      visit(lessons_path)
-      expect(page).to have_css('.subject-title', text: lesson.subject.name)
-    end
-
-    it 'only shows videos for subjects I am enrolled for' do
-      not_enrolled_lesson
-      visit(lessons_path)
-      expect(page).to have_no_css('.subject-title', text: not_enrolled_lesson.subject.name)
-    end
-
-    it 'ignores lessons with no video link ' do
-      lesson_no_content
-      visit(lessons_path)
-      expect(page).to have_no_content(lesson_no_content.title)
     end
 
     it 'plays the video when clicked on' do
@@ -42,15 +22,15 @@ RSpec.describe 'User views lessons', :vcr, type: :system, js: true, default_crea
   end
 
   context 'when a teacher' do
-    let(:question) { create(:question, lesson: lesson, topic: topic) }
-    let(:answer) { create(:answer, question: question) }
+    let(:question) { create(:question, lesson:, topic:) }
+    let(:answer) { create(:answer, question:) }
 
     before do
       setup_subject_database
       sign_in teacher
       answer
       lesson
-      create(:enrollment, user: teacher, classroom: create(:classroom, school: school, subject: lesson.subject))
+      create(:enrollment, user: teacher, classroom: create(:classroom, school:, subject: lesson.subject))
       visit(lessons_path)
     end
 

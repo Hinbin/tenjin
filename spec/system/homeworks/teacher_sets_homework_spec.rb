@@ -2,6 +2,8 @@
 
 require 'rails_helper'
 
+# JS-only Selenium smoke tests for homework creation flows.
+# Non-interactive tests have been converted to spec/requests/homeworks_request_spec.rb.
 RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates: true do
   let(:classroom) { create(:classroom, subject:, school: teacher.school) }
   let(:flatpickr_one_week_from_now) do
@@ -30,11 +32,6 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
       visit(classroom_path(classroom.id))
       expect(page).to have_css('tr.homework-data td', text: topic.name)
     end
-
-    it 'alerts you if you have not got a classroom id' do
-      visit(new_homework_path)
-      expect(page).to have_current_path(dashboard_path)
-    end
   end
 
   context 'when viewing a homework' do
@@ -45,25 +42,9 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
       visit(homework_path(homework))
     end
 
-    it 'shows all the students that are assigned to the homework' do
-      expect(page).to have_css('tr.student-row', count: 10)
-    end
-
-    it 'shows the percentage of students that have completed the homework' do
-      HomeworkProgress.first.update_attribute(:completed, true)
-      visit(homework_path(homework))
-      expect(page).to have_content('10%')
-    end
-
     it 'allows the teacher to delete the homework' do
       click_link('Delete Homework')
       expect(page).to have_no_css('tr.homework-data td', text: topic.name)
-    end
-
-    it 'shows the progress towards completion' do
-      HomeworkProgress.first.update_attribute(:progress, 50)
-      visit(homework_path(homework))
-      expect(page).to have_content('50%')
     end
   end
 
@@ -75,9 +56,7 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
       create_list(:question, 10, lesson: lesson_different_topic, topic: second_topic)
     end
 
-    before do
-      lesson
-    end
+    before { lesson }
 
     it 'allows you to set a lesson specific homework' do
       ten_questions
@@ -116,13 +95,13 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
 
     it 'shows the lesson the homework was created for if available' do
       create_homework_for_lesson
-      find_by_id('flash-notice') # homework view page
+      find_by_id('flash-notice')
       expect(page).to have_content(lesson.title)
     end
 
     it 'shows the topic the lesson was created for' do
       create_homework
-      find_by_id('flash-notice') # homework view page
+      find_by_id('flash-notice')
       expect(page).to have_content(topic.name)
     end
   end
