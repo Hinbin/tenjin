@@ -1,8 +1,16 @@
-require: 
+require:
   - rubocop-rspec
   - rubocop-performance 
 
+inherit_from: .rubocop_todo.yml
+
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
+  TargetRubyVersion: 3.3
+  SuggestExtensions: false
   Exclude:
     - 'Gemfile'
     - 'db/**/*'
@@ -19,6 +27,8 @@ RSpec/NamedSubject:
   
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
+  Exclude:
+    - 'omniauth-wonde/lib/omniauth/strategies/wonde.rb'
 
 Style/FrozenStringLiteralComment:
   Exclude:
