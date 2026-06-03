@@ -22,8 +22,7 @@ RSpec.describe 'Author edits a question', :default_creates, :js, type: :system d
   end
 
   def switch_to_student_account
-    click_button('Logout')
-    find('button', text: 'LOGIN')
+    Capybara.reset_sessions!
     sign_in student
     visit dashboard_path
     find('h3', text: subject.name.upcase)
