@@ -69,7 +69,7 @@ RSpec.describe 'employee views a student record', :default_creates, type: :reque
     get user_path(student)
     html = Capybara.string(response.body)
     expect(response.body).to include(homework.topic.name)
-    expect(html).to have_css('svg.fa-times')
+    expect(html).to have_css('i.fa-times')
   end
 
   it 'shows recently completed homeworks' do
@@ -83,7 +83,7 @@ RSpec.describe 'employee views a student record', :default_creates, type: :reque
     homework_different_class
     get user_path(student)
     html = Capybara.string(response.body)
-    expect(html).to have_no_css("tr[data-homework='#{homework_different_class.id}'")
+    expect(html).to have_no_css("tr[data-homework='#{homework_different_class.id}']")
   end
 
   it 'does not allow resetting an employee password' do
@@ -165,7 +165,8 @@ RSpec.describe 'school admin views user list', :default_creates, type: :request 
     create(:enrollment, classroom:, user: teacher)
     create_list(:enrollment, 5, classroom:, school:)
     get users_path
-    expect(response.body).to include(User.where(role: 'student', school:).first.surname)
+    html = Capybara.string(response.body)
+    expect(html).to have_css('.student-row', text: User.where(role: 'student', school:).first.surname)
   end
 
   it 'does not show students that belong to another school' do

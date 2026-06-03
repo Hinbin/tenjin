@@ -54,34 +54,37 @@ RSpec.describe 'Admin manages customisations', :default_creates, type: :request 
 
     it 'shows currently available customisations' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('section.available-customisations .card', text: available_customisation.name.upcase)
+      expect(html).to have_css('section.available-customisations .dashboard-style',
+                               text: available_customisation.name)
     end
 
     it 'puts stickied customisations on top' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('section.available-customisations .card:nth-of-type(1)',
-                               text: sticky_customisation.name.upcase)
+      dashboard_styles = html.all('section.available-customisations .dashboard-style')
+      expect(dashboard_styles.first).to have_text(sticky_customisation.name)
     end
 
     it 'marks stickied customisations' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('section.available-customisations .card:nth-of-type(1)', text: 'STICKIED')
+      dashboard_styles = html.all('section.available-customisations .dashboard-style')
+      expect(dashboard_styles.first).to have_text('Stickied')
     end
 
     it 'puts unavailable customisations at the bottom' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('section.available-customisations .card:nth-of-type(3)',
-                               text: unavailable_customisation.name.upcase)
+      dashboard_styles = html.all('section.available-customisations .dashboard-style')
+      expect(dashboard_styles.last).to have_text(unavailable_customisation.name)
     end
 
     it 'marks unavailable customisations' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('section.available-customisations .card:nth-of-type(3)', text: 'UNAVAILABLE')
+      dashboard_styles = html.all('section.available-customisations .dashboard-style')
+      expect(dashboard_styles.last).to have_text('Unavailable')
     end
 
     it 'shows retired customisations in their own section' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('section.retired-customisations .card', text: retired_customisation.name.upcase)
+      expect(html).to have_css('section.retired-customisations .dashboard-style', text: retired_customisation.name)
     end
 
     it 'allows editing a customisation' do
@@ -96,7 +99,7 @@ RSpec.describe 'Admin manages customisations', :default_creates, type: :request 
     it 'updates the name' do
       patch customisation_path(available_customisation), params: { customisation: { name: new_name } }
       follow_redirect!
-      expect(response.body).to include(new_name.upcase)
+      expect(response.body).to include(new_name)
     end
 
     it 'updates the value' do
@@ -108,7 +111,7 @@ RSpec.describe 'Admin manages customisations', :default_creates, type: :request 
 
     it 'updates the picture' do
       patch customisation_path(available_customisation), params: {
-        customisation: { image: fixture_file_upload('files/computer-science.jpg', 'image/jpeg') }
+        customisation: { image: fixture_file_upload('computer-science.jpg', 'image/jpeg') }
       }
       expect(available_customisation.reload.image).to be_attached
     end
@@ -116,13 +119,13 @@ RSpec.describe 'Admin manages customisations', :default_creates, type: :request 
     it 'updates if it is sticky' do
       patch customisation_path(available_customisation), params: { customisation: { sticky: true } }
       follow_redirect!
-      expect(response.body).to include('STICKIED')
+      expect(response.body).to include('Stickied')
     end
 
     it 'updates if it is purchasable' do
       patch customisation_path(available_customisation), params: { customisation: { purchasable: false } }
       follow_redirect!
-      expect(response.body).to include('UNAVAILABLE')
+      expect(response.body).to include('Unavailable')
     end
   end
 
@@ -135,11 +138,11 @@ RSpec.describe 'Admin manages customisations', :default_creates, type: :request 
           cost: 200,
           purchasable: false,
           retired: false,
-          image: fixture_file_upload('files/game-pieces.jpg', 'image/jpeg')
+          image: fixture_file_upload('game-pieces.jpg', 'image/jpeg')
         }
       }
       follow_redirect!
-      expect(response.body).to include(new_name.upcase)
+      expect(response.body).to include(new_name)
     end
   end
 
@@ -161,7 +164,8 @@ RSpec.describe 'Admin manages customisations', :default_creates, type: :request 
   end
 
   it 'prevents accessing customisations as a regular user' do
-    sign_in school_admin
+    sign_out super_admin
+    sign_in student
     get customisations_path
     expect(response).to redirect_to(new_admin_session_path)
   end

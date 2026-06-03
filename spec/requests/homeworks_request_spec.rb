@@ -33,7 +33,7 @@ RSpec.describe 'Homeworks', :default_creates, type: :request do
     end
 
     it 'shows the percentage of students that have completed the homework' do
-      HomeworkProgress.first.update_attribute(:completed, true)
+      homework.homework_progresses.first.update_attribute(:completed, true)
       get homework_path(homework)
       expect(response.body).to include('10%')
     end
@@ -44,7 +44,7 @@ RSpec.describe 'Homeworks', :default_creates, type: :request do
     end
 
     it 'shows the progress towards completion' do
-      HomeworkProgress.first.update_attribute(:progress, 50)
+      homework.homework_progresses.first.update_attribute(:progress, 50)
       get homework_path(homework)
       expect(response.body).to include('50%')
     end

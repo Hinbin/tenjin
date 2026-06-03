@@ -89,7 +89,7 @@ class QuestionsController < ApplicationController
 
     data = File.read(params[:file])
     result = Question::ImportQuestions.call(data, @topic, params[:file].original_filename)
-    flash[:notice] = result.error
+    flash[:notice] = result.error unless result.success?
     redirect_to topic_path(@topic)
   end
 

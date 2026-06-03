@@ -6,7 +6,7 @@ class LessonPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.includes(:topic)
-           .where(topics: { subject_id: user.subjects })
+           .where(topics: { subject_id: user.subject_ids })
     end
   end
 

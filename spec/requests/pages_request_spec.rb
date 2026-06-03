@@ -10,8 +10,9 @@ RSpec.describe 'Pages', :default_creates, type: :request do
       expect(response.body).to include('Login')
     end
 
-    it 'has TENJIN content' do
-      expect(response.body).to include('TENJIN')
+    it 'has Tenjin content' do
+      html = Capybara.string(response.body)
+      expect(html).to have_css('#branding-text', text: 'Tenjin')
     end
 
     it 'has an About link' do
@@ -24,10 +25,11 @@ RSpec.describe 'Pages', :default_creates, type: :request do
     end
   end
 
-  it 'redirects to dashboard if already signed in' do
+  it 'renders the dashboard if already signed in' do
     sign_in student
     get root_path
-    expect(response).to redirect_to(dashboard_path)
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include('Start a Quiz')
   end
 
   context 'when looking at the about page' do
@@ -41,9 +43,9 @@ RSpec.describe 'Pages', :default_creates, type: :request do
       expect(html).to have_css('#standardAbout')
     end
 
-    it 'does not have a fixed top nav bar on the about page' do
+    it 'has the logged out navigation on the about page' do
       html = Capybara.string(response.body)
-      expect(html).to have_no_css('nav.fixed-top')
+      expect(html).to have_css('nav.fixed-top')
     end
   end
 
@@ -57,22 +59,25 @@ RSpec.describe 'Pages', :default_creates, type: :request do
   end
 
   context 'when being prompted to sign in with google' do
-    it 'displays a message to click on the users name' do
+    it 'renders the account linking prompt trigger for students' do
       sign_in create(:student, :no_oauth)
       get dashboard_path
-      expect(response.body).to include("Let's get your account linked")
+      html = Capybara.string(response.body)
+      expect(html).to have_css('input#oAuthEmail', visible: :all)
     end
 
-    it 'only displays the message when the account is not yet linked to Google' do
+    it 'only renders the account linking prompt trigger when the account is not yet linked to Google' do
       sign_in student
       get dashboard_path
-      expect(response.body).not_to include("Let's get your account linked")
+      html = Capybara.string(response.body)
+      expect(html).to have_no_css('input#oAuthEmail', visible: :all)
     end
 
-    it 'displays the message for teachers' do
+    it 'renders the account linking prompt trigger for teachers' do
       sign_in create(:teacher, :no_oauth)
       get dashboard_path
-      expect(response.body).to include("Let's get your account linked")
+      html = Capybara.string(response.body)
+      expect(html).to have_css('input#oAuthEmail', visible: :all)
     end
   end
 end

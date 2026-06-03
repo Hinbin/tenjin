@@ -15,6 +15,10 @@ class ApplicationService
       @attributes.fetch(:completed, false)
     end
 
+    def [](key)
+      @attributes[key.to_sym]
+    end
+
     def method_missing(method_name, *args, &block)
       return @attributes[method_name] if args.empty? && block.nil? && @attributes.key?(method_name)
 

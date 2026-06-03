@@ -12,9 +12,9 @@ class TopicPolicy < ApplicationPolicy
 
     def resolve
       @scope.where(active: true,
-                   subject: Subject.with_role(:question_author, user)
-                                   .where(active: true)
-                                   .select(:id))
+                   subject_id: Subject.with_role(:question_author, user)
+                                      .where(active: true)
+                                      .pluck(:id))
     end
   end
 
