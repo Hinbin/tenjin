@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserPolicy < ApplicationPolicy
-
   class Scope < Scope
     def resolve
       scope.where(school: user.school, disabled: false)

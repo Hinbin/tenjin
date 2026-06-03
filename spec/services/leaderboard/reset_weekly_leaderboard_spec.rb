@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/session_helpers'
 
-RSpec.describe Leaderboard::ResetWeeklyLeaderboard, default_creates: true do
+RSpec.describe Leaderboard::ResetWeeklyLeaderboard, :default_creates do
   let(:topic_score) { create(:topic_score) }
   let(:top_score_same_school) do
     create(:topic_score, topic: topic_score.topic,
@@ -52,7 +52,7 @@ RSpec.describe Leaderboard::ResetWeeklyLeaderboard, default_creates: true do
 
     it 'does not add an award if there are no scores' do
       create(:student)
-      expect { described_class.new.call }.to change(LeaderboardAward, :count).by(0)
+      expect { described_class.new.call }.not_to change(LeaderboardAward, :count)
     end
 
     it 'gives awards for three people with the same score' do
@@ -78,7 +78,7 @@ RSpec.describe Leaderboard::ResetWeeklyLeaderboard, default_creates: true do
 
     it 'removes previous winners' do
       previous_winner
-      expect { described_class.new.call }.to change(ClassroomWinner, :count).by(0)
+      expect { described_class.new.call }.not_to change(ClassroomWinner, :count)
     end
 
     it 'awards the classroom winner to the top scorer' do

@@ -2,6 +2,7 @@
 
 class Challenge::ProcessExpiredChallenges < ApplicationService
   def initialize
+    super
     @expired_challenges = Challenge.where('end_date < ?', Time.current)
   end
 

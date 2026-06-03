@@ -2,6 +2,7 @@
 
 class Customisation::BuyCustomisation < ApplicationService
   def initialize(user, customisation)
+    super()
     @user = user
     @customisation = customisation
   end
@@ -20,7 +21,7 @@ class Customisation::BuyCustomisation < ApplicationService
     destroy_old_active_customisation
     create_new_active_customisation
     unlock.save!
-    OpenStruct.new(success?: true, user: @user, errors: nil)
+    result(success: true, user: @user, errors: nil)
   end
 
   protected
@@ -46,6 +47,6 @@ class Customisation::BuyCustomisation < ApplicationService
   end
 
   def error_openstruct(error)
-    OpenStruct.new(success?: false, user: @user, errors: error)
+    result(success: false, user: @user, errors: error)
   end
 end

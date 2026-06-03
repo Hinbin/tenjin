@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'user controller', default_creates: true, type: :request do
+RSpec.describe 'user controller', :default_creates, type: :request do
   before do
     student
   end
@@ -47,7 +47,7 @@ RSpec.describe 'user controller', default_creates: true, type: :request do
   end
 end
 
-RSpec.describe 'employee views a student record', default_creates: true, type: :request do
+RSpec.describe 'employee views a student record', :default_creates, type: :request do
   let(:second_classroom) { create(:classroom, school:) }
   let(:homework_different_class) { create(:homework, classroom: second_classroom, topic:) }
   let(:enrollment_different_class) { create(:enrollment, user: student, classroom: second_classroom) }
@@ -99,7 +99,7 @@ RSpec.describe 'employee views a student record', default_creates: true, type: :
   end
 end
 
-RSpec.describe 'school admin views a student record', default_creates: true, type: :request do
+RSpec.describe 'school admin views a student record', :default_creates, type: :request do
   before { create(:enrollment, user: student, classroom:) }
 
   it 'shows the user password reset option for a school admin' do
@@ -128,7 +128,7 @@ RSpec.describe 'school admin views a student record', default_creates: true, typ
   end
 end
 
-RSpec.describe 'school admin views an employee record', default_creates: true, type: :request do
+RSpec.describe 'school admin views an employee record', :default_creates, type: :request do
   it 'shows the user password reset option for a school admin' do
     sign_in school_admin
     get user_path(teacher)
@@ -142,7 +142,7 @@ RSpec.describe 'school admin views an employee record', default_creates: true, t
   end
 end
 
-RSpec.describe 'school admin views user list', default_creates: true, type: :request do
+RSpec.describe 'school admin views user list', :default_creates, type: :request do
   before do
     sign_in school_admin
   end

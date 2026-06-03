@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Pages', type: :request, default_creates: true do
+RSpec.describe 'Pages', :default_creates, type: :request do
   context 'when looking at the home page' do
     before { get root_path }
 

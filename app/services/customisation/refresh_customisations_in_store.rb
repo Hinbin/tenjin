@@ -1,11 +1,11 @@
-class Customisation::RefreshCustomisationsInStore < ApplicationService
-  def initialize; end
+# frozen_string_literal: true
 
+class Customisation::RefreshCustomisationsInStore < ApplicationService
   def call
     disable_all_customisations
     make_six_purchasable('dashboard_style')
     make_six_purchasable('leaderboard_icon')
-    OpenStruct.new(success?: true, user: @user, errors: nil)
+    result(success: true, user: @user, errors: nil)
   end
 
   def disable_all_customisations

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 # JS-only Selenium smoke tests for lesson viewing flows.
 # Non-interactive tests have been converted to spec/requests/lessons_request_spec.rb.
-RSpec.describe 'User views lessons', :vcr, type: :system, js: true, default_creates: true do
+RSpec.describe 'User views lessons', :default_creates, :js, :vcr, type: :system do
   let(:lesson) { create(:lesson, topic:) }
 
   context 'when a student' do
@@ -36,7 +36,7 @@ RSpec.describe 'User views lessons', :vcr, type: :system, js: true, default_crea
 
     it 'shows what questions are available for each lesson' do
       find('a', text: 'View Questions').click
-      expect(page).to have_content(question.question_text.to_plain_text)
+      expect(page).to have_text(question.question_text.to_plain_text)
     end
   end
 end

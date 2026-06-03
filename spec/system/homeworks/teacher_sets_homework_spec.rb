@@ -4,7 +4,7 @@ require 'rails_helper'
 
 # JS-only Selenium smoke tests for homework creation flows.
 # Non-interactive tests have been converted to spec/requests/homeworks_request_spec.rb.
-RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates: true do
+RSpec.describe 'Teacher sets homework', :default_creates, :js, type: :system do
   let(:classroom) { create(:classroom, subject:, school: teacher.school) }
   let(:flatpickr_one_week_from_now) do
     "span.flatpickr-day[aria-label=\"#{(Time.now + 1.week).strftime('%B %-e, %Y')}\"]"
@@ -69,13 +69,13 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
       nine_questions
       visit(new_homework_path(classroom: { classroom_id: classroom.id }))
       select topic.name, from: 'Topic'
-      expect(page).to have_no_content(lesson.title)
+      expect(page).to have_no_text(lesson.title)
     end
 
     it 'only shows lessons when a topic has been selected' do
       ten_questions
       visit(new_homework_path(classroom: { classroom_id: classroom.id }))
-      expect(page).to have_no_content(lesson.title)
+      expect(page).to have_no_text(lesson.title)
     end
 
     it 'only shows lessons for the topic selected' do
@@ -83,7 +83,7 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
       ten_questions_different_topic
       visit(new_homework_path(classroom: { classroom_id: classroom.id }))
       select topic.name, from: 'Topic'
-      expect(page).to have_no_content(lesson_different_topic.title)
+      expect(page).to have_no_text(lesson_different_topic.title)
     end
   end
 
@@ -96,13 +96,13 @@ RSpec.describe 'Teacher sets homework', type: :system, js: true, default_creates
     it 'shows the lesson the homework was created for if available' do
       create_homework_for_lesson
       find_by_id('flash-notice')
-      expect(page).to have_content(lesson.title)
+      expect(page).to have_text(lesson.title)
     end
 
     it 'shows the topic the lesson was created for' do
       create_homework
       find_by_id('flash-notice')
-      expect(page).to have_content(topic.name)
+      expect(page).to have_text(topic.name)
     end
   end
 end

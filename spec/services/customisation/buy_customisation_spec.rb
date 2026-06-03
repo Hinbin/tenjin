@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Customisation::BuyCustomisation, default_creates: true do
+RSpec.describe Customisation::BuyCustomisation, :default_creates do
   let(:customisation) { create(:dashboard_customisation, cost: 5) }
   let(:old_customisation) { create(:dashboard_customisation, cost: 2) }
   let(:old_customisation_unlock) do
@@ -83,7 +83,7 @@ RSpec.describe Customisation::BuyCustomisation, default_creates: true do
 
     it 'does not cost anything' do
       described_class.new(student, customisation).call
-      expect { student.reload }.to change(student, :challenge_points).by(0)
+      expect { student.reload }.not_to change(student, :challenge_points)
     end
 
     it 'creates a new entry in the active customisaion table' do

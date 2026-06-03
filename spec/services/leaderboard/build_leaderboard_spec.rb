@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/session_helpers'
 
-RSpec.describe Leaderboard::BuildLeaderboard, default_creates: true do
+RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
   before do
     create(:enrollment, classroom: classroom, user: student)
     create(:topic_score, topic: topic, user: student)

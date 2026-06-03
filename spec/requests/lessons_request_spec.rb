@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Lessons', type: :request, default_creates: true do
+RSpec.describe 'Lessons', :default_creates, type: :request do
   let(:lesson) { create(:lesson, topic:) }
   let(:second_subject) { create(:subject) }
   let(:second_topic) { create(:topic, subject: second_subject) }

@@ -3,11 +3,12 @@
 # Finds the correct quiz for a user if multiple quizzes have been created.
 class Quiz::SelectCorrectQuiz < ApplicationService
   def initialize(params)
+    super()
     @quizzes = params[:quizzes]
   end
 
   def call
-    if @quizzes.length.zero?
+    if @quizzes.empty?
       '/quizzes/new'
     elsif @quizzes.length == 1
       @quizzes.first

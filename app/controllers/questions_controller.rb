@@ -16,6 +16,13 @@ class QuestionsController < ApplicationController
     render 'lesson_question_index'
   end
 
+  def show
+    @question.assign_attributes(question_params) if params[:question].present?
+    authorize @question
+    check_answers
+    # build_answers
+  end
+
   def new
     @question = Question.new(question_params)
     authorize @question
@@ -35,13 +42,6 @@ class QuestionsController < ApplicationController
     else
       render :new
     end
-  end
-
-  def show
-    @question.assign_attributes(question_params) if params[:question].present?
-    authorize @question
-    check_answers
-    #build_answers
   end
 
   def update
@@ -134,9 +134,7 @@ class QuestionsController < ApplicationController
   end
 
   def build_answers
-    unless @question.answers.present?
-      @question.answers.build if @question.short_answer? || @question.question_type.nil?
-    end
+    @question.answers.build if !@question.answers.present? && (@question.short_answer? || @question.question_type.nil?)
 
     @question.answers.build until @question.answers.length >= 4 || !@question.multiple?
   end

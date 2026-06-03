@@ -53,7 +53,7 @@ class UpdateQuestionStatisticsJob < ApplicationJob
                  .destroy_all
 
     AskedQuestion.where('updated_at < ?', 1.day.ago)
-                 .destroy_all    
+                 .destroy_all
   end
 
   def calculate_correct(asked_question)

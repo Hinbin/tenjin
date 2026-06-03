@@ -3,6 +3,7 @@
 # Moves the quiz to the next question.  If finished, set quiz as inactive
 class Quiz::MoveQuizForward < ApplicationService
   def initialize(params)
+    super()
     @quiz = params[:quiz]
   end
 

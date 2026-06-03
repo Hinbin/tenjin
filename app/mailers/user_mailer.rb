@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserMailer < ApplicationMailer
-  default from: ENV['DEFAULT_MAIL_SENDER']
+  default from: ENV.fetch('DEFAULT_MAIL_SENDER', nil)
 
   def setup_email
     @user = params[:user]

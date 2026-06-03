@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Lesson < ApplicationRecord
-  validates_length_of :title, minimum: 3
+  validates :title, length: { minimum: 3 }
   validate :check_video_id
 
-  enum :category, %i[youtube vimeo no_content]
+  enum :category, { youtube: 0, vimeo: 1, no_content: 2 }
   has_many :questions
   has_many :default_lessons
   belongs_to :topic
@@ -16,11 +16,12 @@ class Lesson < ApplicationRecord
 
   def generate_video_src
     return "https://www.youtube.com/embed/#{video_id}" if youtube?
-    return "https://player.vimeo.com/video/#{video_id}" if vimeo?
+
+    "https://player.vimeo.com/video/#{video_id}" if vimeo?
   end
 
   def generate_thumbnail_src
-    return "https://img.youtube.com/vi/#{video_id}/hqdefault.jpg" if youtube?
+    "https://img.youtube.com/vi/#{video_id}/hqdefault.jpg" if youtube?
   end
 
   private

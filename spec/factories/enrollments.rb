@@ -10,7 +10,7 @@ FactoryBot.define do
     # Make sure we only create one school, and use the same school for the
     # classroom as the user.
 
-    association :classroom, factory: :classroom, school: nil, strategy: :build
+    association :classroom, school: nil, strategy: :build
     association :user, factory: :student, school: nil, strategy: :build
 
     after(:build) do |enrollment, evaluator|

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Admins', type: :request, default_creates: true do
+RSpec.describe 'Admins', :default_creates, type: :request do
   context 'when a super admin logs in' do
     it 'allows an admin to access the schools page' do
       sign_in super_admin

@@ -4,6 +4,7 @@ require 'wondeclient'
 
 class School::SyncSchool < ApplicationService
   def initialize(school)
+    super()
     @school = school
     @client = Wonde::Client.new(school.token)
     @school_from_client = @client.schools.get(school.client_id)

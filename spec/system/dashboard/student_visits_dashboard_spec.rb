@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_creates: true do
+RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :system do
   before do
     setup_subject_database
     sign_in student
@@ -31,7 +31,7 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
 
     it 'shows challenges for subjects' do
       visit(dashboard_path)
-      expect(page).to have_content(challenge_one.stringify)
+      expect(page).to have_text(challenge_one.stringify)
     end
 
     it 'shows progress for full marks challenges' do
@@ -50,7 +50,7 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
       second_topic
       c = Challenge.create_challenge(second_subject)
       visit(dashboard_path)
-      expect(page).not_to have_content(c.stringify)
+      expect(page).to have_no_text(c.stringify)
     end
 
     it 'links you to the correct quiz when clicked' do
@@ -85,7 +85,7 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
 
     it 'shows the homeworks I currnently have' do
       visit(dashboard_path)
-      expect(page).to have_content(homework.topic.name).and have_content(homework.required)
+      expect(page).to have_text(homework.topic.name).and have_text(homework.required)
     end
 
     it 'limits homeworks owing to the last 15' do
@@ -134,7 +134,7 @@ RSpec.describe 'Student visits the dashboard', type: :system, js: true, default_
     it 'shows the lesson if a lesson based homework' do
       homework_lesson
       visit(dashboard_path)
-      expect(page).to have_content(homework_lesson.lesson.title)
+      expect(page).to have_text(homework_lesson.lesson.title)
     end
 
     it 'takes you to a lesson quiz when clicked' do

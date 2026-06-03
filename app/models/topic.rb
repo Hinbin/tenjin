@@ -13,8 +13,7 @@ class Topic < ApplicationRecord
 
   belongs_to :default_lesson,
              optional: true,
-             class_name: 'Lesson',
-             foreign_key: 'default_lesson_id'
+             class_name: 'Lesson'
 
   validates :name, presence: true
 

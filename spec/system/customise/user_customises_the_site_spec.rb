@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'User customises the site', default_creates: true, js: true, type: :system do
+RSpec.describe 'User customises the site', :default_creates, :js, type: :system do
   before do
     setup_subject_database
     sign_in student
@@ -41,13 +41,13 @@ RSpec.describe 'User customises the site', default_creates: true, js: true, type
     end
 
     it 'shows available dashboard customisations' do
-      expect(page).to have_content(dashboard_customisation.name.upcase)
+      expect(page).to have_text(dashboard_customisation.name.upcase)
     end
 
     it 'hides unpurchasable dashboard customisations' do
       dashboard_customisation_unavailable = create(:dashboard_customisation, cost: 20, purchasable: false)
       visit(show_available_customisations_path)
-      expect(page).to have_no_content(dashboard_customisation_unavailable.name.upcase)
+      expect(page).to have_no_text(dashboard_customisation_unavailable.name.upcase)
     end
 
     it 'allows you to buy a dashbord style' do
@@ -84,12 +84,12 @@ RSpec.describe 'User customises the site', default_creates: true, js: true, type
       end
 
       it 'always shows customisations I have already purchased' do
-        expect(page).to have_content(dashboard_customisation.name.upcase)
+        expect(page).to have_text(dashboard_customisation.name.upcase)
       end
 
       it 'shows purchased customisations in a separate section' do
         within('section.purchased-styles') do
-          expect(page).to have_content(dashboard_customisation.name.upcase)
+          expect(page).to have_text(dashboard_customisation.name.upcase)
         end
       end
 
@@ -131,14 +131,14 @@ RSpec.describe 'User customises the site', default_creates: true, js: true, type
     end
 
     it 'shows what icons are available to purchase' do
-      expect(page).to have_content(icon_customisation.name)
+      expect(page).to have_text(icon_customisation.name)
     end
 
     it 'hides unpurchasable icons' do
       dashboard_customisation_unavailable = create(:customisation,
                                                    customisation_type: 'leaderboard_icon', cost: 20, purchasable: false)
       visit(show_available_customisations_path)
-      expect(page).to have_no_content(dashboard_customisation_unavailable.name.upcase)
+      expect(page).to have_no_text(dashboard_customisation_unavailable.name.upcase)
     end
 
     it 'allows you to buy an icon' do

@@ -3,6 +3,7 @@
 # Creates a Quiz session object and initialises it appropriately
 class Quiz::CreateQuiz < ApplicationService
   def initialize(params)
+    super()
     @user = params[:user]
     @topic_id = params[:topic]
     @subject = params[:subject]
@@ -13,13 +14,13 @@ class Quiz::CreateQuiz < ApplicationService
   end
 
   def call
-    return OpenStruct.new(success?: false, user: @user, errors: 'User not found') unless @user.present?
+    return result(success: false, user: @user, errors: 'User not found') unless @user.present?
 
     initialise_quiz
 
     unless quiz_cooldown_expired?
-      return OpenStruct.new(success?: false, cooldown: @seconds_left,
-                            errors: "You need to wait #{@seconds_left} seconds to start another quiz")
+      return result(success: false, cooldown: @seconds_left,
+                    errors: "You need to wait #{@seconds_left} seconds to start another quiz")
     end
 
     initialise_questions
@@ -27,7 +28,7 @@ class Quiz::CreateQuiz < ApplicationService
     @quiz.save!
     @user.time_of_last_quiz = Time.current
     @user.save!
-    OpenStruct.new(success?: true, quiz: @quiz, errors: nil)
+    result(success: true, quiz: @quiz, errors: nil)
   end
 
   protected

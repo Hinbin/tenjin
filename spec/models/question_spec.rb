@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/session_helpers'
 
-RSpec.describe Question, type: :model, default_creates: true do
+RSpec.describe Question, :default_creates, type: :model do
   let(:mismatched_question) { build(:question, lesson: create(:lesson), topic: topic) }
 
   context 'with validations' do

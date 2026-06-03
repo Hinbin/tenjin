@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_creates: true do
+RSpec.describe 'Lesson author edits a lesson', :default_creates, :js, type: :system do
   let(:second_subject) { create(:subject) }
   let!(:lesson) { create(:lesson, topic: topic) }
   let(:new_lesson) { build(:lesson, topic: topic) }
@@ -60,7 +60,7 @@ RSpec.describe 'Lesson author edits a lesson', type: :system, js: true, default_
       visit(new_lesson_path(subject: subject))
       fill_in_form(new_lesson_bad_content)
       click_button('Create Lesson')
-      expect(page).to have_content('Must be a YouTube or Vimeo link')
+      expect(page).to have_text('Must be a YouTube or Vimeo link')
     end
 
     it 'allows me to create a lesson' do

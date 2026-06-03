@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admins::InvitationsController < Devise::InvitationsController
   before_action :authenticate_admin!
 

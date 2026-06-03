@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module QuestionsHelper
-
   def percentage_correct(question)
     qs = question.question_statistic
     return '0%' unless qs.present?

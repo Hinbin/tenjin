@@ -7,7 +7,7 @@ FactoryBot.define do
     end
 
     question
-    association :quiz, factory: :quiz, user: nil, strategy: :build
+    association :quiz, user: nil, strategy: :build
 
     correct { nil }
 

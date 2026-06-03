@@ -4,7 +4,7 @@ module SessionHelpers
   def log_in
     sign_in student
     visit root_path
-    expect(page).to have_content('START A QUIZ')
+    expect(page).to have_text('START A QUIZ')
   end
 
   def stub_omniauth # rubocop:disable Metrics/MethodLength

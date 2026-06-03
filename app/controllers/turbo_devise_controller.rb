@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/controllers/turbo_devise_controller.rb
 # https://betterprogramming.pub/devise-auth-setup-in-rails-7-44240aaed4be
 # Necessary due to turbo/devise not working together properly in Rails 7

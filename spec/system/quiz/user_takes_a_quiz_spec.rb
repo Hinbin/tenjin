@@ -3,8 +3,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: true do
-
+RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
   let(:lesson) { create(:lesson, topic:) }
 
   context 'when answering a multiple choice question' do
@@ -26,13 +25,13 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
       it 'shows a lesson video if one is present' do
         question.lesson = lesson
         visit quizzes_path
-        expect(page).to have_content(lesson.title)
+        expect(page).to have_text(lesson.title)
       end
 
       it 'only shows a lesson with content' do
         question.update_attribute(:lesson, no_content_lesson)
         visit quizzes_path
-        expect(page).to have_no_content(lesson.title)
+        expect(page).to have_no_text(lesson.title)
       end
     end
 
@@ -44,12 +43,12 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
       end
 
       it 'displays the question text' do
-        expect(page).to have_content(question.question_text.to_plain_text)
+        expect(page).to have_text(question.question_text.to_plain_text)
       end
 
       it 'allows me to respond to a question' do
         first(class: 'question-button').click
-        expect(page).to have_selector('.next-button', visible: :visible)
+        expect(page).to have_css('.next-button', visible: :visible)
       end
 
       it 'disables all other buttons when I attempt to answer' do
@@ -58,7 +57,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
       end
 
       it 'hides the next question button before answering' do
-        expect(page).to have_selector('.next-button', visible: :hidden)
+        expect(page).to have_css('.next-button', visible: :hidden)
       end
 
       it 'indicates if the answer I gave was right' do
@@ -97,7 +96,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
       it 'allows me to flag a question' do
         find(:css, 'svg.fa-flag').click
         expect(page).to have_css('svg.fa-flag[data-prefix="fas"]')
-                    .and have_content('You have flagged this question as unfair')
+                    .and have_text('You have flagged this question as unfair')
       end
 
       it 'shows if I have already flagged a particular question' do
@@ -132,7 +131,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
       find(class: 'next-button').click
       find(class: 'question-button').click
       find(class: 'next-button').click
-      expect(page).to have_content('Finished!')
+      expect(page).to have_text('Finished!')
     end
   end
 
@@ -171,7 +170,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
       it 'shows a lesson video if one is present' do
         question.lesson = lesson
         visit quizzes_path
-        expect(page).to have_content(lesson.title)
+        expect(page).to have_text(lesson.title)
       end
     end
 
@@ -180,12 +179,12 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
     end
 
     it 'displays the question text' do
-      expect(page).to have_content(question.question_text.to_plain_text)
+      expect(page).to have_text(question.question_text.to_plain_text)
     end
 
     it 'allows me to respond to a question' do
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      expect(page).to have_selector('.next-button', visible: :visible)
+      expect(page).to have_css('.next-button', visible: :visible)
     end
 
     it 'indicates if the answer I gave was right' do
@@ -236,7 +235,7 @@ RSpec.describe 'User takes a quiz', type: :system, js: true, default_creates: tr
     it 'shows the next question button if there is no correct answer returned' do
       Answer.first.destroy
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      expect(page).to have_selector('.next-button', visible: :visible)
+      expect(page).to have_css('.next-button', visible: :visible)
     end
 
     context 'when checking my multipliers' do

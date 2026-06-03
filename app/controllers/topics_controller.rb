@@ -9,6 +9,15 @@ class TopicsController < ApplicationController
     raise Pundit::NotAuthorizedError if @subjects.blank?
   end
 
+  def show
+    authorize @topic
+
+    @topic_lessons = Lesson.where(topic: @topic)
+    @questions = Question.with_rich_text_question_text_and_embeds
+                         .includes(:question_statistic, :lesson)
+                         .where(topic: @topic, active: true)
+  end
+
   def new
     @subject = Subject.find(new_topic_params[:subject_id])
     return unless @subject.present?
@@ -17,15 +26,6 @@ class TopicsController < ApplicationController
     authorize @topic
 
     redirect_to topic_path(@topic)
-  end
-
-  def show
-    authorize @topic
-
-    @topic_lessons = Lesson.where(topic: @topic)
-    @questions = Question.with_rich_text_question_text_and_embeds
-                         .includes(:question_statistic, :lesson)
-                         .where(topic: @topic, active: true)
   end
 
   def edit
@@ -77,5 +77,4 @@ class TopicsController < ApplicationController
   def flagged_questions_params
     params.require(:subject_id)
   end
-
 end

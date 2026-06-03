@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'support/api_data'
 require 'pry'
 
-RSpec.describe 'User views the leaderboard', type: :system, js: true, default_creates: true do
+RSpec.describe 'User views the leaderboard', :default_creates, :js, type: :system do
   let(:topic_score) { create(:topic_score, topic: topic, user: student) }
   let(:student) { create(:student, forename: 'Aaaron', school: school) } # Ensure first alphabetically
   let(:student_name) { initialize_name student }
@@ -50,7 +50,7 @@ RSpec.describe 'User views the leaderboard', type: :system, js: true, default_cr
     student.update(forename: 'Aaron') # Ensure first alphabetically
     one_to_ten
     visit(leaderboard_path(subject.name))
-    expect(page).to have_css('tr', text: "6 #{student_name}".to_s)
+    expect(page).to have_css('tr', text: "6 #{student_name}")
   end
 
   it 'does not show students from another school' do
@@ -199,7 +199,7 @@ RSpec.describe 'User views the leaderboard', type: :system, js: true, default_cr
       visit(leaderboard_path(subject.name))
       click_button('Select Class')
       click_button(classroom.name)
-      expect(page).to have_content("#{classroom.name} winner: #{student.forename}")
+      expect(page).to have_text("#{classroom.name} winner: #{student.forename}")
     end
   end
 end

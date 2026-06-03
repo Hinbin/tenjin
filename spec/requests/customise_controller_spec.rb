@@ -20,7 +20,7 @@ RSpec.describe 'submitting a customisation', type: :request do
   end
 end
 
-RSpec.describe 'Admin manages customisations', type: :request, default_creates: true do
+RSpec.describe 'Admin manages customisations', :default_creates, type: :request do
   let(:available_customisation) { create(:dashboard_customisation, purchasable: true) }
   let(:new_name) { FFaker::Lorem.word }
 

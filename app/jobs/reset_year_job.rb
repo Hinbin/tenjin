@@ -7,4 +7,3 @@ class ResetYearJob < ApplicationJob
     Admin::ResetYear.call
   end
 end
-

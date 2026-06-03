@@ -104,7 +104,7 @@ class QuizzesController < ApplicationController
   def set_create_params
     @topic = quiz_params[:topic_id]
     @subject = Subject.find(quiz_params[:subject])
-    @lesson = quiz_params[:lesson_id] unless quiz_params[:lesson_id].blank?
+    @lesson = quiz_params[:lesson_id] if quiz_params[:lesson_id].present?
   end
 
   def set_dashboard_style

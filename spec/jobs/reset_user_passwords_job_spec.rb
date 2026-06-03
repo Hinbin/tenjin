@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ResetUserPasswordsJob do
-  context 'when resetting the passwords for the whole school', default_creates: true do
+  context 'when resetting the passwords for the whole school', :default_creates do
     let(:reset_password) { Quiz::CreateQuiz.new(admin: school_admin).call }
 
     before do

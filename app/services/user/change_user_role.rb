@@ -3,10 +3,11 @@
 # Adds a role to a user
 class User::ChangeUserRole < ApplicationService
   def initialize(user, role, action, subject = nil)
+    super()
     @user = user
     @role = role
     @action = action
-    @subject = Subject.find(subject) unless subject.blank?
+    @subject = Subject.find(subject) if subject.present?
   end
 
   def call
@@ -20,13 +21,13 @@ class User::ChangeUserRole < ApplicationService
 
     change_user_role
 
-    OpenStruct.new(success?: true, user: @user, role: @role, action: @action)
+    result(success: true, user: @user, role: @role, action: @action)
   end
 
   private
 
   def return_error(msg)
-    OpenStruct.new(success?: false, user: @user, role: @role, action: @action, errors: msg)
+    result(success: false, user: @user, role: @role, action: @action, errors: msg)
   end
 
   def change_user_role

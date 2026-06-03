@@ -4,7 +4,7 @@ require 'rails_helper'
 
 # JS-only Selenium smoke tests for subject management.
 # Non-interactive tests have been converted to spec/requests/subject_request_spec.rb.
-RSpec.describe 'Super manages subjects', type: :system, js: true, default_creates: true do
+RSpec.describe 'Super manages subjects', :default_creates, :js, type: :system do
   before do
     sign_in super_admin
     subject
@@ -33,7 +33,7 @@ RSpec.describe 'Super manages subjects', type: :system, js: true, default_create
         sign_out super_admin
         sign_in student
         visit(dashboard_path)
-        expect(page).to have_no_content(subject.name)
+        expect(page).to have_no_text(subject.name)
       end
 
       it 'reassigns classrooms to nil' do
@@ -41,7 +41,7 @@ RSpec.describe 'Super manages subjects', type: :system, js: true, default_create
         sign_out super_admin
         sign_in school_admin
         visit(classrooms_path)
-        expect(page).to have_no_content(subject.name)
+        expect(page).to have_no_text(subject.name)
       end
     end
   end

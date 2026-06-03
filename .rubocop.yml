@@ -1,16 +1,16 @@
-require:
+plugins:
+  - rubocop-capybara
+  - rubocop-factory_bot
+  - rubocop-rails
   - rubocop-rspec
-  - rubocop-performance 
-
-inherit_from: .rubocop_todo.yml
+  - rubocop-performance
 
 inherit_mode:
   merge:
     - Exclude
 
 AllCops:
-  TargetRubyVersion: 3.3
-  SuggestExtensions: false
+  TargetRubyVersion: 3.4
   Exclude:
     - 'Gemfile'
     - 'db/**/*'
@@ -20,22 +20,27 @@ AllCops:
     - 'node_modules/**/*'
     - 'lib/gem_ext/wondeclient/endpoints.rb'
     - !ruby/regexp /old_and_unused\.rb$/
-  NewCops: enable  
+  NewCops: enable
     
 RSpec/NamedSubject:
   Enabled: false
   
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
-  Exclude:
-    - 'omniauth-wonde/lib/omniauth/strategies/wonde.rb'
 
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'lib/ext/Wondeclient/**/*.rb'
 
+Style/OpenStructUse:
+  Exclude:
+    - 'spec/models/school_spec.rb'
+    - 'spec/support/api_data.rb'
+
 Metrics/MethodLength:
   Max: 12
+  Exclude:
+    - 'app/services/challenge/update_challenge_progress.rb'
 
 Metrics/BlockLength:
   Exclude:
@@ -50,3 +55,143 @@ Style/Documentation:
 
 Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
+
+Layout/EndOfLine:
+  Enabled: false
+
+Layout/LineLength:
+  Exclude:
+    - 'app/models/classroom.rb'
+    - 'app/services/challenge/update_challenge_progress.rb'
+
+Capybara/RSpec/NegationMatcherAfterVisit:
+  Enabled: false
+
+FactoryBot/ExcessiveCreateList:
+  Enabled: false
+
+Metrics/AbcSize:
+  Exclude:
+    - 'app/controllers/questions_controller.rb'
+    - 'app/models/classroom.rb'
+    - 'app/services/challenge/update_challenge_progress.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/models/question.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'app/controllers/questions_controller.rb'
+    - 'app/services/quiz/create_quiz.rb'
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/BeEq:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MultipleDescribes:
+  Enabled: false
+
+RSpec/NoExpectationExample:
+  Enabled: false
+
+RSpec/SpecFilePathSuffix:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/SubjectDeclaration:
+  Enabled: false
+
+Rails/ActionControllerFlashBeforeRender:
+  Enabled: false
+
+Rails/ActiveRecordAliases:
+  Enabled: false
+
+Rails/Blank:
+  Enabled: false
+
+Rails/FindEach:
+  Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/HelperInstanceVariable:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
+Rails/RedundantActiveRecordAllMethod:
+  Enabled: false
+
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Enabled: false
+
+Rails/RootPathnameMethods:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+
+Rails/WhereEquals:
+  Enabled: false
+
+Rails/WhereExists:
+  Enabled: false
+
+Rails/WhereRange:
+  Enabled: false
+
+Capybara/RSpec/SpecificMatcher:
+  Enabled: false
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Naming/PredicateMethod:
+  Exclude:
+    - 'app/models/customisation.rb'
+    - 'app/policies/user_policy.rb'
+    - 'app/services/question/import_questions.rb'
+    - 'app/services/quiz/create_quiz.rb'
+
+Naming/PredicatePrefix:
+  Exclude:
+    - 'app/models/customisation.rb'
+
+Naming/VariableNumber:
+  Enabled: false
+
+Performance/CollectionLiteralInLoop:
+  Exclude:
+    - 'app/models/question.rb'

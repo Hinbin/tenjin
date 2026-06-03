@@ -11,7 +11,7 @@ RSpec.describe Homework, type: :model do
     create(:enrollment, classroom: classroom, user: student)
   end
 
-  context 'when dealing with homework progress', default_creates: true do
+  context 'when dealing with homework progress', :default_creates do
     it 'increases user progresses after being created' do
       expect { homework }.to change(HomeworkProgress, :count).by 1
     end
@@ -27,7 +27,7 @@ RSpec.describe Homework, type: :model do
     end
   end
 
-  context 'when creating a homework', default_creates: true do
+  context 'when creating a homework', :default_creates do
     it 'does not let you create a homework with a due date in the past' do
       expect { homework_old.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end

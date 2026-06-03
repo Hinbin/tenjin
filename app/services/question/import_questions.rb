@@ -2,6 +2,7 @@
 
 class Question::ImportQuestions < ApplicationService
   def initialize(data, topic, filename)
+    super()
     @json = JSON.parse(data)
 
     @topic = topic
@@ -12,9 +13,9 @@ class Question::ImportQuestions < ApplicationService
 
   def call
     if import_json_questions
-      OpenStruct.new(success?: true, number_questions_imported: @questions_to_import.count)
+      result(success: true, number_questions_imported: @questions_to_import.count)
     else
-      OpenStruct.new(success?: false, error: @error)
+      result(success: false, error: @error)
     end
   end
 

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Author edits a question', type: :system, js: true, default_creates: true do
+RSpec.describe 'Author edits a question', :default_creates, :js, type: :system do
   let(:author) { create(:question_author, subject:) }
   let(:question) { create(:question, topic:) }
   let(:lesson) { create(:lesson, topic:) }
@@ -74,7 +74,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       flagged_question
       visit topics_path
       click_link 'Most Flagged Questions'
-      expect(page).to have_content(flagged_question.question_text.to_plain_text)
+      expect(page).to have_text(flagged_question.question_text.to_plain_text)
     end
   end
 
@@ -111,7 +111,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
     it 'allows you to create a topic' do
       click_link('Add Topic')
-      expect(page).to have_content('Delete Topic')
+      expect(page).to have_text('Delete Topic')
     end
 
     it 'allows you to disable a topic' do
@@ -146,11 +146,11 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       update_topic_name
       switch_to_student_account
       navigate_to_quiz
-      expect(page).to have_content(new_topic_name)
+      expect(page).to have_text(new_topic_name)
     end
 
     it 'shows the quesitons for a topic' do
-      expect(page).to have_content(question.question_text.to_plain_text)
+      expect(page).to have_text(question.question_text.to_plain_text)
     end
 
     it 'allows you to edit a question' do
@@ -166,7 +166,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
     end
 
     it 'shows each subject' do
-      expect(page).to have_content(question.topic.subject.name)
+      expect(page).to have_text(question.topic.subject.name)
     end
 
     it 'shows the links for a topic' do
@@ -182,13 +182,13 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
     it 'shows the content of the question' do
       visit(question_path(question))
-      expect(page).to have_content(question.question_text.to_plain_text)
+      expect(page).to have_text(question.question_text.to_plain_text)
     end
 
     it 'allows you to delete the question' do
       visit(question_path(question))
       page.accept_confirm { click_link('Delete Question') }
-      expect(page).to have_no_content(question.question_text.to_plain_text)
+      expect(page).to have_no_text(question.question_text.to_plain_text)
     end
 
     context 'when showing a multiple choice question' do
@@ -211,14 +211,14 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         visit(question_path(question))
         find('table', id: 'table-answers')
         click_button('Save Question')
-        expect(page).to have_content('Question must have at least one correct answer')
+        expect(page).to have_text('Question must have at least one correct answer')
       end
 
       it 'allows you to add an answer' do
         visit(question_path(question))
         add_answer
         switch_and_create_quiz
-        expect(page).to have_content(answer_text)
+        expect(page).to have_text(answer_text)
       end
 
       it 'allows you to edit an existing answer' do
@@ -226,7 +226,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         fill_in(answer_id, with: "#{answer_text}\n")
         save_question
         switch_and_create_quiz
-        expect(page).to have_content(answer_text)
+        expect(page).to have_text(answer_text)
       end
 
       it 'allows you to delete an existing answer' do
@@ -255,7 +255,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       end
 
       it 'does not let you modify if the answer is correct' do
-        expect(page).to have_no_content('Correct?')
+        expect(page).to have_no_text('Correct?')
       end
 
       it 'changes any existing answers for the question to be correct' do
@@ -264,7 +264,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
       it 'allows me to save without saying I need to select a correct answer' do
         click_button('Save Question')
-        expect(page).to have_content('Question successfully updated')
+        expect(page).to have_text('Question successfully updated')
       end
 
       it 'saves every answer as correct' do
@@ -284,7 +284,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
       end
 
       it 'creates two answers, true and false' do
-        expect(page).to have_selector('input[value="True"]').and have_selector('input[value="False"]')
+        expect(page).to have_css('input[value="True"]').and have_css('input[value="False"]')
       end
 
       it 'allows you to set an answer as correct' do
@@ -310,7 +310,7 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
         select lesson.title, from: 'select-lesson'
         save_question
         switch_and_create_quiz
-        expect(page).to have_content(lesson.title)
+        expect(page).to have_text(lesson.title)
       end
     end
 
@@ -321,13 +321,13 @@ RSpec.describe 'Author edits a question', type: :system, js: true, default_creat
 
       it 'shows the number of question flags' do
         visit(question_path(question))
-        expect(page).to have_content('Flags: 1')
+        expect(page).to have_text('Flags: 1')
       end
 
       it 'resets flags when presssing the button' do
         visit(question_path(question))
         click_link('Reset Question Flags')
-        expect(page).to have_content('Flags: 0')
+        expect(page).to have_text('Flags: 0')
       end
     end
   end

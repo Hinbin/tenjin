@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
+RSpec.describe Challenge::UpdateChallengeProgress, :default_creates do
   context 'when updating a number correct challenge' do
     before do
       challenge_full_marks
@@ -52,7 +52,7 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
                                                      challenge_type: 'number_correct', number_required: 3,
                                                      end_date: Time.now + 1.hour)
       expect { described_class.new(quiz_full_marks, 'number_correct').call }
-        .to change { ChallengeProgress.where(challenge: challenge_different_topic).count }.by(0)
+        .not_to(change { ChallengeProgress.where(challenge: challenge_different_topic).count })
     end
 
     it 'only adds challenge points once' do
@@ -94,7 +94,7 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
     it 'only adds the challenge points once' do
       completed_challenge_progress
       described_class.new(quiz_streak_of_five).call
-      expect { student.reload }.to change(student, :challenge_points).by(0)
+      expect { student.reload }.not_to change(student, :challenge_points)
     end
 
     it 'does not set completed back to false' do
@@ -147,7 +147,7 @@ RSpec.describe Challenge::UpdateChallengeProgress, default_creates: true do
       it 'only updates the challenge progress for the current user' do
         second_student = create(:student, school:)
         described_class.new(quiz_five_points, 5).call
-        expect { student.reload }.to change(second_student, :challenge_points).by(0)
+        expect { student.reload }.not_to change(second_student, :challenge_points)
       end
 
       it 'only updates the challenge if the question matches its topic with a lucky dip' do

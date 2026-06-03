@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'using a quiz', default_creates: true, type: :request do
+RSpec.describe 'using a quiz', :default_creates, type: :request do
   before do
     sign_in student
   end

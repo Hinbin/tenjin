@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'School admin sets up classrooms', type: :system, js: true, default_creates: true do
+RSpec.describe 'School admin sets up classrooms', :default_creates, :js, type: :system do
   context 'when configuring classrooms' do
     let(:classroom) { create(:classroom, school:) }
     let(:subject) { create(:subject) }
@@ -17,14 +17,14 @@ RSpec.describe 'School admin sets up classrooms', type: :system, js: true, defau
       visit(classrooms_path)
       select subject.name, from: 'subject'
       visit(classrooms_path)
-      expect(page).to have_content(subject.name)
+      expect(page).to have_text(subject.name)
     end
 
     it 'tells me when I need to sync the school' do
       subject
       visit(classrooms_path)
       select subject.name, from: 'subject'
-      expect(page).to have_content('School sync required. Click here to start')
+      expect(page).to have_text('School sync required. Click here to start')
     end
   end
 end

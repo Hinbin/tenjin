@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Author transfers question files', type: :system, js: true, default_creates: true do
+RSpec.describe 'Author transfers question files', :default_creates, :js, type: :system do
   let(:author) { create(:question_author, subject: subject) }
 
   before do
@@ -38,16 +38,15 @@ RSpec.describe 'Author transfers question files', type: :system, js: true, defau
     click_link('Import Questions')
     attach_file('file', 'spec/fixtures/files/example_import_invalid.json', visible: false)
     click_button('Import')
-    expect(page).to have_content('Question missing key')
+    expect(page).to have_text('Question missing key')
   end
 
   it 'tells the user if they have not attached a file' do
     visit topic_path(topic.id)
     click_link('Import Questions')
     click_button('Import')
-    expect(page).to have_content('Please attach a file')
+    expect(page).to have_text('Please attach a file')
   end
 
   it 'allows you to delete multiple questions'
-  
 end

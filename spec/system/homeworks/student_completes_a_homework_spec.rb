@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Student completes a homework', type: :system, js: true, default_creates: true do
+RSpec.describe 'Student completes a homework', :default_creates, :js, type: :system do
   before do
     setup_subject_database
     sign_in student
@@ -28,7 +28,9 @@ RSpec.describe 'Student completes a homework', type: :system, js: true, default_
 
   context 'when completing a lesson homework' do
     let(:lesson) { create(:lesson, topic: topic) }
-    let(:homework_with_lesson) { create(:homework, lesson: lesson, topic: lesson.topic, classroom: classroom, required: 10) }
+    let(:homework_with_lesson) do
+      create(:homework, lesson: lesson, topic: lesson.topic, classroom: classroom, required: 10)
+    end
     let(:homework_progress_complete) { create(:homework_progress, user: student, homework: homework, completed: true) }
 
     before do
@@ -43,12 +45,12 @@ RSpec.describe 'Student completes a homework', type: :system, js: true, default_
     end
 
     it 'only awards points for the first attempt' do
-      create(:usage_statistic, lesson: lesson, topic: lesson.topic, user: student, quizzes_started: 1, date: Date.current)
+      create(:usage_statistic, lesson: lesson, topic: lesson.topic, user: student, quizzes_started: 1,
+                               date: Date.current)
       visit(dashboard_path)
       find(:css, ".homework-row[data-homework='#{homework_with_lesson.id}']").click
       find(:css, '.trix-content')
-      expect(page).to have_content('This quiz is currently not counting towards your leaderboard points')
+      expect(page).to have_text('This quiz is currently not counting towards your leaderboard points')
     end
-
   end
 end

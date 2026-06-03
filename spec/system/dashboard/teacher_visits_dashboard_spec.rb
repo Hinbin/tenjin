@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Teacher visits the dashboard', type: :system, js: true, default_creates: true do
+RSpec.describe 'Teacher visits the dashboard', :default_creates, :js, type: :system do
   let(:classroom) { create(:classroom, subject: subject, school: teacher.school) }
   let(:other_classroom) { create(:classroom, school: school) }
 
@@ -18,12 +18,12 @@ RSpec.describe 'Teacher visits the dashboard', type: :system, js: true, default_
 
     it 'shows which classes they are currently assigned to' do
       visit(dashboard_path)
-      expect(page).to have_content(classroom.name)
+      expect(page).to have_text(classroom.name)
     end
 
     it 'allows you to go to a selected classroom' do
       visit(dashboard_path)
-      find("tr[data-classroom='#{classroom.id.to_s}']").click
+      find("tr[data-classroom='#{classroom.id}']").click
       expect(page).to have_current_path(classroom_path(classroom))
     end
 
@@ -40,7 +40,7 @@ RSpec.describe 'Teacher visits the dashboard', type: :system, js: true, default_
 
     it 'does not show challenge points' do
       visit(dashboard_path)
-      expect(page).to have_no_content('i.fa-star')
+      expect(page).to have_no_text('i.fa-star')
     end
 
     it 'shows other classes in a school with a subject assigned' do

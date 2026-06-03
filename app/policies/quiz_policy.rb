@@ -2,7 +2,7 @@
 
 class QuizPolicy < ApplicationPolicy
   def initialize(user, quiz)
-    @user = user
+    super
     @quiz = quiz
   end
 
@@ -24,8 +24,9 @@ class QuizPolicy < ApplicationPolicy
     @user.id == @quiz.user_id && @quiz.active
   end
 
-  class Scope
+  class Scope < Scope
     def initialize(user, scope)
+      super
       @user = user
       @scope = scope
     end

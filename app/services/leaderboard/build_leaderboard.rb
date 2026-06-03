@@ -3,6 +3,7 @@
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ClassLength
 class Leaderboard::BuildLeaderboard < ApplicationService
   def initialize(user, params)
+    super()
     @user = user if user.present?
     @subject = Subject.where(name: params[:id]).first
     @topic = params[:topic]

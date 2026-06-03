@@ -79,7 +79,9 @@ group :development do
   gem 'pry-rails'
 
   # All them rules for development
-  gem "rubocop", ">= 1.25.1", require: false
+  gem 'rubocop', '~> 1.87', require: false
+  gem 'rubocop-capybara', require: false
+  gem 'rubocop-factory_bot', require: false
   gem "rubocop-minitest", require: false
   gem "rubocop-packaging", require: false
   gem "rubocop-performance", require: false

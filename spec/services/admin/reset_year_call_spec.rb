@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Admin::ResetYear, '#call', default_creates: true do
+RSpec.describe Admin::ResetYear, '#call', :default_creates do
   before do
     create_active_database
   end
@@ -14,8 +14,12 @@ RSpec.describe Admin::ResetYear, '#call', default_creates: true do
   let(:all_time_topic_score) { create(:all_time_topic_score, subject: second_enrollment.classroom.subject) }
   let(:homework_progress) { create(:homework_progress, homework: homework, user: first_enrollment.user) }
   let(:challenge_progress) { create(:challenge_progress, user: first_enrollment.user) }
-  let(:leaderboard_award) { create(:leaderboard_award, user: first_enrollment.user, subject: first_enrollment.classroom.subject) }
-  let(:classroom_winner) { create(:classroom_winner, user: first_enrollment.user, classroom: first_enrollment.classroom) }
+  let(:leaderboard_award) do
+    create(:leaderboard_award, user: first_enrollment.user, subject: first_enrollment.classroom.subject)
+  end
+  let(:classroom_winner) do
+    create(:classroom_winner, user: first_enrollment.user, classroom: first_enrollment.classroom)
+  end
 
   def create_active_database
     first_enrollment

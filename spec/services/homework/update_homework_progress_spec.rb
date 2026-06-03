@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/session_helpers'
 
-RSpec.describe Homework::UpdateHomeworkProgress, default_creates: true do
+RSpec.describe Homework::UpdateHomeworkProgress, :default_creates do
   context 'when updating a homework' do
     before do
       create(:enrollment, classroom: classroom, user: student)

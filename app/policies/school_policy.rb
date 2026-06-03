@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class SchoolPolicy < ApplicationPolicy
-
   class Scope < Scope
     def initialize(user, scope)
+      super
       @user = user
       @scope = scope
     end
@@ -34,8 +34,8 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def sync?
-    return true if user.class == Admin && user.super?
-    return true if user.class == User && user.has_role?(:school_admin) && user.school == record
+    return true if user.instance_of?(Admin) && user.super?
+    return true if user.instance_of?(User) && user.has_role?(:school_admin) && user.school == record
 
     false
   end

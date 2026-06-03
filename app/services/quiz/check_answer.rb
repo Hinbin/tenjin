@@ -2,6 +2,7 @@
 
 class Quiz::CheckAnswer < ApplicationService
   def initialize(params)
+    super()
     @quiz = params[:quiz]
     @question = params[:question]
     @asked_question = AskedQuestion.find_by(quiz: @quiz, question: @question)

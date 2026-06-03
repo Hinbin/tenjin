@@ -11,7 +11,7 @@ namespace :migrations do
           user: us.user,
           week_beginning: start_date
         )
-        user_statistic.increment!(:questions_answered, us.questions_answered) unless us.questions_answered.blank?
+        user_statistic.increment!(:questions_answered, us.questions_answered) if us.questions_answered.present?
       end
     end
   end

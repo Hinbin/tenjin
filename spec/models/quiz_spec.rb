@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Quiz, type: :model, default_creates: true do
+RSpec.describe Quiz, :default_creates, type: :model do
   let(:quiz) { create(:quiz, user: student, topic: topic) }
   let(:usage_statistic) { UsageStatistic.where(user: student).last }
   let(:old_statistic) { create(:usage_statistic, user: student, date: Time.now - 1.day) }

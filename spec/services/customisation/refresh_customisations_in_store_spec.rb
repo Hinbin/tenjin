@@ -2,11 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe Customisation::RefreshCustomisationsInStore, default_creates: true do
+RSpec.describe Customisation::RefreshCustomisationsInStore, :default_creates do
   let(:retired_customisation) { create(:dashboard_customisation, cost: 5, retired: true) }
 
   context 'when refreshing customisations' do
-
     it 'ignores retires customisations' do
       retired_customisation
       described_class.new.call
@@ -33,6 +32,5 @@ RSpec.describe Customisation::RefreshCustomisationsInStore, default_creates: tru
       described_class.new.call
       expect(Customisation.where(purchasable: true, customisation_type: 'leaderboard_icon').count).to eq(6)
     end
-
   end
 end

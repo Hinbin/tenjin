@@ -12,7 +12,7 @@ FactoryBot.define do
       customisation_type { 'dashboard_style' }
 
       after(:build) do |c|
-        c.image.attach(io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'game-pieces.jpg')),
+        c.image.attach(io: File.open(Rails.root.join('spec/fixtures/files/game-pieces.jpg')),
                        filename: 'game-pieces.jpeg', content_type: 'image/jpeg')
       end
     end

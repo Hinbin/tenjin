@@ -4,6 +4,13 @@ class ClassroomsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_classroom, only: %i[show update]
 
+  def index
+    authorize current_user.school, :sync?
+    @classrooms = policy_scope(Classroom).order(:name)
+    @school = current_user.school
+    @subjects = Subject.where(active: true)
+  end
+
   def show
     authorize @classroom
     @students = User.joins(enrollments: :classroom).where(role: 'student', enrollments: { classroom: @classroom })
@@ -12,13 +19,6 @@ class ClassroomsController < ApplicationController
     @homework_progress = HomeworkProgress.joins(:homework)
                                          .where(homework: @homeworks.pluck(:id))
                                          .order('homeworks.due_date desc')
-  end
-
-  def index
-    authorize current_user.school, :sync?
-    @classrooms = policy_scope(Classroom).order(:name)
-    @school = current_user.school
-    @subjects = Subject.where(active: true)
   end
 
   def update

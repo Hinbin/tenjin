@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Super views a school', type: :system, js: true, default_creates: true do
+RSpec.describe 'Super views a school', :default_creates, :js, type: :system do
   let(:new_email) { FFaker::Internet.email }
   let(:email_notice) do
     "Setup email sent to #{school_admin.forename} #{school_admin.surname} (#{school_admin.email})"

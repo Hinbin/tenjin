@@ -40,9 +40,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def attempt_user_sign_in(user)
-    if user.blank?
-      fail_sign_in
-    elsif user.persisted?
+    if user.present? && user.persisted?
       sign_in_and_redirect user, event: :authentication
     else
       fail_sign_in

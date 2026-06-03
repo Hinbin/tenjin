@@ -2,16 +2,17 @@
 
 class Subject::CompileSubjectStatistics < ApplicationService
   def initialize(subject = nil)
+    super()
     @subject = subject
   end
 
   def call
     questions_this_week = compile_asked_questions_this_week
 
-    OpenStruct.new(success?: true,
-                   asked_questions: compile_previous_asked_questions + questions_this_week,
-                   asked_questions_this_week: questions_this_week,
-                   asked_questions_last_week: 'nyi')
+    result(success: true,
+           asked_questions: compile_previous_asked_questions + questions_this_week,
+           asked_questions_this_week: questions_this_week,
+           asked_questions_last_week: 'nyi')
   end
 
   def compile_previous_asked_questions

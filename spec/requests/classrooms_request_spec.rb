@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Classrooms', type: :request, default_creates: true do
+RSpec.describe 'Classrooms', :default_creates, type: :request do
   before do
     sign_in school_admin
     classroom

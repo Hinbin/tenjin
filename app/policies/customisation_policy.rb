@@ -13,7 +13,7 @@ class CustomisationPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.all if user.super?
+      scope.all if user.super?
     end
   end
 end

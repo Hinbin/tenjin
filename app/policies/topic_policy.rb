@@ -5,6 +5,7 @@ class TopicPolicy < ApplicationPolicy
 
   class Scope < Scope
     def initialize(user, scope)
+      super
       @user = user
       @scope = scope
     end
@@ -13,7 +14,7 @@ class TopicPolicy < ApplicationPolicy
       @scope.where(active: true,
                    subject: Subject.with_role(:question_author, user)
                                    .where(active: true)
-                   .pluck(:id))
+                                   .select(:id))
     end
   end
 

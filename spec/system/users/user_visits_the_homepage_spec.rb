@@ -5,7 +5,7 @@ require 'support/api_data'
 
 # JS-only Selenium smoke tests for login flows.
 # Non-interactive tests have been converted to spec/requests/pages_request_spec.rb.
-RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true, default_creates: true do
+RSpec.describe 'User visits the homepage', :default_creates, :js, :vcr, type: :system do
   include_context 'with api_data'
   include_context 'with wonde_test_data'
 
@@ -17,25 +17,25 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true, defaul
 
     it 'pops up the student login when needed' do
       click_button 'Login'
-      expect(page).to have_content('Login').and have_content('Password')
+      expect(page).to have_text('Login').and have_text('Password')
     end
 
     it 'logs in a student using a username' do
       log_in_through_front_page(student.username, student.password)
-      expect(page).to have_content(student.forename).and have_content(student.surname)
+      expect(page).to have_text(student.forename).and have_text(student.surname)
     end
 
     it 'logs in a teacher using an email' do
       log_in_through_front_page(teacher.username, teacher.password)
-      expect(page).to have_content(teacher.forename).and have_content(teacher.surname)
+      expect(page).to have_text(teacher.forename).and have_text(teacher.surname)
     end
 
     it 'logs in using Google oAuth' do
       student = create(:student, oauth_uid: '123456123456')
       stub_google_omniauth
       click_button 'Login'
-      find(:css, '#loginGoogle').click
-      expect(page).to have_content(student.forename).and have_content(student.surname)
+      find_by_id('loginGoogle').click
+      expect(page).to have_text(student.forename).and have_text(student.surname)
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe 'User visits the homepage', :vcr, type: :system, js: true, defaul
     visit root_path
     stub_google_omniauth
     click_button 'Login'
-    find(:css, '#loginGoogle').click
+    find_by_id('loginGoogle').click
     expect(page).to have_text('Your account has not been found')
   end
 end

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'User changes leaderboard options', type: :system, js: true, default_creates: true do
+RSpec.describe 'User changes leaderboard options', :default_creates, :js, type: :system do
   before do
     setup_subject_database
     sign_in student
@@ -83,13 +83,13 @@ RSpec.describe 'User changes leaderboard options', type: :system, js: true, defa
     end
 
     it 'adds up the the overall score correctly' do
-      find(:css, '#allTime').click
+      find_by_id('allTime').click
       expect(page).to have_css('td', exact_text: overall_score)
     end
 
     it 'adds up a subject score accross multiple topics correctly' do
       create(:all_time_topic_score, user: student, topic: second_topic)
-      find(:css, '#allTime').click
+      find_by_id('allTime').click
       expect(page).to have_css('td', exact_text: (TopicScore.first.score +
                                                   AllTimeTopicScore.first.score +
                                                   AllTimeTopicScore.second.score).to_s)
@@ -101,27 +101,27 @@ RSpec.describe 'User changes leaderboard options', type: :system, js: true, defa
 
     it 'adds up scores only for that subject' do
       create(:all_time_topic_score, user: student, topic: second_subject_topic)
-      find(:css, '#allTime').click
+      find_by_id('allTime').click
       expect(page).to have_css('td', exact_text: TopicScore.first.score)
     end
 
     it 'adds up scores only for that topic' do
       create(:all_time_topic_score, user: student, topic: second_topic)
       visit(leaderboard_path(subject.name, topic: second_topic))
-      find(:css, '#allTime').click
+      find_by_id('allTime').click
       expect(page).to have_css('td', exact_text: AllTimeTopicScore.second.score)
     end
 
     it 'adds up scores correctly for another user if I have no score' do
       AllTimeTopicScore.first.destroy
       create(:all_time_topic_score, user: second_student, topic: second_topic)
-      find(:css, '#allTime').click
+      find_by_id('allTime').click
       expect(page).to have_css('td', exact_text: AllTimeTopicScore.first.score)
     end
 
     it 'works if there is only an all time score and no topic score' do
       TopicScore.first.destroy
-      find(:css, '#allTime').click
+      find_by_id('allTime').click
       expect(page).to have_css('td', exact_text: AllTimeTopicScore.first.score)
     end
   end

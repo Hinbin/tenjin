@@ -22,15 +22,15 @@ class LessonsController < ApplicationController
     authorize @lesson
   end
 
-  def create
-    @lesson = Lesson.new(lesson_params)
-    save_lesson
-  end
-
   def edit
     @topics = Topic.where(active: true, subject: @lesson.subject).order(:name)
     @lesson.video_id = @lesson.generate_video_src
     authorize @lesson
+  end
+
+  def create
+    @lesson = Lesson.new(lesson_params)
+    save_lesson
   end
 
   def update

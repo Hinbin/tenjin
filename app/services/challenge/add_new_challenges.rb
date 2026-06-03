@@ -2,6 +2,7 @@
 
 class Challenge::AddNewChallenges < ApplicationService
   def initialize(multiplier: 1, duration: 7.days, daily: false)
+    super()
     @multiplier = multiplier
     @duration = duration
     @daily = daily

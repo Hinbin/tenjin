@@ -2,6 +2,7 @@
 
 class Quiz::AddLeaderboardPoint < ApplicationService
   def initialize(params)
+    super()
     @quiz = params[:quiz]
     @user = @quiz.user
     @question = params[:question]

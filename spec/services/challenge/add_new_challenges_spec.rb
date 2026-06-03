@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Challenge::AddNewChallenges, default_creates: true do
+RSpec.describe Challenge::AddNewChallenges, :default_creates do
   context 'when creating a new challenge' do
     it 'adds challenges for existing subjects' do
       create_list(:topic, 5)

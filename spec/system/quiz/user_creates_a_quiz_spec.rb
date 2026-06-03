@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/api_data'
 
-RSpec.describe 'User creates a quiz', default_creates: true, js: true, type: :system do
+RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
   context 'when picking a subject' do
     let(:subject_cs) { create(:computer_science) }
     let(:classroom_cs) { create(:classroom, subject: subject_cs, school:) }
@@ -24,7 +24,7 @@ RSpec.describe 'User creates a quiz', default_creates: true, js: true, type: :sy
       setup_subject_database
       log_in
       find(class: 'subject-carousel-item-image').click
-      expect(page).to have_content(/Select topic/i)
+      expect(page).to have_text(/Select topic/i)
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe 'User creates a quiz', default_creates: true, js: true, type: :sy
     end
 
     it 'says how long they need to wait to create another quiz' do
-      expect(page).to have_content('You need to wait')
+      expect(page).to have_text('You need to wait')
     end
   end
 
@@ -78,7 +78,7 @@ RSpec.describe 'User creates a quiz', default_creates: true, js: true, type: :sy
     it 'always allows you to score with a lucky dip' do
       three_quizzes_started
       navigate_to_lucky_dip
-      expect(page).to have_no_content('not counting')
+      expect(page).to have_no_text('not counting')
     end
 
     context 'when you should not be allowed to score' do
@@ -97,7 +97,7 @@ RSpec.describe 'User creates a quiz', default_creates: true, js: true, type: :sy
       end
 
       it 'informs the user they cannot currently score leaderboard points for this quiz' do
-        expect(page).to have_content('not counting')
+        expect(page).to have_text('not counting')
       end
     end
   end

@@ -2,6 +2,7 @@
 
 class Homework::UpdateHomeworkProgress < ApplicationService
   def initialize(quiz)
+    super()
     @quiz = quiz
   end
 
@@ -10,7 +11,7 @@ class Homework::UpdateHomeworkProgress < ApplicationService
     homework_progresses.find_each do |progress|
       check_percentage_correct(progress)
     end
-    OpenStruct.new(success?: true, completed?: completed_homework, errors: nil)
+    result(success: true, completed: completed_homework, errors: nil)
   end
 
   protected

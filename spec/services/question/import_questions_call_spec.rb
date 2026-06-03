@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Question::ImportQuestions, '#call', default_creates: true do
+RSpec.describe Question::ImportQuestions, '#call', :default_creates do
   context 'when importing questions' do
     let(:lesson_name) { FFaker::Lorem.words.join }
     let(:single_question) { build(:question_import_hash_with_lesson) }
@@ -11,7 +11,6 @@ RSpec.describe Question::ImportQuestions, '#call', default_creates: true do
     let(:multiple_lessons) { build_list(:question_import_hash_with_lesson, rand(1..10)) }
     let(:no_lessons) { build_list(:question_import_hash, rand(1..10)) }
     let(:topic_filename) { "#{topic.name}.json" }
-    
 
     it 'validates questions successfully' do
       result = described_class.new(JSON.generate(multiple_lessons), topic, topic_filename).call

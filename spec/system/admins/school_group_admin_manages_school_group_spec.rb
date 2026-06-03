@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'School group admin manages school group', type: :system, js: true, default_creates: true do
+RSpec.describe 'School group admin manages school group', :default_creates, :js, type: :system do
   before do
     school
     sign_in school_group_admin

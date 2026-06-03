@@ -4,7 +4,7 @@ require 'rails_helper'
 
 # JS-only Selenium smoke tests for customisation admin flows.
 # Non-interactive tests have been converted to spec/requests/customise_controller_spec.rb.
-RSpec.describe 'Admin manages customisations', type: :system, js: true, default_creates: true do
+RSpec.describe 'Admin manages customisations', :default_creates, :js, type: :system do
   let(:available_customisation) { create(:dashboard_customisation, purchasable: true) }
 
   before { sign_in super_admin }

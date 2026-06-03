@@ -10,7 +10,7 @@ FactoryBot.define do
 
     score { rand(1000) }
     association :user, factory: :student, school: nil, strategy: :build
-    association :topic, factory: :topic, strategy: :build
+    association :topic, strategy: :build
 
     factory :ordered_topic_score do
       sequence(:score)

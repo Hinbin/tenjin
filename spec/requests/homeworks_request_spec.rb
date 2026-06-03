@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Homeworks', type: :request, default_creates: true do
+RSpec.describe 'Homeworks', :default_creates, type: :request do
   let(:classroom) { create(:classroom, subject:, school: teacher.school) }
   let(:homework) { create(:homework, classroom:) }
 

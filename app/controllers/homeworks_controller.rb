@@ -6,6 +6,12 @@ class HomeworksController < ApplicationController
   before_action :set_homework, only: %i[show destroy]
   rescue_from ActionController::ParameterMissing, with: :no_classroom_id
 
+  def show
+    authorize @homework
+    @homework_progress = HomeworkProgress.includes(:user).where(homework: @homework).order('users.surname')
+    @homework_counts = @homework.classroom.homework_counts.find_by(id: @homework)
+  end
+
   def new
     @homework = Homework.new(due_date: 1.week.from_now, classroom: @classroom, required: 70)
     authorize @homework
@@ -22,12 +28,6 @@ class HomeworksController < ApplicationController
       @classroom = @homework.classroom
       @classroom.present? ? render('new') : redirect_to(dashboard_path)
     end
-  end
-
-  def show
-    authorize @homework
-    @homework_progress = HomeworkProgress.includes(:user).where(homework: @homework).order('users.surname')
-    @homework_counts = @homework.classroom.homework_counts.find_by(id: @homework)
   end
 
   def destroy

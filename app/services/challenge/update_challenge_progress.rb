@@ -2,6 +2,7 @@
 
 class Challenge::UpdateChallengeProgress < ApplicationService
   def initialize(quiz, number_to_add = 0, question_topic = nil)
+    super()
     @quiz = quiz
     @number_to_add = number_to_add
     @question_topic = question_topic
@@ -29,7 +30,7 @@ class Challenge::UpdateChallengeProgress < ApplicationService
 
   def award_challenge_points?
     # Check if completed is true and awarded is false
-    return unless @result.rows[0][1] == true && @result.rows[0][2] == false
+    return false unless @result.rows[0][1] == true && @result.rows[0][2] == false
 
     complete_challenge(ChallengeProgress.find(@result.rows[0][0]))
   end

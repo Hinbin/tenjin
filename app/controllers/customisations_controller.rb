@@ -11,6 +11,12 @@ class CustomisationsController < ApplicationController
     @retired_customisations = policy_scope(Customisation).where(retired: true).with_attached_image
   end
 
+  def new
+    @customisation = Customisation.new(purchasable: false, retired: false)
+    authorize @customisation
+    render :edit
+  end
+
   def edit
     authorize @customisation
   end
@@ -24,12 +30,6 @@ class CustomisationsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
-  end
-
-  def new
-    @customisation = Customisation.new(purchasable: false, retired: false)
-    authorize @customisation
-    render :edit
   end
 
   def update
@@ -83,6 +83,7 @@ class CustomisationsController < ApplicationController
   end
 
   def customisation_params
-    params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image, :customisation_type, :cost, :retired)
+    params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image, :customisation_type, :cost,
+                                          :retired)
   end
 end

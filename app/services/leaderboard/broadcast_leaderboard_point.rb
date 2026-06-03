@@ -2,6 +2,7 @@
 
 class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
   def initialize(topic, user)
+    super()
     @topic = topic
     @user = user
   end
