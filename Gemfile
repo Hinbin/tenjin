@@ -46,6 +46,7 @@ group :development, :test do
 
   # Use the following gems for rspec testing
   gem 'rspec-rails'
+  gem 'parallel_tests', require: false
   
   # Fast creation of test objects
   gem 'factory_bot_rails'

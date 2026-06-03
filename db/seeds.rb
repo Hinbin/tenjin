@@ -14,15 +14,19 @@ def create_file_blob(data:, filename:, content_type:, metadata: nil)
                                            content_type: content_type, metadata: metadata
 end
 
-CSV.foreach('db/CSV Output - subject_export.csv', headers: true) do |row|
-  Subject.create!(external_id: row['id'], name: row['name'])
-  p row["name"]
+if File.exist?('db/CSV Output - subject_export.csv')
+  CSV.foreach('db/CSV Output - subject_export.csv', headers: true) do |row|
+    Subject.create!(external_id: row['id'], name: row['name'])
+    p row["name"]
+  end
 end
 
-CSV.foreach('db/CSV Output - unit_export.csv', headers: true) do |row|
-  subject = Subject.where(external_id: row['subject_id']).first
-  Topic.create!(external_id: row['id'], name: row['name'], subject: subject )
-  p row["name"]
+if File.exist?('db/CSV Output - unit_export.csv')
+  CSV.foreach('db/CSV Output - unit_export.csv', headers: true) do |row|
+    subject = Subject.where(external_id: row['subject_id']).first
+    Topic.create!(external_id: row['id'], name: row['name'], subject: subject)
+    p row["name"]
+  end
 end
 
 Multiplier.create([ {score: 0, multiplier: 1}, {score: 4, multiplier: 2}, {score: 7, multiplier: 4}, {score: 10, multiplier: 10} ] )
@@ -51,57 +55,58 @@ case Rails.env
     Admin.create(email: 'n.houlton@grange.outwood.com', password: 'password', password_confirmation: 'password', role: 'super')
 end
 
-CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
-  topic = Topic.where(external_id: row['topic_id']).first
+if File.exist?('db/CSV Output - question_export.csv')
+  CSV.foreach('db/CSV Output - question_export.csv', headers: true) do |row|
+    topic = Topic.where(external_id: row['topic_id']).first
 
-  if row['image'].nil?
-    q = Question.new(external_id: row['id'], topic: topic, question_text: row['question_text'], question_type: row['question_type'])
-    q.save!(validate: false)
-  else
-    google_location = row['image'].gsub(/open?/, 'uc')
+    if row['image'].nil?
+      q = Question.new(external_id: row['id'], topic: topic, question_text: row['question_text'], question_type: row['question_type'])
+      q.save!(validate: false)
+    else
+      google_location = row['image'].gsub(/open?/, 'uc')
 
-    http_conn = Faraday.new do |builder|
-      builder.adapter Faraday.default_adapter
-    end 
-    response = http_conn.get google_location
+      http_conn = Faraday.new do |builder|
+        builder.adapter Faraday.default_adapter
+      end
+      response = http_conn.get google_location
 
-    filename = google_location.from(31) + '.png'
+      filename = google_location.from(31) + '.png'
 
-    unless defined? /HREF=".*"/.match(response.body)[0]
-      p "ERROR WITH: " + filename
-      next
+      unless defined? /HREF=".*"/.match(response.body)[0]
+        p "ERROR WITH: " + filename
+        next
+      end
+
+      new_google_loc = /HREF=".*"/.match(response.body)[0].from(6).chop
+
+      response = http_conn.get new_google_loc
+
+      image = create_file_blob(data: StringIO.new(response.body), filename: filename, content_type: 'image/jpeg')
+      html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
+      q = Question.new(external_id: row['id'], topic: topic, question_text: html, question_type: row['question_type'])
+      q.save!(validate: false)
     end
-
-    new_google_loc = /HREF=".*"/.match(response.body)[0].from(6).chop
-
-    response = http_conn.get new_google_loc
-
-    image = create_file_blob(data: StringIO.new(response.body), filename: filename, content_type: 'image/jpeg')
-    html = %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
-    q = Question.new(external_id: row['id'], topic: topic, question_text: html , question_type: row['question_type'] )
-    q.save!(validate: false)
   end
-
 end
 
 # Answers from the Google spreadsheets come in a set order, with correct answer first.
 # Randomise these answers
-question_id = 0
-answer_array = []
-CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
-  if question_id == row['question_id']
-    answer_array.push(row)
-  else
-    answer_array.shuffle.each do |r|
+if File.exist?('db/CSV Output - answer_export.csv')
+  question_id = 0
+  answer_array = []
+  CSV.foreach('db/CSV Output - answer_export.csv', headers: true) do |row|
+    if question_id == row['question_id']
+      answer_array.push(row)
+    else
+      answer_array.shuffle.each do |r|
+        q = Question.find_by(external_id: r['question_id'])
+        Answer.create(external_id: r['id'], question: q, text: r['text'], correct: r['correct']) unless q.blank?
+      end
 
-      q = Question.find_by(external_id: r['question_id'])
-      Answer.create(external_id: r['id'], question: q, text: r['text'], correct: r['correct'] ) unless q.blank?
+      answer_array = []
+      answer_array.push(row)
     end
 
-    answer_array = []
-    answer_array.push(row)
+    question_id = row['question_id']
   end
-
-  question_id = row['question_id']
-
 end

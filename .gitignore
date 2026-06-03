@@ -53,6 +53,9 @@ yarn-debug.log*
 # Ignore the image downloads directory
 /db/downloads
 
+# Local data exports, not source
+db/CSV Output - *.csv
+
 .env
 
 /app/assets/builds/*
