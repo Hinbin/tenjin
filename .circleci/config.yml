@@ -60,7 +60,7 @@ commands:
             - ~/.cache/yarn
             
       - run: sudo apt update
-      - run: sudo apt-get install -y libvips42t64 libvips-dev
+      - run: sudo apt-get install -y libvips-dev
 
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
