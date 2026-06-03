@@ -14,7 +14,7 @@ class TopicPolicy < ApplicationPolicy
       @scope.where(active: true,
                    subject_id: Subject.with_role(:question_author, user)
                                       .where(active: true)
-                                      .pluck(:id))
+                                      .select(:id))
     end
   end
 
