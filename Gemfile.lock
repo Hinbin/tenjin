@@ -87,8 +87,8 @@ GEM
       minitest (>= 5.1, < 6)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
-    addressable (2.8.4)
-      public_suffix (>= 2.0.2, < 6.0)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.2)
     aws-eventstream (1.2.0)
     aws-partitions (1.779.0)
@@ -151,11 +151,12 @@ GEM
       debug_inspector (>= 0.0.1)
     bootsnap (1.24.4)
       msgpack (~> 1.2)
-    bootstrap-email (1.4.0)
+    bootstrap-email (1.8.1)
       htmlbeautifier (~> 1.3)
       nokogiri (~> 1.6)
+      ostruct (~> 0.6)
       premailer (~> 1.7)
-      sassc (~> 2.1)
+      sass-embedded (~> 1.55)
     builder (3.3.0)
     bullet (8.1.1)
       activesupport (>= 3.0.0)
@@ -177,8 +178,9 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    css_parser (1.14.0)
+    css_parser (3.0.0)
       addressable
+      ssrf_filter (~> 1.5)
     csv (3.3.5)
     date (3.3.3)
     debug_inspector (1.1.0)
@@ -220,15 +222,52 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     ffaker (2.21.0)
-    ffi (1.15.5)
+    ffi (1.17.4)
+    ffi (1.17.4-aarch64-linux-gnu)
+    ffi (1.17.4-aarch64-linux-musl)
+    ffi (1.17.4-arm-linux-gnu)
+    ffi (1.17.4-arm-linux-musl)
+    ffi (1.17.4-arm64-darwin)
+    ffi (1.17.4-x86-linux-gnu)
+    ffi (1.17.4-x86-linux-musl)
+    ffi (1.17.4-x86_64-darwin)
+    ffi (1.17.4-x86_64-linux-gnu)
+    ffi (1.17.4-x86_64-linux-musl)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    google-protobuf (4.33.6)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-aarch64-linux-gnu)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-aarch64-linux-musl)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-arm64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-x86-linux-gnu)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-x86-linux-musl)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-x86_64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-x86_64-linux-gnu)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.6-x86_64-linux-musl)
+      bigdecimal
+      rake (>= 13)
     hashdiff (1.0.1)
     hashie (5.0.0)
     high_voltage (3.1.2)
     hirefire-resource (0.10.1)
-    htmlbeautifier (1.4.2)
-    htmlentities (4.3.4)
+    htmlbeautifier (1.4.3)
+    htmlentities (4.4.2)
     http-accept (1.7.0)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
@@ -295,6 +334,22 @@ GEM
     nokogiri (1.19.3)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.19.3-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.3-aarch64-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.19.3-arm-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.3-arm-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.19.3-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.3-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.3-x86_64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.3-x86_64-linux-musl)
+      racc (~> 1.4)
     oauth2 (2.0.9)
       faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
@@ -330,9 +385,9 @@ GEM
     pg (1.5.3)
     pp (0.6.3)
       prettyprint
-    premailer (1.21.0)
+    premailer (1.29.0)
       addressable
-      css_parser (>= 1.12.0)
+      css_parser (>= 1.19.0)
       htmlentities (>= 4.0.0)
     prettyprint (0.2.0)
     prism (1.9.0)
@@ -344,7 +399,7 @@ GEM
     psych (5.3.1)
       date
       stringio
-    public_suffix (5.0.1)
+    public_suffix (7.0.5)
     puma (4.3.12)
       nio4r (~> 2.0)
     pundit (2.3.0)
@@ -484,8 +539,37 @@ GEM
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sassc (2.4.0)
-      ffi (~> 1.9)
+    sass-embedded (1.100.0)
+      google-protobuf (~> 4.31)
+      rake (>= 13)
+    sass-embedded (1.100.0-aarch64-linux-android)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-aarch64-linux-gnu)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-aarch64-linux-musl)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-arm-linux-androideabi)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-arm-linux-gnueabihf)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-arm-linux-musleabihf)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-arm64-darwin)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-riscv64-linux-android)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-riscv64-linux-gnu)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-riscv64-linux-musl)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-x86_64-darwin)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-x86_64-linux-android)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-x86_64-linux-gnu)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-x86_64-linux-musl)
+      google-protobuf (~> 4.31)
     scout_apm (5.3.5)
       parser
     securerandom (0.4.1)
@@ -522,6 +606,7 @@ GEM
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
       spring (>= 1.2, < 3.0)
+    ssrf_filter (1.5.0)
     statsd-ruby (1.5.0)
     stringio (3.2.0)
     temple (0.10.2)
@@ -566,7 +651,25 @@ GEM
     zeitwerk (2.6.8)
 
 PLATFORMS
+  aarch64-linux-android
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-androideabi
+  arm-linux-gnu
+  arm-linux-gnueabihf
+  arm-linux-musl
+  arm-linux-musleabihf
+  arm64-darwin
+  riscv64-linux-android
+  riscv64-linux-gnu
+  riscv64-linux-musl
   ruby
+  x86-linux-gnu
+  x86-linux-musl
+  x86_64-darwin
+  x86_64-linux-android
+  x86_64-linux-gnu
+  x86_64-linux-musl
 
 DEPENDENCIES
   aws-sdk-rails
@@ -575,7 +678,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootsnap (>= 1.4.4)
-  bootstrap-email
+  bootstrap-email (~> 1.8)
   bullet
   byebug
   capybara

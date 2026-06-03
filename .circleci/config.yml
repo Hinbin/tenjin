@@ -37,7 +37,10 @@ commands:
           keys:
             - tenjin-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}
             - tenjin-bundle-{{ arch }}-
-      - run: bundle install --jobs=4 --retry=3
+      - run:
+          name: bundle install
+          command: bundle install --jobs=4 --retry=3
+          no_output_timeout: 30m
       - save_cache:
           name: Store bundle cache
           key: tenjin-bundle-{{ arch }}-{{ checksum "Gemfile.lock" }}

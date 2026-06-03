@@ -128,7 +128,7 @@ gem 'rolify'
 gem 'wondeclient', github: 'wondeltd/ruby-client'
 
 # Bootstrap for emails
-gem 'bootstrap-email'
+gem 'bootstrap-email', '~> 1.8'
 
 # High-voltage for our static pages (e.g. home)
 gem 'high_voltage'
