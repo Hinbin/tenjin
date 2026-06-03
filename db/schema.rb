@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_02_135014) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_03_000200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -105,6 +105,28 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_135014) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "external_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
+  end
+
+  create_table "app_errors", force: :cascade do |t|
+    t.string "exception_class", null: false
+    t.text "message"
+    t.text "backtrace"
+    t.string "request_id"
+    t.string "controller"
+    t.string "action"
+    t.string "url"
+    t.jsonb "params", default: {}, null: false
+    t.bigint "user_id"
+    t.bigint "admin_id"
+    t.string "job_class"
+    t.string "job_id"
+    t.string "environment", null: false
+    t.jsonb "context", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_app_errors_on_created_at"
+    t.index ["exception_class"], name: "index_app_errors_on_exception_class"
+    t.index ["request_id"], name: "index_app_errors_on_request_id"
   end
 
   create_table "asked_questions", force: :cascade do |t|
@@ -293,7 +315,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_135014) do
     t.bigint "lesson_id"
     t.boolean "active", default: true
     t.integer "flagged_questions_count"
+    t.index ["lesson_id", "active"], name: "index_questions_on_lesson_id_and_active"
     t.index ["lesson_id"], name: "index_questions_on_lesson_id"
+    t.index ["topic_id", "active"], name: "index_questions_on_topic_id_and_active"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
 
@@ -372,6 +396,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_135014) do
     t.integer "external_id"
     t.bigint "default_lesson_id"
     t.boolean "active", default: true
+    t.index ["subject_id", "active"], name: "index_topics_on_subject_id_and_active"
     t.index ["subject_id"], name: "index_topics_on_subject_id"
   end
 
@@ -386,6 +411,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_135014) do
     t.bigint "lesson_id"
     t.index ["lesson_id"], name: "index_usage_statistics_on_lesson_id"
     t.index ["topic_id"], name: "index_usage_statistics_on_topic_id"
+    t.index ["user_id", "topic_id", "lesson_id", "date"], name: "index_usage_statistics_on_quiz_start_lookup"
     t.index ["user_id"], name: "index_usage_statistics_on_user_id"
   end
 

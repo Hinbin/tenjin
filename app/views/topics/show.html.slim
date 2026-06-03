@@ -45,6 +45,10 @@
 
   .row.my-5
     .col
+      =link_to 'Archive Topic',
+        archive_topic_path(@topic),
+        class: 'btn btn-warning btn-block',
+        data: {turbo_method: :patch, turbo_confirm: 'Archive this topic and remove active challenges for it?'}
       =link_to 'Delete Topic',
         topic_path(@topic),
         class: 'btn btn-danger btn-block',

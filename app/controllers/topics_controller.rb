@@ -2,7 +2,7 @@
 
 class TopicsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_topic, only: %i[update edit show destroy]
+  before_action :set_topic, only: %i[update edit show destroy archive]
 
   def index
     @subjects = policy_scope(Question)
@@ -49,7 +49,16 @@ class TopicsController < ApplicationController
   def destroy
     authorize @topic
 
-    @topic.destroy
+    result = Topic::DestroyTopic.call(@topic)
+    flash[:alert] = result.errors unless result.success?
+    redirect_to topics_path
+  end
+
+  def archive
+    authorize @topic, :destroy?
+
+    result = Topic::ArchiveTopic.call(@topic)
+    flash[result.success? ? :notice : :alert] = result.success? ? 'Topic archived' : result.errors
     redirect_to topics_path
   end
 

@@ -18,6 +18,8 @@ class QuizzesController < ApplicationController
 
   def show
     authorize @quiz
+    return missing_question if @question.blank?
+
     set_quiz_status_variables
     find_lesson
     return render 'show' if @quiz.active?
@@ -65,6 +67,11 @@ class QuizzesController < ApplicationController
 
   def update
     authorize @quiz
+    if @question.blank?
+      return render(json: { error: 'Quiz question could not be found' },
+                    status: :unprocessable_entity)
+    end
+
     render(json: Quiz::CheckAnswer.call(quiz: @quiz, question: @question, answer_given: answer_params))
   end
 
@@ -98,7 +105,8 @@ class QuizzesController < ApplicationController
   end
 
   def set_question
-    @question = Question.find(@quiz.question_order[@quiz.num_questions_asked - 1])
+    question_id = @quiz.question_order&.at(@quiz.num_questions_asked - 1)
+    @question = Question.find_by(id: question_id)
   end
 
   def set_create_params
@@ -143,6 +151,17 @@ class QuizzesController < ApplicationController
     @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
     @percent_complete = (@quiz.num_questions_asked / @quiz.questions.length.to_f) * 100.to_f
     @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
+  end
+
+  def missing_question
+    @quiz.update(active: false)
+    AppErrorReporter.report(StandardError.new('Quiz next question missing'),
+                            context: { quiz_id: @quiz.id,
+                                       user_id: current_user.id,
+                                       question_order: @quiz.question_order,
+                                       num_questions_asked: @quiz.num_questions_asked })
+    flash[:alert] = 'Sorry, that quiz could not find its next question. Please start a new quiz.'
+    redirect_to dashboard_path
   end
 end
 # rubocop:enable Metrics/ClassLength

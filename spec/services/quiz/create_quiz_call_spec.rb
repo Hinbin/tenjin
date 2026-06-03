@@ -9,6 +9,7 @@ RSpec.describe Quiz::CreateQuiz, '#call', :default_creates do
     let(:topics) { create_list(:topic, 10, subject: subject) }
 
     before do
+      create(:question, topic: topic)
       topics.each do |t|
         create(:question, topic: t)
       end
@@ -48,6 +49,19 @@ RSpec.describe Quiz::CreateQuiz, '#call', :default_creates do
     it 'creates a quiz if there is currently no time of last quiz' do
       student.update_attribute(:time_of_last_quiz, nil)
       expect(quiz.success?).to eq(true)
+    end
+
+    it 'records usage statistics during quiz creation' do
+      student.update_attribute(:time_of_last_quiz, nil)
+
+      expect { quiz }.to change { UsageStatistic.where(user: student, topic: nil).count }.by(1)
+    end
+
+    it 'does not create an empty quiz' do
+      Question.update_all(active: false)
+
+      expect(quiz.success?).to eq(false)
+      expect(quiz.errors).to eq('No active questions are available for this quiz.')
     end
   end
 

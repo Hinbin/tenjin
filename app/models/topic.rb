@@ -9,13 +9,11 @@ class Topic < ApplicationRecord
   has_many :challenges, dependent: :destroy
   has_many :homeworks, dependent: :destroy
   has_many :quizzes, dependent: :destroy
-  has_many :usage_statistics, dependent: :destroy
+  has_many :usage_statistics
 
   belongs_to :default_lesson,
              optional: true,
              class_name: 'Lesson'
 
   validates :name, presence: true
-
-  before_destroy { |record| UsageStatistic.where(topic: record).update_all(topic_id: nil) }
 end

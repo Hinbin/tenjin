@@ -1,4 +1,5 @@
 require_relative "boot"
+require_relative "../app/middleware/app_error_middleware"
 
 require "rails/all"
 
@@ -18,5 +19,6 @@ module Csquiz
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.middleware.use AppErrorMiddleware
   end
 end

@@ -1,0 +1,28 @@
+.container
+  .row
+    .col
+      h1 Runtime Errors
+      table.table
+        thead
+          tr
+            th Time
+            th Error
+            th Request
+            th Context
+            th
+        tbody
+          - @app_errors.each do |app_error|
+            tr
+              td = l(app_error.created_at, format: :short)
+              td
+                strong = app_error.exception_class
+                br
+                = truncate(app_error.message, length: 120)
+              td
+                = app_error.controller
+                - if app_error.action.present?
+                  = "##{app_error.action}"
+                br
+                = app_error.request_id
+              td = app_error.context
+              td = link_to 'View', app_error_path(app_error), class: 'btn btn-primary'

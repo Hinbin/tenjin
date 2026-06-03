@@ -30,7 +30,11 @@ Rails.application.routes.draw do
     end
   end
   resources :answers
+  resources :app_errors, only: %i[index show]
   resources :topics do
+    member do
+      patch 'archive'
+    end
     collection do
       get 'flagged_questions' 
     end
