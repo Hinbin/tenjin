@@ -9,7 +9,6 @@
     "@babel/core": "7",
     "@babel/plugin-transform-runtime": "7",
     "@babel/preset-env": "7",
-    "@babel/preset-react": "^7.16.7",
     "@babel/runtime": "7",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@hotwired/turbo-rails": "^7.2.0",
@@ -19,8 +18,6 @@
     "@rails/ujs": "^7.0.2-2",
     "actiontext": "rails/actiontext",
     "babel-loader": "8",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "babel-preset-react": "^6.24.1",
     "bootstrap": "^4.5.2",
     "compression-webpack-plugin": "9",
     "css-loader": "^6.7.1",
@@ -31,7 +28,6 @@
     "datetime-moment": "^1.0.0",
     "expose-loader": "^3.1.0",
     "flatpickr": "^4.5.7",
-    "flux": "^3.1.3",
     "imports-loader": "^0.8.0",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
@@ -39,12 +35,6 @@
     "moment": "^2.29.2",
     "popper.js": "^1.16.1",
     "postcss-cssnext": "^3.1.0",
-    "prop-types": "^15.7.2",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "react_ujs": "^2.6.0",
-    "reactstrap": "^8.0.1",
-    "recompose": "^0.30.0",
     "sass": "^1.49.11",
     "sass-loader": "^12.6.0",
     "shakapacker": "6.6.0",
@@ -61,8 +51,7 @@
   "version": "0.1.0",
   "babel": {
     "presets": [
-      "./node_modules/shakapacker/package/babel/preset.js",
-      "@babel/preset-react"
+      "./node_modules/shakapacker/package/babel/preset.js"
     ]
   },
   "devDependencies": {
@@ -73,7 +62,6 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "react-refresh": "^0.14.0",
     "webpack-dev-server": "^4.7.4"
   },
   "scripts": {

@@ -56,7 +56,7 @@ class LessonsController < ApplicationController
     authorize @lesson
 
     unless @lesson.valid?
-      @topics = policy_scope(Topic).where(subject: @lesson.topic.subject)
+      @topics = Topic.where(active: true, subject_id: @lesson.topic.subject_id).order(:name)
 
       return render :edit, status: :unprocessable_entity if @lesson.persisted?
 

@@ -60,17 +60,6 @@ $(document).on('turbo:load', function () {
   }
 })
 
-// Support component names relative to this directory:
-var componentRequireContext = require.context('components', true)
-var ReactRailsUJS = require('react_ujs')
-ReactRailsUJS.useContext(componentRequireContext)
-
-// Fix for leaderboard not loading
-ReactRailsUJS.handleEvent('turbo:frame-load', ReactRailsUJS.handleMount)
-ReactRailsUJS.handleEvent('turbo:frame-render', ReactRailsUJS.handleUnmount)
-ReactRailsUJS.handleEvent('turbo:load', ReactRailsUJS.handleMount)
-ReactRailsUJS.handleEvent('turbo:before-render', ReactRailsUJS.handleUnmount)
-
 // Stimulus
 const application = Application.start()
 const context = require.context('./controllers', true, /\.js$/)
@@ -78,4 +67,3 @@ application.load(definitionsFromContext(context))
 
 window.Shepherd = Shepherd
 window.Cookies = Cookies
-

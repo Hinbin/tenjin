@@ -5,9 +5,10 @@
     .col-4.d-none.d-lg-block
       =render 'subject_select'
     .col
-      .jsVars data={ subject: {id: @subject.id, name: @subject.name }, school: { id: @school.id, name: @school.name } }
-      - if @school_group.present?
-        .jsVars data={ school_group: { id: @school_group.id, name: @school_group.name } }
-      - if @topic.present?
-        .jsVars data={ topic: {id: @topic.id} }
-      = react_component("LiveLeaderboard")
+      #liveLeaderboard data={ controller: 'live-leaderboard',
+                              live_leaderboard_url: leaderboard_path(@subject.name, format: :json),
+                              live_leaderboard_subject: @subject.name,
+                              live_leaderboard_school: @school.name,
+                              live_leaderboard_school_group: @school_group&.name,
+                              live_leaderboard_topic: @topic&.id }
+        .loader Loading...
