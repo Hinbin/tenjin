@@ -91,6 +91,7 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
 
       context "with many enrolled students" do
         before do
+          student.update!(surname: "Zzzqx")
           create_list(:enrollment, 32, classroom: classroom)
           visit(classroom_path(classroom))
         end
