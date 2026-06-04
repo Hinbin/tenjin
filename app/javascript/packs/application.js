@@ -10,8 +10,8 @@ import * as ActiveStorage from '@rails/activestorage'
 
 import 'bootstrap'
 import '@fortawesome/fontawesome-free/js/all'
-import { Application } from 'stimulus'
-import { definitionsFromContext } from 'stimulus/webpack-helpers'
+import { Application } from '@hotwired/stimulus'
+import { definitionsFromContext } from '@hotwired/stimulus-webpack-helpers'
 
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
@@ -43,7 +43,6 @@ const imagePath = (name) => images(name, true)
 require('datatables.net-bs4')
 require('datatables.net-buttons-bs4')
 require('datatables.net-buttons/js/buttons.html5.js')
-require('datetime-moment')
 require('trix')
 require('@rails/actioncable')
 

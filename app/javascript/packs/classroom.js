@@ -34,7 +34,6 @@ $(document).on('turbo:load', () => {
     })
 
     if (!$.fn.dataTable.isDataTable('#homework-table')) {
-      $.fn.dataTable.moment('dd/MM/YYYY HH:mm')
       $('#homework-table').DataTable({
         dom: 'rtp',
         'pageLength': 5,
