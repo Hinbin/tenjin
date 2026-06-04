@@ -14,7 +14,7 @@ bundle install
 yarn install
 bin/rails db:create db:schema:load
 
-# Development server (Rails + yarn build --watch)
+# Development server (Rails + webpacker-dev-server)
 bin/dev
 
 # Tests
@@ -26,7 +26,7 @@ bin/rails parallel:prepare                           # (re)build parallel test D
 # Linting
 bundle exec rubocop
 bundle exec reek
-yarn build                                           # JS asset compilation (no JS test runner)
+yarn build                                           # JS asset compilation via shakapacker webpack (no JS test runner)
 
 # Before CI-style runs
 bin/rails webpacker:compile

@@ -10,15 +10,24 @@ module ApplicationHelper
   end
 
   def asset_exists?(path)
-    Webpacker.manifest.send(:data).keys.grep(/#{path}/)
+    Webpacker.manifest.lookup("static/#{path}").present?
   end
 
   def print_subject_image(url)
-    if asset_exists?(url).empty?
-      'default-subject.jpg'
-    else
+    if asset_exists?(url)
       url
+    else
+      'default-subject.jpg'
     end
+  end
+
+  # Renders a subject's carousel image, falling back to the default image if the
+  # named asset is missing from the manifest (belt-and-braces guard so a missing
+  # pack degrades gracefully instead of raising a MissingEntryError mid-render).
+  def subject_image_tag(name, **)
+    image_pack_tag(print_subject_image("#{name.parameterize}.jpg"), **)
+  rescue Webpacker::Manifest::MissingEntryError
+    image_pack_tag('default-subject.jpg', **)
   end
 
   def render_small_separator(style = nil)

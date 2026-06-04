@@ -85,7 +85,7 @@ For local development:
 bin/dev
 ```
 
-`Procfile.dev` starts the Rails server on port `3000` and runs `yarn build --watch`.
+`Procfile.dev` starts the Rails server on port `3000` and the webpacker dev server (`bin/webpacker-dev-server`).
 
 ## Test Commands
 
