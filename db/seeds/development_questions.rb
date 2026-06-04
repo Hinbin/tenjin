@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-unless Rails.env.development?
-  raise "Development question seeds can only be loaded in development, not #{Rails.env}."
-end
+raise "Development question seeds can only be loaded in development, not #{Rails.env}." unless Rails.env.development?
 
 require 'csv'
 
@@ -12,48 +10,70 @@ def create_file_blob(data:, filename:, content_type:, metadata: nil)
 end
 
 def upsert_seed_subject(row)
-  Subject.find_or_initialize_by(external_id: row['id']).tap do |subject|
-    subject.name = row['name']
-    subject.save!
-    p subject.name
-  end
+  subject = find_seed_subject(row)
+  subject.name = row['name']
+  subject.external_id ||= row['id']
+  subject.save!
+  Rails.logger.info(subject.name)
 rescue ActiveRecord::RecordInvalid => e
-  raise e unless e.record.errors.of_kind?(:name, :taken)
+  handle_seed_subject_error(row, e)
+end
 
-  Subject.find_by!(name: row['name']).tap do |subject|
-    subject.update!(external_id: row['id']) if subject.external_id.blank?
-    p subject.name
-  end
+def find_seed_subject(row)
+  Subject.find_by(external_id: row['id']) || Subject.find_or_initialize_by(name: row['name'])
+end
+
+def handle_seed_subject_error(row, error)
+  raise error unless error.record.errors.of_kind?(:name, :taken)
+
+  subject = Subject.find_by!(name: row['name'])
+  subject.update!(external_id: row['id']) if subject.external_id.blank?
+  Rails.logger.info(subject.name)
 end
 
 def upsert_seed_topic(row)
   subject = Subject.find_by!(external_id: row['subject_id'])
 
-  Topic.find_or_initialize_by(external_id: row['id']).tap do |topic|
+  find_seed_topic(row, subject).tap do |topic|
     topic.name = row['name']
     topic.subject = subject
+    topic.external_id ||= row['id']
     topic.save!
-    p topic.name
+    Rails.logger.info(topic.name)
   end
+end
+
+def find_seed_topic(row, subject)
+  Topic.find_by(external_id: row['id']) || Topic.find_or_initialize_by(subject:, name: row['name'])
 end
 
 def question_text_for_seed(row)
   return row['question_text'] if row['image'].blank?
 
-  google_location = row['image'].gsub(/open?/, 'uc')
-  http_conn = Faraday.new { |builder| builder.adapter Faraday.default_adapter }
-  response = http_conn.get google_location
-  filename = google_location.from(31) + '.png'
-  href_match = /HREF=".*"/.match(response.body)
+  image = fetch_seed_image_blob(row['image'])
+  return if image.blank?
 
-  unless href_match
-    p "ERROR WITH: #{filename}"
-    return nil
-  end
-
-  response = http_conn.get href_match[0].from(6).chop
-  image = create_file_blob(data: StringIO.new(response.body), filename:, content_type: 'image/jpeg')
   %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
+end
+
+def fetch_seed_image_blob(image_url)
+  google_location = image_url.gsub(/open?/, 'uc')
+  http_conn = Faraday.new { |builder| builder.adapter Faraday.default_adapter }
+  filename = "#{google_location.from(31)}.png"
+  image_location = seed_image_location(http_conn, google_location, filename)
+  return if image_location.blank?
+
+  response = http_conn.get image_location
+  create_file_blob(data: StringIO.new(response.body), filename:, content_type: 'image/jpeg')
+end
+
+def seed_image_location(http_conn, google_location, filename)
+  response = http_conn.get google_location
+  href_match = /HREF=".*"/.match(response.body)
+  return href_match[0].from(6).chop if href_match
+
+  Rails.logger.info("ERROR WITH: #{filename}")
+  nil
 end
 
 def upsert_seed_question(row)
@@ -119,4 +139,4 @@ if File.exist?('db/CSV Output - answer_export.csv')
   flush_seed_answers(answer_rows)
 end
 
-puts 'Development questions seeded.'
+Rails.logger.info('Development questions seeded.')

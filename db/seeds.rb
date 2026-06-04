@@ -22,22 +22,22 @@ require 'csv'
 end
 
 [
-  {customisation_type: 'dashboard_style', cost: 0, name: 'Race Red', value: 'red'},
-  {customisation_type: 'dashboard_style', cost: 100, name: 'Climber Orange', value: 'orange'},
-  {customisation_type: 'dashboard_style', cost: 100, name: 'Ferrari Dark Red', value: 'darkred'},
-  {customisation_type: 'dashboard_style', cost: 100, name: 'Hiking Dark Blue', value: 'darkblue'},
-  {customisation_type: 'dashboard_style', cost: 100, name: 'Football Dark Green', value: 'darkgreen'},
-  {customisation_type: 'dashboard_style', cost: 100, name: 'Sunshine Yellow', value: 'yellow'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Force', value: 'black,jedi'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Cat', value: 'black,cat'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Jet', value: 'black,fighter-jet'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Wizard', value: 'black,hat-wizard'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Dog', value: 'black,dog'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Candy', value: 'black,candy-cane'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Emoji', value: 'black,grin'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Frog', value: 'black,frog'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Gelato', value: 'black,ice-cream'},
-  {customisation_type: 'leaderboard_icon', cost: 200, name: 'Pizza', value: 'black,pizza-slice'}
+  { customisation_type: 'dashboard_style', cost: 0, name: 'Race Red', value: 'red' },
+  { customisation_type: 'dashboard_style', cost: 100, name: 'Climber Orange', value: 'orange' },
+  { customisation_type: 'dashboard_style', cost: 100, name: 'Ferrari Dark Red', value: 'darkred' },
+  { customisation_type: 'dashboard_style', cost: 100, name: 'Hiking Dark Blue', value: 'darkblue' },
+  { customisation_type: 'dashboard_style', cost: 100, name: 'Football Dark Green', value: 'darkgreen' },
+  { customisation_type: 'dashboard_style', cost: 100, name: 'Sunshine Yellow', value: 'yellow' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Force', value: 'black,jedi' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Cat', value: 'black,cat' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Jet', value: 'black,fighter-jet' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Wizard', value: 'black,hat-wizard' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Dog', value: 'black,dog' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Candy', value: 'black,candy-cane' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Emoji', value: 'black,grin' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Frog', value: 'black,frog' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Gelato', value: 'black,ice-cream' },
+  { customisation_type: 'leaderboard_icon', cost: 200, name: 'Pizza', value: 'black,pizza-slice' }
 ].each do |attributes|
   Customisation.find_or_initialize_by(customisation_type: attributes[:customisation_type],
                                       name: attributes[:name]).tap do |customisation|
@@ -47,7 +47,7 @@ end
 end
 
 case Rails.env
-  when "development"
-    load Rails.root.join('db/seeds/development_questions.rb')
-    load Rails.root.join('db/seeds/development_users.rb')
+when 'development'
+  load Rails.root.join('db/seeds/development_questions.rb')
+  load Rails.root.join('db/seeds/development_users.rb')
 end
