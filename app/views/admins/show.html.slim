@@ -9,3 +9,29 @@
                   turbo_method: "post" },
                   id: 'reset-button',
                   class: 'btn btn-danger btn-block my-5'
+  .row
+    .col
+      h2.h3 Current Admins
+      .table-responsive
+        table.table#admins-table
+          thead
+            tr
+              th Email
+              th Role
+              th Reset Password
+              th Remove
+          tbody
+            - @admins.each do |admin|
+              tr.admin-row id="admin-#{admin.id}"
+                td = admin.email
+                td = admin.role.humanize
+                td = button_to 'Send Reset Email',
+                  reset_password_admin_path(admin),
+                  class: 'btn btn-primary',
+                  data: { turbo_confirm: "Send password reset instructions to #{admin.email}?" }
+                td = button_to 'Remove',
+                  admin_path(admin),
+                  method: :delete,
+                  class: 'btn btn-danger',
+                  disabled: @minimum_admin_count_reached,
+                  data: { turbo_confirm: "Remove admin account for #{admin.email}?" }

@@ -9,6 +9,54 @@ RSpec.describe 'Admins', :default_creates, type: :request do
       get schools_path
       expect(response.body).to include('Schools')
     end
+
+    it 'shows current admin accounts on the admin page' do
+      school_group_admin
+      sign_in super_admin
+      get admin_path(super_admin)
+      html = Capybara.string(response.body)
+      expect(html).to have_css('#admins-table .admin-row', count: 2)
+      expect(html).to have_text(super_admin.email)
+      expect(html).to have_text(school_group_admin.email)
+    end
+
+    it 'sends reset password instructions to an admin' do
+      school_group_admin
+      sign_in super_admin
+      expect do
+        post reset_password_admin_path(school_group_admin)
+      end.to change { ActionMailer::Base.deliveries.count }.by(1)
+      expect(response).to redirect_to(admin_path(super_admin))
+      expect(flash[:notice]).to include(school_group_admin.email)
+    end
+
+    it 'removes an admin account' do
+      school_group_admin
+      sign_in super_admin
+      expect do
+        delete admin_path(school_group_admin)
+      end.to change(Admin, :count).by(-1)
+      expect(response).to redirect_to(admin_path(super_admin))
+    end
+
+    it 'does not remove my own admin account when another admin remains' do
+      school_group_admin
+      sign_in super_admin
+      expect do
+        delete admin_path(super_admin)
+      end.not_to change(Admin, :count)
+      expect(response).to redirect_to(admin_path(super_admin))
+      expect(flash[:alert]).to include('cannot remove your own admin account')
+    end
+
+    it 'does not remove the final admin account' do
+      sign_in super_admin
+      expect do
+        delete admin_path(super_admin)
+      end.not_to change(Admin, :count)
+      expect(response).to redirect_to(admin_path(super_admin))
+      expect(flash[:alert]).to include('at least one admin')
+    end
   end
 
   context 'when viewing global statistics' do

@@ -54,9 +54,10 @@ Rails.application.routes.draw do
         get 'manage_roles'
       end
   end
-  resources :admins, only:[:show] do
+  resources :admins, only:[:show, :destroy] do
     member do
       post 'become'
+      post 'reset_password'
       post 'reset_year'
     end
   end

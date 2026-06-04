@@ -68,6 +68,6 @@
     "webpack-dev-server": "^4.7.4"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config config/webpack/webpack.config.js"
   }
 }

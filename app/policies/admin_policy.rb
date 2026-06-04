@@ -20,4 +20,12 @@ class AdminPolicy < ApplicationPolicy
   def show?
     user.super?
   end
+
+  def reset_password?
+    user.super?
+  end
+
+  def destroy?
+    user.super?
+  end
 end

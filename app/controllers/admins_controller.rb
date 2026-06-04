@@ -14,6 +14,27 @@ class AdminsController < ApplicationController
 
   def show
     authorize current_admin
+    @admins = Admin.order(:email)
+    @minimum_admin_count_reached = Admin.count <= 1
+  end
+
+  def reset_password
+    admin = Admin.find(params[:id])
+    authorize admin
+    admin.send_reset_password_instructions
+    redirect_to admin_path(current_admin), notice: "Password reset instructions sent to #{admin.email}"
+  end
+
+  def destroy
+    admin = Admin.find(params[:id])
+    authorize admin
+    if Admin.count <= 1
+      redirect_to admin_path(current_admin), alert: 'There must be at least one admin account.'
+    elsif admin == current_admin
+      redirect_to admin_path(current_admin), alert: 'You cannot remove your own admin account.'
+    else
+      destroy_admin(admin)
+    end
   end
 
   def reset_year
@@ -27,5 +48,10 @@ class AdminsController < ApplicationController
 
   def become_admin_params
     params.require(:user_id)
+  end
+
+  def destroy_admin(admin)
+    admin.destroy
+    redirect_to admin_path(current_admin), notice: "Removed admin account for #{admin.email}"
   end
 end
