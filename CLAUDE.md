@@ -51,7 +51,7 @@ Known local Ruby paths:
 
 **Ruby/Rails stack:** Rails 7.2, PostgreSQL (`csquiz_development` / `csquiz_test`), Puma, Delayed Job for background work, Active Storage on S3 in production, Devise + Pundit + Rolify for auth/authz.
 
-**Frontend:** Shakapacker (Webpack 5) bundles JS. Mix of React components (in `app/javascript/components/`), Stimulus controllers, Turbo, and Bootstrap 4 + jQuery-era libs. Match nearby patterns rather than introducing a new frontend architecture for small changes.
+**Frontend:** Shakapacker (Webpack 5) bundles JS. Stimulus controllers (`@hotwired/stimulus` v3), Turbo, and Bootstrap 4 + jQuery-era libs. `app/javascript/components/` is empty — there is no React in this app. Match nearby patterns rather than introducing a new frontend architecture for small changes.
 
 **Service objects** under `app/services/<domain>/` encapsulate multi-step workflows. All inherit from `ApplicationService` which provides a `.call` class method. Use service objects for domain logic; keep controllers thin.
 
