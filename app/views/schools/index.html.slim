@@ -24,7 +24,7 @@
             td =link_to boolean_icon(school.permitted?),
               school_path(school, school: { permitted: !school.permitted } ),
               method: :patch
-            td = form_with model: school do |f|
+            td = form_with model: school, local: false do |f|
               = f.select :school_group_id,
                 options_from_collection_for_select(@school_groups, :id, :name, school.school_group_id),
                 { include_blank: '',

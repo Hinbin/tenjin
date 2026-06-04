@@ -26,7 +26,7 @@
               th Login As
           tbody
             -@school_admins.each do |sa|
-              = form_with model: sa, url: update_email_user_path(sa), method: :patch do |f|
+              = form_with model: sa, url: update_email_user_path(sa), method: :patch, local: false do |f|
                 tr.school-admin-data
                   td =sa.username
                   -if current_admin.super?
