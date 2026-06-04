@@ -4,9 +4,12 @@ raise "Development question seeds can only be loaded in development, not #{Rails
 
 require 'csv'
 
+@seed_image_blobs = {}
+@seed_http_conn = Faraday.new { |builder| builder.adapter Faraday.default_adapter }
+
 def create_file_blob(data:, filename:, content_type:, metadata: nil)
-  ActiveStorage::Blob.create_after_upload! io: data, filename: filename,
-                                           content_type: content_type, metadata: metadata
+  ActiveStorage::Blob.create_and_upload! io: data, filename: filename,
+                                         content_type: content_type, metadata: metadata
 end
 
 def upsert_seed_subject(row)
@@ -57,19 +60,30 @@ def question_text_for_seed(row)
 end
 
 def fetch_seed_image_blob(image_url)
+  @seed_image_blobs[image_url] ||= download_seed_image_blob(image_url)
+end
+
+def download_seed_image_blob(image_url)
   google_location = image_url.gsub(/open?/, 'uc')
-  http_conn = Faraday.new { |builder| builder.adapter Faraday.default_adapter }
   filename = "#{google_location.from(31)}.png"
-  image_location = seed_image_location(http_conn, google_location, filename)
+  image_location = seed_image_location(google_location, filename)
   return if image_location.blank?
 
-  response = http_conn.get image_location
+  response = @seed_http_conn.get image_location
   create_file_blob(data: StringIO.new(response.body), filename:, content_type: 'image/jpeg')
 end
 
-def seed_image_location(http_conn, google_location, filename)
-  response = http_conn.get google_location
-  href_match = /HREF=".*"/.match(response.body)
+def seed_image_location(google_location, filename)
+  response = @seed_http_conn.get google_location
+  location = response.headers['location']
+  return location if location.present?
+  return google_location if response.success?
+
+  html_image_location(response.body, filename)
+end
+
+def html_image_location(response_body, filename)
+  href_match = /HREF=".*"/.match(response_body)
   return href_match[0].from(6).chop if href_match
 
   Rails.logger.info("ERROR WITH: #{filename}")
