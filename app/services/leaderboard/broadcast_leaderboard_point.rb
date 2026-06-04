@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
-  def initialize(topic, user)
+  def initialize(topic_or_score, user)
     super()
-    @topic = topic
+    @topic = topic_or_score.respond_to?(:topic) ? topic_or_score.topic : topic_or_score
     @user = user
   end
 
