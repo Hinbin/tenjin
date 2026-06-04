@@ -53,6 +53,9 @@ yarn-debug.log*
 # Ignore the image downloads directory
 /db/downloads
 
+# Local design-system scratch work, not part of the app
+/design
+
 # Local data exports, not source
 db/CSV Output - *.csv
 
