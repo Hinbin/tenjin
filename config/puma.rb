@@ -35,7 +35,7 @@ preload_app!
 
 # Start Barnes to support Heroku runtime metrics.
 #
-before_fork { Barnes.start }
+on_worker_boot { Barnes.start }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart

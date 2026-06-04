@@ -6,7 +6,7 @@ class AppErrorsController < ApplicationController
 
   def index
     authorize AppError
-    @app_errors = AppError.order(created_at: :desc).limit(100)
+    @app_errors = policy_scope(AppError).order(created_at: :desc).limit(100)
   end
 
   def show

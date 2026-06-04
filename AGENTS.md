@@ -64,12 +64,20 @@ yarn install
 bin/rails db:create db:schema:load
 ```
 
-When running Rails commands from a non-interactive WSL invocation, initialize the local `rbenv` paths first. Ruby is installed through `rbenv`, but commands such as `wsl -- bin/rails ...` may not source `~/.bashrc` and can otherwise fail with `/usr/bin/env: 'ruby': No such file or directory`.
+When running Rails commands from a non-interactive WSL invocation, initialize the local `rbenv` paths first. Ruby is installed through `rbenv`, but commands such as `wsl -- bin/rails ...` may not source `~/.bashrc` and can otherwise fail with `/usr/bin/env: 'ruby': No such file or directory`. In Codex Desktop/PowerShell, prefer an interactive login shell so rbenv shims are loaded:
 
 ```sh
 export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
 bin/rails assets:precompile
+wsl -e bash -lic "cd /home/nhoulton/source/tenjin && bundle exec rails runner 'puts Rails.env'"
 ```
+
+Known local Ruby paths:
+
+- Ruby shim: `/home/nhoulton/.rbenv/shims/ruby`
+- Bundler shim: `/home/nhoulton/.rbenv/shims/bundle`
+- Verified local Ruby: `3.4.9`
+- Verified local Bundler: `2.6.9`
 
 For local development:
 

@@ -34,6 +34,19 @@ bin/rails db:create db:schema:load
 bundle exec rspec
 ```
 
+When running commands from Codex Desktop, PowerShell, or another non-interactive WSL entrypoint, Ruby may look unavailable unless the local `rbenv` shims are loaded. Use an interactive login shell:
+
+```sh
+wsl -e bash -lic "cd /home/nhoulton/source/tenjin && bundle exec rails runner 'puts Rails.env'"
+```
+
+Known local Ruby paths:
+
+- Ruby shim: `/home/nhoulton/.rbenv/shims/ruby`
+- Bundler shim: `/home/nhoulton/.rbenv/shims/bundle`
+- Verified local Ruby: `3.4.9`
+- Verified local Bundler: `2.6.9`
+
 ## Architecture
 
 **Ruby/Rails stack:** Rails 7.2, PostgreSQL (`csquiz_development` / `csquiz_test`), Puma, Delayed Job for background work, Active Storage on S3 in production, Devise + Pundit + Rolify for auth/authz.
