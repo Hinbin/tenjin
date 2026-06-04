@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Start code coverage
-unless defined?(Spring) || ENV["NO_COVERAGE"]
+unless ENV["NO_COVERAGE"]
   require "simplecov"
   SimpleCov.start "rails" do
     add_filter "vendor"
