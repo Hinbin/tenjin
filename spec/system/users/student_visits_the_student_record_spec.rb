@@ -21,8 +21,7 @@ RSpec.describe "Student visits the student record", :default_creates, :js, :vcr 
   end
 
   it "changes the password" do
-    fill_in("user[password]", with: new_password)
-    click_button("Update Password")
+    update_password(new_password)
     log_in_through_front_page(student.username, new_password)
     expect(page).to have_content(student.forename).and have_content(student.surname)
   end
