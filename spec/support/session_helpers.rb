@@ -101,7 +101,7 @@ module SessionHelpers
   end
 
   def create_file_blob(filename:, content_type:, metadata: nil)
-    ActiveStorage::Blob.create_after_upload! io: file_fixture(filename).open, filename: filename,
+    ActiveStorage::Blob.create_and_upload! io: file_fixture(filename).open, filename: filename,
       content_type: content_type, metadata: metadata
   end
 end
