@@ -2,11 +2,10 @@
   title=('About')
 .section.pt-4
   h1.page-section-header.text-uppercase.text-center About
-  hr.small.mb-5.primary-red
+  ==render_small_separator
 .row.justify-content-center
   .col-8
     -if ENV['OGAT']
       =render('about_ogat')
     -else
       =render('about_standard')
-=render('student_login_modal')

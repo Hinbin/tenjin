@@ -1,12 +1,12 @@
 .container
     h1.page-section-header.text-uppercase.text-center School Statistics
-    hr class=("small mb-5 primary-red")
+    ==render_small_separator
     .row.justify-content-center
       .col.mx-auto
         =render('school_statistics_table')
 
     h1.page-section-header.text-uppercase.text-center Customisations
-    hr class=("small mb-5 primary-red")
+    ==render_small_separator
     .row.justify-content-center
       .col.mx-auto
         table.table

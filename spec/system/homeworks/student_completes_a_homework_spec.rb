@@ -18,7 +18,7 @@ RSpec.describe "Student completes a homework", :default_creates, :js do
       find(".homework-row[data-homework='#{homework_ten_percent.id}']").click
       find(".question-button", match: :first).click
       find(".next-button", match: :first).click
-      expect(page).to have_css(".homework-row > td > svg.fa-check")
+      expect(page).to have_css(".homework-row > td > i.fa-check")
     end
   end
 

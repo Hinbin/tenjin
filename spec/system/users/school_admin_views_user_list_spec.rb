@@ -88,7 +88,7 @@ RSpec.describe "School admin views user list", :default_creates, :js do
       end
 
       it "filters students by name" do
-        find("#students-table_filter input").set("#{student.forename} #{student.surname}")
+        find(".col.table-responsive:has(#students-table) [data-datatable-target='search']").set("#{student.forename} #{student.surname}")
         expect(page).to have_css(".student-row", count: 1).and have_content("#{student.forename} #{student.surname}")
       end
     end

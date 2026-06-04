@@ -22,7 +22,7 @@ RSpec.describe "Teacher sets homework", :default_creates, :js do
       end
 
       it "shows a success notice" do
-        expect(page).to have_css("#flash-notice", text: "homework set")
+        expect(page).to have_css(".alert-info", text: "homework set")
       end
 
       it "attaches the homework to the correct classroom" do
@@ -114,7 +114,7 @@ RSpec.describe "Teacher sets homework", :default_creates, :js do
       end
 
       it "shows a success notice" do
-        expect(page).to have_css("#flash-notice", text: "homework set")
+        expect(page).to have_css(".alert-info", text: "homework set")
       end
     end
 
@@ -146,7 +146,7 @@ RSpec.describe "Teacher sets homework", :default_creates, :js do
       visit(new_homework_path(classroom: {classroom_id: classroom.id}))
       create_homework_for_lesson
       click_button "Set Homework"
-      find_by_id("flash-notice") # homework view page
+      find(".alert-info") # homework view page
     end
 
     it "shows the lesson the homework was created for" do

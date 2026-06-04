@@ -32,7 +32,7 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
       before { visit(classroom_path(classroom)) }
 
       it "navigates to a homework when clicked" do
-        find("tr[data-controller='homeworks'][data-id='#{homework.id}']").click
+        click_link(homework.topic.name)
         expect(page).to have_current_path(homework_path(homework))
       end
     end
@@ -47,7 +47,9 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
       end
 
       it "shows the correct percentage of homeworks completed" do
-        expect(page).to have_css("td", text: "60%")
+        within "#homework-table" do
+          expect(page).to have_content("60%")
+        end
       end
     end
 
@@ -60,19 +62,7 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
         expect { page.accept_alert }.to raise_error(Capybara::ModalNotFound)
       end
 
-      it "hides reset password buttons by default" do
-        expect(page).to have_no_link("Reset Password")
-      end
-
-      it "has a working reset password toggle" do
-        find_by_id("resetPasswordCheck").set(true)
-        within "#students-table" do
-          expect(page).to have_link("Reset Password")
-        end
-      end
-
       it "resets a student password" do
-        find_by_id("resetPasswordCheck").set(true)
         click_link("Reset Password")
         expect(page).to have_no_link("Reset Password").and have_css(".new-password")
       end
@@ -85,7 +75,7 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
         end
 
         it "shows the last 5 homeworks" do
-          expect(page).to have_css("tr[data-id='#{student.id}'] svg.fa-times", count: 5)
+          expect(page).to have_css("[data-id='#{student.id}'] i.fa-times", count: 5)
         end
       end
 
@@ -97,7 +87,9 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
         end
 
         it "allows searching students" do
-          find("#students-table_filter input").set("#{student.forename} #{student.surname}")
+          within "#students" do
+            find("[data-datatable-target='search']").set(student.surname)
+          end
           expect(page).to have_css(".student-data", count: 1)
         end
       end
@@ -112,7 +104,9 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
         end
 
         it "shows the completed homework in the correct place" do
-          expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(5) svg:nth-child(2).fa-check")
+          within "[data-id='#{student.id}']" do
+            expect(page).to have_css("i:nth-child(2).fa-check")
+          end
         end
       end
 
@@ -121,7 +115,7 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
         before { visit(classroom_path(classroom)) }
 
         it "does not show homeworks for another classroom" do
-          expect(page).to have_no_css("svg.fa-times")
+          expect(page).to have_no_css("i.fa-times")
         end
       end
 

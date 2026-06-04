@@ -1,7 +1,7 @@
 section.page-section.pt-2#Users
   .container
     h1.page-section-header.text-uppercase.text-center Manage Roles
-    hr.text-center class=("small mb-5 primary-red")
+    ==render_small_separator
     =render partial: 'role_table',
       locals: {role: 'school_admin',
       role_collection: @school_admins} if @school_admins.present?
@@ -15,7 +15,7 @@ section.page-section.pt-2#Users
       .col
         h1.text-center =link_to @school.name, school_path(@school)
         h2.h2.text-center.text-uppercase School Users
-        hr.text-center class=("small mb-5 primary-red")
+        ==render_small_separator
         .table-responsive
           table.table#employees-table
             thead
@@ -36,12 +36,12 @@ section.page-section.pt-2#Users
                       options_from_collection_for_select(@all_subjects, :id, :name),
                       id: "role-select-user-#{e.id}",
                       form: "form-#{e.id}",
-                      class: 'custom-select'
+                      class: 'form-select'
                   td = select_tag 'user[role]',
                     options_for_select([ 'school_admin', 'question_author', 'lesson_author'], e.role),
                     id: "role-select-user-#{e.id}",
                     form: "form-#{e.id}",
-                    class: 'custom-select'
+                    class: 'form-select'
                   td = button_to 'Add Role',
                     set_role_user_path(e.id),
                     id: "add-role-#{e.id}",

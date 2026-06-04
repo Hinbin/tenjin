@@ -54,7 +54,7 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
       before { visit(dashboard_path) }
 
       it "shows a tick icon" do
-        expect(page).to have_css("td svg.fa-check")
+        expect(page).to have_css("td i.fa-check")
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
       end
 
       it "shows a times icon" do
-        expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-times")
+        expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-times")
       end
 
       it "does not show an exclamation icon"
@@ -120,7 +120,7 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
       end
 
       it "shows a tick icon" do
-        expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-check")
+        expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-check")
       end
     end
 
@@ -129,7 +129,7 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
       before { visit(dashboard_path) }
 
       it "shows an exclamation icon" do
-        expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-exclamation")
+        expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-exclamation")
       end
     end
 

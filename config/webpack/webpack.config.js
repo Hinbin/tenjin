@@ -21,9 +21,6 @@ const options = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery",
-      Popper: ["popper.js", "default"],
       Rails: ["@rails/ujs"],
     }),
   ],

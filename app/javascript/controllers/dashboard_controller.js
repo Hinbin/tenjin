@@ -1,5 +1,4 @@
-// src/controllers/dashboard_controller.js
-import { Controller } from "stimulus";
+import { Controller } from "@hotwired/stimulus";
 import Shepherd from "shepherd.js";
 
 export default class extends Controller {

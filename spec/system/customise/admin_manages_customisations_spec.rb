@@ -43,25 +43,25 @@ RSpec.describe "Admin manages customisations", :default_creates, :js do
     end
 
     it "puts stickied customisations on top" do
-      expect(page).to have_css("section.available-customisations .card:nth-of-type(1)",
-        text: sticky_customisation.name.upcase)
-        .and have_css("section.available-customisations .card:nth-of-type(2)",
-          text: available_customisation.name.upcase)
+      cards = all("section.available-customisations .card")
+      expect(cards[0]).to have_text(sticky_customisation.name.upcase)
+      expect(cards[1]).to have_text(available_customisation.name.upcase)
     end
 
     it "marks stickied customisations" do
-      expect(page).to have_css("section.available-customisations .card:nth-of-type(1)", text: "STICKIED")
+      cards = all("section.available-customisations .card")
+      expect(cards[0]).to have_text("STICKIED")
     end
 
     it "puts unavailable customisations at the bottom" do
-      expect(page).to have_css("section.available-customisations .card:nth-of-type(2)",
-        text: available_customisation.name.upcase)
-        .and have_css("section.available-customisations .card:nth-of-type(3)",
-          text: unavailable_customisation.name.upcase)
+      cards = all("section.available-customisations .card")
+      expect(cards[1]).to have_text(available_customisation.name.upcase)
+      expect(cards[2]).to have_text(unavailable_customisation.name.upcase)
     end
 
     it "marks unavailable customisations" do
-      expect(page).to have_css("section.available-customisations .card:nth-of-type(3)", text: "UNAVAILABLE")
+      cards = all("section.available-customisations .card")
+      expect(cards[2]).to have_text("UNAVAILABLE")
     end
 
     it "shows retired customisations in their own section" do
@@ -89,7 +89,7 @@ RSpec.describe "Admin manages customisations", :default_creates, :js do
     it "updates the value" do
       fill_in("Value", with: "blue")
       click_button("Update Customisation")
-      expect(page).to have_css("hr[style*='blue']")
+      expect(page).to have_css(".heading-divider[style*='blue']")
     end
 
     it "updates the picture" do

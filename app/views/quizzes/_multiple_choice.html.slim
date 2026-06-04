@@ -1,10 +1,11 @@
-div.lead.text-center ==@question.question_text
--if @question.boolean?
-  -@question.answers.order(text: :desc).each do |a|
-    button.btn.btn-dark.btn-block.m-2.question-button.multiple-choice-button id="response-#{a.id}"
-      = a.text
--else
-  -@question.answers.shuffle.each do |a|
-    button.btn.btn-dark.btn-block.m-2.question-button.multiple-choice-button id="response-#{a.id}"
-      = a.text
-button.btn.btn-dark.btn-block.m-2.next-button.invisible#nextButton Next Question
+div data-controller="multiple-choice-question next-question" data-multiple-choice-question-quiz-stats-outlet="[data-controller~='quiz-stats']"
+  div.lead.text-center ==@question.question_text
+  -if @question.boolean?
+    -@question.answers.order(text: :desc).each do |a|
+      button.btn.btn-dark.w-100.m-2.question-button.multiple-choice-button id="response-#{a.id}" data-multiple-choice-question-target="button" data-action="click->multiple-choice-question#select"
+        = a.text
+  -else
+    -@question.answers.shuffle.each do |a|
+      button.btn.btn-dark.w-100.m-2.question-button.multiple-choice-button id="response-#{a.id}" data-multiple-choice-question-target="button" data-action="click->multiple-choice-question#select"
+        = a.text
+  button.btn.btn-dark.w-100.m-2.next-button.invisible#nextButton data-multiple-choice-question-target="nextButton" data-action="click->next-question#reload" Next Question

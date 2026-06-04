@@ -10,12 +10,12 @@ section.page-section.text-center
     .row.justify-content-center.py-3
       -if current_user.oauth_uid.blank?
         .col-sm-3.text-sm-right.py-2
-          p.text-right-md Link Account to Google
+          p.text-end-md Link Account to Google
         .col-sm-3
-          = link_to image_pack_tag('images/btn_google_signin_dark_normal_web.png', id: 'loginGoogle', class: 'text-left-md'), user_google_oauth2_omniauth_authorize_path, method: :post
+          = link_to image_pack_tag('images/btn_google_signin_dark_normal_web.png', id: 'loginGoogle', class: 'text-start-md'), user_google_oauth2_omniauth_authorize_path, method: :post
       -else
         .col-sm-3.text-sm-right.py-2
-          p.text-right-md Unlink Account from Google
+          p.text-end-md Unlink Account from Google
         .col-sm-3
           =link_to "Unlink #{current_user.oauth_email}",
             unlink_oauth_account_user_path(current_user),

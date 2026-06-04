@@ -5,10 +5,10 @@ section.page-section.text-center#newQuiz
     h1.page-section-header.text-uppercase Start a Quiz
     p.lead Select a subject below
     ==render_small_separator
-    .carousel.slide.col-md-8.col-lg-5.mx-auto#subjectCarousel data-ride="carousel"
+    .carousel.slide.col-md-8.col-lg-5.mx-auto#subjectCarousel data-bs-ride="carousel"
       ol.carousel-indicators
         -@subjects.each_with_index do |s, i|
-          li data-target="#subjectCarousel" data-slide-to=i class=('active' if i.zero?)
+          li data-bs-target="#subjectCarousel" data-bs-slide-to=i class=('active' if i.zero?)
       .carousel-inner
         -@subjects.each_with_index do |s, i|
             .carousel-item class=('active' if i.zero?)
@@ -16,12 +16,12 @@ section.page-section.text-center#newQuiz
                 =image_pack_tag(subject_image(s), class: 'w-100 subject-carousel-item-image')
                 .carousel-caption
                   h3.text-uppercase = s.name
-      a.carousel-control-prev href="#subjectCarousel" role="button" data-slide="prev"
+      a.carousel-control-prev href="#subjectCarousel" role="button" data-bs-slide="prev"
         span.carousel-control-prev-icon aria-hidden="true"
-        span.sr-only Previous
-      a.carousel-control-next href="#subjectCarousel" role="button" data-slide="next"
+        span.visually-hidden Previous
+      a.carousel-control-next href="#subjectCarousel" role="button" data-bs-slide="next"
         span.carousel-control-next-icon aria-hidden="true"
-        span.sr-only Next
+        span.visually-hidden Next
 =render('shared/homework')
 section#challenges.page-section.text-center
   .container
@@ -38,8 +38,9 @@ section#challenges.page-section.text-center
               th Expires in
           tbody
             - @challenges.each do |c|
-                tr.challenge-row data-challenge=c.id data-topic=(c.daily? ? 'Lucky Dip' : c.topic.id) data-subject=c.topic.subject_id
-                  td.text-left = c.stringify
+                - topic_value = c.daily? ? 'Lucky Dip' : c.topic.id.to_s
+                tr.challenge-row data-challenge=c.id data-topic=topic_value data-subject=c.topic.subject_id data-controller='quiz-starter' data-quiz-starter-subject-value=c.topic.subject_id.to_s data-quiz-starter-topic-value=topic_value data-action='click->quiz-starter#start'
+                  td.text-start = c.stringify
                   td = challenge_progress_display(c, @challenge_progresses)
                   td.d-none.d-sm-table-cell
                     = c.points

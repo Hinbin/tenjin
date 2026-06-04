@@ -14,9 +14,11 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,900,900i");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,900;1,400;1,900&display=swap");
 
-@import "bootstrap";
 @import "~bootstrap/scss/bootstrap";
-@import "@fortawesome/fontawesome-free";
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import "@fortawesome/fontawesome-free/scss/solid";
+@import "@fortawesome/fontawesome-free/scss/regular";
 @import "pages";
 @import "dashboard";
 @import "actiontext";
@@ -25,7 +27,14 @@
 @import "shepherd";
 
 .navbar-dark .nav-item .nav-link {
-  color: theme-color("light");
+  color: map-get($theme-colors, "light");
+}
+
+// BS5 dropped .btn-block; Phase 6 replaced it with .w-100, which loses
+// the adjacent-sibling top margin that BS4 added between stacked
+// block buttons. Restore exactly that selector against the new class.
+.btn.w-100 + .btn.w-100 {
+  margin-top: 0.5rem;
 }
 
 a {
@@ -145,16 +154,13 @@ hr.small {
   margin-right: auto;
 }
 
-%hr.primary-shared {
-  border-top-width: 3px;
-  border-bottom-width: 3px;
-  border-style: solid;
+.heading-divider {
+  max-width: 10rem;
+  box-sizing: content-box;
   height: 0.125rem;
-}
-
-hr.secondary {
-  @extend %hr, .primary-shared;
-  border-color: white;
+  margin: 0 auto;
+  border-top: 3px solid currentColor;
+  border-bottom: 3px solid currentColor;
 }
 
 .page-section {
@@ -164,7 +170,7 @@ hr.secondary {
 
 .page-section-header {
   font-size: 3rem;
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: 2rem;
   }
 }
@@ -211,6 +217,16 @@ h1#branding-text {
 #navbar-main {
   background-color: transparent;
   min-height: 66px;
+}
+
+// Overlay below the fixed navbar; don't displace the masthead.
+.fixed-top ~ .alert {
+  position: fixed;
+  top: 66px;
+  left: 0;
+  right: 0;
+  z-index: 1031;
+  margin: 0;
 }
 
 #navbar-btn {

@@ -146,7 +146,7 @@ RSpec.describe "User creates a quiz", :default_creates, :js do
       before { visit(new_quiz_path(params: {subject: quiz_subject.name})) }
 
       it "has a separator of the correct colour" do
-        expect(page).to have_css("hr[style*='#{active_customisation.customisation.value}'")
+        expect(page).to have_css(".heading-divider[style*='#{active_customisation.customisation.value}']")
       end
     end
   end

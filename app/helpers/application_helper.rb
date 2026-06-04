@@ -20,9 +20,9 @@ module ApplicationHelper
     end
   end
 
-  def render_small_separator(style = nil)
+  def render_small_separator(style = nil, margin: "mb-5")
     color = style&.value || @dashboard_style&.value || "red"
-    content_tag(:hr, nil, class: "small mb-5 primary", style: "border-color: #{color}")
+    content_tag(:div, nil, class: "heading-divider #{margin}", style: "color: #{color}", aria: {hidden: true})
   end
 
   def render_dashboard_style(style)
@@ -42,6 +42,8 @@ module ApplicationHelper
     fields = form.simple_fields_for(association, new_object, child_index: id) do |builder|
       render(association.to_s.singularize, f: builder)
     end
-    link_to(name, "#", class: "add_fields #{args[:class]}", data: {id: id, fields: fields.delete("\n")})
+    link_to(name, "#",
+      class: args[:class].to_s,
+      data: {action: "click->nested-fields#add", id: id, fields: fields.delete("\n")})
   end
 end

@@ -153,11 +153,11 @@ RSpec.describe "User views the leaderboard", :default_creates, :js do
     end
 
     it "shows the leaderboard icon for a person" do
-      expect(page).to have_css("td svg.fa-star", style: "color: blue;")
+      expect(page).to have_css("td i.fa-star", style: "color: blue;")
     end
 
     it "shows a blank space if there is no leaderboard icon" do
-      expect(page).to have_no_css("td svg.fa-star", count: 11)
+      expect(page).to have_no_css("td i.fa-star", count: 11)
     end
 
     context "with a pink star customisation" do
@@ -168,7 +168,7 @@ RSpec.describe "User views the leaderboard", :default_creates, :js do
       end
 
       it "shows different colours of leaderboard icons" do
-        expect(page).to have_css("td svg.fa-star", style: "color: pink;")
+        expect(page).to have_css("td i.fa-star", style: "color: pink;")
       end
     end
   end
@@ -204,7 +204,7 @@ RSpec.describe "User views the leaderboard", :default_creates, :js do
     before { visit(leaderboard_path(quiz_subject.name)) }
 
     it "shows a star for a weekly award" do
-      expect(page).to have_css("td svg.fa-star", style: "color: red;")
+      expect(page).to have_css("td i.fa-star", style: "color: red;")
     end
 
     context "with 6 or more wins" do
@@ -214,7 +214,7 @@ RSpec.describe "User views the leaderboard", :default_creates, :js do
       end
 
       it "shows a gold star" do
-        expect(page).to have_css("td svg.fa-star", style: "color: gold;")
+        expect(page).to have_css("td i.fa-star", style: "color: gold;")
       end
     end
 
@@ -225,7 +225,7 @@ RSpec.describe "User views the leaderboard", :default_creates, :js do
       end
 
       it "shows a silver star" do
-        expect(page).to have_css("td svg.fa-star", style: "color: silver;")
+        expect(page).to have_css("td i.fa-star", style: "color: silver;")
       end
     end
 
@@ -244,7 +244,7 @@ RSpec.describe "User views the leaderboard", :default_creates, :js do
       before { visit(leaderboard_path(quiz_subject.name)) }
 
       it "shows a star for each" do
-        expect(page).to have_css("td svg.fa-star", style: "color: red;", count: 2)
+        expect(page).to have_css("td i.fa-star", style: "color: red;", count: 2)
       end
     end
   end

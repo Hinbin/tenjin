@@ -21,7 +21,7 @@ RSpec.describe "Teacher visits the dashboard", :default_creates, :js do
     end
 
     it "navigates to a selected classroom" do
-      find("tr[data-classroom='#{classroom.id}']").click
+      click_link(classroom.name)
       expect(page).to have_current_path(classroom_path(classroom))
     end
 
@@ -48,7 +48,7 @@ RSpec.describe "Teacher visits the dashboard", :default_creates, :js do
       before { visit(dashboard_path) }
 
       it "shows the other classroom" do
-        expect(page).to have_css("#otherClassrooms tr[data-classroom='#{other_classroom.id}']")
+        expect(page).to have_css("#otherClassrooms [data-classroom='#{other_classroom.id}']")
       end
     end
   end

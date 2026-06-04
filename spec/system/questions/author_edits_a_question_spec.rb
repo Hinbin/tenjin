@@ -11,12 +11,12 @@ RSpec.describe "Author edits a question", :default_creates, :js do
     find_by_id("answer-text-1")
     all(".text-answer").last.set("#{answer_text}\n")
     click_button("Save Question")
-    find_by_id("flash-notice", text: "Question successfully updated")
+    find(".alert-info", text: "Question successfully updated")
   end
 
   def save_question
     click_button("Save Question")
-    find_by_id("flash-notice", text: "Question successfully updated")
+    find(".alert-info", text: "Question successfully updated")
   end
 
   def switch_to_student_account
@@ -96,7 +96,9 @@ RSpec.describe "Author edits a question", :default_creates, :js do
     end
 
     it "shows the number of flags a question has" do
-      expect(page).to have_css("tr#question-#{question.id} td.flags", exact_text: "5")
+      within "#question-#{question.id}" do
+        expect(page).to have_css("[tabulator-field='flags']", exact_text: "5")
+      end
     end
   end
 
@@ -252,7 +254,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
         click_link("Add Answer")
         all(".text-answer").last.set("#{answer_text}\n")
         click_button("Save Question")
-        find_by_id("flash-notice", text: "Question successfully updated")
+        find(".alert-info", text: "Question successfully updated")
       end
 
       it "does not show the correct answer toggle" do

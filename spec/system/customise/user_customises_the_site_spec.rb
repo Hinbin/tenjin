@@ -18,7 +18,7 @@ RSpec.describe "User customises the site", :default_creates, :js do
     end
 
     it "allows navigation from the challenge star" do
-      find("svg.fa-star").click
+      find("i.fa-star").click
       expect(page).to have_current_path(show_available_customisations_path)
     end
 
@@ -61,7 +61,7 @@ RSpec.describe "User customises the site", :default_creates, :js do
 
       context "when the student has enough points" do
         it "displays the style" do
-          expect(page).to have_css("hr[style*=#{dashboard_customisation.value}]")
+          expect(page).to have_css(".heading-divider[style*=#{dashboard_customisation.value}]")
         end
 
         it "shows their new points total" do
@@ -156,7 +156,7 @@ RSpec.describe "User customises the site", :default_creates, :js do
         end
         expect(page).to have_current_path(dashboard_path)
         visit(leaderboard_path(quiz_subject.name))
-        expect(page).to have_css("td svg.fa-star", style: "color: black;")
+        expect(page).to have_css("td i.fa-star", style: "color: black;")
       end
     end
   end

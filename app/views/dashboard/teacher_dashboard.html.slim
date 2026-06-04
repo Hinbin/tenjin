@@ -3,43 +3,44 @@
 section.page-section.text-center#myClassrooms
   .container
     h1.page-section-header.text-uppercase My Classes
-    hr class=("small mb-5 primary-red")
+    ==render_small_separator
     .row.justify-content-center
       .table-responsive
         table.table.table-hover#classroomTable
           thead
             tr
               th Name
-              th.d-none.d-lg-block Description
+              th.d-none.d-lg-table-cell Description
               th Subject
-              th.d-none.d-lg-block # Students
+              th.d-none.d-lg-table-cell # Students
               th
           tbody
             - @enrollments.each do |e|
-              tr data-classroom = e.classroom.id
-                td =e.classroom.name
-                td.d-none.d-lg-block =e.classroom.description
+              tr data-classroom=e.classroom.id
+                td =link_to e.classroom.name, classroom_path(e.classroom)
+                td.d-none.d-lg-table-cell =e.classroom.description
                 td =e.subject.name if e.subject.present?
-                td.d-none.d-lg-block =e.classroom.enrollments.size
+                td.d-none.d-lg-table-cell =e.classroom.enrollments.size
                 td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'btn btn-dark'
 - if @other_classrooms.present?
   section.page-section.text-center#otherClassrooms
     .container
       h1.page-section-header.text-uppercase Other Classrooms
-      hr class=("small mb-5 primary-red")
+      ==render_small_separator
       .row.justify-content-center
-        .table-responsive
-          table.table.table-hover#otherClassroomTable
+        .table-responsive data-controller='datatable' data-datatable-options-value=({ paginationSize: 25, placeholder: 'No other classrooms have been found' }.to_json)
+          = render 'shared/table_search'
+          table.table.table-hover#otherClassroomTable data-datatable-target='table'
             thead
               tr
                 th Name
-                th.d-none.d-lg-block Description
+                th.d-none.d-lg-table-cell Description
                 th Subject
             tbody
               - @other_classrooms.each do |c|
-                tr data-classroom = c.id
-                  td =c.name
-                  td.d-none.d-lg-block =c.description
+                tr data-classroom=c.id
+                  td =link_to c.name, classroom_path(c)
+                  td.d-none.d-lg-table-cell =c.description
                   td =c.subject.name if c.subject.present?
 -if current_user.oauth_email.blank?
   input#oAuthEmail type='hidden'

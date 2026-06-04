@@ -1,33 +1,21 @@
-// src/controllers/homework_controller.js
-import { Controller } from "stimulus";
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ["lessonSelect"];
+  static values = { lessons: Array };
 
-  loadLessons() {
-    var topicID = $("#homework_topic_id").val();
-    var options = $(".jsVars")
-      .data("lessons")
-      .filter((i) => {
-        return i.topic_id == topicID;
-      });
-
-    $(this.lessonSelectTarget).empty();
-
-    $(this.lessonSelectTarget).append(
-      $("<option></option>").attr("value", null).text(null),
+  loadLessons(event) {
+    const topicId = event.target.value;
+    const matching = this.lessonsValue.filter(
+      (l) => String(l.topic_id) === String(topicId),
     );
-
-    if (options.length) {
-      options.forEach((i) => {
-        $(this.lessonSelectTarget).append(
-          $("<option></option>").attr("value", i.id).text(i.title),
-        );
-      });
-
-      this.lessonSelectTarget.disabled = false;
-    } else {
-      this.lessonSelectTarget.disabled = true;
-    }
+    this.lessonSelectTarget.innerHTML = '<option value=""></option>';
+    matching.forEach((l) => {
+      const opt = document.createElement("option");
+      opt.value = l.id;
+      opt.textContent = l.title;
+      this.lessonSelectTarget.appendChild(opt);
+    });
+    this.lessonSelectTarget.disabled = matching.length === 0;
   }
 }

@@ -36,9 +36,8 @@ gem "high_voltage"
 # Assets
 gem "shakapacker", "= 8.4.0"
 
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem "turbolinks", "~> 5.2.0"
-gem "turbolinks_render" # Aids in rendering form validation errors using ajax
+# Turbo (Hotwire) — installed Phase 1 of the migration; replaces Turbolinks.
+gem "turbo-rails"
 
 # User authentication
 gem "devise"
@@ -52,9 +51,6 @@ gem "omniauth-rails_csrf_protection"
 # User authorization
 gem "pundit"
 gem "rolify"
-
-# React-rails for react components
-gem "react-rails", "~> 2.7"
 
 # Form builder
 gem "simple_form"

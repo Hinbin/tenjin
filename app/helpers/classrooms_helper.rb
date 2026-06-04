@@ -35,7 +35,8 @@ module ClassroomsHelper
     link_to "Sync Classrooms & Users", sync_school_path(current_user.school),
       method: :patch,
       id: "syncButton",
-      class: "btn btn-primary btn-block my-3"
+      class: "btn btn-primary btn-block my-3",
+      data: {"sync-notice-target": "button"}
   end
 
   def sync_needed_button
@@ -43,13 +44,15 @@ module ClassroomsHelper
       sync_school_path(current_user.school),
       method: :patch,
       id: "syncButton",
-      class: "btn btn-danger btn-block my-3"
+      class: "btn btn-danger btn-block my-3",
+      data: {"sync-notice-target": "button"}
   end
 
   def sync_timeout_button
     link_to "Last Sync Timed Out.  Press here to try again.", sync_school_path(current_user.school),
       method: :patch,
       id: "syncButton",
-      class: "btn btn-secondary btn-block my-3"
+      class: "btn btn-secondary btn-block my-3",
+      data: {"sync-notice-target": "button"}
   end
 end

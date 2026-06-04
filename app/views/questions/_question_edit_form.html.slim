@@ -1,4 +1,4 @@
-=form_with model: @question, id:'questionForm' do |f|
+=form_with model: @question, id:'questionForm', local: true, data: { controller: 'nested-fields reload-form' } do |f|
   .row.my-2
     .col-sm-3
       =f.label('select-question-type', 'Question Type')
@@ -7,7 +7,8 @@
         options_for_select(Question.question_types.to_a.map { |k| [k[0].humanize, k[0]] }, selected: @question.question_type ),
         {},
         id: 'select-question-type',
-        class: 'custom-select reload-page' )
+        class: 'form-select reload-page',
+        data: { action: 'change->reload-form#reload' } )
   .row.my-2
     .col.justify-content-center
       =f.rich_text_area :question_text
@@ -23,7 +24,7 @@
           options_from_collection_for_select(@question.topic.lessons, :id, :title, selected: @question.lesson_id),
           { include_blank: 'Select Lesson' },
           id: 'select-lesson',
-          class: 'custom-select')
+          class: 'form-select')
   .row.my-2
     .col-sm-3
       =f.label('select-topic', 'Topic:')
@@ -33,19 +34,20 @@
             :id, :name, selected: @question.topic_id),
           {},
           id: 'select-topic',
-          class: 'custom-select reload-page')
+          class: 'form-select reload-page',
+          data: { action: 'change->reload-form#reload' })
   table.table#table-answers
     thead
       th Answer Text
       th = "Correct?" unless @question.short_answer?
       th
-    tbody.fields
+    tbody.fields data-nested-fields-target='fields'
       =f.fields_for :answers, @question.answers do |a|
         =render 'answer', f: a
   -unless @question.question_type == 'boolean'
     .row.my-2
       .col
-        =link_to_add_row('Add Answer', f, :answers, class: 'btn btn-primary btn-block')
+        =link_to_add_row('Add Answer', f, :answers, class: 'btn btn-primary w-100')
   .row.my-2
     .col
-      =f.submit("Save Question", class: 'btn btn-block btn-success')
+      =f.submit("Save Question", class: 'btn w-100 btn-success')

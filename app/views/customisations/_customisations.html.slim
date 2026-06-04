@@ -22,9 +22,9 @@
                 == customisation_cost(style, bought_customisations)
                 =form_with(model: style, url: buy_customisation_path(style), method: :post, local: true) do |f|
                   -if bought_customisations.include? style.id
-                    =f.submit 'Switch', class: 'btn btn-light-outline float-right buy-btn'
+                    =f.submit 'Switch', class: 'btn btn-light-outline float-end buy-btn'
                   -else
-                    =f.submit 'Buy', class: 'btn btn-light-outline float-right buy-btn'
+                    =f.submit 'Buy', class: 'btn btn-light-outline float-end buy-btn'
 
 - leaderboard_icon_styles = customisations.select { |c| c.leaderboard_icon? }
 - if leaderboard_icon_styles.any?
@@ -32,25 +32,26 @@
     .container
       h3.text-uppercase Leaderboard Icons
       ==render_small_separator
-      .row.col.justify-content-center
+      .row.row-cols-3.row-cols-md-4.row-cols-lg-6.g-3.justify-content-center
         - leaderboard_icon_styles.each do |icon|
-          .card
-            .card-body
-              p =icon.name
-              i class='fas fa-2x fa-#{icon.value.split(',')[1]}' style="color: #{icon.value.split(',')[0]}"
-              -if current_admin.present?
-                div.m-1
-                  -if icon.sticky?
-                    p Stickied
-                  -unless icon.purchasable?
-                    p Unavailable
-                  =link_to 'Edit', edit_customisation_path(icon), class: 'btn btn-dark-outline'
-              -else
-                p#cost
-                  == customisation_cost(icon, bought_customisations)
+          .col
+            .card.h-100
+              .card-body
+                p =icon.name
+                i class='fas fa-2x fa-#{icon.value.split(',')[1]}' style="color: #{icon.value.split(',')[0]}"
+                -if current_admin.present?
                   div.m-1
-                    =form_with(model: icon, url: buy_customisation_path(icon), method: :post, local: true) do |f|
-                      -if bought_customisations.include? icon.id
-                        =f.submit 'Switch', class: 'btn btn-dark-outline buy-btn'
-                      -else
-                        =f.submit 'Buy', class: 'btn btn-dark-outline buy-btn'
+                    -if icon.sticky?
+                      p Stickied
+                    -unless icon.purchasable?
+                      p Unavailable
+                    =link_to 'Edit', edit_customisation_path(icon), class: 'btn btn-dark-outline'
+                -else
+                  p#cost
+                    == customisation_cost(icon, bought_customisations)
+                    div.m-1
+                      =form_with(model: icon, url: buy_customisation_path(icon), method: :post, local: true) do |f|
+                        -if bought_customisations.include? icon.id
+                          =f.submit 'Switch', class: 'btn btn-dark-outline buy-btn'
+                        -else
+                          =f.submit 'Buy', class: 'btn btn-dark-outline buy-btn'

@@ -1,5 +1,5 @@
 =simple_form_for @lesson do |f|
-  =f.input :title, input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
-  =f.input :video_link, label: 'URL:', input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
-  =f.association :topic, collection: @topics, input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
-  =f.button :submit, class: 'btn btn-block btn-primary'
+  =f.input :title, input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'row mb-3'}
+  =f.input :video_link, label: 'URL:', input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'row mb-3'}
+  =f.association :topic, collection: @topics, input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'row mb-3'}
+  =f.button :submit, class: 'btn w-100 btn-primary'

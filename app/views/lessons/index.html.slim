@@ -1,31 +1,32 @@
 -content_for :title
   title=('Lessons')
-.container
+.container data-controller='video-modal'
   section.page-section.text-center.pt-2#newLesson
     h1.page-section-header.text-uppercase Lessons
-    hr class=("small mb-2 primary-red")
+    ==render_small_separator(margin: "mb-2")
     -if @lessons.count.zero?
       p.lead No lessons yet!
     -@subjects.each do |s|
       - @subject_author = current_user.has_role? :lesson_author, s if @author
       h1.py-4.h1.subject-title=s.name
-      .card-columns
+      .row.row-cols-1.row-cols-md-2.row-cols-lg-3.g-3
         -@lessons.where(topics: { subject:s } ).each do |l|
           -unless l.no_content?
-            .card
-              .card-body.videoLink src=l.video_url data-toggle="modal" data-target="#videoModal"
-                h3.h4.lesson-title =l.title
-                p.font-weight-light =l.topic.name
-                img.img-fluid.card-img-top video_id=l.video_id category=l.category src=l.thumbnail_url
-              -if @subject_author
-                .card-footer
-                  p = 'Questions: ' + l.questions_count.to_s
-                  =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
-                  =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
-                  =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
-              -elsif !current_user.student?
-                .card-footer
-                  =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
+            .col
+              .card.h-100
+                .card-body.videoLink src=l.video_url data-bs-toggle="modal" data-bs-target="#videoModal" data-action="click->video-modal#open"
+                  h3.h4.lesson-title =l.title
+                  p.fw-light =l.topic.name
+                  img.img-fluid.card-img-top video_id=l.video_id category=l.category src=l.thumbnail_url data-video-modal-target=("vimeo" if l.vimeo?)
+                -if @subject_author
+                  .card-footer
+                    p = 'Questions: ' + l.questions_count.to_s
+                    =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
+                    =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
+                    =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
+                -elsif !current_user.student?
+                  .card-footer
+                    =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
 
       -if @subject_author
         table.table
@@ -59,20 +60,19 @@
                 td =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
 
 
--if @author
-  .container
-    section.page-section.text-center.pt-2#createLessons
-      h1.page-section-header.text-uppercase Create Lessons
-      hr class=("small mb-5 primary-red")
+  -if @author
+    .container
+      section.page-section.text-center.pt-2#createLessons
+        h1.page-section-header.text-uppercase Create Lessons
+        ==render_small_separator
         - @editable_subjects.each do |s|
           h3.h3.py-2 = s.name
-          =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'btn btn-block btn-primary'
+          =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'btn w-100 btn-primary'
 
-.modal.fade#videoModal
-  .modal-dialog.modal-dialog-centered.modal-lg role="document"
-    .modal-content
-      .modal-body.p-0.p-md-2
-        button.close type="button" data-dismiss="modal" aria-label="Close"
-          span aria-hidden="true"&times;
-        .embed-responsive.embed-responsive-16by9
-          iframe.embed-responsive-item#video(allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen)
+  .modal.fade#videoModal data-video-modal-target='modal'
+    .modal-dialog.modal-dialog-centered.modal-lg role="document"
+      .modal-content
+        .modal-body.p-0.p-md-2
+          button.btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
+          .ratio.ratio-16x9
+            iframe#video data-video-modal-target='iframe' allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen

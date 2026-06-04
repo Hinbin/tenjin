@@ -22,7 +22,7 @@ h3.h3 =role.humanize
           - else
             td =select_tag 'user[subject]',
                 options_from_collection_for_select(Subject.with_role(role, r), :id, :name),
-                class: 'custom-select',
+                class: 'form-select',
                 form: "form-#{role}-#{r.id}"
           td = button_to 'Remove',
             remove_role_user_path(id: r.id),

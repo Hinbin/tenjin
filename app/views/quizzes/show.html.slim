@@ -9,7 +9,7 @@
       .col-md-4.text-center#lesson
         h3.h3 = @lesson.title
         .videoLink src=@lesson.video_url
-          img.img-fluid.card-img-top video_id=@lesson.video_id category=@lesson.category src=@lesson.thumbnail_url data-toggle="modal" data-target="#videoModal"
+          img.img-fluid.card-img-top video_id=@lesson.video_id category=@lesson.category src=@lesson.thumbnail_url data-bs-toggle="modal" data-bs-target="#videoModal"
   -else
     = render_question
 = render('question_bottom')

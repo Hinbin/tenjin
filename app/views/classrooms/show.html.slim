@@ -4,11 +4,11 @@
   h1.h1.mt-3.text-center =@classroom.name
   section.page-section.text-center.pt-2#homework
     h1.page-section-header.text-uppercase Homework
-    hr class=("small mb-5 primary-red")
+    ==render_small_separator
     .row.justify-content-center
-      =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: @classroom.id}), class: 'btn btn-block btn-primary'
-      .col.mx-auto
-        table.table.table-hover#homework-table
+      =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: @classroom.id}), class: 'btn w-100 btn-primary'
+      .col.mx-auto data-controller='datatable' data-datatable-options-value=({ paginationSize: 5, placeholder: 'No homeworks have been found', initialSort: [{ column: 'due', dir: 'desc' }], columns: [{ title: 'Topic', field: 'topic' }, { title: 'Completion', field: 'completion' }, { title: 'Due', field: 'due', sorter: 'ukDateTime' }] }.to_json)
+        table.table.table-hover#homework-table data-datatable-target='table'
           thead
             tr
               th Topic
@@ -16,28 +16,32 @@
               th Due
           tbody
             -@homeworks.each do |h|
-              tr.homework-data data-controller='homeworks' data-id=h.id
-                td =h.topic.name
+              tr.homework-data data-id=h.id
+                td =link_to h.topic.name, homework_path(h)
                 td =report_progress(h)
                 td =h.due_date.strftime("%d/%m/%y %H:%M")
   section.page-section.text-center.pt-2#students
     h1.page-section-header.text-uppercase Students
-    hr class=("small mb-5 primary-red")
-    .row.justify-content-center
-      table.table#students-table style="width:100%"
+    ==render_small_separator
+    .row.justify-content-center data-controller='datatable' data-datatable-options-value=({ pagination: false }.to_json)
+      = render 'shared/table_search'
+      .mb-2
+        button.btn.btn-secondary.btn-sm.me-2 type='button' data-action='click->datatable#copy' Copy
+        button.btn.btn-secondary.btn-sm type='button' data-action='click->datatable#downloadCsv' CSV
+      table.table#students-table style="width:100%" data-datatable-target='table'
         thead
           tr
             th First Name
             th Last Name
             th Username
-            th.password-col.d-none Reset Password
+            th Reset Password
             th Homeworks
         tbody
           -@students.each do |s|
             tr.student-data data-id=s.id
-              td =s.forename
+              td =link_to s.forename, user_path(s)
               td =s.surname
               td =s.username
-              td.password-col.d-none =link_to('Reset Password', reset_password_user_path(id: s.id), class: 'btn btn-dark reset-password reset-password-student', remote: true, method: :patch )
+              td =link_to('Reset Password', reset_password_user_path(id: s.id), class: 'btn btn-dark reset-password reset-password-student', data: { controller: 'password-reset', action: 'click->password-reset#reset' })
               td =link_to(s) do
                 ==student_homeworks(s, @homework_progress)

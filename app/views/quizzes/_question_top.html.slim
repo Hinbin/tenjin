@@ -1,19 +1,19 @@
 .container.pt-5
   .progress.mb-3
     .progress-bar role="progressbar" style="width:#{@percent_complete}%" aria-valuenow="#{@percent_complete}" aria-valuemin="0" aria-valuemax="100"
-  .row.justify-content-around
+  .row.justify-content-around data-controller="quiz-stats tooltip"
     .col-3.text-center
       ul.list-inline
         li.list-inline-item
-          i.fas.fa-bolt.text-dark alt='Streak' title='Streak' data-toggle="tooltip"
-        li.list-inline-item#streak = @quiz.streak
+          i.fas.fa-bolt.text-dark alt='Streak' title='Streak' data-bs-toggle="tooltip"
+        li.list-inline-item#streak data-quiz-stats-target="streak" = @quiz.streak
     .col-3.text-center
       ul.list-inline
         li.list-inline-item
-          i.fas.fa-check.text-success alt='Correct' title='Correct' data-toggle="tooltip"
-        li.list-inline-item#answeredCorrect = @quiz.answered_correct
+          i.fas.fa-check.text-success alt='Correct' title='Correct' data-bs-toggle="tooltip"
+        li.list-inline-item#answeredCorrect data-quiz-stats-target="answeredCorrect" = @quiz.answered_correct
     .col-3.text-center
       ul.list-inline
         li.list-inline-item
-          i.fas.fa-times.text-primary alt='Multiplier' title='Multiplier' data-toggle="tooltip"
-        li.list-inline-item#multiplier = @multiplier
+          i.fas.fa-times.text-primary alt='Multiplier' title='Multiplier' data-bs-toggle="tooltip"
+        li.list-inline-item#multiplier data-quiz-stats-target="multiplier" = @multiplier

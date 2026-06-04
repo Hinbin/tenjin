@@ -28,7 +28,7 @@ RSpec.describe "User attempts a challenge", :default_creates, :js do
       find("#challenge-table tbody tr:nth-child(1)").click
       find(".question-button").click
       find(".next-button").click
-      expect(page).to have_css("svg.fa-check")
+      expect(page).to have_css(".fa-check")
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe "User attempts a challenge", :default_creates, :js do
       find("#challenge-table tbody tr:nth-child(1)").click
       find(".question-button").click
       find(".next-button").click
-      expect(page).to have_css("svg.fa-check")
+      expect(page).to have_css(".fa-check")
     end
   end
 
@@ -73,7 +73,7 @@ RSpec.describe "User attempts a challenge", :default_creates, :js do
       find("#challenge-table tbody tr:nth-child(1)").click
       find(".question-button").click
       find(".next-button").click
-      expect(page).to have_css("svg.fa-check")
+      expect(page).to have_css(".fa-check")
     end
   end
 
@@ -89,7 +89,7 @@ RSpec.describe "User attempts a challenge", :default_creates, :js do
     it "flags the challenge complete" do
       find("#challenge-table tbody tr:nth-child(1)").click
       click_through_quiz
-      expect(page).to have_css("svg.fa-check")
+      expect(page).to have_css(".fa-check")
     end
 
     context "when another student is enrolled in the classroom" do

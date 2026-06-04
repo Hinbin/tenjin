@@ -6,13 +6,12 @@
       -else
         p#quiz-name=@question.lesson.title
     .col
-      p.text-right
+      p.text-end
         =link_to flag_icon,
           flagged_questions_path(flagged_question: {user_id: current_user.id, question_id: @question.id }),
           class: 'btn',
           id: 'unfairFlag',
-          data: {method: :post},
-          remote: true
+          data: { controller: 'unfair-flag', action: 'click->unfair-flag#flag' }
 
 -unless @quiz.counts_for_leaderboard
   .row.col-lg-8.mx-auto.alert.alert-warning
@@ -24,14 +23,13 @@
       .modal-body
         p#feedback You have flagged this question as unfair.  Thanks for your feedback!
       .modal-footer
-        button.btn.btn-secondary type="button" data-dismiss="modal"
+        button.btn.btn-secondary type="button" data-bs-dismiss="modal"
           | Close
 
 .modal.fade#videoModal
   .modal-dialog.modal-dialog-centered.modal-lg role="document"
     .modal-content
       .modal-body.p-0.p-md-2
-        button.close type="button" data-dismiss="modal" aria-label="Close"
-          span aria-hidden="true"&times;
-        .embed-responsive.embed-responsive-16by9
-          iframe.embed-responsive-item#video(allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen)
+        button.btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
+        .ratio.ratio-16x9
+          iframe#video(allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen)

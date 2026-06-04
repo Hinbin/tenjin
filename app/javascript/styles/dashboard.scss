@@ -24,10 +24,6 @@
   background-color: white;
 }
 
-hr.primary {
-  @extend %hr, .primary-shared;
-}
-
 .dashboard-style {
   background-size: cover !important;
   background-position: center !important;

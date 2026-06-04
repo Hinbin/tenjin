@@ -1,4 +1,5 @@
-p.lead.text-center ==@question.question_text
-input.form-control.text-center.container-fluid.m-2#shortAnswerText autofocus='' autocomplete='off'
-button.btn.btn-dark.btn-block.m-2.question-button#shortAnswerButton Check Answer
-button.btn.btn-dark.btn-block.m-2.next-button.invisible#nextButton Next Question
+div data-controller="short-response-question next-question" data-short-response-question-quiz-stats-outlet="[data-controller~='quiz-stats']"
+  p.lead.text-center ==@question.question_text
+  input.form-control.text-center.container-fluid.m-2#shortAnswerText autofocus='' autocomplete='off' data-short-response-question-target="input" data-action="keydown.enter->short-response-question#check"
+  button.btn.btn-dark.w-100.m-2.question-button#shortAnswerButton data-short-response-question-target="submitButton" data-action="click->short-response-question#check" Check Answer
+  button.btn.btn-dark.w-100.m-2.next-button.invisible#nextButton data-short-response-question-target="nextButton" data-action="click->next-question#reload" Next Question

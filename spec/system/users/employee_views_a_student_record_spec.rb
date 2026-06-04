@@ -17,7 +17,7 @@ RSpec.describe "Employee views a user record", :default_creates, :js do
     end
 
     it "shows uncompleted homeworks" do
-      expect(page).to have_content(homework.topic.name).and have_css("svg.fa-times")
+      expect(page).to have_content(homework.topic.name).and have_css("i.fa-times")
     end
 
     context "when homework is completed" do
@@ -27,7 +27,7 @@ RSpec.describe "Employee views a user record", :default_creates, :js do
       end
 
       it "shows completed homeworks" do
-        expect(page).to have_css("svg.fa-check")
+        expect(page).to have_css("i.fa-check")
       end
     end
 

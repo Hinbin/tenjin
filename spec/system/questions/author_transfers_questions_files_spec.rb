@@ -29,7 +29,9 @@ RSpec.describe "Author transfers question files", :default_creates, :js do
     click_link("Import Questions")
     attach_file("file", "spec/fixtures/files/example_import.json", visible: false)
     click_button("Import")
-    expect(page).to have_css(".question-text", count: 27)
+    within "#questionTable" do
+      expect(page).to have_css("[id^='question-']", count: 27)
+    end
   end
 
   it "reports upload issues" do

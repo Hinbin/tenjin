@@ -47,12 +47,12 @@ RSpec.describe "Super views a school", :default_creates, :js do
     it "saves email addresses of school admins" do
       fill_in "user-email-#{school_admin.id}", with: new_email
       find("#save-email-#{school_admin.id}").click
-      expect(page).to have_css("#flash-notice", text: save_email_notice)
+      expect(page).to have_css(".alert-info", text: save_email_notice)
     end
 
     it "notifies users that a setup email has been sent" do
       click_link "Send Setup Email"
-      expect(page).to have_css("#flash-notice", text: email_notice, wait: 6)
+      expect(page).to have_css(".alert-info", text: email_notice, wait: 6)
     end
   end
 
