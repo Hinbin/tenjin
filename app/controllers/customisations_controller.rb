@@ -7,8 +7,8 @@ class CustomisationsController < ApplicationController
 
   def index
     authorize current_admin, policy_class: CustomisationPolicy
-    @customisations = policy_scope(Customisation).where(retired: false).with_attached_image
-    @retired_customisations = policy_scope(Customisation).where(retired: true).with_attached_image
+    @customisations = policy_scope(Customisation).where(retired: false)
+    @retired_customisations = policy_scope(Customisation).where(retired: true)
   end
 
   def new
@@ -44,8 +44,8 @@ class CustomisationsController < ApplicationController
     @subjects = current_user.subjects
     @dashboard_style = find_dashboard_style
     @bought_customisations = CustomisationUnlock.where(user: current_user).pluck(:customisation_id)
-    @purchased_styles = Customisation.with_attached_image.where(id: @bought_customisations)
-    @available_styles = Customisation.with_attached_image.where(purchasable: true)
+    @purchased_styles = Customisation.where(id: @bought_customisations)
+    @available_styles = Customisation.where(purchasable: true)
                                      .where.not(id: @bought_customisations)
                                      .order('RANDOM()')
   end

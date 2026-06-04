@@ -1,4 +1,4 @@
--dashboard_styles = customisations.where(customisation_type: 'dashboard_style').each do |style|
+-dashboard_styles = customisations.dashboard_style.with_attached_image
 - if dashboard_styles.count > 0
   section.page-section.text-center.dashboard-styles
     .container
@@ -26,8 +26,8 @@
                   -else
                     =f.submit 'Buy', class: 'btn btn-light-outline float-right buy-btn'
               
-                
--leaderboard_icon_styles = customisations.where(customisation_type: 'leaderboard_icon').each do |icon|
+
+-leaderboard_icon_styles = customisations.leaderboard_icon
 - if leaderboard_icon_styles.count > 0
   section.page-section.text-center.icons
     .container
