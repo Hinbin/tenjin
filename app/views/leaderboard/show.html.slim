@@ -6,9 +6,9 @@
       =render 'subject_select'
     .col
       #liveLeaderboard data={ controller: 'live-leaderboard',
-                              live_leaderboard_url: leaderboard_path(@subject.name, format: :json),
-                              live_leaderboard_subject: @subject.name,
-                              live_leaderboard_school: @school.name,
-                              live_leaderboard_school_group: @school_group&.name,
-                              live_leaderboard_topic: @topic&.id }
+                              'live-leaderboard-url': leaderboard_path(@subject.name, format: :json),
+                              'live-leaderboard-subject': @subject.name,
+                              'live-leaderboard-school': @school.name,
+                              'live-leaderboard-school-group': @school_group&.name,
+                              'live-leaderboard-topic': @topic&.id }
         .loader Loading...

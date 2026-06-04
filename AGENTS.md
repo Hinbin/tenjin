@@ -64,6 +64,13 @@ yarn install
 bin/rails db:create db:schema:load
 ```
 
+When running Rails commands from a non-interactive WSL invocation, initialize the local `rbenv` paths first. Ruby is installed through `rbenv`, but commands such as `wsl -- bin/rails ...` may not source `~/.bashrc` and can otherwise fail with `/usr/bin/env: 'ruby': No such file or directory`.
+
+```sh
+export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
+bin/rails assets:precompile
+```
+
 For local development:
 
 ```sh
