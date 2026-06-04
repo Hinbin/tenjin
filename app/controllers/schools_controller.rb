@@ -62,6 +62,8 @@ class SchoolsController < ApplicationController
     school = authorize find_school
     school.update_attribute(:sync_status, "queued")
     SyncSchoolJob.perform_later school
+    return head :ok if request.xhr?
+
     redirect_to classrooms_path
   end
 
