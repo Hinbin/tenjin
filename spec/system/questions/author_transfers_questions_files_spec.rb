@@ -8,7 +8,7 @@ RSpec.describe "Author transfers question files", :default_creates, :js do
   let!(:question) { create(:question, topic: topic) }
 
   before do
-    driven_by :selenium_chrome_headless_download
+    driven_by :cuprite_download
     clear_downloads
     sign_in author
     visit topic_questions_path(topic_id: topic.id)
@@ -27,7 +27,7 @@ RSpec.describe "Author transfers question files", :default_creates, :js do
 
   it "uploads questions" do
     click_link("Import Questions")
-    attach_file("file", "spec/fixtures/files/example_import.json", visible: false)
+    attach_file("file", Rails.root.join("spec/fixtures/files/example_import.json").to_s, visible: false)
     click_button("Import")
     within "#questionTable" do
       expect(page).to have_css("[id^='question-']", count: 27)
@@ -36,7 +36,7 @@ RSpec.describe "Author transfers question files", :default_creates, :js do
 
   it "reports upload issues" do
     click_link("Import Questions")
-    attach_file("file", "spec/fixtures/files/example_import_invalid.json", visible: false)
+    attach_file("file", Rails.root.join("spec/fixtures/files/example_import_invalid.json").to_s, visible: false)
     click_button("Import")
     expect(page).to have_content("Question missing key")
   end

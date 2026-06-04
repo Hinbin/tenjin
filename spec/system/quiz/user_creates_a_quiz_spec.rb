@@ -129,7 +129,7 @@ RSpec.describe "User creates a quiz", :default_creates, :js do
 
       it "lists available topics" do
         find(:xpath, "//select/option[1]")
-        expect(page).to have_select("quiz_topic_id", options: ["Lucky Dip", Topic.first.name])
+        expect(page).to have_select("quiz_topic_id", options: ["Lucky Dip", topic.name])
       end
     end
 

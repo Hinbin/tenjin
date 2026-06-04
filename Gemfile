@@ -104,7 +104,7 @@ end
 group :test do
   gem "capybara"
   gem "rspec-retry"
-  gem "selenium-webdriver"
+  gem "cuprite", require: "capybara/cuprite"
   gem "shoulda-matchers", "~> 5.3"
 
   gem "simplecov", require: false

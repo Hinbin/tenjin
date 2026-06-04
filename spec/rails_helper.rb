@@ -15,6 +15,15 @@ require "vcr"
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
+# Prevent ActionCable WebSocket upgrades to /cable from interfering
+# with Devise session state.
+Warden::Manager.prepend(Module.new do
+  def call(env)
+    return @app.call(env) if %r{^/cable}.match?(env["PATH_INFO"])
+    super
+  end
+end)
+
 VCR.configure do |config|
   config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
   config.hook_into :webmock
@@ -46,22 +55,20 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 
-Capybara.register_driver :selenium_chrome_headless do |app|
-  browser_options = Selenium::WebDriver::Chrome::Options.new
-  browser_options.args << "--headless=new"
-  browser_options.args << "--disable-site-isolation-trials"
-  browser_options.args << "--window-size=1024,768"
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+CUPRITE_OPTIONS = {
+  window_size: [1024, 768],
+  process_timeout: 30,
+  timeout: 15,
+  js_errors: true,
+  browser_options: {"headless" => "new"}
+}.freeze
+
+Capybara.register_driver :cuprite do |app|
+  Capybara::Cuprite::Driver.new(app, **CUPRITE_OPTIONS)
 end
 
-Capybara.register_driver :selenium_chrome_headless_download do |app|
-  browser_options = Selenium::WebDriver::Chrome::Options.new
-  browser_options.args << "--headless=new"
-  browser_options.args << "--disable-site-isolation-trials"
-  browser_options.args << "--window-size=1024,768"
-  browser_options.add_preference(:download, prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s)
-  browser_options.add_preference(:browser, set_download_behavior: {behavior: "allow"})
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+Capybara.register_driver :cuprite_download do |app|
+  Capybara::Cuprite::Driver.new(app, **CUPRITE_OPTIONS, save_path: DownloadHelpers::PATH.to_s)
 end
 
 RSpec.configure do |config|
@@ -93,7 +100,6 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Devise::Test::IntegrationHelpers, type: :request
-  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SessionHelpers, type: :system
   config.include DownloadHelpers, type: :system
   config.include ActiveJob::TestHelper, type: :job
@@ -103,29 +109,8 @@ RSpec.configure do |config|
   # Required to use database cleaner with action cable
   # or feature testing will not work
 
-  config.after(:each, type: :system) do
-    next unless page.driver.browser.respond_to?(:logs)
-
-    errors = page.driver.browser.logs.get(:browser)
-    if errors.present?
-      aggregate_failures "javascript errors" do
-        errors.each do |error|
-          # console.error in Chrome is reported as SEVERE, including React deprecation
-          # warnings. Skip those to avoid false positives.
-          next if error.message.include?('"Warning:')
-
-          expect(error.level).not_to eq("SEVERE"), error.message
-          next unless error.level == "WARNING"
-
-          warn "WARN: javascript warning"
-          warn error.message
-        end
-      end
-    end
-  end
-
   config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless
+    driven_by :cuprite
   end
 
   if ENV["CI"]

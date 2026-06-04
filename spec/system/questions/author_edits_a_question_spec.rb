@@ -149,7 +149,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
     end
 
     it "navigates to the question edit page" do
-      click_link(question.question_text.to_plain_text)
+      find("a", text: question.question_text.to_plain_text).trigger("click")
       expect(page).to have_current_path(question_path(question))
     end
   end
@@ -189,8 +189,8 @@ RSpec.describe "Author edits a question", :default_creates, :js do
       before do
         create_list(:answer, 3, correct: false, question: question)
         visit(question_path(question))
-        find_by_id("select-question-type").click
-        find("option", text: "Multiple").click
+        select "Multiple", from: "select-question-type"
+        find("table", id: "table-answers")
       end
 
       it "sets an answer as correct" do
@@ -245,8 +245,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
 
       before do
         visit(question_path(question))
-        find_by_id("select-question-type").click
-        find("option", text: "Short answer").click
+        select "Short answer", from: "select-question-type"
         find("table", id: "table-answers")
       end
 
@@ -269,7 +268,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
       it "saves every answer as correct" do
         add_new_answer
         switch_and_create_quiz
-        fill_in("shortAnswerText", with: "#{answer_text}\n")
+        fill_in("shortAnswerText", with: answer_text).native.send_keys(:return)
         expect(page).to have_css(".correct-answer")
       end
     end
@@ -277,8 +276,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
     context "when showing a boolean question" do
       before do
         visit(question_path(question))
-        find_by_id("select-question-type").click
-        find("option", text: "Boolean").click
+        select "Boolean", from: "select-question-type"
         find("table", id: "table-answers")
       end
 

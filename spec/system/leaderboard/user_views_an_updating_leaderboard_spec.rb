@@ -20,7 +20,7 @@ RSpec.describe "User views an updating leaderboard", :default_creates, :js do
     before do
       visit(leaderboard_path(quiz_subject.name))
       expect(page).to have_css("#leaderboardTable tbody tr:nth-child(10)")
-      expect(page).to have_css("#connected", visible: :all)
+      expect(page).to have_css("#connected")
     end
 
     it "flashes an update for the current student's score" do
@@ -72,7 +72,7 @@ RSpec.describe "User views an updating leaderboard", :default_creates, :js do
       create(:school, school_group: school.school_group)
       visit(leaderboard_path(quiz_subject.name))
       expect(page).to have_css("#leaderboardTable tbody tr:nth-child(10)")
-      expect(page).to have_css("#connected", visible: :all)
+      expect(page).to have_css("#connected")
     end
 
     context "when an update arrives from a different school group" do
@@ -118,7 +118,7 @@ RSpec.describe "User views an updating leaderboard", :default_creates, :js do
       school.update!(school_group_id: nil)
       visit(leaderboard_path(quiz_subject.name))
       expect(page).to have_css("#leaderboardTable tbody tr:nth-child(10)")
-      expect(page).to have_css("#connected", visible: :all)
+      expect(page).to have_css("#connected")
     end
 
     it "updates if someone from the same schools has a score" do
@@ -136,7 +136,7 @@ RSpec.describe "User views an updating leaderboard", :default_creates, :js do
     before do
       visit(leaderboard_path(quiz_subject.name))
       expect(page).to have_css("#leaderboardTable tbody tr:nth-child(10)")
-      expect(page).to have_css("#connected", visible: :all)
+      expect(page).to have_css("#connected")
     end
 
     let(:different_subject) { create(:subject) }
@@ -152,7 +152,7 @@ RSpec.describe "User views an updating leaderboard", :default_creates, :js do
     before do
       visit(leaderboard_path(quiz_subject.name, topic: topic))
       expect(page).to have_css("#leaderboardTable tbody tr:nth-child(10)")
-      expect(page).to have_css("#connected", visible: :all)
+      expect(page).to have_css("#connected")
     end
 
     let(:different_topic) { create(:topic, subject: quiz_subject) }
