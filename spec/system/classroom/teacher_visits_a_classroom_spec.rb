@@ -88,6 +88,10 @@ RSpec.describe "User visits a classroom", :default_creates, :js do
 
         it "allows searching students" do
           within "#students" do
+            # Wait for Tabulator to finish rendering before typing.
+            # Otherwise, input events can race ahead of `tableBuilt` and the
+            # filter call is silently dropped.
+            expect(page).to have_css(".tabulator-row.student-data", count: 33)
             find("[data-datatable-target='search']").set(student.surname)
           end
           expect(page).to have_css(".student-data", count: 1)
