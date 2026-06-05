@@ -22,7 +22,7 @@
                 -else
                   td =h.topic.name
                 td =report_progress(h)
-                td =h.due_date.strftime("%d/%m/%y %H:%M")
+                td data-order=h.due_date.to_i =h.due_date.strftime("%d/%m/%y %H:%M")
   section.page-section.text-center.pt-2#students                            
     h1.page-section-header.text-uppercase Students
     hr class=("small mb-5 primary-red")      

@@ -1,4 +1,4 @@
-import { Controller } from 'stimulus'
+import { Controller } from '@hotwired/stimulus'
 import consumer from '../../channels/consumer'
 
 const maxUsersToDisplay = 10

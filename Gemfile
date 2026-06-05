@@ -26,10 +26,6 @@ gem 'rack-timeout', groups: [:production]
 
 gem 'delayed_job_active_record'
 
-# Templates & asset handling
-gem 'jbuilder', '~> 2.5'
-gem 'uglifier', '>= 1.3.0'
-
 # Turbo-rails replaces Turbolinks
 gem 'turbo-rails'
 
@@ -94,7 +90,7 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara'
   gem 'selenium-webdriver'
-  gem 'shoulda-matchers', '4.0.0.rc1'
+  gem 'shoulda-matchers', '~> 6.0'
   gem 'simplecov', require: false # For code coverage
   gem 'rspec-retry'
   gem 'rspec_junit_formatter'
