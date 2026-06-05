@@ -16,7 +16,7 @@ gem "image_processing"
 gem "bootsnap", ">= 1.1.0", require: false
 
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 5.6"
+gem "puma", "~> 6.0"
 gem "rack-cors"
 gem "rack-timeout", groups: [:production]
 
@@ -105,7 +105,7 @@ group :test do
   gem "capybara"
   gem "rspec-retry"
   gem "cuprite", require: "capybara/cuprite"
-  gem "shoulda-matchers", "~> 5.3"
+  gem "shoulda-matchers", "~> 6.5"
 
   gem "simplecov", require: false
   gem "rspec_junit_formatter"
