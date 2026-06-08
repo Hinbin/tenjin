@@ -32,27 +32,35 @@ module ClassroomsHelper
   private
 
   def sync_button
-    link_to "Sync Classrooms & Users", sync_school_path(current_user.school),
+    button_to sync_school_path(current_user.school),
       method: :patch,
       id: "syncButton",
       class: "btn btn-primary btn-block my-3",
-      data: {"sync-notice-target": "button"}
+      data: {"sync-notice-target": "button"},
+      form: {class: "d-inline", data: {turbo: true}} do
+      "Sync Classrooms & Users"
+    end
   end
 
   def sync_needed_button
-    link_to "School sync required. Click here to start.",
-      sync_school_path(current_user.school),
+    button_to sync_school_path(current_user.school),
       method: :patch,
       id: "syncButton",
       class: "btn btn-danger btn-block my-3",
-      data: {"sync-notice-target": "button"}
+      data: {"sync-notice-target": "button"},
+      form: {class: "d-inline", data: {turbo: true}} do
+      "School sync required. Click here to start."
+    end
   end
 
   def sync_timeout_button
-    link_to "Last Sync Timed Out.  Press here to try again.", sync_school_path(current_user.school),
+    button_to sync_school_path(current_user.school),
       method: :patch,
       id: "syncButton",
       class: "btn btn-secondary btn-block my-3",
-      data: {"sync-notice-target": "button"}
+      data: {"sync-notice-target": "button"},
+      form: {class: "d-inline", data: {turbo: true}} do
+      "Last Sync Timed Out.  Press here to try again."
+    end
   end
 end

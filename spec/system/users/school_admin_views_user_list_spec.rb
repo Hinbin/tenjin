@@ -43,19 +43,19 @@ RSpec.describe "School admin views user list", :default_creates, :js do
     it "does not enable the confirmation button until the school name matches" do
       find_by_id("resetPrintModalButton").click
       find_by_id("confirmAllPasswordResetTextbox").set("test")
-      expect(page).to have_link("Confirm", class: "disabled")
+      expect(page).to have_button("Confirm", class: "disabled")
     end
 
     it "enables the confirmation button when the school name is entered" do
       click_button("Reset and print all passwords")
       find_by_id("confirmAllPasswordResetTextbox").set(school.name)
-      expect(page).to have_link("Confirm")
+      expect(page).to have_button("Confirm")
     end
 
     it "resets all passwords and presents a download link" do
       click_button("Reset and print all passwords")
       find_by_id("confirmAllPasswordResetTextbox").set(school.name)
-      click_link("Confirm")
+      click_button("Confirm")
       expect(page).to have_content("Password").and have_content("CSV")
     end
 

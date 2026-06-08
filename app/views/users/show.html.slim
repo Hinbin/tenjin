@@ -12,15 +12,16 @@ section.page-section.text-center
         .col-sm-3.text-sm-right.py-2
           p.text-end-md Link Account to Google
         .col-sm-3
-          = link_to image_pack_tag('images/btn_google_signin_dark_normal_web.png', id: 'loginGoogle', class: 'text-start-md'), user_google_oauth2_omniauth_authorize_path, method: :post
+          = button_to user_google_oauth2_omniauth_authorize_path, method: :post, form: { data: { turbo: false } }, class: 'btn btn-link p-0 border-0 bg-transparent text-start-md' do
+            = image_pack_tag 'images/btn_google_signin_dark_normal_web.png', id: 'loginGoogle'
       -else
         .col-sm-3.text-sm-right.py-2
           p.text-end-md Unlink Account from Google
         .col-sm-3
-          =link_to "Unlink #{current_user.oauth_email}",
+          = button_to "Unlink #{current_user.oauth_email}",
             unlink_oauth_account_user_path(current_user),
             class: 'btn btn-danger',
-            data: { confirm: 'Are you sure?' },
-            method: :delete
+            method: :delete,
+            form: { data: { turbo: true, turbo_confirm: 'Are you sure?' } }
   - if @user.student?
     = render('shared/homework')

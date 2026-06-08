@@ -46,5 +46,5 @@ section.page-section.pt-2#Users
                     set_role_user_path(e.id),
                     id: "add-role-#{e.id}",
                     class: 'btn btn-primary add-role-button',
-                    form: {id: "form-#{e.id}"},
+                    form: { id: "form-#{e.id}", data: { turbo: true } },
                     method: :patch

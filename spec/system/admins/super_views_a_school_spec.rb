@@ -20,7 +20,7 @@ RSpec.describe "Super views a school", :default_creates, :js do
     before { visit(school_path(school)) }
 
     it "shows the school admin as the current user" do
-      within("#schoolAdminTable") { click_link "Become User" }
+      within("#schoolAdminTable") { click_button "Become User" }
       expect(page).to have_css("#current_user", text: "#{school_admin.forename} #{school_admin.surname}")
     end
   end
@@ -51,7 +51,7 @@ RSpec.describe "Super views a school", :default_creates, :js do
     end
 
     it "notifies users that a setup email has been sent" do
-      click_link "Send Setup Email"
+      click_button "Send Setup Email"
       expect(page).to have_css(".alert-info", text: email_notice, wait: 6)
     end
   end

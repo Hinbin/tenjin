@@ -21,18 +21,20 @@
           td = @monthly_questions[school.id].to_i
           td =sync_status_icon(school.sync_status)
           - if current_admin.super?
-            td =link_to boolean_icon(school.permitted?),
-              school_path(school, school: { permitted: !school.permitted } ),
-              method: :patch
-            td = form_with model: school, local: false do |f|
+            td
+              = button_to school_path(school, school: { permitted: !school.permitted } ),
+                method: :patch,
+                class: 'btn btn-link p-0 border-0',
+                form: { class: 'd-inline', data: { turbo: true } } do
+                = boolean_icon(school.permitted?)
+            td = form_with model: school, data: { turbo: true, controller: 'auto-submit' } do |f|
               = f.select :school_group_id,
                 options_from_collection_for_select(@school_groups, :id, :name, school.school_group_id),
-                { include_blank: '',
-                onchange: 'Rails.fire(this.form, "submit")'},
+                { include_blank: '' },
                 id: ('school-group-select-' + school.id.to_s),
                 class: 'form-select',
-                data: { remote: 'true',  url: school_path(school), method: 'patch' }
-          td =link_to 'Sync', sync_school_path(school), class: 'btn w-100 btn-primary', method: :patch, remote: true
+                data: { action: 'change->auto-submit#submit' }
+          td = button_to 'Sync', sync_school_path(school), class: 'btn w-100 btn-primary', method: :patch, form: { class: 'd-inline', data: { turbo: true } }
     -if current_admin.super?
       =link_to(new_school_path)
         button.btn.btn-dark type="button" Add School

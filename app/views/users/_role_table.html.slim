@@ -29,4 +29,4 @@ h3.h3 =role.humanize
             class: 'btn btn-danger',
             method: :delete,
             params: {user: { role: role} },
-            form: {id: "form-#{role}-#{r.id}" }
+            form: { id: "form-#{role}-#{r.id}", data: { turbo: true } }

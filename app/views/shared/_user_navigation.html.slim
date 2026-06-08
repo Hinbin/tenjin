@@ -52,4 +52,4 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
         a#current_user.text-light href=user_path(current_user)
           => current_user.forename
           = current_user.surname
-      = link_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-light-outline'
+      = button_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-light-outline', form: { class: 'd-inline', data: { turbo: false } }

@@ -63,7 +63,7 @@ RSpec.describe "School group admin manages school group", :default_creates, :js 
       before { visit(school_path(school)) }
 
       it "shows the school admin as the current user" do
-        within("#schoolAdminTable") { click_link "Become User" }
+        within("#schoolAdminTable") { click_button "Become User" }
         expect(page).to have_css("#current_user", text: "#{school_admin.forename} #{school_admin.surname}")
       end
     end

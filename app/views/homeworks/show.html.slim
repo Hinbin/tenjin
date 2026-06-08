@@ -34,4 +34,4 @@ section.page-section.text-center.pt-2#StudentProgress
                 = h.progress.to_s
                 | %
     .row.col.mt-5
-      =link_to 'Delete Homework', homework_path(@homework), method: :delete, class: 'btn w-100 btn-danger'
+      = button_to 'Delete Homework', homework_path(@homework), method: :delete, class: 'btn w-100 btn-danger', form: { data: { turbo: true } }

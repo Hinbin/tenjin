@@ -5,13 +5,11 @@ export default class extends Controller {
     this.element.setAttribute("novalidate", true);
     this.element.addEventListener("blur", this.onBlur, true);
     this.element.addEventListener("submit", this.onSubmit);
-    this.element.addEventListener("ajax:beforeSend", this.onSubmit);
   }
 
   disconnect() {
     this.element.removeEventListener("blur", this.onBlur, true);
     this.element.removeEventListener("submit", this.onSubmit);
-    this.element.removeEventListener("ajax:beforeSend", this.onSubmit);
   }
 
   onBlur = (event) => {

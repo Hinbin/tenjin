@@ -76,7 +76,7 @@ RSpec.describe "Super manages subjects", :default_creates, :js do
   context "when managing an individual subject" do
     def deactivate_subject
       visit(subject_path(quiz_subject))
-      page.accept_confirm { click_link("Deactivate Subject") }
+      page.accept_confirm { click_button("Deactivate Subject") }
       find("table#active-subjects")
     end
 

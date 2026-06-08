@@ -27,7 +27,7 @@ RSpec.describe "Student visits the student record", :default_creates, :js, :vcr 
   end
 
   it "unlinks a Google account" do
-    page.accept_confirm { click_link "Unlink #{student.oauth_email}" }
+    page.accept_confirm { click_button "Unlink #{student.oauth_email}" }
     expect(page).to have_css("#loginGoogle")
   end
 

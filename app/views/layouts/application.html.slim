@@ -27,5 +27,5 @@ html
     - if current_user.nil? && current_admin.nil?
       = render('shared/logged_out_navigation')
       = render('shared/student_login_modal') unless devise_controller?
-    = render('shared/flashes')
+    #flashes = render('shared/flashes')
     = yield

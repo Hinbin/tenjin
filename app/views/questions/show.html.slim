@@ -23,15 +23,16 @@
         = @question.flagged_questions.size
   .row
     .col
-      = link_to 'Reset Question Flags',
+      = button_to 'Reset Question Flags',
         reset_flags_question_path,
         method: :patch,
-        class: 'btn w-100 btn-secondary'
+        class: 'btn w-100 btn-secondary',
+        form: { data: { turbo: true } }
 
   .row.mt-5
     .col
-      = link_to 'Delete Question',
+      = button_to 'Delete Question',
         question_path(@question),
-        data:{ confirm: 'Are you sure?' },
         method: :delete,
-        class: 'btn btn-danger w-100'
+        class: 'btn btn-danger w-100',
+        form: { data: { turbo: true, turbo_confirm: 'Are you sure?' } }

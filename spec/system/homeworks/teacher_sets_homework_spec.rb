@@ -49,7 +49,7 @@ RSpec.describe "Teacher sets homework", :default_creates, :js do
     end
 
     it "allows the teacher to delete the homework" do
-      click_link("Delete Homework")
+      click_button("Delete Homework")
       expect(page).to have_current_path(classroom_path(classroom))
     end
 

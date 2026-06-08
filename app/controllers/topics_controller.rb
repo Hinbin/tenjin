@@ -14,6 +14,7 @@ class TopicsController < ApplicationController
   def update
     topic = authorize find_topic
     topic.update(topic_params)
+    head :no_content
   end
 
   def destroy

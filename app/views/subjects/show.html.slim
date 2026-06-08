@@ -6,8 +6,8 @@
        =f.input :name
        =f.input :active
        =f.button :submit, class: "btn btn-primary w-100"
-      =link_to 'Deactivate Subject',
+      = button_to 'Deactivate Subject',
         subject_path(@subject),
         method: :delete,
         class: 'btn w-100 btn-danger my-5',
-        data: {confirm: "Are you sure?"}
+        form: { data: { turbo: true, turbo_confirm: 'Are you sure?' } }

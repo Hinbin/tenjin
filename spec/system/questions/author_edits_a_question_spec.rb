@@ -20,7 +20,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
   end
 
   def switch_to_student_account
-    click_link("Logout")
+    click_button("Logout")
     find("button", text: "LOGIN")
     sign_in student
     visit dashboard_path
@@ -91,7 +91,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
 
     it "deletes a question" do
       visit(question_path(question))
-      page.accept_confirm { click_link("Delete Question") }
+      page.accept_confirm { click_button("Delete Question") }
       expect(page).to have_no_css(".question-row")
     end
 
@@ -109,18 +109,18 @@ RSpec.describe "Author edits a question", :default_creates, :js do
 
     it "creates a topic" do
       click_link("Add Topic")
-      expect(page).to have_content("Delete Topic")
+      expect(page).to have_button("Delete Topic")
     end
 
     it "disables a topic" do
       click_link("Add Topic")
-      page.accept_confirm { click_link("Delete Topic") }
+      page.accept_confirm { click_button("Delete Topic") }
       expect(page).to have_no_css(".topic-row")
     end
 
     it "prevents disabled topics from showing when taking a quiz" do
       visit(topic_questions_path(topic_id: topic))
-      page.accept_confirm { click_link("Delete Topic") }
+      page.accept_confirm { click_button("Delete Topic") }
       expect(page).to have_css("div", exact_text: quiz_subject.name, count: 1)
       switch_to_student_account
       expect(page).to have_no_css("option", text: topic.name)
@@ -179,7 +179,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
     end
 
     it "deletes the question" do
-      page.accept_confirm { click_link("Delete Question") }
+      page.accept_confirm { click_button("Delete Question") }
       expect(page).to have_no_content(question.question_text.to_plain_text)
     end
 
@@ -323,7 +323,7 @@ RSpec.describe "Author edits a question", :default_creates, :js do
       end
 
       it "resets flags" do
-        click_link("Reset Question Flags")
+        click_button("Reset Question Flags")
         expect(page).to have_content("Flags: 0")
       end
     end

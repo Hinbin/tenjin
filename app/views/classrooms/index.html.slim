@@ -22,9 +22,11 @@
               tr
                 td =c.name
                 td.d-none.d-lg-table-cell =c.enrollments.size
-                td =select_tag :subject,
-                  options_from_collection_for_select(@subjects, :id, :name, c.subject_id),
-                  include_blank: '',
-                  id: ('classroom-' + c.id.to_s),
-                  class: 'form-select',
-                  data: { remote: 'true', url: classroom_path(c.id), method: 'patch', action: 'change->sync-notice#notify' }
+                td
+                  = form_with url: classroom_path(c.id), method: :patch, data: { turbo: true, controller: 'auto-submit' } do
+                    = select_tag :subject,
+                      options_from_collection_for_select(@subjects, :id, :name, c.subject_id),
+                      include_blank: '',
+                      id: ('classroom-' + c.id.to_s),
+                      class: 'form-select',
+                      data: { action: 'change->auto-submit#submit sync-notice#notify' }

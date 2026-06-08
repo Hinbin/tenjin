@@ -88,7 +88,7 @@ RSpec.describe "Lesson author edits a lesson", :default_creates, :js do
 
     it "removes the lesson from the list" do
       page.accept_confirm do
-        click_link("Delete")
+        click_button("Delete")
       end
       expect(page).to have_no_css(".videoLink")
     end

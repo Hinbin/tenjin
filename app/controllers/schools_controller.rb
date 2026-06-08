@@ -53,18 +53,14 @@ class SchoolsController < ApplicationController
   def update
     school = authorize find_school
     school.update(update_school_params)
-    return head :ok if request.xhr?
-
-    redirect_to schools_path
+    head :no_content
   end
 
   def sync
     school = authorize find_school
     school.update_attribute(:sync_status, "queued")
     SyncSchoolJob.perform_later school
-    return head :ok if request.xhr?
-
-    redirect_to classrooms_path
+    head :no_content
   end
 
   def reset_all_passwords
