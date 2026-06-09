@@ -39,8 +39,15 @@ class Challenge::UpdateChallengeProgress < ApplicationService
 
     completed = progress >= challenge.number_required
 
-    binds = [[nil, progress], [nil, @quiz.user_id], [nil, challenge.id],
-      [nil, challenge.number_required], [nil, completed]]
+    int = ActiveRecord::Type::Integer.new
+    bool = ActiveRecord::Type::Boolean.new
+    binds = [
+      ActiveRecord::Relation::QueryAttribute.new("progress", progress, int),
+      ActiveRecord::Relation::QueryAttribute.new("user_id", @quiz.user_id, int),
+      ActiveRecord::Relation::QueryAttribute.new("challenge_id", challenge.id, int),
+      ActiveRecord::Relation::QueryAttribute.new("number_required", challenge.number_required, int),
+      ActiveRecord::Relation::QueryAttribute.new("completed", completed, bool)
+    ]
     ChallengeProgress.connection.exec_query <<~SQL, "Upsert progress", binds
       INSERT INTO challenge_progresses("progress","user_id", "challenge_id", "completed", "created_at","updated_at")
       values ($1, $2, $3, $5, current_timestamp, current_timestamp)
@@ -65,7 +72,15 @@ class Challenge::UpdateChallengeProgress < ApplicationService
 
     completed = points >= challenge.number_required
 
-    binds = [[nil, points], [nil, @quiz.user_id], [nil, challenge.id], [nil, completed], [nil, challenge.number_required]]
+    int = ActiveRecord::Type::Integer.new
+    bool = ActiveRecord::Type::Boolean.new
+    binds = [
+      ActiveRecord::Relation::QueryAttribute.new("progress", points, int),
+      ActiveRecord::Relation::QueryAttribute.new("user_id", @quiz.user_id, int),
+      ActiveRecord::Relation::QueryAttribute.new("challenge_id", challenge.id, int),
+      ActiveRecord::Relation::QueryAttribute.new("completed", completed, bool),
+      ActiveRecord::Relation::QueryAttribute.new("number_required", challenge.number_required, int)
+    ]
     ChallengeProgress.connection.exec_query <<~SQL, "Upsert points", binds
       INSERT INTO challenge_progresses("progress", "user_id", "challenge_id", "completed", "created_at", "updated_at")
       values ($1, $2, $3, $4, current_timestamp, current_timestamp)

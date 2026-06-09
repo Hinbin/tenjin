@@ -9,7 +9,7 @@ ruby "~> 3.1.7"
 gem "dotenv", groups: [:development, :test]
 gem "recipient_interceptor"
 
-gem "rails", "~> 6.1.7"
+gem "rails", "~> 7.0.0"
 gem "image_processing"
 
 # Reduces boot times through caching; required in config/boot.rb

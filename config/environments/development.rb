@@ -16,6 +16,9 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  # Enable server timing
+  config.server_timing = true
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?
@@ -69,12 +72,6 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.after_initialize do
-    HttpLog.configure do |config|
-      config.logger = Rails.logger
-      config.color = :red
-      config.log_headers = true
-    end
-
     Mail.register_interceptor(
       RecipientInterceptor.new(
         ENV["EMAIL_RECIPIENTS"],
