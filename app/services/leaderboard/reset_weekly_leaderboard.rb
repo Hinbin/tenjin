@@ -13,7 +13,7 @@ class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
 
   def update_classroom_winners
     School.find_each do |sc|
-      Classroom.where(school: sc).where.not(subject: nil).find_each do |c|
+      Classroom.where(school: sc).where.associated(:subject).find_each do |c|
         top = build_leaderboard_for_subject(c.subject.name, sc.id)
         top = filter_by_classroom_name(top, c)
 

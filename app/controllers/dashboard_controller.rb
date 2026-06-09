@@ -38,7 +38,7 @@ class DashboardController < ApplicationController
       .where(user: current_user)
     @other_classrooms = Classroom.where(school: current_user.school)
       .includes(:subject)
-      .where.not(subject: nil)
+      .where.associated(:subject)
       .where.not(id: @enrollments.select(:classroom_id))
   end
 end
