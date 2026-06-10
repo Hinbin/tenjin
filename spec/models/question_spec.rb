@@ -3,6 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Question, :default_creates do
+  let(:question) { create(:question, topic: topic) }
   let(:mismatched_question) { build(:question, lesson: create(:lesson), topic: topic) }
 
   it "has a valid factory" do

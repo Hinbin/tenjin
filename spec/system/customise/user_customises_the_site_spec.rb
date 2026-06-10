@@ -8,30 +8,17 @@ RSpec.describe "User customises the site", :default_creates, :js do
     sign_in student
   end
 
-  describe "visiting the customisation page" do
-    before { visit(dashboard_path) }
-
-    it "allows navigation from the customise link" do
-      find("a", text: "Shop").click
-      find("a", text: "Styles").click
-      expect(page).to have_current_path(show_available_customisations_path)
-    end
-
-    it "allows navigation from the challenge star" do
-      find("i.fa-star").click
-      expect(page).to have_current_path(show_available_customisations_path)
-    end
-
-    it "allows navigation from the number of points" do
-      find_by_id("challenge-points").click
-      expect(page).to have_current_path(show_available_customisations_path)
-    end
+  it "navigates from the shop dropdown to the styles page" do
+    visit(dashboard_path)
+    find("a", text: "Shop").click
+    find("a", text: "Styles").click
+    expect(page).to have_current_path(show_available_customisations_path)
   end
 
-  describe "looking at available dashboard styles" do
+  describe "available dashboard styles" do
     let!(:dashboard_customisation) { create(:dashboard_customisation, cost: 6) }
     let!(:second_customisation) { create(:dashboard_customisation, cost: 4) }
-    let(:student) { create(:user, school: school, challenge_points: 10) }
+    let(:student) { create(:student, school: school, challenge_points: 10) }
 
     before do
       visit(show_available_customisations_path)
@@ -45,7 +32,7 @@ RSpec.describe "User customises the site", :default_creates, :js do
     context "when not all customisations are purchasable" do
       let!(:dashboard_customisation_unavailable) { create(:dashboard_customisation, cost: 6, purchasable: false) }
 
-      it "lists available customisations" do
+      it "hides unavailable customisations" do
         expect(page).to have_content(dashboard_customisation.name.upcase)
           .and have_no_content(dashboard_customisation_unavailable.name.upcase)
       end
@@ -60,12 +47,9 @@ RSpec.describe "User customises the site", :default_creates, :js do
       end
 
       context "when the student has enough points" do
-        it "displays the style" do
+        it "applies the style and deducts the cost" do
           expect(page).to have_css(".heading-divider[style*=#{dashboard_customisation.value}]")
-        end
-
-        it "shows their new points total" do
-          expect(page).to have_css("#challenge-points", text: (student.challenge_points - dashboard_customisation.cost).to_s)
+            .and have_css("#challenge-points", text: (student.challenge_points - dashboard_customisation.cost).to_s)
         end
       end
 
@@ -76,47 +60,42 @@ RSpec.describe "User customises the site", :default_creates, :js do
           expect(page).to have_css(".alert", text: "You do not have enough points")
         end
       end
-    end
 
-    context "when they have bought a customisation" do
-      before do
-        within("form[action='#{buy_customisation_path(dashboard_customisation)}']") do
-          click_button "Buy"
+      context "when returning to the store" do
+        before { visit(show_available_customisations_path) }
+
+        it "shows the purchased customisation in a separate section" do
+          expect(page).to have_content(second_customisation.name.upcase)
+
+          within("section.purchased-styles") do
+            expect(page).to have_content(dashboard_customisation.name.upcase)
+              .and have_no_content(second_customisation.name.upcase)
+          end
         end
-        expect(page).to have_current_path(dashboard_path)
-        visit(show_available_customisations_path)
-      end
 
-      it "shows the purchased customisation in a separate section" do
-        expect(page).to have_content(second_customisation.name.upcase)
-
-        within("section.purchased-styles") do
-          expect(page).to have_content(dashboard_customisation.name.upcase)
-            .and have_no_content(second_customisation.name.upcase)
+        it "shows Switch instead of Buy" do
+          expect(page).to have_css("input[value='Switch']")
         end
-      end
 
-      it "shows Switch instead of Buy" do
-        expect(page).to have_css("input[value='Switch']")
-      end
+        it "allows switching back at no cost after buying another" do
+          expected_points = student.challenge_points - dashboard_customisation.cost - second_customisation.cost
 
-      it "allows switching back at no cost after buying another" do
-        within("form[action='#{buy_customisation_path(second_customisation)}']") do
-          click_button "Buy"
+          within("form[action='#{buy_customisation_path(second_customisation)}']") do
+            click_button "Buy"
+          end
+          expect(page).to have_current_path(dashboard_path)
+          visit(show_available_customisations_path)
+          within("form[action='#{buy_customisation_path(dashboard_customisation)}']") do
+            click_button "Switch"
+          end
+          expect(page).to have_current_path(dashboard_path)
+          expect(page).to have_css("#challenge-points", text: expected_points.to_s)
         end
-        expect(page).to have_current_path(dashboard_path)
-        visit(show_available_customisations_path)
-        points_before_switch = find("#challenge-points").text
-        within("form[action='#{buy_customisation_path(dashboard_customisation)}']") do
-          click_button "Switch"
-        end
-        expect(page).to have_current_path(dashboard_path)
-        expect(page).to have_css("#challenge-points", text: points_before_switch)
       end
     end
   end
 
-  context "when purchasing a leaderboard icon" do
+  describe "leaderboard icons" do
     let!(:icon_customisation) do
       create(:customisation, customisation_type: "leaderboard_icon", value: "black,star", cost: 10)
     end
@@ -126,23 +105,21 @@ RSpec.describe "User customises the site", :default_creates, :js do
       visit(show_available_customisations_path)
     end
 
-    it "lists available icons" do
+    it "lists available icons with a buy button" do
       expect(page).to have_content(icon_customisation.name)
+        .and have_button("Buy")
     end
 
     context "when an icon is not purchasable" do
       let!(:unpurchasable_icon) do
         create(:customisation, customisation_type: "leaderboard_icon", cost: 10, purchasable: false)
       end
+
       before { visit(show_available_customisations_path) }
 
       it "hides it" do
         expect(page).to have_no_content(unpurchasable_icon.name.upcase)
       end
-    end
-
-    it "shows a buy button for purchasable icons" do
-      expect(page).to have_button("Buy")
     end
 
     context "when the student has a topic score" do

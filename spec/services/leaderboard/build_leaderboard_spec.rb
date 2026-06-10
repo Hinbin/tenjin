@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
   let(:student) { create(:student, forename: "Aaaron", school: school) } # Ensure first alphabetically
   let(:school) { create(:school, school_group: nil) }
+  let(:second_school) { create(:school, school_group: school.school_group) }
+  let(:school_without_school_group) { create(:school, school_group: nil) }
 
   before do
     create(:enrollment, classroom: classroom, user: student)

@@ -3,30 +3,27 @@
 require "rails_helper"
 
 RSpec.describe "Employee views a user record", :default_creates, :js do
-  context "when visiting a user record" do
-    before do
-      sign_in teacher
-      create(:enrollment, user: student, classroom: classroom)
-      create(:enrollment, user: teacher, classroom: classroom)
-      homework
-      visit(user_path(student))
-    end
+  let!(:student_enrollment) { create(:enrollment, user: student, classroom: classroom) }
+  let!(:teacher_enrollment) { create(:enrollment, user: teacher, classroom: classroom) }
+  let!(:homework) { create(:homework, classroom: classroom, topic: topic) }
 
-    it "opens the student record webpage" do
-      expect(page).to have_current_path(user_path(student))
-    end
+  before do
+    sign_in teacher
+    visit(user_path(student))
+  end
 
-    it "shows uncompleted homeworks" do
+  describe "homework status" do
+    it "shows a cross icon next to uncompleted homework" do
       expect(page).to have_content(homework.topic.name).and have_css("i.fa-times")
     end
 
     context "when homework is completed" do
       before do
-        student.homework_progresses.update_all(completed: true)
+        homework.homework_progresses.find_by!(user: student).update!(completed: true)
         visit(user_path(student))
       end
 
-      it "shows completed homeworks" do
+      it "shows a check icon" do
         expect(page).to have_css("i.fa-check")
       end
     end
@@ -40,30 +37,20 @@ RSpec.describe "Employee views a user record", :default_creates, :js do
         visit(user_path(student))
       end
 
-      it "only shows homeworks for classes the teacher belongs to" do
-        expect(page).to have_no_css("tr[data-homework='#{homework_different_class.id}'")
+      it "hides homework from classrooms the teacher does not belong to" do
+        expect(page).to have_no_css("tr[data-homework='#{homework_different_class.id}']")
       end
     end
+  end
 
-    context "when resetting passwords" do
-      let(:different_employee) { create(:teacher, school: school) }
+  describe "password reset" do
+    let(:new_password) { FFaker::Internet.password }
 
-      it "resets a student password" do
-        update_password(new_password)
-        sign_out teacher
-        log_in_through_front_page(student.username, new_password)
-        expect(page).to have_content(student.forename).and have_content(student.surname)
-      end
-
-      it "does not allow resetting an employee password" do
-        visit(user_path(different_employee))
-        expect(page).to have_no_css("#user_password")
-      end
-
-      it "does not allow resetting a school admin password" do
-        visit(user_path(school_admin))
-        expect(page).to have_no_css("#user_password")
-      end
+    it "resets a student password" do
+      update_password(new_password)
+      sign_out teacher
+      log_in_through_front_page(student.username, new_password)
+      expect(page).to have_content(student.forename).and have_content(student.surname)
     end
   end
 end

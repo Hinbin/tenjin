@@ -9,7 +9,7 @@ RSpec.describe "User selects a leaderboard", :default_creates, :js do
   end
 
   context "with a topic and a second subject enrolled" do
-    let!(:topic) { create(:topic, subject: quiz_subject) }
+    let!(:topic) { super() }
     let(:second_subject) { create(:subject) }
     let(:second_classroom) { create(:classroom, subject: second_subject, school: school) }
 
@@ -43,7 +43,7 @@ RSpec.describe "User selects a leaderboard", :default_creates, :js do
       visit leaderboard_index_path
     end
 
-    it "highlights the current user" do # javascript/turbolinks bug
+    it "highlights the current user" do
       click_link(quiz_subject.name)
       within(".collapse.show") { click_link("All") }
       expect(page).to have_css("tr.current-user")

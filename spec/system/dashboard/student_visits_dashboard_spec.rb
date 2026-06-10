@@ -3,19 +3,20 @@
 require "rails_helper"
 
 RSpec.describe "Student visits the dashboard", :default_creates, :js do
+  let(:question) { create(:question, topic: topic) }
+
   before do
     setup_subject_database
     sign_in student
   end
 
-  it "shows the arrow for a tutorial"
-
   describe "challenges" do
     let!(:challenge_one) { create(:challenge, topic: topic, end_date: 1.hour.from_now) }
-    let!(:answer) { create(:answer, question: question, correct: true) }
-    let(:challenge_css_selector) { "#challenge-table tr[data-topic='#{topic.id}']" }
 
     context "when the student has no challenge progress" do
+      let!(:answer) { create(:answer, question: question, correct: true) }
+      let(:challenge_css_selector) { "#challenge-table tr[data-topic='#{topic.id}']" }
+
       before { visit(dashboard_path) }
 
       it "shows enrolled challenges" do
@@ -27,7 +28,7 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
         expect(page).to have_css("p", exact_text: challenge_one.topic.name)
       end
 
-      it "allows answering a challenge question" do # turbolinks bug
+      it "allows answering a challenge question" do
         find(challenge_css_selector).click
         find(".question-button", match: :first).click
         expect(page).to have_text("Next Question")
@@ -70,8 +71,10 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
     end
 
     context "when the student has challenge points" do
-      let(:student) { create(:student, school: school, challenge_points: 25) }
-      before { visit(dashboard_path) }
+      before do
+        student.update!(challenge_points: 25)
+        visit(dashboard_path)
+      end
 
       it "shows challenge points in the nav bar" do
         expect(page).to have_css("p", exact_text: 25)
@@ -186,9 +189,6 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
           expect(page).to have_css("p", exact_text: homework_lesson.lesson.title)
         end
       end
-
-      it "stops points being added on third lesson attempt"
-      it "prevents you taking a lesson homework that has already been completed"
     end
 
     context "when homeworks exist for another teacher" do

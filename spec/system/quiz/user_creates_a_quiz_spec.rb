@@ -4,10 +4,10 @@ require "rails_helper"
 
 RSpec.describe "User creates a quiz", :default_creates, :js do
   describe "picking a subject" do
-    let(:subject_cs) { create(:computer_science) }
-    let(:classroom_cs) { create(:classroom, subject: subject_cs, school: school) }
-
     context "with a subject-specific image" do
+      let(:subject_cs) { create(:computer_science) }
+      let(:classroom_cs) { create(:classroom, subject: subject_cs, school: school) }
+
       before do
         create(:enrollment, classroom: classroom_cs, user: student)
         log_in
@@ -36,6 +36,8 @@ RSpec.describe "User creates a quiz", :default_creates, :js do
   end
 
   context "when creating two quizzes in quick succession" do
+    let(:question) { create(:question, topic: topic) }
+
     before do
       setup_subject_database
       create_list(:answer, 3, question: question)
@@ -99,7 +101,7 @@ RSpec.describe "User creates a quiz", :default_creates, :js do
 
       before { navigate_to_quiz }
 
-      it "informs the user they cannot currently score leaderboard points for this quiz" do
+      it "shows a 'not counting' message" do
         expect(page).to have_content("not counting")
       end
 
@@ -116,8 +118,6 @@ RSpec.describe "User creates a quiz", :default_creates, :js do
   end
 
   describe "selecting a topic" do
-    let(:topic) { create(:topic, subject: quiz_subject) }
-
     before do
       setup_subject_database
       create(:question, topic: topic)

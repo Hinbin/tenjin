@@ -3,11 +3,9 @@
 require "rails_helper"
 
 RSpec.describe "School admin views a student record", :default_creates, :js do
-  before do
-    setup_subject_database
-  end
+  let(:new_password) { FFaker::Internet.password }
 
-  context "when updating the user password" do
+  describe "as a school admin" do
     before do
       sign_in school_admin
       visit(user_path(student))
@@ -19,15 +17,10 @@ RSpec.describe "School admin views a student record", :default_creates, :js do
 
     it "updates the user password" do
       update_password(new_password)
+      expect(page).to have_text("Password successfully updated")
       sign_out school_admin
       log_in_through_front_page(student.username, new_password)
       expect(page).to have_content(student.forename).and have_content(student.surname)
-    end
-
-    it "confirms the password has been updated" do
-      find_by_id("user_password").set(new_password)
-      click_button("Update Password")
-      expect(page).to have_text("Password successfully updated")
     end
   end
 

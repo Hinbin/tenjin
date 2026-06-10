@@ -67,10 +67,6 @@ Capybara.register_driver :cuprite do |app|
   Capybara::Cuprite::Driver.new(app, **CUPRITE_OPTIONS)
 end
 
-Capybara.register_driver :cuprite_download do |app|
-  Capybara::Cuprite::Driver.new(app, **CUPRITE_OPTIONS, save_path: DownloadHelpers::PATH.to_s)
-end
-
 RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -101,7 +97,6 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include SessionHelpers, type: :system
-  config.include DownloadHelpers, type: :system
   config.include ActiveJob::TestHelper, type: :job
 
   config.include_context "with default_creates", default_creates: true

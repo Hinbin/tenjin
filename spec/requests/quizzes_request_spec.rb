@@ -111,7 +111,7 @@ RSpec.describe "using a quiz" do
     end
 
     context "when the question is a short answer" do
-      let(:short_answer_question) { create(:question, question_type: "short_answer") }
+      let(:short_answer_question) { create(:short_answer_question) }
       let(:quiz) { create(:new_quiz, user: student, question_order: [short_answer_question.id]) }
 
       it "renders the short answer question" do

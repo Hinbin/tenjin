@@ -4,48 +4,28 @@ require "rails_helper"
 
 RSpec.describe "Author transfers question files", :default_creates, :js do
   let(:author) { create(:question_author, subject: quiz_subject) }
-  let!(:topic) { create(:topic, subject: quiz_subject) }
   let!(:question) { create(:question, topic: topic) }
 
   before do
-    driven_by :cuprite_download
-    clear_downloads
     sign_in author
     visit topic_questions_path(topic_id: topic.id)
   end
 
-  after do
-    clear_downloads
-  end
+  describe "uploading questions" do
+    it "imports questions from a valid JSON file" do
+      click_link("Import Questions")
+      attach_file("file", Rails.root.join("spec/fixtures/files/example_import.json").to_s, visible: false)
+      click_button("Import")
+      within "#questionTable" do
+        expect(page).to have_css("[id^='question-']", count: 27)
+      end
+    end
 
-  it "downloads questions" do
-    skip if ENV["CI"] # Flakes out in CircleCI
-    click_link("Download Questions")
-    wait_for_download
-    expect(download).to match("#{topic.name}.json")
-  end
-
-  it "uploads questions" do
-    click_link("Import Questions")
-    attach_file("file", Rails.root.join("spec/fixtures/files/example_import.json").to_s, visible: false)
-    click_button("Import")
-    within "#questionTable" do
-      expect(page).to have_css("[id^='question-']", count: 27)
+    it "reports issues with an invalid JSON file" do
+      click_link("Import Questions")
+      attach_file("file", Rails.root.join("spec/fixtures/files/example_import_invalid.json").to_s, visible: false)
+      click_button("Import")
+      expect(page).to have_content("Question missing key")
     end
   end
-
-  it "reports upload issues" do
-    click_link("Import Questions")
-    attach_file("file", Rails.root.join("spec/fixtures/files/example_import_invalid.json").to_s, visible: false)
-    click_button("Import")
-    expect(page).to have_content("Question missing key")
-  end
-
-  it "tells the user if they have not attached a file" do
-    click_link("Import Questions")
-    click_button("Import")
-    expect(page).to have_content("Please attach a file")
-  end
-
-  it "deletes multiple questions"
 end

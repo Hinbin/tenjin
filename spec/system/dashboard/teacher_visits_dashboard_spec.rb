@@ -3,8 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "Teacher visits the dashboard", :default_creates, :js do
-  let(:classroom) { create(:classroom, subject: quiz_subject, school: teacher.school) }
-
   before do
     setup_subject_database
   end
@@ -34,13 +32,11 @@ RSpec.describe "Teacher visits the dashboard", :default_creates, :js do
       expect(page).to have_link("Classrooms", href: dashboard_path)
     end
 
-    it "shows challenge points"
-
     it "does not show challenge points" do
       expect(page).to have_no_css("i.fa-star")
     end
 
-    it "does not show other classrooms"
+    it "does not show a link to school admin in the nav bar"
 
     context "when another teacher's classroom exists in the school" do
       let(:other_classroom) { create(:classroom, school: school) }

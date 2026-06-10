@@ -1,26 +1,20 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "support/api_data"
 
 RSpec.describe "User visits the homepage", :default_creates, :js, :vcr do
-  include_context "with api_data"
-  include_context "with wonde_test_data"
-
-  context "when looking at the page" do
-    subject { page }
-
+  describe "the landing page" do
     before { visit root_path }
 
-    it { is_expected.to have_button("Login") }
-    it { is_expected.to have_content("TENJIN") }
-    it { is_expected.to have_link("About") }
-    it { is_expected.to have_css("nav.fixed-top") }
+    it "shows the brand, login button, about link, and fixed nav" do
+      expect(page).to have_button("Login")
+        .and have_content("TENJIN")
+        .and have_link("About")
+        .and have_css("nav.fixed-top")
+    end
   end
 
-  context "when logging in" do
-    let!(:student) { create(:student) }
-
+  describe "logging in" do
     before { visit root_path }
 
     it "pops up the login form" do
@@ -39,7 +33,7 @@ RSpec.describe "User visits the homepage", :default_creates, :js, :vcr do
     end
 
     context "with a Google-linked account" do
-      let!(:google_student) { create(:student, oauth_uid: "123456123456") }
+      let!(:google_student) { create(:student, school: school, oauth_uid: "123456123456") }
 
       before { stub_google_omniauth }
 
@@ -70,66 +64,70 @@ RSpec.describe "User visits the homepage", :default_creates, :js, :vcr do
     end
   end
 
-  context "when looking at the about page" do
-    before do
-      hide_const("OGAT")
-      visit page_path("about")
-    end
-
-    it "shows the about page" do
-      expect(page).to have_css("#standardAbout")
-    end
-
-    it "does not have a fixed top nav bar" do
-      expect(page).to have_no_css("nav.fixed-top")
-    end
-  end
-
-  context "with the OGAT environment variable set" do
-    before do
-      stub_const("ENV", "OGAT" => "true")
-      visit page_path("about")
-    end
-
-    it "shows the OGAT about page" do
-      expect(page).to have_css("#ogatAbout")
-    end
-  end
-
-  context "when being prompted to sign in with Google" do
-    context "with an unlinked account" do
+  describe "the about page" do
+    context "with the OGAT constant hidden" do
       before do
-        sign_in create(:student, :no_oauth)
+        hide_const("OGAT")
+        visit page_path("about")
+      end
+
+      it "shows the standard about page" do
+        expect(page).to have_css("#standardAbout")
+      end
+
+      it "hides the fixed top nav bar" do
+        expect(page).to have_no_css("nav.fixed-top")
+      end
+    end
+
+    context "with the OGAT environment variable set" do
+      before do
+        stub_const("ENV", "OGAT" => "true")
+        visit page_path("about")
+      end
+
+      it "shows the OGAT about page" do
+        expect(page).to have_css("#ogatAbout")
+      end
+    end
+  end
+
+  describe "the Google account link prompt" do
+    context "with an unlinked student account" do
+      let!(:unlinked_student) { create(:student, :no_oauth, school: school) }
+
+      before do
+        sign_in unlinked_student
         visit(dashboard_path)
       end
 
-      it "prompts to link their account" do
+      it "prompts to link the account" do
         expect(page).to have_content("Let's get your account linked")
       end
     end
 
-    context "with a linked account" do
+    context "with a linked student account" do
       before do
         sign_in student
         visit(dashboard_path)
       end
 
-      it "does not prompt to link their account" do
+      it "does not prompt to link the account" do
         expect(page).to have_no_content("Let's get your account linked")
       end
     end
 
     context "with an unlinked teacher account" do
+      let!(:unlinked_teacher) { create(:teacher, :no_oauth, school: school) }
+
       before do
-        sign_in create(:teacher, :no_oauth)
+        sign_in unlinked_teacher
         visit(dashboard_path)
       end
 
-      it "prompts to link their account" do
+      it "prompts to link the account" do
         expect(page).to have_content("Let's get your account linked")
       end
     end
-
-    it "only displays the message when the MAT is Google enabled"
   end
 end

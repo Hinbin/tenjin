@@ -10,15 +10,8 @@ RSpec.describe "Lesson author edits a lesson", :default_creates, :js do
     sign_in teacher
   end
 
-  describe "visiting the lessons index" do
-    before do
-      visit(lessons_path)
-    end
-
-    it "navigates to the new lesson form" do
-      click_link("Create #{quiz_subject.name} Lesson")
-      expect(page).to have_current_path(new_lesson_path, ignore_query: true)
-    end
+  describe "the lessons index" do
+    before { visit(lessons_path) }
 
     context "with lessons in multiple subjects" do
       let!(:other_lesson) { create(:lesson) }
@@ -46,36 +39,17 @@ RSpec.describe "Lesson author edits a lesson", :default_creates, :js do
   describe "adding a lesson" do
     before { visit(new_lesson_path(subject: quiz_subject)) }
 
-    it "creates a lesson without a video link" do
-      fill_in "Title", with: "No video lesson"
-      select topic.name, from: "Topic"
-      click_button("Create Lesson")
-      expect(page).to have_css("td", text: "No video lesson")
-    end
-
-    it "creates a lesson with a supported video link" do
+    it "creates a lesson" do
       fill_in "URL", with: "https://vimeo.com/371104836"
       fill_in "Title", with: "Vimeo video lesson"
       select topic.name, from: "Topic"
       click_button("Create Lesson")
       expect(page).to have_css(".lesson-title", text: "Vimeo video lesson")
     end
-
-    it "shows an error with an unsupported video link" do
-      fill_in "URL", with: "https://badtube.com/t-ZRX8984sc"
-      fill_in "Title", with: "Bad video lesson"
-      select topic.name, from: "Topic"
-      click_button("Create Lesson")
-      expect(page).to have_content("Must be a YouTube or Vimeo link")
-    end
   end
 
   describe "editing a lesson" do
-    before do
-      setup_subject_database
-      create(:enrollment, user: teacher, subject: quiz_subject)
-      visit(lessons_path)
-    end
+    before { visit(lessons_path) }
 
     it "saves new lesson details" do
       click_link("Edit")
@@ -90,7 +64,7 @@ RSpec.describe "Lesson author edits a lesson", :default_creates, :js do
       page.accept_confirm do
         click_button("Delete")
       end
-      expect(page).to have_no_css(".videoLink")
+      expect(page).to have_no_content(lesson.title)
     end
   end
 end

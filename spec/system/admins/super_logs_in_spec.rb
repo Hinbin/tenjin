@@ -11,6 +11,4 @@ RSpec.describe "Super logs in", :default_creates, :js do
     click_button "Log in"
     expect(page).to have_content("Schools")
   end
-
-  it "does not authenticate with invalid credentials" # pending — counterpart for successful login
 end

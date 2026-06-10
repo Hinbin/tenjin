@@ -4,6 +4,8 @@ require "rails_helper"
 
 RSpec.describe ResetUserPasswordsJob, :default_creates do
   let!(:student) { create(:student, school: school) }
+  let(:second_school) { create(:school, school_group: school.school_group) }
+  let(:second_school_student) { create(:student, school: second_school) }
 
   describe "performing the job" do
     it "resets passwords for students of that school" do

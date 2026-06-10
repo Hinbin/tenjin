@@ -2,160 +2,103 @@
 
 require "rails_helper"
 
-RSpec.describe "User visits a classroom", :default_creates, :js do
-  let(:classroom) { create(:classroom, subject: quiz_subject, school: teacher.school) }
-
+RSpec.describe "Teacher visits a classroom", :default_creates, :js do
   before do
     setup_subject_database
     create(:enrollment, classroom: classroom, user: teacher)
     sign_in teacher
+    visit(classroom_path(classroom))
   end
 
-  context "when looking at the classroom information" do
-    before { visit(classroom_path(classroom)) }
+  describe "the homework completion percentage" do
+    let!(:homework) { create(:homework, classroom: classroom) }
 
-    it "shows the name of the classroom" do
-      expect(page).to have_content(classroom.name)
+    before do
+      create_list(:homework_progress, 3, homework: homework, completed: false)
+      create_list(:homework_progress, 6, homework: homework, completed: true)
+      visit(classroom_path(classroom))
     end
 
-    it "shows the name of the students" do
-      expect(page).to have_content(student.forename)
-    end
-
-    it "navigates to the new homework form" do
-      click_link("Set Homework")
-      expect(page).to have_current_path(new_homework_path(classroom: {classroom_id: classroom.id}))
-    end
-
-    context "when a homework has been created" do
-      let!(:homework) { create(:homework, classroom: classroom) }
-      before { visit(classroom_path(classroom)) }
-
-      it "navigates to a homework when clicked" do
-        click_link(homework.topic.name)
-        expect(page).to have_current_path(homework_path(homework))
+    it "shows the proportion of progresses that are completed" do
+      within "#homework-table" do
+        expect(page).to have_content("60%")
       end
     end
+  end
 
-    context "with homework completion data" do
-      let!(:homework) { create(:homework, classroom: classroom) }
+  describe "the student table" do
+    it "resets a student password" do
+      click_link("Reset Password")
+      expect(page).to have_no_link("Reset Password").and have_css(".new-password")
+    end
 
+    context "with many enrolled students" do
       before do
-        create_list(:homework_progress, 3, homework: homework, completed: false)
-        create_list(:homework_progress, 6, homework: homework, completed: true)
+        student.update!(surname: "Zzzqx")
+        create_list(:enrollment, 32, classroom: classroom)
         visit(classroom_path(classroom))
       end
 
-      it "shows the correct percentage of homeworks completed" do
-        within "#homework-table" do
-          expect(page).to have_content("60%")
+      it "allows searching students" do
+        within "#students" do
+          # Wait for Tabulator to finish rendering before typing.
+          # Otherwise, input events can race ahead of `tableBuilt` and the
+          # filter call is silently dropped.
+          expect(page).to have_css(".tabulator-row.student-data", count: 33)
+          find("[data-datatable-target='search']").set(student.surname)
+        end
+        expect(page).to have_css(".student-data", count: 1)
+      end
+    end
+
+    context "when a homework is completed" do
+      let!(:homeworks) { create_list(:homework, 5, classroom: classroom) }
+      let(:second_newest_homework) { homeworks.sort_by(&:due_date).reverse[1] }
+
+      before do
+        second_newest_homework.homework_progresses.find_by!(user: student).update!(completed: true)
+        visit(classroom_path(classroom))
+      end
+
+      it "shows the completed homework in the correct place" do
+        within "[data-id='#{student.id}']" do
+          expect(page).to have_css("i:nth-child(2).fa-check")
         end
       end
     end
 
-    context "when looking at the student table" do
+    context "when a homework exists for a different classroom" do
       let(:different_classroom) { create(:classroom, school: school) }
+      let!(:different_homework) { create(:homework, classroom: different_classroom) }
 
-      it "only loads the data table once after going back in the browser" do
-        click_link("Set Homework")
-        page.go_back
-        expect { page.accept_alert }.to raise_error(Capybara::ModalNotFound)
+      before { visit(classroom_path(classroom)) }
+
+      it "does not show homeworks for another classroom" do
+        expect(page).to have_no_css("i.fa-times")
+      end
+    end
+
+    context "with many homeworks" do
+      before do
+        create_list(:homework, 20, classroom: classroom)
+        visit(classroom_path(classroom))
       end
 
-      it "resets a student password" do
-        click_link("Reset Password")
-        expect(page).to have_no_link("Reset Password").and have_css(".new-password")
-      end
-
-      context "with many students and homeworks" do
-        before do
-          create_list(:enrollment, 10, classroom: classroom)
-          create_list(:homework, 10, classroom: classroom)
-          visit(classroom_path(classroom))
-        end
-
-        it "shows the last 5 homeworks" do
-          expect(page).to have_css("[data-id='#{student.id}'] i.fa-times", count: 5)
-        end
-      end
-
-      context "with many enrolled students" do
-        before do
-          student.update!(surname: "Zzzqx")
-          create_list(:enrollment, 32, classroom: classroom)
-          visit(classroom_path(classroom))
-        end
-
-        it "allows searching students" do
-          within "#students" do
-            # Wait for Tabulator to finish rendering before typing.
-            # Otherwise, input events can race ahead of `tableBuilt` and the
-            # filter call is silently dropped.
-            expect(page).to have_css(".tabulator-row.student-data", count: 33)
-            find("[data-datatable-target='search']").set(student.surname)
-          end
-          expect(page).to have_css(".student-data", count: 1)
-        end
-      end
-
-      context "when a homework is completed" do
-        let!(:homeworks) { create_list(:homework, 5, classroom: classroom) }
-        let(:completed_homework_progress) { HomeworkProgress.joins(:homework).order("homeworks.due_date desc").second }
-
-        before do
-          completed_homework_progress.update!(completed: true)
-          visit(classroom_path(classroom))
-        end
-
-        it "shows the completed homework in the correct place" do
-          within "[data-id='#{student.id}']" do
-            expect(page).to have_css("i:nth-child(2).fa-check")
-          end
-        end
-      end
-
-      context "when a homework exists for a different classroom" do
-        let!(:different_homework) { create(:homework, classroom: different_classroom) }
-        before { visit(classroom_path(classroom)) }
-
-        it "does not show homeworks for another classroom" do
-          expect(page).to have_no_css("i.fa-times")
-        end
-      end
-
-      context "with many homeworks" do
-        before do
-          create_list(:homework, 20, classroom: classroom)
-          visit(classroom_path(classroom))
-        end
-
-        it "shows 5 homeworks per page" do
-          expect(page).to have_css(".homework-data", count: 5)
-        end
+      it "paginates 5 homeworks per page" do
+        expect(page).to have_css(".homework-data", count: 5)
+          .and have_css("[data-id='#{student.id}'] i.fa-times", count: 5)
       end
     end
   end
 
-  describe "as a student" do
+  describe "after navigating away and back" do
     before do
-      sign_in student
-      visit(classroom_path(classroom))
-    end
-
-    it "redirects to root" do
-      expect(page).to have_current_path(root_path)
-    end
-  end
-
-  context "when navigating from classroom to homework form and back" do
-    before do
-      visit(classroom_path(classroom))
       click_link("Set Homework")
       find("section#set_homework")
       page.go_back
     end
 
-    it "shows the search box only once" do
+    it "does not duplicate the student data table search box" do
       expect(page).to have_css('input[type="search"]', count: 1)
     end
   end

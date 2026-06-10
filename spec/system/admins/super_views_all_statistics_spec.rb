@@ -3,26 +3,21 @@
 require "rails_helper"
 
 RSpec.describe "Super views all statistics", :default_creates, :js do
-  before do
-    sign_in super_admin
-  end
-
   let(:two_weeks_ago) { (Date.current - 2.weeks).beginning_of_week }
+  let(:this_week) { Date.current.beginning_of_week }
+  let(:other_school) { create(:school) }
+  let(:other_school_student) { create(:student, school: other_school) }
+
+  before { sign_in super_admin }
 
   describe "viewing asked questions" do
-    let!(:new_stat) { create(:user_statistic, user: student, week_beginning: Date.current.beginning_of_week) }
-    let!(:old_stat) { create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago) }
-    let!(:new_stat_different_school) { create(:user_statistic, week_beginning: Date.current.beginning_of_week) }
-    let!(:old_stat_different_school) do
-      create(:user_statistic, user: create(:student, school: school), week_beginning: two_weeks_ago)
-    end
-    let(:total_answered) do
-      [new_stat.questions_answered,
-        old_stat.questions_answered,
-        new_stat_different_school.questions_answered,
-        old_stat_different_school.questions_answered].sum
-    end
-    let(:weekly_answered) { new_stat.questions_answered + new_stat_different_school.questions_answered }
+    let!(:new_stat) { create(:user_statistic, user: student, week_beginning: this_week) }
+    let!(:old_stat) { create(:user_statistic, user: student, week_beginning: two_weeks_ago) }
+    let!(:new_stat_other_school) { create(:user_statistic, user: other_school_student, week_beginning: this_week) }
+    let!(:old_stat_other_school) { create(:user_statistic, user: other_school_student, week_beginning: two_weeks_ago) }
+
+    let(:total_answered) { UserStatistic.sum(:questions_answered) }
+    let(:weekly_answered) { UserStatistic.where(week_beginning: this_week).sum(:questions_answered) }
 
     before { visit(show_stats_schools_path) }
 
@@ -36,31 +31,21 @@ RSpec.describe "Super views all statistics", :default_creates, :js do
   end
 
   describe "viewing completed homework" do
-    let!(:homework_progress) do
-      create(:homework_progress, user: student,
-        completed: true, updated_at: Date.current.beginning_of_week)
+    before do
+      create(:homework_progress, user: student, completed: true, updated_at: this_week)
+      create(:homework_progress, user: student, completed: true, updated_at: two_weeks_ago)
+      create(:homework_progress, user: other_school_student, completed: true, updated_at: this_week)
+      create(:homework_progress, user: other_school_student, completed: true, updated_at: two_weeks_ago)
+      visit(show_stats_schools_path)
     end
-    let!(:old_homework_progress) do
-      create(:homework_progress, user: student,
-        completed: true, updated_at: two_weeks_ago)
-    end
-    let!(:homework_progress_different_school) do
-      create(:homework_progress,
-        completed: true, updated_at: Date.current.beginning_of_week)
-    end
-    let!(:old_homework_progress_different_school) do
-      create(:homework_progress,
-        completed: true, updated_at: two_weeks_ago)
-    end
-
-    before { visit(show_stats_schools_path) }
 
     it "shows total homeworks completed" do
-      expect(page).to have_css("#homeworks_completed", exact_text: "4")
+      expect(page).to have_css("#homeworks_completed", exact_text: HomeworkProgress.where(completed: true).count.to_s)
     end
 
     it "shows this week's completed homeworks" do
-      expect(page).to have_css("#homeworks_completed_weekly", exact_text: "2")
+      expect(page).to have_css("#homeworks_completed_weekly",
+        exact_text: HomeworkProgress.where(completed: true, updated_at: this_week..).count.to_s)
     end
   end
 end
