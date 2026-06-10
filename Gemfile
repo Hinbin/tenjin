@@ -31,7 +31,7 @@ gem "wondeclient", "~> 0.1.3"
 # Templates
 gem "slim"
 gem "jbuilder", "~> 2.5"
-gem "high_voltage", "~> 4.0"
+gem "high_voltage", "~> 5.0"
 
 # Assets
 gem "shakapacker", "= 8.4.0"
