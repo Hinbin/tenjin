@@ -27,7 +27,7 @@
     "flatpickr": "^4.5.7",
     "imports-loader": "^0.8.0",
     "jquery": "^3.5.1",
-    "js-cookie": "^2.2.1",
+    "js-cookie": "^3.0.7",
     "mini-css-extract-plugin": "^2.6.0",
     "popper.js": "^1.16.1",
     "postcss-cssnext": "^3.1.0",
