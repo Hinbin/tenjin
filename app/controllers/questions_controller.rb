@@ -88,7 +88,7 @@ class QuestionsController < ApplicationController
     end
 
     data = File.read(params[:file])
-    result = Question::ImportQuestions.call(data, @topic, params[:file].original_filename)
+    result = Question::ImportQuestions.call(data, @topic, params.expect(:file).original_filename)
     flash[:notice] = result.error unless result.success?
     redirect_to topic_path(@topic)
   end
@@ -111,12 +111,12 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:question_text, :question_type, :lesson_id,
-                                     :topic_id, answers_attributes: %i[correct id text _destroy])
+    params.expect(question: [:question_text, :question_type, :lesson_id,
+                             :topic_id, { answers_attributes: [%i[correct id text _destroy]] }])
   end
 
   def set_question
-    @question = Question.find(params[:id])
+    @question = Question.find(params.expect(:id))
   end
 
   def setup_boolean_question

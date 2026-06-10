@@ -32,14 +32,14 @@ class AnswersController < ApplicationController
   private
 
   def set_answer
-    @answer = Answer.find(params[:id])
+    @answer = Answer.find(params.expect(:id))
   end
 
   def new_answer_params
-    params.require(:question).permit(:question_id)
+    params.expect(question: [:question_id])
   end
 
   def answer_params
-    params.require(:answer).permit(:text, :correct)
+    params.expect(answer: %i[text correct])
   end
 end

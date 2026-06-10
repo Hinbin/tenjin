@@ -49,7 +49,7 @@ class LessonsController < ApplicationController
   private
 
   def set_lesson
-    @lesson = Lesson.find(params[:id])
+    @lesson = Lesson.find(params.expect(:id))
   end
 
   def save_lesson
@@ -73,7 +73,7 @@ class LessonsController < ApplicationController
   end
 
   def lesson_params
-    params.require(:lesson).permit(:title, :video_id, :topic_id, :category)
+    params.expect(lesson: %i[title video_id topic_id category])
   end
 
   def set_permitted_lessons_and_subjects

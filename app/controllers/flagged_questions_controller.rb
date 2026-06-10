@@ -24,6 +24,6 @@ class FlaggedQuestionsController < ApplicationController
   end
 
   def create_flagged_question_params
-    params.require(:flagged_question).permit(:user_id, :question_id)
+    params.expect(flagged_question: %i[user_id question_id])
   end
 end

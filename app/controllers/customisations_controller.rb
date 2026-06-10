@@ -61,7 +61,7 @@ class CustomisationsController < ApplicationController
   private
 
   def set_customisation
-    @customisation = Customisation.find(params[:id])
+    @customisation = Customisation.find(params.expect(:id))
   end
 
   def buy_customisation
@@ -83,7 +83,7 @@ class CustomisationsController < ApplicationController
   end
 
   def customisation_params
-    params.require(:customisation).permit(:name, :value, :purchasable, :sticky, :image, :customisation_type, :cost,
-                                          :retired)
+    params.expect(customisation: %i[name value purchasable sticky image customisation_type cost
+                                    retired])
   end
 end

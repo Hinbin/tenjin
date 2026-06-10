@@ -16,6 +16,6 @@ class AppErrorsController < ApplicationController
   private
 
   def set_app_error
-    @app_error = AppError.find(params[:id])
+    @app_error = AppError.find(params.expect(:id))
   end
 end

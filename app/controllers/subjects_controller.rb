@@ -47,10 +47,10 @@ class SubjectsController < ApplicationController
   private
 
   def set_subject
-    @subject = Subject.find(params[:id])
+    @subject = Subject.find(params.expect(:id))
   end
 
   def subject_params
-    params.require(:subject).permit(:name, :active)
+    params.expect(subject: %i[name active])
   end
 end

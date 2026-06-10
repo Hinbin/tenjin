@@ -72,15 +72,15 @@ class TopicsController < ApplicationController
   private
 
   def set_topic
-    @topic = Topic.find(params[:id])
+    @topic = Topic.find(params.expect(:id))
   end
 
   def topic_params
-    params.require(:topic).permit(:name, :default_lesson_id)
+    params.expect(topic: %i[name default_lesson_id])
   end
 
   def new_topic_params
-    params.require(:subject).permit(:subject_id)
+    params.expect(subject: [:subject_id])
   end
 
   def flagged_questions_params

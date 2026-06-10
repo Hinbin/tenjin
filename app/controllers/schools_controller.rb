@@ -73,15 +73,15 @@ class SchoolsController < ApplicationController
   private
 
   def set_school
-    @school = School.find(params[:id])
+    @school = School.find(params.expect(:id))
   end
 
   def school_params
-    params.require(:school).permit(:client_id, :token)
+    params.expect(school: %i[client_id token])
   end
 
   def update_school_params
-    params.require(:school).permit(:school_group_id, :permitted)
+    params.expect(school: %i[school_group_id permitted])
   end
 
   def reset_all_password_params
