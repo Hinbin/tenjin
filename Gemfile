@@ -24,7 +24,7 @@ gem 'puma', '~> 6.4'
 gem 'rack-cors', groups: [:production]
 gem 'rack-timeout', groups: [:production]
 
-gem 'delayed_job_active_record'
+gem 'solid_queue'
 
 # Turbo-rails replaces Turbolinks
 gem 'turbo-rails'

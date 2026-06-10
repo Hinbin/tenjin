@@ -10,48 +10,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_03_000200) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_000200) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
-    t.string "name", null: false
     t.text "body"
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
     t.datetime "updated_at", null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_customisations", force: :cascade do |t|
-    t.bigint "customisation_id", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
+    t.bigint "customisation_id", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["customisation_id", "user_id"], name: "index_active_customisations_on_customisation_id_and_user_id", unique: true
     t.index ["customisation_id"], name: "index_active_customisations_on_customisation_id"
     t.index ["user_id"], name: "index_active_customisations_on_user_id"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
     t.bigint "byte_size", null: false
     t.string "checksum"
+    t.string "content_type"
     t.datetime "created_at", precision: nil, null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -63,22 +63,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_03_000200) do
   end
 
   create_table "admins", force: :cascade do |t|
+    t.datetime "created_at", precision: nil, null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "role", null: false
-    t.string "invitation_token"
-    t.datetime "invitation_created_at", precision: nil
-    t.datetime "invitation_sent_at", precision: nil
     t.datetime "invitation_accepted_at", precision: nil
+    t.datetime "invitation_created_at", precision: nil
     t.integer "invitation_limit"
-    t.string "invited_by_type"
-    t.bigint "invited_by_id"
+    t.datetime "invitation_sent_at", precision: nil
+    t.string "invitation_token"
     t.integer "invitations_count", default: 0
+    t.bigint "invited_by_id"
+    t.string "invited_by_type"
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "reset_password_sent_at", precision: nil
+    t.string "reset_password_token"
+    t.integer "role", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["invitation_token"], name: "index_admins_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_admins_on_invitations_count"
@@ -88,233 +88,218 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_03_000200) do
   end
 
   create_table "all_time_topic_scores", force: :cascade do |t|
-    t.integer "score"
-    t.bigint "user_id"
-    t.bigint "topic_id"
     t.datetime "created_at", precision: nil, null: false
+    t.integer "score"
+    t.bigint "topic_id"
     t.datetime "updated_at", precision: nil, null: false
+    t.bigint "user_id"
     t.index ["topic_id"], name: "index_all_time_topic_scores_on_topic_id"
     t.index ["user_id"], name: "index_all_time_topic_scores_on_user_id"
   end
 
   create_table "answers", force: :cascade do |t|
-    t.bigint "question_id"
-    t.string "text"
     t.boolean "correct"
     t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
     t.integer "external_id"
+    t.bigint "question_id"
+    t.string "text"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["question_id"], name: "index_answers_on_question_id"
   end
 
   create_table "app_errors", force: :cascade do |t|
-    t.string "exception_class", null: false
-    t.text "message"
-    t.text "backtrace"
-    t.string "request_id"
-    t.string "controller"
     t.string "action"
-    t.string "url"
-    t.jsonb "params", default: {}, null: false
-    t.bigint "user_id"
     t.bigint "admin_id"
+    t.text "backtrace"
+    t.jsonb "context", default: {}, null: false
+    t.string "controller"
+    t.datetime "created_at", null: false
+    t.string "environment", null: false
+    t.string "exception_class", null: false
     t.string "job_class"
     t.string "job_id"
-    t.string "environment", null: false
-    t.jsonb "context", default: {}, null: false
-    t.datetime "created_at", null: false
+    t.text "message"
+    t.jsonb "params", default: {}, null: false
+    t.string "request_id"
     t.datetime "updated_at", null: false
+    t.string "url"
+    t.bigint "user_id"
     t.index ["created_at"], name: "index_app_errors_on_created_at"
     t.index ["exception_class"], name: "index_app_errors_on_exception_class"
     t.index ["request_id"], name: "index_app_errors_on_request_id"
   end
 
   create_table "asked_questions", force: :cascade do |t|
-    t.bigint "question_id"
-    t.bigint "quiz_id"
     t.boolean "correct"
     t.datetime "created_at", precision: nil, null: false
+    t.bigint "question_id"
+    t.bigint "quiz_id"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["question_id"], name: "index_asked_questions_on_question_id"
     t.index ["quiz_id"], name: "index_asked_questions_on_quiz_id"
   end
 
   create_table "challenge_progresses", force: :cascade do |t|
+    t.boolean "awarded", default: false
     t.bigint "challenge_id", null: false
-    t.bigint "user_id", null: false
-    t.integer "progress", default: 0, null: false
     t.boolean "completed", default: false
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "progress", default: 0, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.boolean "awarded", default: false
+    t.bigint "user_id", null: false
     t.index ["challenge_id"], name: "index_challenge_progresses_on_challenge_id"
     t.index ["user_id", "challenge_id"], name: "index_challenge_progresses_on_user_id_and_challenge_id", unique: true
   end
 
   create_table "challenges", force: :cascade do |t|
     t.integer "challenge_type"
-    t.datetime "start_date", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.boolean "daily"
     t.datetime "end_date", precision: nil
     t.integer "number_required"
     t.integer "points"
+    t.datetime "start_date", precision: nil
     t.bigint "topic_id"
-    t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.boolean "daily"
     t.index ["topic_id"], name: "index_challenges_on_topic_id"
   end
 
   create_table "classroom_winners", force: :cascade do |t|
-    t.bigint "user_id"
     t.bigint "classroom_id"
-    t.integer "score"
     t.datetime "created_at", null: false
+    t.integer "score"
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["classroom_id"], name: "index_classroom_winners_on_classroom_id"
     t.index ["user_id"], name: "index_classroom_winners_on_user_id"
   end
 
   create_table "classrooms", force: :cascade do |t|
     t.string "client_id", null: false
-    t.string "name", null: false
     t.string "code"
+    t.datetime "created_at", precision: nil, null: false
     t.string "description"
     t.boolean "disabled"
-    t.bigint "subject_id"
-    t.bigint "school_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
     t.integer "enrollments_count"
+    t.string "name", null: false
+    t.bigint "school_id"
+    t.bigint "subject_id"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["school_id"], name: "index_classrooms_on_school_id"
     t.index ["subject_id"], name: "index_classrooms_on_subject_id"
   end
 
   create_table "customisation_unlocks", force: :cascade do |t|
-    t.bigint "customisation_id", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
+    t.bigint "customisation_id", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["customisation_id"], name: "index_customisation_unlocks_on_customisation_id"
     t.index ["user_id"], name: "index_customisation_unlocks_on_user_id"
   end
 
   create_table "customisations", force: :cascade do |t|
-    t.integer "customisation_type"
     t.integer "cost"
-    t.string "name"
-    t.string "value"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer "customisation_type"
+    t.string "name"
     t.boolean "purchasable", default: true, null: false
     t.boolean "retired", default: false, null: false
     t.boolean "sticky", default: false, null: false
-  end
-
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer "priority", default: 0, null: false
-    t.integer "attempts", default: 0, null: false
-    t.text "handler", null: false
-    t.text "last_error"
-    t.datetime "run_at", precision: nil
-    t.datetime "locked_at", precision: nil
-    t.datetime "failed_at", precision: nil
-    t.string "locked_by"
-    t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+    t.datetime "updated_at", null: false
+    t.string "value"
   end
 
   create_table "enrollments", force: :cascade do |t|
-    t.bigint "user_id"
     t.bigint "classroom_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.bigint "user_id"
     t.index ["classroom_id", "user_id"], name: "index_enrollments_on_classroom_id_and_user_id", unique: true
     t.index ["classroom_id"], name: "index_enrollments_on_classroom_id"
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
   create_table "flagged_questions", force: :cascade do |t|
-    t.bigint "question_id", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
+    t.bigint "question_id", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["question_id"], name: "index_flagged_questions_on_question_id"
     t.index ["user_id"], name: "index_flagged_questions_on_user_id"
   end
 
   create_table "homework_progresses", force: :cascade do |t|
-    t.bigint "homework_id"
-    t.bigint "user_id"
-    t.integer "progress"
     t.boolean "completed"
     t.datetime "created_at", null: false
+    t.bigint "homework_id"
+    t.integer "progress"
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["homework_id"], name: "index_homework_progresses_on_homework_id"
     t.index ["user_id"], name: "index_homework_progresses_on_user_id"
   end
 
   create_table "homeworks", force: :cascade do |t|
     t.bigint "classroom_id"
-    t.bigint "topic_id"
-    t.datetime "due_date", precision: nil
-    t.integer "required"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "due_date", precision: nil
     t.bigint "lesson_id"
+    t.integer "required"
+    t.bigint "topic_id"
+    t.datetime "updated_at", null: false
     t.index ["classroom_id"], name: "index_homeworks_on_classroom_id"
     t.index ["lesson_id"], name: "index_homeworks_on_lesson_id"
     t.index ["topic_id"], name: "index_homeworks_on_topic_id"
   end
 
   create_table "leaderboard_awards", force: :cascade do |t|
-    t.bigint "subject_id"
-    t.bigint "user_id"
-    t.bigint "school_id"
     t.datetime "created_at", null: false
+    t.bigint "school_id"
+    t.bigint "subject_id"
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["school_id"], name: "index_leaderboard_awards_on_school_id"
     t.index ["subject_id"], name: "index_leaderboard_awards_on_subject_id"
     t.index ["user_id"], name: "index_leaderboard_awards_on_user_id"
   end
 
   create_table "lessons", force: :cascade do |t|
-    t.string "title"
     t.integer "category"
-    t.string "video_id"
-    t.bigint "topic_id"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.integer "questions_count"
+    t.string "title"
+    t.bigint "topic_id"
+    t.datetime "updated_at", null: false
+    t.string "video_id"
     t.index ["topic_id"], name: "index_lessons_on_topic_id"
   end
 
   create_table "multipliers", force: :cascade do |t|
-    t.integer "score"
-    t.integer "multiplier"
     t.datetime "created_at", precision: nil, null: false
+    t.integer "multiplier"
+    t.integer "score"
     t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "question_statistics", force: :cascade do |t|
+    t.datetime "created_at", null: false
     t.integer "number_asked"
     t.integer "number_correct"
     t.bigint "question_id", null: false
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["question_id"], name: "index_question_statistics_on_question_id", unique: true
   end
 
   create_table "questions", force: :cascade do |t|
-    t.bigint "topic_id"
-    t.integer "question_type"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "external_id"
-    t.bigint "lesson_id"
     t.boolean "active", default: true
+    t.datetime "created_at", precision: nil, null: false
+    t.integer "external_id"
     t.integer "flagged_questions_count"
+    t.bigint "lesson_id"
+    t.integer "question_type"
+    t.bigint "topic_id"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["lesson_id", "active"], name: "index_questions_on_lesson_id_and_active"
     t.index ["lesson_id"], name: "index_questions_on_lesson_id"
     t.index ["topic_id", "active"], name: "index_questions_on_topic_id_and_active"
@@ -322,19 +307,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_03_000200) do
   end
 
   create_table "quizzes", force: :cascade do |t|
-    t.datetime "time_last_answered", precision: nil
-    t.integer "streak"
-    t.integer "answered_correct"
-    t.integer "num_questions_asked"
-    t.bigint "user_id"
-    t.bigint "subject_id"
-    t.bigint "topic_id"
     t.boolean "active"
-    t.integer "question_order", array: true
+    t.integer "answered_correct"
     t.boolean "counts_for_leaderboard"
     t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
     t.bigint "lesson_id"
+    t.integer "num_questions_asked"
+    t.integer "question_order", array: true
+    t.integer "streak"
+    t.bigint "subject_id"
+    t.datetime "time_last_answered", precision: nil
+    t.bigint "topic_id"
+    t.datetime "updated_at", precision: nil, null: false
+    t.bigint "user_id"
     t.index ["lesson_id"], name: "index_quizzes_on_lesson_id"
     t.index ["subject_id"], name: "index_quizzes_on_subject_id"
     t.index ["topic_id"], name: "index_quizzes_on_topic_id"
@@ -342,73 +327,194 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_03_000200) do
   end
 
   create_table "roles", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "resource_type"
-    t.integer "resource_id"
     t.datetime "created_at", precision: nil
+    t.string "name"
+    t.integer "resource_id"
+    t.string "resource_type"
     t.datetime "updated_at", precision: nil
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
   end
 
   create_table "school_groups", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", precision: nil, null: false
+    t.string "name", null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "schools", force: :cascade do |t|
     t.string "client_id", null: false
-    t.string "name"
-    t.string "token", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.date "last_sync"
-    t.integer "sync_status"
+    t.string "name"
     t.boolean "permitted"
     t.bigint "school_group_id"
-    t.datetime "created_at", precision: nil, null: false
+    t.integer "sync_status"
+    t.string "token", null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["client_id"], name: "index_schools_on_client_id", unique: true
     t.index ["school_group_id"], name: "index_schools_on_school_group_id"
   end
 
-  create_table "subjects", force: :cascade do |t|
+  create_table "solid_queue_blocked_executions", force: :cascade do |t|
+    t.string "concurrency_key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.bigint "job_id", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "queue_name", null: false
+    t.index ["concurrency_key", "priority", "job_id"], name: "index_solid_queue_blocked_executions_for_release"
+    t.index ["expires_at", "concurrency_key"], name: "index_solid_queue_blocked_executions_for_maintenance"
+    t.index ["job_id"], name: "index_solid_queue_blocked_executions_on_job_id", unique: true
+  end
+
+  create_table "solid_queue_claimed_executions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "job_id", null: false
+    t.bigint "process_id"
+    t.index ["job_id"], name: "index_solid_queue_claimed_executions_on_job_id", unique: true
+    t.index ["process_id", "job_id"], name: "index_solid_queue_claimed_executions_on_process_id_and_job_id"
+  end
+
+  create_table "solid_queue_failed_executions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "error"
+    t.bigint "job_id", null: false
+    t.index ["job_id"], name: "index_solid_queue_failed_executions_on_job_id", unique: true
+  end
+
+  create_table "solid_queue_jobs", force: :cascade do |t|
+    t.string "active_job_id"
+    t.text "arguments"
+    t.string "class_name", null: false
+    t.string "concurrency_key"
+    t.datetime "created_at", null: false
+    t.datetime "finished_at"
+    t.integer "priority", default: 0, null: false
+    t.string "queue_name", null: false
+    t.datetime "scheduled_at"
+    t.datetime "updated_at", null: false
+    t.index ["active_job_id"], name: "index_solid_queue_jobs_on_active_job_id"
+    t.index ["class_name"], name: "index_solid_queue_jobs_on_class_name"
+    t.index ["finished_at"], name: "index_solid_queue_jobs_on_finished_at"
+    t.index ["queue_name", "finished_at"], name: "index_solid_queue_jobs_for_filtering"
+    t.index ["scheduled_at", "finished_at"], name: "index_solid_queue_jobs_for_alerting"
+  end
+
+  create_table "solid_queue_pauses", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "queue_name", null: false
+    t.index ["queue_name"], name: "index_solid_queue_pauses_on_queue_name", unique: true
+  end
+
+  create_table "solid_queue_processes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "hostname"
+    t.string "kind", null: false
+    t.datetime "last_heartbeat_at", null: false
+    t.text "metadata"
     t.string "name", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "external_id"
+    t.integer "pid", null: false
+    t.bigint "supervisor_id"
+    t.index ["last_heartbeat_at"], name: "index_solid_queue_processes_on_last_heartbeat_at"
+    t.index ["name", "supervisor_id"], name: "index_solid_queue_processes_on_name_and_supervisor_id", unique: true
+    t.index ["supervisor_id"], name: "index_solid_queue_processes_on_supervisor_id"
+  end
+
+  create_table "solid_queue_ready_executions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "job_id", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "queue_name", null: false
+    t.index ["job_id"], name: "index_solid_queue_ready_executions_on_job_id", unique: true
+    t.index ["priority", "job_id"], name: "index_solid_queue_poll_all"
+    t.index ["queue_name", "priority", "job_id"], name: "index_solid_queue_poll_by_queue"
+  end
+
+  create_table "solid_queue_recurring_executions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "job_id", null: false
+    t.datetime "run_at", null: false
+    t.string "task_key", null: false
+    t.index ["job_id"], name: "index_solid_queue_recurring_executions_on_job_id", unique: true
+    t.index ["task_key", "run_at"], name: "index_solid_queue_recurring_executions_on_task_key_and_run_at", unique: true
+  end
+
+  create_table "solid_queue_recurring_tasks", force: :cascade do |t|
+    t.text "arguments"
+    t.string "class_name"
+    t.string "command", limit: 2048
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "key", null: false
+    t.integer "priority", default: 0
+    t.string "queue_name"
+    t.string "schedule", null: false
+    t.boolean "static", default: true, null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_solid_queue_recurring_tasks_on_key", unique: true
+    t.index ["static"], name: "index_solid_queue_recurring_tasks_on_static"
+  end
+
+  create_table "solid_queue_scheduled_executions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "job_id", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "queue_name", null: false
+    t.datetime "scheduled_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_scheduled_executions_on_job_id", unique: true
+    t.index ["scheduled_at", "priority", "job_id"], name: "index_solid_queue_dispatch_all"
+  end
+
+  create_table "solid_queue_semaphores", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "key", null: false
+    t.datetime "updated_at", null: false
+    t.integer "value", default: 1, null: false
+    t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
+    t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
+    t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
+  create_table "subjects", force: :cascade do |t|
     t.boolean "active", default: true, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.integer "external_id"
+    t.string "name", null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "topic_scores", force: :cascade do |t|
-    t.integer "score", default: 0, null: false
-    t.bigint "user_id", null: false
-    t.bigint "topic_id", null: false
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "score", default: 0, null: false
+    t.bigint "topic_id", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.bigint "user_id", null: false
     t.index ["topic_id"], name: "index_topic_scores_on_topic_id"
     t.index ["user_id", "topic_id"], name: "index_topic_scores_on_user_id_and_topic_id", unique: true
   end
 
   create_table "topics", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.datetime "created_at", precision: nil, null: false
+    t.bigint "default_lesson_id"
+    t.integer "external_id"
     t.string "name", null: false
     t.bigint "subject_id"
-    t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.integer "external_id"
-    t.bigint "default_lesson_id"
-    t.boolean "active", default: true
     t.index ["subject_id", "active"], name: "index_topics_on_subject_id_and_active"
     t.index ["subject_id"], name: "index_topics_on_subject_id"
   end
 
   create_table "usage_statistics", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "topic_id"
-    t.datetime "date", precision: nil
-    t.integer "quizzes_started"
-    t.integer "questions_answered"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "date", precision: nil
     t.bigint "lesson_id"
+    t.integer "questions_answered"
+    t.integer "quizzes_started"
+    t.bigint "topic_id"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["lesson_id"], name: "index_usage_statistics_on_lesson_id"
     t.index ["topic_id"], name: "index_usage_statistics_on_topic_id"
     t.index ["user_id", "topic_id", "lesson_id", "date"], name: "index_usage_statistics_on_quiz_start_lookup"
@@ -416,52 +522,52 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_03_000200) do
   end
 
   create_table "user_statistics", force: :cascade do |t|
+    t.datetime "created_at", null: false
     t.integer "questions_answered", default: 0, null: false
+    t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.date "week_beginning", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["user_id", "week_beginning"], name: "index_user_statistics_on_user_id_and_week_beginning", unique: true
     t.index ["user_id"], name: "index_user_statistics_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
+    t.integer "challenge_points"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "current_sign_in_at", precision: nil
+    t.inet "current_sign_in_ip"
+    t.boolean "disabled"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at", precision: nil
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at", precision: nil
-    t.datetime "last_sign_in_at", precision: nil
-    t.inet "current_sign_in_ip"
-    t.inet "last_sign_in_ip"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.bigint "school_id"
-    t.integer "role", null: false
-    t.string "provider"
-    t.string "upi"
     t.string "forename"
-    t.string "surname"
-    t.string "photo"
-    t.string "type"
-    t.integer "challenge_points"
-    t.datetime "time_of_last_quiz", precision: nil
-    t.string "username"
-    t.boolean "disabled"
+    t.datetime "last_sign_in_at", precision: nil
+    t.inet "last_sign_in_ip"
+    t.string "oauth_email"
     t.string "oauth_provider"
     t.string "oauth_uid"
-    t.string "oauth_email"
+    t.string "photo"
+    t.string "provider"
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "reset_password_sent_at", precision: nil
+    t.string "reset_password_token"
+    t.integer "role", null: false
+    t.bigint "school_id"
+    t.integer "sign_in_count", default: 0, null: false
+    t.string "surname"
+    t.datetime "time_of_last_quiz", precision: nil
     t.integer "tutorials", default: 0, null: false
+    t.string "type"
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "upi"
+    t.string "username"
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   create_table "users_roles", id: false, force: :cascade do |t|
-    t.integer "user_id"
     t.integer "role_id"
+    t.integer "user_id"
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
   end
 
@@ -498,6 +604,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_03_000200) do
   add_foreign_key "quizzes", "topics"
   add_foreign_key "quizzes", "users"
   add_foreign_key "schools", "school_groups"
+  add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "topic_scores", "topics"
   add_foreign_key "topic_scores", "users"
   add_foreign_key "topics", "subjects"

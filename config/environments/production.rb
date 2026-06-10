@@ -52,7 +52,9 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  config.active_job.queue_adapter = :delayed_job
+  config.active_job.queue_adapter = :solid_queue
+  # Single-DB: Solid Queue tables live in the primary Postgres DB (no separate queue DB on Heroku)
+  config.solid_queue.connects_to = { database: { writing: :primary } }
   # config.active_job.queue_name_prefix = "csquiz_production"
 
   config.action_mailer.perform_caching = false
