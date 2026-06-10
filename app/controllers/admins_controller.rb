@@ -19,14 +19,14 @@ class AdminsController < ApplicationController
   end
 
   def reset_password
-    admin = Admin.find(params[:id])
+    admin = Admin.find(params.expect(:id))
     authorize admin
     admin.send_reset_password_instructions
     redirect_to admin_path(current_admin), notice: "Password reset instructions sent to #{admin.email}"
   end
 
   def destroy
-    admin = Admin.find(params[:id])
+    admin = Admin.find(params.expect(:id))
     authorize admin
     if Admin.count <= 1
       redirect_to admin_path(current_admin), alert: 'There must be at least one admin account.'

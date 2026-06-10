@@ -30,7 +30,7 @@ class ClassroomsController < ApplicationController
   private
 
   def set_classroom
-    @classroom = Classroom.find(params[:id])
+    @classroom = Classroom.find(params.expect(:id))
   end
 
   def update_classroom_params

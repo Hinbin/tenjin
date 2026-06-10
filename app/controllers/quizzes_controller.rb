@@ -97,7 +97,7 @@ class QuizzesController < ApplicationController
   end
 
   def set_quiz
-    @quiz = Quiz.find(params[:id])
+    @quiz = Quiz.find(params.expect(:id))
   end
 
   def set_subject
@@ -120,11 +120,11 @@ class QuizzesController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:id, :short_answer)
+    params.expect(answer: %i[id short_answer])
   end
 
   def quiz_params
-    params.require(:quiz).permit(:topic_id, :subject, :lesson_id)
+    params.expect(quiz: %i[topic_id subject lesson_id])
   end
 
   def quiz_not_authorized(exception)

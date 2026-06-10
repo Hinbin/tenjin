@@ -103,15 +103,15 @@ class UsersController < ApplicationController
   private
 
   def update_password_params
-    params.require(:user).permit(:password)
+    params.expect(user: [:password])
   end
 
   def update_email_params
-    params.require(:user).permit(:email)
+    params.expect(user: [:email])
   end
 
   def set_user_role_params
-    params.require(:user).permit(:role, :subject, :id)
+    params.expect(user: %i[role subject id])
   end
 
   def manage_roles_params
@@ -119,7 +119,7 @@ class UsersController < ApplicationController
   end
 
   def set_user
-    @user = User.find(params[:id])
+    @user = User.find(params.expect(:id))
   end
 
   def set_manage_roles_variables

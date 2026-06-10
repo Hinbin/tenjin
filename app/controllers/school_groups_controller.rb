@@ -43,10 +43,10 @@ class SchoolGroupsController < ApplicationController
   private
 
   def set_school_group
-    @school_group = SchoolGroup.find(params[:id])
+    @school_group = SchoolGroup.find(params.expect(:id))
   end
 
   def school_group_params
-    params.require(:school_group).permit(:name)
+    params.expect(school_group: [:name])
   end
 end

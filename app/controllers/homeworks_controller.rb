@@ -44,7 +44,7 @@ class HomeworksController < ApplicationController
   end
 
   def set_homework
-    @homework = Homework.find(params[:id])
+    @homework = Homework.find(params.expect(:id))
   end
 
   def set_homework_notice
@@ -56,11 +56,11 @@ class HomeworksController < ApplicationController
   end
 
   def new_homework_params
-    params.require(:classroom).permit(:classroom_id)
+    params.expect(classroom: [:classroom_id])
   end
 
   def homework_params
-    params.require(:homework).permit(:due_date, :required, :topic_id, :classroom_id, :lesson_id)
+    params.expect(homework: %i[due_date required topic_id classroom_id lesson_id])
   end
 
   def no_classroom_id
