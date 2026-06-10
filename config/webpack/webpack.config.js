@@ -1,6 +1,6 @@
 // config/webpack/webpack.config.js
 // Expose jQuery through expose-loader config included
-const { webpackConfig, merge } = require('shakapacker')
+const { generateWebpackConfig, merge } = require('shakapacker')
 
 const customConfig = {
   target: 'web',
@@ -17,4 +17,4 @@ const customConfig = {
   }
 }
 
-module.exports = merge(webpackConfig, customConfig)
+module.exports = merge(generateWebpackConfig(), customConfig)

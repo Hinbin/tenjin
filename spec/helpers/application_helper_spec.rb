@@ -30,8 +30,8 @@ RSpec.describe ApplicationHelper, type: :helper do
     it 'degrades to the default image if image_pack_tag raises a missing entry' do
       allow(helper).to receive(:image_pack_tag).and_call_original
       allow(helper).to receive(:image_pack_tag)
-        .with('does-not-exist.jpg', any_args)
-        .and_raise(Webpacker::Manifest::MissingEntryError)
+        .with('images/does-not-exist.jpg', any_args)
+        .and_raise(Shakapacker::Manifest::MissingEntryError)
       allow(helper).to receive(:print_subject_image).and_return('does-not-exist.jpg')
 
       expect(helper.subject_image_tag('Anything')).to include('default-subject')

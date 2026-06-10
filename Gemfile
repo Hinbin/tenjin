@@ -148,4 +148,4 @@ gem 'barnes'
 # New image manipulator gem
 gem "ruby-vips"
 
-gem "shakapacker", "~> 6.6"
+gem "shakapacker", "~> 8.4"
