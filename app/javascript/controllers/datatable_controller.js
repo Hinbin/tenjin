@@ -97,21 +97,17 @@ export default class extends Controller {
   }
 
   filter(event) {
-    const value = event.target.value;
-    clearTimeout(this._filterTimeout);
-    this._filterTimeout = setTimeout(() => {
-      if (value) {
-        this.tabulator.setFilter((row) =>
-          Object.values(row).some(
-            (cell) =>
-              typeof cell === "string" &&
-              cell.toLowerCase().includes(value.toLowerCase()),
-          ),
-        );
-      } else {
-        this.tabulator.clearFilter();
-      }
-    }, 150);
+    const needle = event.target.value.toLowerCase();
+    if (needle) {
+      this.tabulator.setFilter((row) =>
+        Object.values(row).some(
+          (cell) =>
+            typeof cell === "string" && cell.toLowerCase().includes(needle),
+        ),
+      );
+    } else {
+      this.tabulator.clearFilter();
+    }
   }
 
   copy() {
