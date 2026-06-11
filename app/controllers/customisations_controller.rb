@@ -2,7 +2,7 @@
 
 class CustomisationsController < ApplicationController
   before_action :authenticate_user!, only: %i[show_available buy]
-  before_action :authenticate_admin!, only: %i[index show update new destroy]
+  before_action :authenticate_admin!, only: %i[index new edit create update]
 
   def index
     authorize current_admin, policy_class: CustomisationPolicy

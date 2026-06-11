@@ -9,7 +9,7 @@ ruby "~> 3.2.11"
 gem "dotenv", groups: [:development, :test]
 gem "recipient_interceptor"
 
-gem "rails", "~> 7.0.0"
+gem "rails", "~> 7.1.0"
 gem "image_processing"
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -36,7 +36,7 @@ gem "high_voltage", "~> 5.0"
 # Assets
 gem "shakapacker", "= 8.4.0"
 
-# Turbo (Hotwire) — installed Phase 1 of the migration; replaces Turbolinks.
+# Turbo (Hotwire)
 gem "turbo-rails"
 
 # User authentication

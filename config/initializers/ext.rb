@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-require "gem_ext"
+require_relative "../../lib/gem_ext/wondeclient/endpoints"
