@@ -20,7 +20,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       allow(helper).to receive(:image_pack_tag).and_call_original
       allow(helper).to receive(:image_pack_tag)
         .with('images/does-not-exist.jpg', any_args)
-        .and_raise(Webpacker::Manifest::MissingEntryError)
+        .and_raise(Shakapacker::Manifest::MissingEntryError)
       allow(helper).to receive(:image_pack_tag)
         .with('images/default-subject.jpg', any_args)
         .and_call_original

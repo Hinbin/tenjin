@@ -16,7 +16,7 @@ import { definitionsFromContext } from '@hotwired/stimulus-webpack-helpers'
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
 import Shepherd from 'shepherd.js'
-import Cookies from 'js-cookie/src/js.cookie'
+import Cookies from 'js-cookie'
 
 
 import './classroom'

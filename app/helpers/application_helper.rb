@@ -11,7 +11,7 @@ module ApplicationHelper
 
   def subject_image_tag(name, **)
     image_pack_tag("images/#{name.parameterize}.jpg", **)
-  rescue Webpacker::Manifest::MissingEntryError
+  rescue Shakapacker::Manifest::MissingEntryError
     image_pack_tag('images/default-subject.jpg', **)
   end
 
