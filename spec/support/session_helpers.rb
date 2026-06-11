@@ -61,14 +61,14 @@ module SessionHelpers
   end
 
   def create_homework
-    find('input#homework_due_date').set((Time.now + 1.week).strftime('%Y-%m-%dT%H:%M'))
+    find('input#homework_due_date').set(Time.now + 1.week)
     select '70', from: 'Required %'
     select topic.name, from: 'Topic'
     click_button('Set Homework')
   end
 
   def create_homework_for_lesson
-    find('input#homework_due_date').set((Time.now + 1.week).strftime('%Y-%m-%dT%H:%M'))
+    find('input#homework_due_date').set(Time.now + 1.week)
     select '70', from: 'Required %'
     select topic.name, from: 'Topic'
     select lesson.title, from: 'Lesson'
