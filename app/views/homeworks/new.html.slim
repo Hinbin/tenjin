@@ -7,7 +7,7 @@ section.page-section.text-center.pt-2#set_homework
     hr class=("small mb-5 primary-red")
     .jsVars data={ lessons: @lessons.to_json }
     =simple_form_for @homework do |f|
-      =f.input :due_date, as: :citext, label: 'Due date', input_html: { class:'datepicker col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
+      =f.input :due_date, as: :string, label: 'Due date', input_html: { type: 'datetime-local', min: Time.current.strftime('%Y-%m-%dT%H:%M'), value: f.object.due_date&.strftime('%Y-%m-%dT%H:%M'), class: 'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
       =f.input :required, label: 'Required %', collection: (0..100).step(10),  input_html: { class:'col-sm-9 form-control' }, label_html: {class: 'col-sm-3 col-form-label'}, wrapper_html: {class: 'form-group row'}
       =f.association :topic, collection: @classroom.subject.topics.order(:name),
         input_html: { class:'col-sm-9 form-control', data: {action:'homework#loadLessons'} },
