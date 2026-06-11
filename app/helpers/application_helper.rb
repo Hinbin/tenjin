@@ -9,16 +9,8 @@ module ApplicationHelper
     end
   end
 
-  def asset_exists?(path)
-    Shakapacker.manifest.lookup("static/images/#{path}").present?
-  end
-
-  def print_subject_image(url)
-    asset_exists?(url) ? url : 'default-subject.jpg'
-  end
-
   def subject_image_tag(name, **)
-    image_pack_tag("images/#{print_subject_image("#{name.parameterize}.jpg")}", **)
+    image_pack_tag("images/#{name.parameterize}.jpg", **)
   rescue Shakapacker::Manifest::MissingEntryError
     image_pack_tag('images/default-subject.jpg', **)
   end
