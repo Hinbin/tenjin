@@ -8,7 +8,7 @@ section.page-section.text-center.pt-2#set_homework
     .jsVars data={ lessons: @lessons.to_json }
     =simple_form_for @homework do |f|
       =f.input :due_date, as: :string, label: 'Due date', wrapper: :horizontal_form,
-        input_html: { type: 'datetime-local', min: Time.current.strftime('%Y-%m-%dT%H:%M'), value: f.object.due_date&.strftime('%Y-%m-%dT%H:%M') }
+        input_html: { type: 'datetime-local', min: Time.current.strftime('%Y-%m-%dT%H:%M'), value: f.object.due_date&.strftime('%Y-%m-%dT%H:%M'), onchange: 'this.blur()' }
       =f.input :required, label: 'Required %', collection: (0..100).step(10), wrapper: :horizontal_form
       =f.association :topic, collection: @classroom.subject.topics.order(:name), wrapper: :horizontal_form,
         input_html: { data: {action:'homework#loadLessons'} }
