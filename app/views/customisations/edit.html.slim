@@ -1,7 +1,7 @@
 -content_for :title
   title=("Edit #{@customisation.name}")
 section.page-section.text-center.available-customisations
-  .container
+  .tjk-container
     -if @customisation.dashboard_style? || @customisation.image.attached?
       .card.dashboard-style style=render_dashboard_style(@customisation)
         .card-body.m-5
