@@ -19,9 +19,9 @@ RSpec.describe 'Pages', :default_creates, type: :request do
       expect(response.body).to include('About')
     end
 
-    it 'has a fixed top nav bar' do
+    it 'has a navbar' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('nav.fixed-top')
+      expect(html).to have_css('nav.tj-navbar')
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe 'Pages', :default_creates, type: :request do
 
     it 'has the logged out navigation on the about page' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('nav.fixed-top')
+      expect(html).to have_css('nav.tj-navbar')
     end
   end
 

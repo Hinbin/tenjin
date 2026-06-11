@@ -12,6 +12,7 @@
  *
  */
 @import 'tokens';
+@import 'navbar';
 
 @import url('https://fonts.googleapis.com/css?family=Raleway:300,900,900i');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,900;1,400;1,900&display=swap');
@@ -25,10 +26,6 @@
 @import 'trix/dist/trix';
 @import 'leaderboard';
 @import 'shepherd';
-
-.navbar-dark .nav-item .nav-link {
-  color: theme-color("light");
-}
 
 a {
   color: #212529;
@@ -166,29 +163,8 @@ h1#branding-text {
   margin-bottom: 0rem;
 }
 
-#navbar-main.bg-black {
-  background-color: black;
-}
-
-#navbar-main {
-  background-color: transparent;
-  min-height: 66px;
-}
-
-#navbar-btn {  
-  @include media-breakpoint-up(md) {
-    font-size: 2rem;
-  }
-}
-
 h1, h3, #branding-text, .fa-2x {
   font-size: 2rem;
-
-}
-
-.navbar {
-  padding-top: 0.15rem;
-  padding-bottom: 0.15rem;
 }
 
 .form-control {
