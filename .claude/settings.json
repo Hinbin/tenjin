@@ -11,7 +11,11 @@
       "Bash(yarn info *)",
       "Bash(gem list *)",
       "Bash(gem search *)",
-      "Bash(gem info *)"
+      "Bash(gem info *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git switch *)"
     ]
   }
 }
