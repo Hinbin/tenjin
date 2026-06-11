@@ -4,9 +4,49 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/5ae5ee384434b20e2789/maintainability)](https://codeclimate.com/github/Hinbin/tenjin/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/5ae5ee384434b20e2789/test_coverage)](https://codeclimate.com/github/Hinbin/tenjin/test_coverage)
 
+Tenjin is an online quiz platform for schools. Students answer questions, earn rewards, and compete on leaderboards while teachers manage homework and classrooms.
 
-Tenjin is an online quiz platform that allows students to answer questions, complete homework, earn rewards and compete against one another earning points on a leaderboard.  It offers he following:
+## Features
 
-  - An online quiz platform that can be used students to increase the time students spend revising key subjects.
-  - A reduction in teacher workload through an option for the management of homework for these subjects.
-  - A low cost solution for schools
+- Quizzes that keep students engaged with revision across the curriculum.
+- Homework management that reduces teacher workload.
+- Sync pupil and class data from the school MIS using Wonde.
+
+## Getting started
+
+```bash
+bin/setup
+```
+
+This installs gem and JavaScript dependencies, creates the database, and prepares the app to run.
+
+Copy `.env.example` to `.env` and fill in the required values (database credentials, AWS keys, Wonde API tokens, OAuth credentials).
+
+Run the app in two terminals:
+
+```bash
+bin/rails server
+bin/shakapacker-dev-server
+```
+
+Background jobs (only needed when exercising async work locally):
+
+```bash
+bin/rails jobs:work
+```
+
+## Running the tests
+
+```bash
+bundle exec rspec        # Ruby
+yarn test:js             # JavaScript (Jest)
+```
+
+System specs run against a real Chrome via Cuprite; failure screenshots are saved to `tmp/screenshots/`.
+
+## Linting
+
+```bash
+bundle exec standardrb   # Ruby
+yarn lint                # JavaScript
+```
