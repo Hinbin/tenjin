@@ -11,7 +11,7 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
   context 'when visiting the customisation page from the navbar' do
     it 'visits from the customise link' do
       visit(dashboard_path)
-      find('a', text: 'Shop').click
+      find('button', text: 'Shop').click
       find('a', text: 'Styles').click
       expect(page).to have_current_path(show_available_customisations_path)
     end
@@ -57,7 +57,7 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
 
     it 'deducts the required amount of challenge points' do
       find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
-      expect(page).to have_css('td#challenge-points',
+      expect(page).to have_css('#challenge-points',
                                exact_text: student.challenge_points - dashboard_customisation.cost)
     end
 
@@ -112,7 +112,7 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
         visit(show_available_customisations_path)
         find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
         find('.alert', text: 'Congratulations!')
-        expect(page).to have_css('td#challenge-points',
+        expect(page).to have_css('#challenge-points',
                                  exact_text: student.challenge_points - dashboard_customisation.cost)
       end
     end
