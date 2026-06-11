@@ -56,14 +56,14 @@ jobs:
   build:
     <<: *default_job
     docker:
-      - image: cimg/ruby:3.2.11-browsers
+      - image: cimg/ruby:3.4.9-browsers
         environment:
           RAILS_ENV: test
   test:
     <<: *default_job
     parallelism: 2
     docker:
-      - image: cimg/ruby:3.2.11-browsers
+      - image: cimg/ruby:3.4.9-browsers
         environment:
           PGUSER: root
           PGHOST: 127.0.0.1
