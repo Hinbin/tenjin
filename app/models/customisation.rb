@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Customisation < ApplicationRecord
-  enum customisation_type: {dashboard_style: 0, leaderboard_icon: 1, subject_image: 2}
+  enum :customisation_type, {dashboard_style: 0, leaderboard_icon: 1, subject_image: 2}
 
   has_many :customisation_unlocks
   has_many :active_customisations

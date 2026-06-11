@@ -15,7 +15,7 @@ class Lesson < ApplicationRecord
     youtube: "https://img.youtube.com/vi/%s/hqdefault.jpg"
   }.freeze
 
-  enum category: {youtube: 0, vimeo: 1, no_content: 2}
+  enum :category, {youtube: 0, vimeo: 1, no_content: 2}
 
   belongs_to :topic
   has_many :homeworks
