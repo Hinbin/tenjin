@@ -10,7 +10,8 @@ RSpec.describe 'Classrooms', :default_creates, type: :request do
 
   it 'shows which classrooms have been retrieved from Wonde' do
     get classrooms_path
-    expect(response.body).to include(classroom.name)
+    html = Capybara.string(response.body)
+    expect(html).to have_text(classroom.name)
   end
 
   it 'allows visiting the classroom assignment page' do
