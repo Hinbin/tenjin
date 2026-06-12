@@ -221,13 +221,9 @@ GEM
       webrick (~> 1.7)
       websocket-driver (~> 0.7)
     ffaker (2.25.0)
-    ffi (1.17.4-arm64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
     globalid (1.3.0)
       activesupport (>= 6.1)
-    google-protobuf (4.35.0-arm64-darwin)
-      bigdecimal
-      rake (~> 13.3)
     google-protobuf (4.35.0-x86_64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
@@ -260,7 +256,7 @@ GEM
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
     jmespath (1.6.2)
-    json (2.19.8)
+    json (2.19.9)
     jwt (3.2.0)
       base64
     language_server-protocol (3.17.0.5)
@@ -308,8 +304,6 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.5)
-    nokogiri (1.19.3-arm64-darwin)
-      racc (~> 1.4)
     nokogiri (1.19.3-x86_64-linux-gnu)
       racc (~> 1.4)
     oauth2 (2.0.22)
@@ -340,11 +334,10 @@ GEM
     orm_adapter (0.5.0)
     ostruct (0.6.3)
     package_json (0.2.0)
-    parallel (1.28.0)
+    parallel (2.1.0)
     parser (3.3.11.1)
       ast (~> 2.4.1)
       racc
-    pg (1.6.3-arm64-darwin)
     pg (1.6.3-x86_64-linux)
     pp (0.6.3)
       prettyprint
@@ -465,11 +458,11 @@ GEM
     rspec-support (3.13.7)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.84.2)
+    rubocop (1.87.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
-      parallel (~> 1.10)
+      parallel (>= 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
@@ -486,8 +479,6 @@ GEM
     ruby-progressbar (1.13.0)
     ruby-vips (2.2.1)
       ffi (~> 1.12)
-    sass-embedded (1.100.0-arm64-darwin)
-      google-protobuf (~> 4.31)
     sass-embedded (1.100.0-x86_64-linux-gnu)
       google-protobuf (~> 4.31)
     scout_apm (5.3.8)
@@ -517,10 +508,10 @@ GEM
     snaky_hash (2.0.5)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    standard (1.54.0)
+    standard (1.55.0)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.0)
-      rubocop (~> 1.84.0)
+      rubocop (~> 1.87.0)
       standard-custom (~> 1.0.0)
       standard-performance (~> 1.8)
     standard-custom (1.0.2)
@@ -574,7 +565,6 @@ GEM
     zeitwerk (2.8.2)
 
 PLATFORMS
-  arm64-darwin-25
   x86_64-linux
 
 DEPENDENCIES

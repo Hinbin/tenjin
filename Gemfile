@@ -21,7 +21,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 8.0"
 gem "rack"
 gem "rack-cors", "~> 3"
-gem 'rack-session'
+gem "rack-session"
 gem "rack-timeout", groups: [:production]
 
 gem "delayed_job_active_record"
