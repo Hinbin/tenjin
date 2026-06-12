@@ -1,3 +1,1 @@
-$(document).on('turbo:load', () => {
-  flatpickr('.datepicker', { enableTime: true, minDate: new Date(), time_24hr: true })
-})
+// flatpickr removed — due_date now uses a native datetime-local input (Plan 04d)
