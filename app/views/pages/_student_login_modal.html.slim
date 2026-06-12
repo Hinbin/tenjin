@@ -1,20 +1,21 @@
-.modal.fade#studentLoginModal
-  .modal-dialog.modal-dialog-centered role="document"
-    .modal-content 
-      .modal-body
-        =simple_form_for(resource, as: resource_name, data: { turbo: false }, url: session_path(resource_name)) do |f|
-          .form-inputs
-            = f.input :login,
-                required: false,
-                autofocus: true,
-                input_html: { autocomplete: "email" }
-            = f.input :password,
-                required: false,
-                input_html: { autocomplete: "current-password" }
-            = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' } if devise_mapping.rememberable?
-            = f.button :submit, "Login", class: 'btn btn-primary btn-block', id: 'loginModal'
-        .my-3 
-          =button_to image_pack_tag('images/btn_google_signin_dark_normal_web.png'),
-            user_google_oauth2_omniauth_authorize_path,
-            {data: {turbo: :false},class: 'd-flex mx-auto btn btn-outline', id: 'loginGoogle'}
-            
+dialog#studentLoginModal
+  .modal-content
+    .modal-header
+      button.close type='button' aria-label='Close' onclick='this.closest("dialog").close()'
+        span aria-hidden='true' &times;
+    .modal-body
+      =simple_form_for(resource, as: resource_name, data: { turbo: false }, url: session_path(resource_name)) do |f|
+        .form-inputs
+          = f.input :login,
+              required: false,
+              autofocus: true,
+              input_html: { autocomplete: "email" }
+          = f.input :password,
+              required: false,
+              input_html: { autocomplete: "current-password" }
+          = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' } if devise_mapping.rememberable?
+          = f.button :submit, "Login", class: 'btn btn-primary btn-block', id: 'loginModal'
+      .my-3
+        =button_to image_pack_tag('images/btn_google_signin_dark_normal_web.png'),
+          user_google_oauth2_omniauth_authorize_path,
+          {data: {turbo: :false},class: 'd-flex mx-auto btn btn-outline', id: 'loginGoogle'}

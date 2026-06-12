@@ -1,8 +1,7 @@
-#alertModal.modal.fade
-  .modal-dialog role="document"
-    .modal-content 
+- if flash[:alert].present?
+  dialog data-controller='modal' data-auto-open=''
+    .modal-content
       .modal-body
         p#alert = flash[:alert]
       .modal-footer
-        button.btn.btn-secondary type="button" data-dismiss="modal"
-          | Close
+        button.btn.btn-secondary type='button' data-action='click->modal#close' Close

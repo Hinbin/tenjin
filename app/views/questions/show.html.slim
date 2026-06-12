@@ -35,9 +35,8 @@
         data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' },
         class: 'btn btn-danger btn-block'
 
-.modal.fade#noCorrectAnswerModal
-  .modal-dialog.modal-dialog-centered role="document"
-    .modal-content
-      .modal-body Please select at least one correct answer
-      .modal-footer
-        button.btn.btn-secondary data-dismiss="modal" Close
+dialog#noCorrectAnswerModal
+  .modal-content
+    .modal-body Please select at least one correct answer
+    .modal-footer
+      button.btn.btn-secondary type='button' onclick='this.closest("dialog").close()' Close

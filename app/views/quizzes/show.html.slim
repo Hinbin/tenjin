@@ -8,8 +8,8 @@
         = render_question
       .col-md-4.text-center#lesson
         h3.h3 = @lesson.title
-        .videoLink src=@lesson.generate_video_src
-          img.img-fluid.card-img-top video_id=@lesson.video_id category=@lesson.category src=@lesson.generate_thumbnail_src data-toggle="modal" data-target="#videoModal" 
+        div.videoLink src=@lesson.generate_video_src
+          img.img-fluid.card-img-top video_id=@lesson.video_id category=@lesson.category src=@lesson.generate_thumbnail_src
   -else
     = render_question
 = render('question_bottom')

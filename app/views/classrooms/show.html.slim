@@ -7,39 +7,51 @@
     h2.tj-section-header Homework
     hr.tj-hr-primary
     = link_to 'Set Homework', new_homework_path(classroom: { classroom_id: @classroom.id }), class: 'tj-btn-primary tj-btn--full'
-    table.tj-table#homework-table
-      thead
-        tr
-          th Topic
-          th Completion
-          th Due
-      tbody
-        - @homeworks.each do |h|
-          tr.homework-data data-action='click->classroom#navigateRow' data-url=homework_path(h) data-id=h.id
-            - if h.lesson.present?
-              td = h.lesson.title
-            - else
-              td = h.topic.name
-            td = report_progress(h)
-            td data-order=h.due_date.to_i = h.due_date.strftime('%d/%m/%y %H:%M')
+    div data-controller='table' data-table-page-length-value='5' data-table-order-value='[[2,"desc"]]'
+      table.tj-table#homework-table
+        thead
+          tr
+            th Topic
+            th Completion
+            th Due
+        tbody
+          - @homeworks.each do |h|
+            tr.homework-data data-action='click->classroom#navigateRow' data-url=homework_path(h) data-id=h.id
+              - if h.lesson.present?
+                td = h.lesson.title
+              - else
+                td = h.topic.name
+              td = report_progress(h)
+              td data-order=h.due_date.to_i = h.due_date.strftime('%d/%m/%y %H:%M')
+      .tj-table-controls
+        button.tj-btn-secondary.btn-sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+        span.tj-table-info data-table-target='info'
+        button.tj-btn-secondary.btn-sm type='button' data-table-target='next' data-action='click->table#next' Next ›
 
   section.tj-section#students
     h2.tj-section-header Students
     hr.tj-hr-primary
-    table.tj-table#students-table style='width:100%'
-      thead
-        tr
-          th First Name
-          th Last Name
-          th Username
-          th.password-col.d-none Reset Password
-          th Homeworks
-      tbody
-        - @students.each do |s|
-          tr.student-data data-id=s.id
-            td = s.forename
-            td = s.surname
-            td = s.username
-            td.password-col.d-none = link_to 'Reset Password', reset_password_user_path(id: s.id), id: dom_id(s), class: 'tj-btn-dark reset-password reset-password-student', data: { turbo_method: :patch }
-            td = link_to(s) do
-              == student_homeworks(s, @homework_progress)
+    div data-controller='table' data-table-page-length-value='0'
+      .tj-table-toolbar
+        input.form-control.form-control-sm.w-auto type='search' placeholder='Search students…' data-table-target='search' data-action='input->table#search'
+        .form-check-inline
+          input.form-check-inline#resetPasswordCheck type='checkbox' data-action='change->classroom#togglePasswordCol'
+          label.form-check-label for='resetPasswordCheck'  Reset Passwords?
+        button.tj-btn-secondary.btn-sm type='button' data-action='click->table#exportCsv' Export CSV
+      table.tj-table#students-table style='width:100%'
+        thead
+          tr
+            th First Name
+            th Last Name
+            th Username
+            th.password-col.d-none data-no-export='true' Reset Password
+            th Homeworks
+        tbody
+          - @students.each do |s|
+            tr.student-data data-id=s.id
+              td = s.forename
+              td = s.surname
+              td = s.username
+              td.password-col.d-none = link_to 'Reset Password', reset_password_user_path(id: s.id), id: dom_id(s), class: 'tj-btn-dark reset-password reset-password-student', data: { turbo_method: :patch }
+              td = link_to(s) do
+                == student_homeworks(s, @homework_progress)

@@ -1,73 +1,71 @@
-$(document).on('turbo:load', () => {
-  if (page.controller() === 'questions') {
-    if (!$.fn.dataTable.isDataTable('#questionTable')) {
-      $('#questionTable').DataTable({
-        'pageLength': 50,
-        'language': {
-          'emptyTable': 'No questions have been found'
-        }
-      })
-    }
+// questionTable now uses table_controller.js (no DataTables).
 
-    $('.save-question-text').on('trix-blur', (event) => {
-      saveQuestionText(() => { })
+document.addEventListener('turbo:load', () => {
+  if (page.controller() !== 'questions') return
+
+  document.querySelectorAll('.save-question-text').forEach(el => {
+    el.addEventListener('trix-blur', () => saveQuestionText(() => {}))
+  })
+
+  document.querySelectorAll('.check-and-save').forEach(el => {
+    el.addEventListener('click', (event) => {
+      const { redirect, update } = event.currentTarget.dataset
+      validateAndSave(() => { Turbo.visit(redirect) }, update)
     })
+  })
 
-    $('.check-and-save').click((event) => {
-      const paths = $(event.target).data()
-      validateAndSave(() => { Turbo.visit(paths['redirect']) }, paths['update'])
-    })
-
-    $('.reload-page').on('change', (target) => {
+  document.querySelectorAll('.reload-page').forEach(el => {
+    el.addEventListener('change', () => {
       const currentPath = window.location.href.split('?')[0]
-      $('input[name=authenticity_token').remove()
-      let form = $('#questionForm')
-      const formParams = form.serialize()
+      document.querySelectorAll('input[name=authenticity_token]').forEach(i => i.remove())
+      const form = document.getElementById('questionForm')
+      const formParams = new URLSearchParams(new FormData(form)).toString()
       Turbo.visit(currentPath + '?' + formParams)
     })
+  })
 
-    $('form').on('click', '.remove_record', function (event) {
-      $(this).prev('input[type=hidden]').val('1')
-      $(this).closest('tr').hide()
-      $(this).closest('tr').remove()
-      return event.preventDefault()
-    })
-  
-    $('form').on('click', '.add_fields', function (event) {
-      var regexp, time
-      time = new Date().getTime()
-      regexp = new RegExp($(this).data('id'), 'g')
-      $('.fields').append($(this).data('fields').replace(regexp, time))
-      return event.preventDefault()
-    })
-  }
-})
+  document.querySelector('form')?.addEventListener('click', (event) => {
+    const removeBtn = event.target.closest('.remove_record')
+    if (removeBtn) {
+      event.preventDefault()
+      const prev = removeBtn.previousElementSibling
+      if (prev && prev.matches('input[type=hidden]')) prev.value = '1'
+      removeBtn.closest('tr')?.remove()
+    }
 
-$(document).on('turbo:before-cache', () => {
-  $('#questionTable').DataTable().destroy()
+    const addBtn = event.target.closest('.add_fields')
+    if (addBtn) {
+      event.preventDefault()
+      const time = new Date().getTime()
+      const regexp = new RegExp(addBtn.dataset.id, 'g')
+      document.querySelector('.fields')?.insertAdjacentHTML('beforeend', addBtn.dataset.fields.replace(regexp, time))
+    }
+  })
 })
 
 function validateAndSave (successCallback, updatePath) {
-  const correctAnswers = $('input[checked=checked]')
+  const correctAnswers = document.querySelectorAll('input[checked=checked]')
+  const questionType = document.getElementById('questionTypeSelect')?.value
 
-  // If not answers have been selected as correct, and we're trying to save...
-  if (correctAnswers.length === 0 && $('#questionTypeSelect').val() !== 'short_answer') {
-    // Alert the user and do not save.
-    $('#noCorrectAnswerModal').modal()
+  if (correctAnswers.length === 0 && questionType !== 'short_answer') {
+    document.getElementById('noCorrectAnswerModal')?.showModal()
   } else {
-    // Else save the question text and return
     saveQuestionText(successCallback, updatePath)
   }
 }
 
 function saveQuestionText (successCallback, updatePath) {
-  const questionText = $('#question_question_text').val()
+  const questionText = document.getElementById('question_question_text')?.value ?? ''
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
 
-  $.ajax({
-    type: 'put',
-    url: updatePath,
-    beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
-    data: { question: { question_text: questionText } },
-    success: successCallback()
+  fetch(updatePath, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRF-Token': csrfToken
+    },
+    body: new URLSearchParams({ 'question[question_text]': questionText })
   })
+  // Preserve original behaviour: callback fires immediately (not on success)
+  successCallback()
 }

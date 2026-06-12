@@ -28,19 +28,24 @@ section.page-section.text-center#myClassrooms
       h1.page-section-header.text-uppercase Other Classrooms
       hr class=("small mb-5 primary-red")
       .row.justify-content-center
-        .table-responsive
-          table.table.table-hover#otherClassroomTable
-            thead
-              tr
-                th Name
-                th.d-none.d-lg-block Description
-                th Subject
-            tbody
-              - @other_classrooms.each do |c|
-                tr data-classroom = c.id
-                  td =c.name
-                  td.d-none.d-lg-block =c.description
-                  td =c.subject.name if c.subject.present?
+        div data-controller='table' data-table-page-length-value='25'
+          .table-responsive
+            table.table.table-hover#otherClassroomTable
+              thead
+                tr
+                  th Name
+                  th.d-none.d-lg-block Description
+                  th Subject
+              tbody
+                - @other_classrooms.each do |c|
+                  tr data-classroom = c.id
+                    td =c.name
+                    td.d-none.d-lg-block =c.description
+                    td =c.subject.name if c.subject.present?
+          .d-flex.justify-content-between.align-items-center.mt-2
+            button.btn.btn-sm.btn-secondary type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+            span data-table-target='info'
+            button.btn.btn-sm.btn-secondary type='button' data-table-target='next' data-action='click->table#next' Next ›
 -if current_user.oauth_email.blank?
   input#oAuthEmail type='hidden'
 

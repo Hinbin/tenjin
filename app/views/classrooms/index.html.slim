@@ -8,15 +8,21 @@
     == sync_status_button
     h1.tj-section-header Classrooms
     hr.tj-hr-primary
-    table.tj-table#classroom-table
-      thead
-        tr
-          th Name
-          th.tj-hide-sm Number of Students
-          th Subject
-      tbody
-        - @classrooms.each do |c|
+    div data-controller='table' data-table-page-length-value='25'
+      input.tjk-input.mb-2 type='search' placeholder='Search classrooms…' data-table-target='search' data-action='input->table#search'
+      table.tj-table#classroom-table
+        thead
           tr
-            td = c.name
-            td.tj-hide-sm = c.enrollments.size
-            td = select_tag :subject, options_from_collection_for_select(@subjects, :id, :name, c.subject_id), include_blank: '', id: 'classroom-' + c.id.to_s, class: 'tjk-input', data: { remote: 'true', url: classroom_path(c.id), turbo_method: 'patch', action: 'change->classroom#subjectChanged' }
+            th Name
+            th.tj-hide-sm Number of Students
+            th Subject
+        tbody
+          - @classrooms.each do |c|
+            tr
+              td = c.name
+              td.tj-hide-sm = c.enrollments.size
+              td = select_tag :subject, options_from_collection_for_select(@subjects, :id, :name, c.subject_id), include_blank: '', id: 'classroom-' + c.id.to_s, class: 'tjk-input', data: { remote: 'true', url: classroom_path(c.id), turbo_method: 'patch', action: 'change->classroom#subjectChanged' }
+      .tj-table-controls
+        button.tj-btn-secondary.btn-sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+        span.tj-table-info data-table-target='info'
+        button.tj-btn-secondary.btn-sm type='button' data-table-target='next' data-action='click->table#next' Next ›

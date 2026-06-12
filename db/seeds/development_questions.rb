@@ -153,4 +153,46 @@ if File.exist?('db/CSV Output - answer_export.csv')
   flush_seed_answers(answer_rows)
 end
 
+def seed_question_statistics
+  Question.find_each do |question|
+    QuestionStatistic.find_or_initialize_by(question:).tap do |stat|
+      stat.number_asked = rand(20..500)
+      stat.number_correct = stat.number_asked - rand(0..stat.number_asked)
+      stat.save!
+    end
+  end
+end
+
+# Build a spread of challenges across topics: a mix of types, plus some that are
+# currently running and some that have already finished, so the seeded data exercises
+# both states. Idempotent on topic + challenge_type so re-running the seed is safe.
+def seed_challenges
+  challenge_types = Challenge.challenge_types.keys
+
+  Topic.find_each.with_index do |topic, index|
+    challenge_type = challenge_types[index % challenge_types.length]
+    active = index.even?
+
+    Challenge.find_or_initialize_by(topic:, challenge_type:).tap do |challenge|
+      challenge.daily = false
+      challenge.number_required = number_required_for(challenge_type)
+      challenge.points = challenge.number_required * 10
+      challenge.start_date = active ? 1.day.ago : 14.days.ago
+      challenge.end_date = active ? 6.days.from_now : 7.days.ago
+      challenge.save!
+    end
+  end
+end
+
+def number_required_for(challenge_type)
+  case challenge_type
+  when 'number_correct' then rand(5..10)
+  when 'streak' then rand(3..8)
+  else rand(40..60)
+  end
+end
+
+seed_question_statistics
+seed_challenges
+
 Rails.logger.info('Development questions seeded.')

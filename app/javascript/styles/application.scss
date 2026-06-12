@@ -186,3 +186,43 @@ body {
   @extend .text-danger
 }
 
+
+// Native <dialog> styling — gives our converted modals a reasonable default
+// until Bootstrap is removed in 04f.
+dialog {
+  border: none;
+  border-radius: 0.3rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+  max-width: 90vw;
+  padding: 0;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+// The video modal needs an explicit width so the 16:9 embed has room to fill
+// (the native <dialog> otherwise shrinks to its content).
+#videoModal {
+  width: 800px;
+}
+
+// Sort indicators for table_controller.js
+thead th.sorted-asc::after  { content: ' ▲'; font-size: 0.7em; }
+thead th.sorted-desc::after { content: ' ▼'; font-size: 0.7em; }
+
+// Table controls layout (used by table_controller.js pagination/info)
+.tj-table-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tj-table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}

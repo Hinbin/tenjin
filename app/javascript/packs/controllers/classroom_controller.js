@@ -23,4 +23,9 @@ export default class extends Controller {
       btnEl.textContent = 'School sync required. Click here to start.'
     }
   }
+
+  // Toggle visibility of password-col cells for the reset-password checkbox.
+  togglePasswordCol () {
+    this.element.querySelectorAll('.password-col').forEach(el => el.classList.toggle('d-none'))
+  }
 }

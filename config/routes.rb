@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get '/.well-known/appspecific/com.chrome.devtools.json', to: proc { [204, {}, ['']] }
+
   devise_for :admins, controllers: { invitations: 'admins/invitations' }
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   

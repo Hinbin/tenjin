@@ -41,7 +41,7 @@ RSpec.describe 'School admin views user list', :default_creates, :js, type: :sys
   it 'allows you to search for a student' do
     create_list(:enrollment, 32, classroom:)
     visit(users_path)
-    find('#students-table_filter input').set("#{student.forename} #{student.surname}")
+    find_by_id('students-search').set("#{student.forename} #{student.surname}")
     expect(page).to have_css('.student-row', count: 1).and have_text("#{student.forename} #{student.surname}")
   end
 

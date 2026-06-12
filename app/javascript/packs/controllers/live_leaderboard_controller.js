@@ -31,6 +31,11 @@ export default class extends Controller {
     this.schoolGroup = this.data.get('schoolGroup')
     this.topic = this.data.get('topic')
 
+    this._closeDropdowns = () => {
+      this.element.querySelectorAll('.dropdown-menu.show').forEach(el => el.classList.remove('show'))
+    }
+    document.addEventListener('click', this._closeDropdowns)
+
     this.listenToLeaderboard()
     this.loadLeaderboard()
   }
@@ -38,6 +43,15 @@ export default class extends Controller {
   disconnect () {
     if (this.subscription) this.subscription.unsubscribe()
     Object.values(this.flashTimers).forEach((timer) => clearTimeout(timer))
+    document.removeEventListener('click', this._closeDropdowns)
+  }
+
+  toggleDropdown (event) {
+    event.stopPropagation()
+    const menu = event.currentTarget.nextElementSibling
+    const isOpen = menu.classList.contains('show')
+    this._closeDropdowns()
+    if (!isOpen) menu.classList.add('show')
   }
 
   listenToLeaderboard () {
@@ -367,7 +381,7 @@ export default class extends Controller {
       <div class="col-6">
         <div class="form-group">
           <div id="${dropdownId}" class="dropdown filter">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-action="click->live-leaderboard#toggleDropdown" aria-haspopup="true" aria-expanded="false">
               ${this.escape(selected)}
             </button>
             <div class="dropdown-menu">
