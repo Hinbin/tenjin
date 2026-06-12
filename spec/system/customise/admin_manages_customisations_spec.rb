@@ -19,7 +19,7 @@ RSpec.describe 'Admin manages customisations', :default_creates, :js, type: :sys
     end
 
     it 'allows navigating to edit a customisation' do
-      first('.card').click_link('Edit')
+      first('.tj-card').click_link('Edit')
       expect(page).to have_current_path(edit_customisation_path(sticky_customisation))
     end
   end
