@@ -212,6 +212,15 @@ dialog::backdrop {
   width: 800px;
 }
 
+// Dialog inner layout — replaces Bootstrap .modal-content/.modal-body/.modal-footer
+.tj-dialog-content { display: flex; flex-direction: column; }
+.tj-dialog-header  { display: flex; justify-content: flex-end; padding: var(--tj-space-2) var(--tj-space-3); border-bottom: 1px solid #dee2e6; }
+.tj-dialog-body    { padding: var(--tj-space-4); }
+.tj-dialog-footer  { display: flex; justify-content: flex-end; gap: var(--tj-space-2); padding: var(--tj-space-3) var(--tj-space-4); border-top: 1px solid #dee2e6; }
+
+// Danger alert (replaces .alert.alert-danger)
+.tj-alert-danger { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; border-radius: var(--tj-radius); padding: var(--tj-space-2) var(--tj-space-3); }
+
 // Sort indicators for table_controller.js
 thead th.sorted-asc::after  { content: ' ▲'; font-size: 0.7em; }
 thead th.sorted-desc::after { content: ' ▼'; font-size: 0.7em; }

@@ -1,9 +1,9 @@
 dialog#studentLoginModal
-  .modal-content
-    .modal-header
-      button.close type='button' aria-label='Close' onclick='this.closest("dialog").close()'
+  .tj-dialog-content
+    .tj-dialog-header
+      button type='button' aria-label='Close' onclick='this.closest("dialog").close()' style='background:none; border:none; font-size:1.5rem; cursor:pointer; line-height:1'
         span aria-hidden='true' &times;
-    .modal-body
+    .tj-dialog-body
       =simple_form_for(resource, as: resource_name, data: { turbo: false }, url: session_path(resource_name)) do |f|
         .form-inputs
           = f.input :login,
@@ -14,8 +14,8 @@ dialog#studentLoginModal
               required: false,
               input_html: { autocomplete: "current-password" }
           = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' } if devise_mapping.rememberable?
-          = f.button :submit, "Login", class: 'btn btn-primary btn-block', id: 'loginModal'
-      .my-3
+          = f.button :submit, "Login", class: 'tj-btn-primary tj-btn--full', id: 'loginModal'
+      div style='margin: var(--tj-space-3) 0; text-align: center'
         =button_to image_pack_tag('images/btn_google_signin_dark_normal_web.png'),
           user_google_oauth2_omniauth_authorize_path,
-          {data: {turbo: :false},class: 'd-flex mx-auto btn btn-outline', id: 'loginGoogle'}
+          {data: {turbo: :false}, style: 'display:flex; margin: 0 auto; background: none; border: none; cursor: pointer', id: 'loginGoogle'}
