@@ -6,9 +6,6 @@ require 'rails_helper'
 # Non-interactive tests have been converted to spec/requests/homeworks_request_spec.rb.
 RSpec.describe 'Teacher sets homework', :default_creates, :js, type: :system do
   let(:classroom) { create(:classroom, subject:, school: teacher.school) }
-  let(:flatpickr_one_week_from_now) do
-    "span.flatpickr-day[aria-label=\"#{(Time.now + 1.week).strftime('%B %-e, %Y')}\"]"
-  end
   let(:lesson) { create(:lesson, topic:) }
   let(:ten_questions) { create_list(:question, 10, lesson:, topic: lesson.topic) }
 
