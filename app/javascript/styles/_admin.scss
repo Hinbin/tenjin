@@ -1,0 +1,41 @@
+// Dialog inner layout — replaces Bootstrap .modal-content/.modal-body/.modal-footer
+
+.tj-dialog-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.tj-dialog-body {
+  padding: var(--tj-space-4);
+}
+
+.tj-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tj-space-2);
+  padding: var(--tj-space-3) var(--tj-space-4);
+  border-top: 1px solid #dee2e6;
+}
+
+// Danger alert text (replaces .alert.alert-danger)
+.tj-alert-danger {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  border-radius: var(--tj-radius);
+  padding: var(--tj-space-2) var(--tj-space-3);
+  text-align: center;
+}
+
+// Statistics grid — replaces .row.justify-content-center .col.mx-auto
+.tj-stats-grid {
+  display: flex;
+  text-align: center;
+  gap: var(--tj-space-3);
+  margin-bottom: var(--tj-space-3);
+  flex-wrap: wrap;
+
+  > * {
+    flex: 1;
+  }
+}

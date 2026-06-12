@@ -1,7 +1,7 @@
-.container
+.tjk-container
   span.display-4 Schools
-  .table-responsive
-    table.table
+  .tj-table-responsive
+    table.tj-table
       tr
         th Name
         th Students
@@ -14,7 +14,7 @@
           th Force Sync
 
       - @schools.each do |school|
-        tr 
+        tr
           td =link_to(school.name, school)
           td =school.users.where(role: 'student').count
           td =UserStatistic.joins(user: :school).where(users: {school: school}, week_beginning: Date.current.beginning_of_week).sum(:questions_answered)
@@ -23,16 +23,16 @@
           - if current_admin.super?
             td =link_to boolean_icon(school.permitted?),
               school_path(school, school: { permitted: !school.permitted } ),
-              method: :patch            
+              method: :patch
             td = form_with model: school do |f|
               = f.select :school_group_id,
                 options_from_collection_for_select(@school_groups, :id, :name, school.school_group_id),
                 { include_blank: '',
                 onchange: 'Rails.fire(this.form, "submit")'},
                 id: ('school-group-select-' + school.id.to_s),
-                class: 'custom-select',             
+                class: 'tjk-input',
                 data: { remote: 'true',  url: school_path(school), method: 'patch' }
-          td =link_to 'Sync', sync_school_path(school), class: 'btn btn-block btn-primary', method: :patch, remote: true
-    -if current_admin.super?
-      =link_to(new_school_path)
-        button.btn.btn-dark type="button" Add School
+          td =link_to 'Sync', sync_school_path(school), class: 'tj-btn-primary tj-btn--full', method: :patch, remote: true
+  -if current_admin.super?
+    =link_to(new_school_path)
+      button.tj-btn-dark type="button" Add School
