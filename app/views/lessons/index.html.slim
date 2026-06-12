@@ -1,7 +1,7 @@
 -content_for :title
   title=('Lessons')
-.container
-  section.page-section.text-center.pt-2#newLesson 
+.tjk-container
+  section.page-section.text-center.pt-2#newLesson
     h1.page-section-header.text-uppercase Lessons
     hr class=("small mb-2 primary-red")
     -if @lessons.count.zero?
@@ -9,26 +9,26 @@
     -@subjects.each do |s|
       - @subject_author = current_user.has_role? :lesson_author, s if @author
       h1.py-4.h1.subject-title=s.name
-      .card-columns
-        -@lessons.where(topics: { subject:s } ).each do |l|    
-          -unless l.no_content?    
-            .card
-              .card-body.videoLink src=l.generate_video_src
+      .tj-card-grid
+        -@lessons.where(topics: { subject:s } ).each do |l|
+          -unless l.no_content?
+            .tj-card
+              .tj-card-body.videoLink src=l.generate_video_src
                 h3.h4.lesson-title =l.title
-                p.font-weight-light =l.topic.name
-                img.img-fluid.card-img-top video_id=l.video_id category=l.category src=l.generate_thumbnail_src      
+                p =l.topic.name
+                img style='width:100%;height:auto' video_id=l.video_id category=l.category src=l.generate_thumbnail_src
               -if @subject_author
-                .card-footer
+                .tj-card-footer
                   p = 'Questions: ' + l.questions_count.to_s
-                  =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
-                  =link_to 'Edit', edit_lesson_path(l), class: 'btn btn-primary mx-2'
-                  =link_to 'Delete', lesson_path(l), class: 'btn btn-danger', data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' }
+                  =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'tj-btn-primary'
+                  =link_to 'Edit', edit_lesson_path(l), class: 'tj-btn-primary'
+                  =link_to 'Delete', lesson_path(l), class: 'tj-btn-danger', data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' }
               -elsif !@current_user.student?
-                .card-footer
-                  =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
-           
+                .tj-card-footer
+                  =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'tj-btn-primary'
+
       -if @subject_author
-        table.table
+        table.tj-table
           thead
             th Lesson Title
             th Questions
@@ -36,46 +36,45 @@
             th
             th
           tbody
-            - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|    
-              tr  
-                td = l.title                 
+            - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|
+              tr
+                td = l.title
                 td = Question.where(lesson: l, active: true).count
                 td =link_to 'View Questions',
                   lesson_questions_path(lesson_id: l),
-                  class: 'btn btn-primary'
+                  class: 'tj-btn-primary'
                 td =link_to 'Edit',
                   edit_lesson_path(l),
-                  class: 'btn btn-primary'
+                  class: 'tj-btn-primary'
                 td =link_to 'Delete',
                   lesson_path(l),
-                  class: 'btn btn-danger',
+                  class: 'tj-btn-danger',
                   data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' }
       -elsif !@current_user.student?
-        table.table
-            thead
-              th Lesson Title
-              th Questions
-              th
-              - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|    
-                tr
-                  td = l.title
-                  td = Question.where(lesson: l, active: true).count
-                  td =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'btn btn-primary mx-2'
-
+        table.tj-table
+          thead
+            th Lesson Title
+            th Questions
+            th
+            - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|
+              tr
+                td = l.title
+                td = Question.where(lesson: l, active: true).count
+                td =link_to 'View Questions', lesson_questions_path(lesson_id: l), class: 'tj-btn-primary'
 
 -if @author
-  .container
+  .tjk-container
     section.page-section.text-center.pt-2#createLessons
       h1.page-section-header.text-uppercase Create Lessons
       hr class=("small mb-5 primary-red")
         - @editable_subjects.each do |s|
           h3.h3.py-2 = s.name
-          =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'btn btn-block btn-primary'
+          =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'tj-btn-primary tj-btn--full'
 
 dialog#videoModal
-  .modal-content
-    .modal-body.p-0.p-md-2
-      button.close type='button' aria-label='Close' onclick='this.closest("dialog").close()'
+  .tj-dialog-content
+    .tj-dialog-body
+      button type='button' aria-label='Close' onclick='this.closest("dialog").close()' style='float:right; background:none; border:none; font-size:1.5rem; cursor:pointer'
         span aria-hidden='true' &times;
-      .embed-responsive.embed-responsive-16by9
-        iframe.embed-responsive-item#video allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen=true
+      .tj-embed-16by9
+        iframe#video allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen=true
