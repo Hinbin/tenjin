@@ -39,7 +39,7 @@ bin/rails jobs:work
 
 ```bash
 bundle exec rspec        # Ruby
-yarn test:js             # JavaScript (Jest)
+pnpm test:js             # JavaScript (Jest)
 ```
 
 System specs run against a real Chrome via Cuprite; failure screenshots are saved to `tmp/screenshots/`.
@@ -48,5 +48,5 @@ System specs run against a real Chrome via Cuprite; failure screenshots are save
 
 ```bash
 bundle exec standardrb   # Ruby
-yarn lint                # JavaScript
+pnpm lint                # JavaScript
 ```

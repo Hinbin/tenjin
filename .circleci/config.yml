@@ -35,17 +35,22 @@ commands:
           paths:
             - vendor/bundle
 
+      - run:
+          name: Enable pnpm via corepack
+          command: |
+            sudo corepack enable
+            corepack prepare --activate
       - restore_cache:
-          name: Restore yarn cache
+          name: Restore pnpm store
           keys:
-            - tenjin-yarn-{{ checksum "yarn.lock" }}
-            - tenjin-yarn-
-      - run: yarn install --cache-folder ~/.cache/yarn
+            - tenjin-pnpm-{{ checksum "pnpm-lock.yaml" }}
+            - tenjin-pnpm-
+      - run: pnpm install --frozen-lockfile
       - save_cache:
-          name: Store yarn cache
-          key: tenjin-yarn-{{ checksum "yarn.lock" }}
+          name: Store pnpm store
+          key: tenjin-pnpm-{{ checksum "pnpm-lock.yaml" }}
           paths:
-            - ~/.cache/yarn
+            - ~/.local/share/pnpm/store
 
 default_job: &default_job
   working_directory: ~/tenjin
