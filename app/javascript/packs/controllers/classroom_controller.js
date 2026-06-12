@@ -26,6 +26,6 @@ export default class extends Controller {
 
   // Toggle visibility of password-col cells for the reset-password checkbox.
   togglePasswordCol () {
-    this.element.querySelectorAll('.password-col').forEach(el => el.classList.toggle('d-none'))
+    this.element.querySelectorAll('.password-col').forEach(el => el.classList.toggle('tj-hidden'))
   }
 }
