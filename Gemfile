@@ -18,9 +18,10 @@ gem "image_processing"
 gem "bootsnap", ">= 1.1.0", require: false
 
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 6.0"
-gem "rack", "~> 2.2"
-gem "rack-cors"
+gem "puma", "~> 8.0"
+gem "rack"
+gem "rack-cors", "~> 3"
+gem 'rack-session'
 gem "rack-timeout", groups: [:production]
 
 gem "delayed_job_active_record"

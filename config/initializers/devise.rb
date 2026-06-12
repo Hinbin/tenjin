@@ -267,8 +267,7 @@ Devise.setup do |config|
 
   # Hotwire/Turbo: return 422 on form errors (so Turbo re-renders) and 303 on
   # redirects (so Turbo issues a GET after a form POST).
-  # config.responder.error_status = :unprocessable_content # for Rack 3.1 or higher
-  config.responder.error_status = :unprocessable_entity # for Rack 3.0 or lower
+  config.responder.error_status = :unprocessable_content
   config.responder.redirect_status = :see_other
 
   # The default HTTP method used to sign out a resource. Default is :delete.
