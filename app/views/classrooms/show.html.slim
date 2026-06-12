@@ -1,49 +1,45 @@
--content_for :title
-  title=('Classroom - ' + @classroom.name)
-.container
-  h1.h1.mt-3.text-center =@classroom.name
-  section.page-section.text-center.pt-2#homework  
-    h1.page-section-header.text-uppercase Homework
-    hr class=("small mb-5 primary-red")
-    .row.justify-content-center
-      =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: @classroom.id}), class: 'btn btn-block btn-primary'
-      .col.mx-auto
-        table.table.table-hover#homework-table
-          thead
-            tr
-              th Topic
-              th Completion
-              th Due
-          tbody
-            -@homeworks.each do |h|
-              tr.homework-data data-controller='homeworks' data-id=h.id
-                -if h.lesson.present?
-                  td =h.lesson.title
-                -else
-                  td =h.topic.name
-                td =report_progress(h)
-                td data-order=h.due_date.to_i =h.due_date.strftime("%d/%m/%y %H:%M")
-  section.page-section.text-center.pt-2#students                            
-    h1.page-section-header.text-uppercase Students
-    hr class=("small mb-5 primary-red")      
-    .row.justify-content-center
-      table.table#students-table style="width:100%"
-        thead
+- content_for :title
+  title = 'Classroom - ' + @classroom.name
+.tjk-container data-controller='classroom'
+  h1.tj-h1 style='text-align:center;margin-top:var(--tj-space-3)' = @classroom.name
+
+  section.tj-section#homework
+    h2.tj-section-header Homework
+    hr.tj-hr-primary
+    = link_to 'Set Homework', new_homework_path(classroom: { classroom_id: @classroom.id }), class: 'tj-btn-primary tj-btn--full'
+    table.tj-table#homework-table
+      thead
+        tr
+          th Topic
+          th Completion
+          th Due
+      tbody
+        - @homeworks.each do |h|
+          tr.homework-data data-action='click->classroom#navigateRow' data-url=homework_path(h) data-id=h.id
+            - if h.lesson.present?
+              td = h.lesson.title
+            - else
+              td = h.topic.name
+            td = report_progress(h)
+            td data-order=h.due_date.to_i = h.due_date.strftime('%d/%m/%y %H:%M')
+
+  section.tj-section#students
+    h2.tj-section-header Students
+    hr.tj-hr-primary
+    table.tj-table#students-table style='width:100%'
+      thead
+        tr
           th First Name
           th Last Name
           th Username
           th.password-col.d-none Reset Password
           th Homeworks
-        tbody
-          -@students.each do |s|
-            tr.student-data data-id=s.id
-              td =s.forename
-              td =s.surname
-              td =s.username
-              td.password-col.d-none =link_to('Reset Password',
-                                        reset_password_user_path(id: s.id),
-                                        id: dom_id(s),
-                                        class: 'btn btn-dark reset-password reset-password-student',
-                                        data: {turbo_method: :patch} )
-              td =link_to(s) do
-                ==student_homeworks(s, @homework_progress)
+      tbody
+        - @students.each do |s|
+          tr.student-data data-id=s.id
+            td = s.forename
+            td = s.surname
+            td = s.username
+            td.password-col.d-none = link_to 'Reset Password', reset_password_user_path(id: s.id), id: dom_id(s), class: 'tj-btn-dark reset-password reset-password-student', data: { turbo_method: :patch }
+            td = link_to(s) do
+              == student_homeworks(s, @homework_progress)

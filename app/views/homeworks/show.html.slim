@@ -1,37 +1,39 @@
--content_for :title
-  title=('Homework')
-section.page-section.text-center.pt-2#HomeworkTitle
-  .container
-    h1.page-section-header.text-uppercase Homework
-    p.lead =link_to(@homework.classroom.name, @homework.classroom)
-    p.lead
+- content_for :title
+  title = 'Homework'
+section.tj-section#HomeworkTitle
+  .tjk-container
+    h1.tj-section-header Homework
+    p.tj-lead = link_to(@homework.classroom.name, @homework.classroom)
+    p.tj-lead
       => @homework.topic.name
-      -if @homework.lesson
+      - if @homework.lesson
         ' -
         => @homework.lesson.title
       ' -
       => number_to_percentage(@homework.required, precision: 0)
-      | required 
-    hr.small.mb-5.primary-red
-    h3.display-4 =report_progress(@homework_counts)
-section.page-section.text-center.pt-2#StudentProgress
-  .container
-    .row.col
-      table.table
-        thead
+      | required
+    hr.tj-hr-primary
+    h3 = report_progress(@homework_counts)
+
+section.tj-section#StudentProgress
+  .tjk-container
+    table.tj-table
+      thead
+        tr
           th Name
           th Complete?
           th Progress
-        tbody
-          - @homework_progress.each do |h|
-            tr.student-row data-user=h.user.id
-              td
-                => h.user.forename[0]
-                = h.user.surname
-              td = boolean_icon(h.completed?)
-              td
-                = h.progress.to_s
-                | %
-    .row.col.mt-5
-      =link_to 'Delete Homework', homework_path(@homework), data: {turbo_method: "delete"}, class: 'btn btn-block btn-danger'
- 
+      tbody
+        - @homework_progress.each do |h|
+          tr.student-row data-user=h.user.id
+            td
+              => h.user.forename[0]
+              = h.user.surname
+            td = boolean_icon(h.completed?)
+            td
+              = h.progress.to_s
+              | %
+    = link_to 'Delete Homework',
+      homework_path(@homework),
+      data: { turbo_method: 'delete' },
+      class: 'tj-btn-danger tj-btn--full'
