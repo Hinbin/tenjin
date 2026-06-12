@@ -19,6 +19,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 6.0"
+gem "rack", "~> 2.2"
 gem "rack-cors"
 gem "rack-timeout", groups: [:production]
 
@@ -107,7 +108,7 @@ group :test do
   gem "capybara"
   gem "rspec-retry"
   gem "cuprite", require: "capybara/cuprite"
-  gem "shoulda-matchers", "~> 6.5"
+  gem "shoulda-matchers", "~> 7.0"
 
   gem "simplecov", require: false
   gem "rspec_junit_formatter"
