@@ -1,22 +1,15 @@
--content_for :title
-  title=('New Homework')
-section.page-section.text-center.pt-2#set_homework
+- content_for :title
+  title = 'New Homework'
+section.tj-section#set_homework
   .tjk-container data-controller='homework'
-    h1.page-section-header.text-uppercase Set Homework
-    p.lead =@classroom.name
-    hr class=("small mb-5 primary-red")
+    h1.tj-section-header Set Homework
+    p.tj-lead = @classroom.name
+    hr.tj-hr-primary
     .jsVars data={ lessons: @lessons.to_json }
-    =simple_form_for @homework do |f|
-      =f.input :due_date, as: :string, label: 'Due date', wrapper: :horizontal_form,
-        input_html: { type: 'datetime-local', min: Time.current.strftime('%Y-%m-%dT%H:%M'), value: f.object.due_date&.strftime('%Y-%m-%dT%H:%M'), onchange: 'this.blur()' }
-      =f.input :required, label: 'Required %', collection: (0..100).step(10), wrapper: :horizontal_form
-      =f.association :topic, collection: @classroom.subject.topics.order(:name), wrapper: :horizontal_form,
-        input_html: { data: {action:'homework#loadLessons'} }
-      =f.input :lesson_id,
-        as: :select,
-        disabled: true,
-        label: 'Lesson (Optional)',
-        wrapper: :horizontal_form,
-        input_html: { data: {target:'homework.lessonSelect'} }
-      =f.association :classroom, as: :hidden
-      =f.submit "Set Homework", class: 'btn btn-primary'
+    = simple_form_for @homework do |f|
+      = f.input :due_date, as: :string, label: 'Due date', input_html: { type: 'datetime-local', id: 'homework_due_date', class: 'tjk-input', min: Time.current.strftime('%Y-%m-%dT%H:%M'), value: f.object.due_date&.strftime('%Y-%m-%dT%H:%M'), onchange: 'this.blur()' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+      = f.input :required, label: 'Required %', collection: (0..100).step(10), input_html: { class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+      = f.association :topic, collection: @classroom.subject.topics.order(:name), input_html: { class: 'tjk-input', data: { action: 'homework#loadLessons' } }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+      = f.input :lesson_id, as: :select, disabled: true, label: 'Lesson (Optional)', input_html: { class: 'tjk-input', data: { homework_target: 'lessonSelect' } }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+      = f.association :classroom, as: :hidden
+      = f.submit 'Set Homework', class: 'tj-btn-primary'

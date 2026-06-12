@@ -34,7 +34,7 @@ RSpec.describe 'User visits a classroom', :default_creates, :js, type: :system d
     it 'takes me to a homework that I have clicked on' do
       homework
       visit(classroom_path(classroom))
-      find(:css, "tr[data-controller='homeworks'][data-id='#{homework.id}']").click
+      find(:css, "tr.homework-data[data-id='#{homework.id}']").click
       expect(page).to have_current_path(homework_path(homework))
     end
 
