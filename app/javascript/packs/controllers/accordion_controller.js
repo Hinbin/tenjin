@@ -5,6 +5,6 @@ export default class extends Controller {
 
   toggle (event) {
     event.preventDefault()
-    this.bodyTarget.classList.toggle('d-none')
+    this.bodyTarget.classList.toggle('tj-hidden')
   }
 }
