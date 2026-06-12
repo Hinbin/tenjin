@@ -38,7 +38,7 @@ gem "jbuilder", "~> 2.5"
 gem "high_voltage", "~> 5.0"
 
 # Assets
-gem "shakapacker", "= 8.4.0"
+gem "shakapacker", "= 10.1.0"
 
 # Turbo (Hotwire)
 gem "turbo-rails"

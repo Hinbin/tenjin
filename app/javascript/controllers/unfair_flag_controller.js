@@ -14,7 +14,9 @@ export default class extends Controller {
     const icon = this.element.querySelector("i.fa-flag");
     if (icon.classList.contains("far")) {
       icon.classList.replace("far", "fas");
-      Modal.getOrCreateInstance(document.getElementById("feedbackModal")).show();
+      Modal.getOrCreateInstance(
+        document.getElementById("feedbackModal"),
+      ).show();
     } else {
       icon.classList.replace("fas", "far");
     }

@@ -1,0 +1,15 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "ecmascript",
+      "jsx": false
+    },
+    "loose": false
+  },
+  "env": {
+    "targets": "defaults"
+  },
+  "module": {
+    "type": "es6"
+  }
+}

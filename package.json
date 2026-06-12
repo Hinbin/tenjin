@@ -2,10 +2,6 @@
   "name": "tenjin",
   "private": true,
   "dependencies": {
-    "@babel/core": "7",
-    "@babel/plugin-transform-runtime": "7",
-    "@babel/preset-env": "7",
-    "@babel/runtime": "7",
     "@fortawesome/fontawesome-free": "^6",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/stimulus-webpack-helpers": "^1.0.1",
@@ -14,10 +10,9 @@
     "@rails/actioncable": "6.1.7",
     "@rails/actiontext": "6.1.7",
     "@rails/activestorage": "6.1.7",
-    "@types/babel__core": "7",
+    "@swc/core": "^1.7.0",
     "@types/webpack": "5",
     "alpinejs": "^3.15.12",
-    "babel-loader": "9",
     "bootstrap": "^5",
     "compression-webpack-plugin": "11",
     "core-js": "3",
@@ -26,9 +21,10 @@
     "mini-css-extract-plugin": "^2.9.0",
     "sass": "^1.77.6",
     "sass-loader": "^14.2.1",
-    "shakapacker": "8.4.0",
+    "shakapacker": "10.1.0",
     "shepherd.js": "^8.1.0",
     "style-loader": "^4.0.0",
+    "swc-loader": "^0.2.6",
     "tabulator-tables": "^5",
     "terser-webpack-plugin": "5",
     "trix": "^1.3.2",
@@ -38,18 +34,12 @@
     "webpack-merge": "5"
   },
   "version": "0.1.0",
-  "babel": {
-    "presets": [
-      "./node_modules/shakapacker/package/babel/preset.js"
-    ]
-  },
   "browserslist": [
     "defaults"
   ],
   "devDependencies": {
-    "@babel/eslint-parser": "^7.24.7",
+    "@swc/jest": "^0.2.36",
     "@testing-library/jest-dom": "^6.9.1",
-    "babel-jest": "^30.4.1",
     "eslint": "^9.5.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
@@ -68,7 +58,7 @@
       "<rootDir>/spec/javascript"
     ],
     "transform": {
-      "^.+\\.(js|jsx)$": "babel-jest"
+      "^.+\\.(js|jsx)$": "@swc/jest"
     },
     "moduleNameMapper": {
       "\\.(css|scss|png|jpg|svg)$": "<rootDir>/spec/javascript/__mocks__/fileMock.js",

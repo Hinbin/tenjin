@@ -1,11 +1,10 @@
 // See the shakacode/shakapacker README and docs directory for advice on customizing your webpackConfig.
-const { generateWebpackConfig, merge, web } = require("shakapacker");
-const webpack = require("webpack");
+const { generateWebpackConfig, merge } = require("shakapacker");
 const webpackConfig = generateWebpackConfig();
 
 const options = {
   resolve: {
-    extensions: [".css", ".scss", ".ts"],
+    extensions: [".css", ".scss"],
   },
   module: {
     rules: [
@@ -19,11 +18,6 @@ const options = {
       },
     ],
   },
-  plugins: [
-    new webpack.ProvidePlugin({
-      Rails: ["@rails/ujs"],
-    }),
-  ],
 };
 
 module.exports = merge(options, webpackConfig);
