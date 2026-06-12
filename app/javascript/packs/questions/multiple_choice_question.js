@@ -1,50 +1,57 @@
 import updateQuizStatistics from 'packs/questions/questions_shared'
 
-function processMultipleChoiceResponse (serverResponse, guess) {
-  const guessDiv = '#' + guess
+function processMultipleChoiceResponse (serverResponse, guessId) {
   const results = serverResponse.answer
   let correct = false
 
-  for (var result of results) {
-    const resultID = '#response-' + result.id
-
-    $(resultID).addClass('correct-answer')
-    if (resultID === guessDiv) {
-      correct = true
-      $(guessDiv).append('<i class="fas fa-check fa-lg float-right my-1"></i>')
+  for (const result of results) {
+    const resultEl = document.getElementById('response-' + result.id)
+    if (resultEl) {
+      resultEl.classList.add('correct-answer')
+      if ('response-' + result.id === guessId) {
+        correct = true
+        resultEl.insertAdjacentHTML('beforeend', '<i class="fas fa-check fa-lg float-right my-1"></i>')
+      }
     }
   }
 
   if (!correct) {
-    $(guessDiv).addClass('incorrect-answer')
-    $(guessDiv).append('<i class="fas fa-times fa-lg float-right my-1"></i>')
+    const guessEl = document.getElementById(guessId)
+    if (guessEl) {
+      guessEl.classList.add('incorrect-answer')
+      guessEl.insertAdjacentHTML('beforeend', '<i class="fas fa-times fa-lg float-right my-1"></i>')
+    }
   }
 
   updateQuizStatistics(serverResponse)
 
-  $('#nextButton').removeClass('invisible')
-  $('#nextButton').focus()
+  const nextBtn = document.getElementById('nextButton')
+  if (nextBtn) {
+    nextBtn.classList.remove('invisible')
+    nextBtn.focus()
+  }
 }
 
-$(document).on('turbo:load', function () {
-  $('.multiple-choice-button').click((click) => {
-    if ($(click.target).hasClass('disabled')) {
-      return
-    }
+document.addEventListener('click', (event) => {
+  const btn = event.target.closest('.multiple-choice-button')
+  if (!btn) return
+  if (btn.classList.contains('disabled')) return
 
-    $('.multiple-choice-button').attr('disabled', 'disabled')
-    $('.multiple-choice-button').addClass('disabled')
-
-    $.ajax({
-      type: 'PUT',
-      url: window.location.pathname,
-      beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
-      success: (result) => processMultipleChoiceResponse(result, click.target.id),
-      data: {
-        answer: {
-          id: click.target.id.slice(9)
-        }
-      }
-    })
+  document.querySelectorAll('.multiple-choice-button').forEach(b => {
+    b.setAttribute('disabled', 'disabled')
+    b.classList.add('disabled')
   })
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+  fetch(window.location.pathname, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRF-Token': csrfToken,
+      'Accept': 'application/json'
+    },
+    body: new URLSearchParams({ 'answer[id]': btn.id.slice(9) })
+  })
+    .then(r => r.json())
+    .then(result => processMultipleChoiceResponse(result, btn.id))
 })

@@ -5,8 +5,11 @@ class TopicsController < ApplicationController
   before_action :set_topic, only: %i[update edit show destroy archive]
 
   def index
-    @subjects = policy_scope(Question)
+    @subjects = policy_scope(Question).includes(:topics)
     raise Pundit::NotAuthorizedError if @subjects.blank?
+
+    topic_ids = @subjects.flat_map(&:topics).map(&:id)
+    @question_counts = Question.where(topic_id: topic_ids).group(:topic_id).count
   end
 
   def show
@@ -14,7 +17,7 @@ class TopicsController < ApplicationController
 
     @topic_lessons = Lesson.where(topic: @topic)
     @questions = Question.with_rich_text_question_text_and_embeds
-                         .includes(:question_statistic, :lesson)
+                         .includes(:question_statistic, :lesson, :flagged_questions)
                          .where(topic: @topic, active: true)
   end
 

@@ -1,22 +1,21 @@
-$(document).on('turbo:load', function () {
-  if (page.controller() === 'schools') {
-    $('.select_input').on('change', (change) => {
-      var subjectMapId = change.target.id
-      var subjectPicked = $(change.target).children('option:selected').text()
-      $(change.target).attr('disabled', 'disabled')
+document.addEventListener('turbo:load', () => {
+  if (page.controller() !== 'schools') return
 
-      $.ajax({
-        type: 'PUT',
-        url: '/subject_maps/' + subjectMapId,
-        beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
-        success: () => { $(change.target).removeAttr('disabled') },
-        data: {
-          subject_map: {
-            name: subjectPicked
-          }
-        }
-      })
+  document.querySelectorAll('.select_input').forEach(select => {
+    select.addEventListener('change', (event) => {
+      const subjectMapId = event.target.id
+      const subjectPicked = event.target.options[event.target.selectedIndex].text
+      event.target.disabled = true
+
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+      fetch('/subject_maps/' + subjectMapId, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRF-Token': csrfToken
+        },
+        body: new URLSearchParams({ 'subject_map[name]': subjectPicked })
+      }).then(() => { event.target.disabled = false })
     })
-  }
+  })
 })
-

@@ -60,7 +60,7 @@ RSpec.describe 'User visits a classroom', :default_creates, :js, type: :system d
       it 'allows the user to search the student table' do
         create_list(:enrollment, 32, classroom: classroom)
         visit(classroom_path(classroom))
-        find('#students-table_filter input').set("#{student.forename} #{student.surname}")
+        find('input[data-table-target="search"]').set("#{student.forename} #{student.surname}")
         expect(page).to have_css('.student-data', count: 1)
       end
 

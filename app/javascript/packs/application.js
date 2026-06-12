@@ -8,7 +8,6 @@ import '../styles/application.scss'
 import '@hotwired/turbo-rails'
 import * as ActiveStorage from '@rails/activestorage'
 
-import 'bootstrap'
 import '@fortawesome/fontawesome-free/js/all'
 import { Application } from '@hotwired/stimulus'
 import { definitionsFromContext } from '@hotwired/stimulus-webpack-helpers'
@@ -38,24 +37,11 @@ ActiveStorage.start()
 const images = require.context('../images', true)
 const imagePath = (name) => images(name, true)
 
-require('datatables.net-bs4')
-require('datatables.net-buttons-bs4')
-require('datatables.net-buttons/js/buttons.html5.js')
 require('trix')
 require('@rails/actioncable')
 
 // Workaround for actiontext issue
 require('@rails/actiontext')
-
-$(document).on('turbo:load', function () {
-  if ($('#notice').text().length) {
-    $('#noticeModal').modal()
-  }
-
-  if ($('#alert').text().length) {
-    $('#alertModal').modal()
-  }
-})
 
 // Stimulus
 const application = Application.start()

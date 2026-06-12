@@ -2,50 +2,60 @@ section.page-section.text-center.pt-2#Users
   .container
     h1.page-section-header.text-uppercase Students
     hr class=("small mb-5 primary-red")
-    .col.table-responsive
-      table.table#students-table
-        thead
-          th Name
-          th Username
-          th.d-none.d-lg-block Classes
-          th Reset Password?
-        tbody
-          - @students.each do |s|
-            tr.student-row data-id=s.id
-              td
-                => s.forename
-                = s.surname
-              td = s.username
-              td.d-none.d-lg-block =get_user_classes(s)
-              td =link_to('Reset Password',
-                    reset_password_user_path(id: s.id),
-                    class: 'btn btn-dark reset-password reset-password-student',
-                    remote: true,
-                    id: dom_id(s),
-                    data: { turbo_method: :patch })
+    .col
+      div data-controller='table' data-table-page-length-value='10'
+        .d-flex.justify-content-between.mb-2
+          input#students-search.form-control.w-50 type='search' placeholder='Search students…' data-table-target='search' data-action='input->table#search'
+          button.btn.btn-secondary.btn-sm type='button' data-action='click->table#exportCsv' Export CSV
+        .table-responsive
+          table.table#students-table
+            thead
+              tr
+                th Name
+                th Username
+                th.d-none.d-lg-block Classes
+                th Reset Password?
+            tbody
+              - @students.each do |s|
+                tr.student-row data-id=s.id
+                  td
+                    => s.forename
+                    = s.surname
+                  td = s.username
+                  td.d-none.d-lg-block =get_user_classes(s)
+                  td =link_to('Reset Password',
+                        reset_password_user_path(id: s.id),
+                        class: 'btn btn-dark reset-password reset-password-student',
+                        remote: true,
+                        id: dom_id(s),
+                        data: { turbo_method: :patch })
+        .d-flex.justify-content-between.align-items-center.mt-2
+          button.btn.btn-sm.btn-secondary type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+          span data-table-target='info'
+          button.btn.btn-sm.btn-secondary type='button' data-table-target='next' data-action='click->table#next' Next ›
     -if current_user.has_role? :school_admin
       =render('users/employee_table')
     h1.page-section-header.text-uppercase.pt-5 Danger Zone
     hr class=("small mb-5 primary-red")
-    button.btn.btn-danger.text-white#resetPrintModalButton data-toggle="modal" data-target='#resetAllPasswordsModal' Reset and print all passwords
-div.modal.fade#resetAllPasswordsModal
-  div.modal-dialog role="document"
-    div.modal-content 
-      div.modal-body
-        p.alert.alert-danger.text-center This action cannot be undone.
-        p It will reset all username and passwords for your school.  Users will not be able to log in again until you give them their new password, which will be random.
-        p It should only be used when setting up your school to use Tenjin for the first time.
-        p 
-          | To confirm this action, type the name of your school, 
-          strong.font-weight-bold#schoolName #{current_user.school.name}
-          |  in the box below and click confirm.
-        .row.justify-content-center
-          input.px-2#confirmAllPasswordResetTextbox
-          =link_to 'Confirm',
-            reset_all_passwords_school_path(current_user.school),
-            class: 'btn btn-danger disabled',
-            id: 'confirmAllPasswordResetButton',
-            data: { turbo_method: :patch }
-
-      div.modal-footer
-        button.btn.btn-secondary type="button" data-dismiss="modal" Close
+    div data-controller='modal'
+      button.btn.btn-danger.text-white#resetPrintModalButton type='button' data-action='click->modal#open'
+        | Reset and print all passwords
+      dialog#resetAllPasswordsModal data-modal-target='dialog'
+        div.modal-content
+          div.modal-body
+            p.alert.alert-danger.text-center This action cannot be undone.
+            p It will reset all username and passwords for your school.  Users will not be able to log in again until you give them their new password, which will be random.
+            p It should only be used when setting up your school to use Tenjin for the first time.
+            p
+              | To confirm this action, type the name of your school,#{' '}
+              strong.font-weight-bold#schoolName #{current_user.school.name}
+              |  in the box below and click confirm.
+            .row.justify-content-center
+              input.px-2#confirmAllPasswordResetTextbox
+              =link_to 'Confirm',
+                reset_all_passwords_school_path(current_user.school),
+                class: 'btn btn-danger disabled',
+                id: 'confirmAllPasswordResetButton',
+                data: { turbo_method: :patch }
+          div.modal-footer
+            button.btn.btn-secondary type='button' data-action='click->modal#close' Close

@@ -75,6 +75,33 @@ def enroll(user:, classroom:)
   Enrollment.find_or_create_by!(user:, classroom:)
 end
 
+# Give a student progress on a single challenge. Roughly a third of progress rows are
+# completed (and awarded); the rest are part-way through. Idempotent on user + challenge.
+def upsert_challenge_progress(user:, challenge:, completed:)
+  ChallengeProgress.find_or_initialize_by(user:, challenge:).tap do |cp|
+    cp.completed = completed
+    cp.awarded = completed
+    cp.progress = completed ? challenge.number_required : rand(0...challenge.number_required)
+    cp.save!
+  end
+end
+
+def seed_challenge_progress(students)
+  challenges = Challenge.all.to_a
+  return if challenges.empty?
+
+  students.each_with_index do |student, student_index|
+    # Each student works on a rotating window of four challenges so progress is spread
+    # across topics rather than all landing on the same few.
+    student_challenges = challenges.rotate(student_index * 4).first(4)
+
+    student_challenges.each_with_index do |challenge, challenge_index|
+      completed = ((student_index + challenge_index) % 3).zero?
+      upsert_challenge_progress(user: student, challenge:, completed:)
+    end
+  end
+end
+
 upsert_admin(email: 'n.houlton@grange.outwood.com', role: 'super')
 
 school_group = upsert_school_group(name: 'Development School Group')
@@ -155,6 +182,8 @@ students.each_with_index do |student, index|
     enroll(user: student, classroom:) if (index + classroom_index).even?
   end
 end
+
+seed_challenge_progress(students)
 
 puts 'Development users seeded.'
 puts "Admin: n.houlton@grange.outwood.com / #{PASSWORD}"

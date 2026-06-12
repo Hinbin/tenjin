@@ -50,4 +50,5 @@ case Rails.env
 when 'development'
   load Rails.root.join('db/seeds/development_questions.rb')
   load Rails.root.join('db/seeds/development_users.rb')
+  load Rails.root.join('db/seeds/development_lessons.rb')
 end

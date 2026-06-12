@@ -13,20 +13,17 @@
   .row.col-lg-8.mx-auto.alert.alert-warning 
     | This quiz is currently not counting towards your leaderboard points.  The first attempt at a lesson homework will count, or the first four quizzes for a particular topic.
 
-#feedbackModal.modal.fade
-  .modal-dialog role="document"
-    .modal-content 
-      .modal-body
-        p#feedback You have flagged this question as unfair.  Thanks for your feedback!
-      .modal-footer
-        button.btn.btn-secondary type="button" data-dismiss="modal"
-          | Close
+dialog#feedbackModal
+  .modal-content
+    .modal-body
+      p#feedback You have flagged this question as unfair.  Thanks for your feedback!
+    .modal-footer
+      button.btn.btn-secondary type='button' onclick='this.closest("dialog").close()' Close
 
-.modal.fade#videoModal
-  .modal-dialog.modal-dialog-centered.modal-lg role="document"
-    .modal-content 
-      .modal-body.p-0.p-md-2
-        button.close type="button" data-dismiss="modal" aria-label="Close"
-          span aria-hidden="true"&times;
-        .embed-responsive.embed-responsive-16by9
-          iframe.embed-responsive-item#video(allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen)
+dialog#videoModal
+  .modal-content
+    .modal-body.p-0.p-md-2
+      button.close type='button' aria-label='Close' onclick='this.closest("dialog").close()'
+        span aria-hidden='true' &times;
+      .embed-responsive.embed-responsive-16by9
+        iframe.embed-responsive-item#video allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen=true

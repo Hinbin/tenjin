@@ -3,58 +3,69 @@ import updateQuizStatistics from 'packs/questions/questions_shared'
 function processShortResponse (serverResponse, guess) {
   const results = serverResponse.answer
   let correct = false
+  const btn = document.getElementById('shortAnswerButton')
+  const input = document.getElementById('shortAnswerText')
 
-  for (var result of results) {
+  for (const result of results) {
     if (result.text.toUpperCase() === guess.toUpperCase()) {
-      $('#shortAnswerButton').addClass('correct-answer')
-      $('#shortAnswerButton').text('Correct!')
-      $('#shortAnswerButton').append('<i class="fas fa-check fa-lg float-right my-1"></i>')
+      if (btn) {
+        btn.classList.add('correct-answer')
+        btn.textContent = 'Correct!'
+        btn.insertAdjacentHTML('beforeend', '<i class="fas fa-check fa-lg float-right my-1"></i>')
+      }
       correct = true
     }
   }
 
   if (!correct && results[0]) {
-    $('#shortAnswerButton').addClass('incorrect-answer')
-    $('#shortAnswerButton').text('Incorrect')
-    $('#shortAnswerButton').append('<i class="fas fa-times fa-lg float-right my-1"></i>')
-
-    $('#shortAnswerText').addClass('correct-answer')
-    if (results.length === 1) {
-      $('#shortAnswerText').val(results[0].text)
-    } else {
-      const correctAnswerText = results.map(r => r.text).join(' or ')
-      $('#shortAnswerText').val(correctAnswerText)
+    if (btn) {
+      btn.classList.add('incorrect-answer')
+      btn.textContent = 'Incorrect'
+      btn.insertAdjacentHTML('beforeend', '<i class="fas fa-times fa-lg float-right my-1"></i>')
+    }
+    if (input) {
+      input.classList.add('correct-answer')
+      input.value = results.length === 1
+        ? results[0].text
+        : results.map(r => r.text).join(' or ')
     }
   }
 
   updateQuizStatistics(serverResponse)
 
-  $('#nextButton').removeClass('invisible')
-  $('#nextButton').focus()
+  const nextBtn = document.getElementById('nextButton')
+  if (nextBtn) {
+    nextBtn.classList.remove('invisible')
+    nextBtn.focus()
+  }
 }
 
-$(document).on('turbo:load', function () {
-  // If someone presses enter, cause the submit answer button to be pressed
-  $('#shortAnswerText').keypress((e) => {
-    if (e.keyCode === 13) {
-      $('#shortAnswerButton').click()
-    }
-  })
+document.addEventListener('keypress', (e) => {
+  if (e.keyCode !== 13) return
+  const input = document.getElementById('shortAnswerText')
+  if (e.target !== input) return
+  document.getElementById('shortAnswerButton')?.click()
+})
 
-  $('#shortAnswerButton').click((click) => {
-    $('#shortAnswerButton').attr('disabled', 'disabled')
-    $('#shortAnswerText').attr('disabled', 'disabled')
+document.addEventListener('click', (event) => {
+  const btn = event.target.closest('#shortAnswerButton')
+  if (!btn) return
+  if (btn.hasAttribute('disabled')) return
 
-    $.ajax({
-      type: 'PUT',
-      url: window.location.pathname,
-      beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
-      success: (result) => processShortResponse(result, $('#shortAnswerText').val()),
-      data: {
-        answer: {
-          short_answer: $('#shortAnswerText').val()
-        }
-      }
-    })
+  const input = document.getElementById('shortAnswerText')
+  btn.setAttribute('disabled', 'disabled')
+  if (input) input.setAttribute('disabled', 'disabled')
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+  fetch(window.location.pathname, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRF-Token': csrfToken,
+      'Accept': 'application/json'
+    },
+    body: new URLSearchParams({ 'answer[short_answer]': input?.value ?? '' })
   })
+    .then(r => r.json())
+    .then(result => processShortResponse(result, input?.value ?? ''))
 })

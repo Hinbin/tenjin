@@ -1,20 +1,26 @@
-$(document).on('turbo:load', () => {
-  $('.challenge-row, .homework-row').off('click')
+document.addEventListener('turbo:load', () => {
+  document.querySelectorAll('.challenge-row, .homework-row').forEach(row => {
+    row.addEventListener('click', (event) => {
+      const tr = event.currentTarget
+      const pickedSubject = tr.dataset.subject
+      const pickedTopic = tr.dataset.topic
+      const pickedLesson = tr.dataset.lesson
+      event.currentTarget.disabled = true
 
-  $('.challenge-row, .homework-row').click(function (event) {
-    let pickedSubject = $(event.target.parentNode).data('subject')
-    let pickedTopic = $(event.target.parentNode).data('topic')
-    let pickedLesson = $(event.target.parentNode).data('lesson')
-    $(event.target).prop('disabled', true)
-
-    $.ajax({
-      type: 'post',
-      url: '/quizzes',
-      data: { quiz: { subject: pickedSubject, topic_id: pickedTopic, lesson_id: pickedLesson } },
-      beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
-      success: function (data) {
-        Turbo.visit('/quizzes')
-      }
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+      const params = new URLSearchParams({
+        'quiz[subject]': pickedSubject,
+        'quiz[topic_id]': pickedTopic
+      })
+      if (pickedLesson) params.append('quiz[lesson_id]', pickedLesson)
+      fetch('/quizzes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRF-Token': csrfToken
+        },
+        body: params
+      }).then(() => Turbo.visit('/quizzes'))
     })
   })
 })

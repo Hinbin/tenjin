@@ -1,10 +1,11 @@
+// turbo:load wrapper removed — was the only jQuery usage.
+// The custom-file-input listener is vanilla; no changes needed to the inner code.
+document.addEventListener('turbo:load', () => {
+  if (page.controller() !== 'questions' || page.action() !== 'import_topic_questions') return
 
-$(document).on('turbo:load', function () {
-  if (page.controller() === 'questions' && page.action() === 'import_topic_questions') {
-    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-      var fileName = document.getElementById('select-file').files[0].name
-      var nextSibling = e.target.nextElementSibling
-      nextSibling.innerText = fileName
-    })
-  }
+  document.querySelector('.custom-file-input')?.addEventListener('change', function (e) {
+    const fileName = document.getElementById('select-file').files[0].name
+    const nextSibling = e.target.nextElementSibling
+    if (nextSibling) nextSibling.innerText = fileName
+  })
 })
