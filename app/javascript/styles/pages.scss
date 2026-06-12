@@ -8,11 +8,11 @@ body {
 }
 
 #mastheadText {
-  @include media-breakpoint-up(sm) {
+  @media (min-width: 576px) {
     font-size: 4rem;
   }
 
-  @include media-breakpoint-up(lg) {
+  @media (min-width: 992px) {
     font-size: 8rem;
   }
 }

@@ -8,8 +8,8 @@
 }
 
 .homework-image{
-  @include media-breakpoint-up(lg) {
-    background-attachment: fixed !important;    
+  @media (min-width: 992px) {
+    background-attachment: fixed !important;
   }
   background-size: cover !important;
   background-position: center !important; 
@@ -24,8 +24,8 @@
   background-color: white;
 }
 
-hr.primary{    
-  @extend %hr, .primary-shared;
+hr.primary {
+  @extend %hr-primary-shared;
 }
 
 .dashboard-style{

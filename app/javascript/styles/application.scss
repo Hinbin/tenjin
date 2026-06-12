@@ -135,7 +135,9 @@ hr.small {
   margin-right: auto;
 }
 
-%hr.primary-shared {
+// Shared structure for the brand horizontal rules (also used by hr.primary in
+// dashboard.scss). Inlined off the former Bootstrap-era %hr placeholder.
+%hr-primary-shared {
   border-top-width: 3px;
   border-bottom-width: 3px;
   border-style: solid;
@@ -143,8 +145,8 @@ hr.small {
 }
 
 hr.secondary {
-  @extend %hr, .primary-shared;
-  border-color: white;
+  @extend %hr-primary-shared;
+  border-color: var(--tj-white);
 }
 
 .page-section
@@ -156,7 +158,7 @@ hr.secondary {
 .page-section-header
 {
   font-size: 3rem;
-  @include media-breakpoint-down(sm) {
+  @media (max-width: 767.98px) {
     font-size: 2rem;
   }
 }
@@ -189,12 +191,11 @@ body {
 }
 
 .error {
-  @extend .text-danger
+  color: var(--tj-danger) !important;
 }
 
 
-// Native <dialog> styling — gives our converted modals a reasonable default
-// until Bootstrap is removed in 04f.
+// Native <dialog> styling — gives our converted modals a reasonable default.
 dialog {
   border: none;
   border-radius: 0.3rem;
