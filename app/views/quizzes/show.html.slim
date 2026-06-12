@@ -1,15 +1,15 @@
 -content_for :title
   title=('Quiz - ' + @quiz.subject.name)
 =render('question_top')
-.container
+.tjk-container
   -unless @lesson.blank? || @lesson.no_content?
-    .row.align-items-center
-      .col-md-8
+    .tj-quiz-content
+      .tj-quiz-main
         = render_question
-      .col-md-4.text-center#lesson
+      .tj-quiz-lesson#lesson
         h3.h3 = @lesson.title
         div.videoLink src=@lesson.generate_video_src
-          img.img-fluid.card-img-top video_id=@lesson.video_id category=@lesson.category src=@lesson.generate_thumbnail_src
+          img.tj-lesson-thumb video_id=@lesson.video_id category=@lesson.category src=@lesson.generate_thumbnail_src
   -else
     = render_question
 = render('question_bottom')
