@@ -1,16 +1,14 @@
-.container
+.tjk-container
   -@subjects.each do |s|
     .display-3.my-3 =s.name
-    =link_to 'Add Topic', new_topic_path(subject: {subject_id: s.id}), class: 'btn btn-primary btn-block'
-    =link_to 'Most Flagged Questions', flagged_questions_topics_path( subject_id: s.id), class: 'btn btn-info btn-block' 
+    =link_to 'Add Topic', new_topic_path(subject: {subject_id: s.id}), class: 'tj-btn-primary tj-btn--full'
+    =link_to 'Most Flagged Questions', flagged_questions_topics_path( subject_id: s.id), class: 'tj-btn-primary tj-btn--full'
     table.table
       thead
         tr
           th Topic Name
-          th Question # 
+          th Question #
       -s.topics.select(&:active).sort_by { |t| t.name.to_s.downcase }.each do |t|
         tr
           td =link_to t.name, topic_path(t)
           td =@question_counts[t.id] || 0
-
-        

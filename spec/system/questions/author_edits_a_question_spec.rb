@@ -231,7 +231,7 @@ RSpec.describe 'Author edits a question', :default_creates, :js, type: :system d
       it 'allows you to delete an existing answer' do
         create_list(:answer, 2, question:)
         visit(question_path(question))
-        expect { first('.btn-danger').click }.to change(Answer, :count).by(-1)
+        expect { first('.tj-btn-danger').click }.to change(Answer, :count).by(-1)
       end
     end
 
