@@ -26,7 +26,7 @@ class HomeworksController < ApplicationController
       redirect_to @homework.classroom
     else
       @classroom = @homework.classroom
-      @classroom.present? ? render('new') : redirect_to(dashboard_path)
+      @classroom.present? ? render('new', status: :unprocessable_entity) : redirect_to(dashboard_path)
     end
   end
 

@@ -13,8 +13,6 @@ import '@fortawesome/fontawesome-free/js/all'
 import { Application } from '@hotwired/stimulus'
 import { definitionsFromContext } from '@hotwired/stimulus-webpack-helpers'
 
-import flatpickr from 'flatpickr'
-import 'flatpickr/dist/flatpickr.min.css'
 import Shepherd from 'shepherd.js'
 import Cookies from 'js-cookie'
 
