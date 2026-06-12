@@ -1,0 +1,201 @@
+// Tenjin form components — emitted by simple_form wrappers in simple_form_bootstrap.rb.
+// Replaces Bootstrap form classes (form-group, form-control, is-invalid, etc.)
+// while Bootstrap remains in the bundle during the 04c→04f migration.
+
+// ── Field wrapper ─────────────────────────────────────────────────────────
+
+.tjk-field {
+  margin-bottom: var(--tj-space-3);
+
+  &--invalid {
+    .tjk-input,
+    .tjk-check-input {
+      border-color: var(--tj-red);
+    }
+  }
+
+  // Side-by-side label + control (horizontal layouts)
+  &--horizontal {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--tj-space-3);
+  }
+
+  // Control column in horizontal layouts
+  &__control {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // Floating-label variant (input before label in DOM)
+  &--floating {
+    position: relative;
+  }
+}
+
+// ── Labels ────────────────────────────────────────────────────────────────
+
+.tjk-label {
+  display: block;
+  font-family: var(--tj-body);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--tj-ink);
+  margin-bottom: var(--tj-space-1);
+
+  // Fixed-width label column in horizontal layouts
+  &--horizontal {
+    flex: 0 0 9rem;
+    padding-top: 0.4375rem;
+    font-weight: 400;
+    margin-bottom: 0;
+  }
+}
+
+// ── Text / select / textarea inputs ───────────────────────────────────────
+
+.tjk-input {
+  display: block;
+  width: 100%;
+  font-family: var(--tj-body);
+  font-size: var(--tj-size-body);
+  font-weight: var(--tj-w-light);
+  padding: 0.375rem 0.75rem;
+  color: var(--tj-ink);
+  background-color: var(--tj-white);
+  border: 1px solid #ced4da;
+  border-radius: var(--tj-radius);
+  line-height: var(--tj-lh-body);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    border-color: var(--tj-black);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
+  }
+
+  &--invalid {
+    border-color: var(--tj-red);
+
+    &:focus {
+      border-color: var(--tj-red);
+      box-shadow: 0 0 0 0.2rem rgba(239, 64, 53, 0.25);
+    }
+  }
+
+  &--valid {
+    border-color: var(--tj-correct);
+
+    &:focus {
+      border-color: var(--tj-correct);
+      box-shadow: 0 0 0 0.2rem rgba(0, 100, 0, 0.25);
+    }
+  }
+}
+
+// ── Validation messages ───────────────────────────────────────────────────
+
+.tjk-error {
+  display: block;
+  color: var(--tj-red);
+  font-family: var(--tj-body);
+  font-size: 0.875rem;
+  margin-top: var(--tj-space-1);
+}
+
+.tjk-hint {
+  display: block;
+  color: var(--tj-grey);
+  font-family: var(--tj-body);
+  font-size: 0.875rem;
+  margin-top: var(--tj-space-1);
+}
+
+// ── Alert / error notification (f.error_notification) ────────────────────
+
+.tjk-alert-danger {
+  padding: var(--tj-space-3);
+  color: var(--tj-red);
+  background-color: #fff5f5;
+  border: 1px solid var(--tj-red);
+  border-radius: var(--tj-radius);
+  margin-bottom: var(--tj-space-3);
+}
+
+// ── Checkboxes and radio buttons ──────────────────────────────────────────
+
+.tjk-check-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--tj-space-2);
+  margin-bottom: var(--tj-space-1);
+
+  &--inline {
+    display: inline-flex;
+    margin-right: var(--tj-space-3);
+  }
+}
+
+.tjk-check-input {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--tj-black);
+}
+
+.tjk-check-label {
+  cursor: pointer;
+  font-family: var(--tj-body);
+  font-size: var(--tj-size-body);
+  font-weight: var(--tj-w-light);
+  margin-bottom: 0;
+}
+
+// ── Switch wrapper ────────────────────────────────────────────────────────
+
+.tjk-switch-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--tj-space-2);
+}
+
+// ── File inputs ───────────────────────────────────────────────────────────
+
+.tjk-file-input {
+  display: block;
+  width: 100%;
+}
+
+.tjk-file-wrap {
+  position: relative;
+}
+
+.tjk-file-label {
+  display: block;
+  font-family: var(--tj-body);
+  font-size: 0.875rem;
+  color: var(--tj-ink);
+}
+
+// ── Range inputs ──────────────────────────────────────────────────────────
+
+.tjk-range {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  accent-color: var(--tj-black);
+}
+
+// ── Multi-select wrapper ──────────────────────────────────────────────────
+
+.tjk-multi-select-wrap {
+  display: flex;
+  flex-direction: row;
+  gap: var(--tj-space-2);
+  align-items: center;
+
+  .tjk-input {
+    flex: 1;
+  }
+}

@@ -1,0 +1,104 @@
+// Teacher classroom management — design tokens only, no Bootstrap.
+// Covers: classrooms index/show, homework new/show.
+
+// ── Page section ──────────────────────────────────────────────────────────
+// Replaces .page-section.text-center (Bootstrap utility combo)
+
+.tj-section {
+  padding-top: var(--tj-section-pad);
+  padding-bottom: var(--tj-section-pad);
+  text-align: center;
+}
+
+// ── Data table ────────────────────────────────────────────────────────────
+// Replaces .table.table-hover; DataTables enhancement deferred to 04e.
+
+.tj-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: var(--tj-space-2) var(--tj-space-3);
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  thead th {
+    font-family: var(--tj-display);
+    font-weight: var(--tj-w-black);
+    text-transform: uppercase;
+    font-size: var(--tj-size-small);
+    border-bottom: 2px solid var(--tj-ink);
+  }
+
+  tbody tr:hover {
+    background-color: var(--tj-red);
+    color: var(--tj-white);
+    transition: background-color var(--tj-dur-hover) var(--tj-ease);
+
+    a {
+      color: var(--tj-white);
+    }
+  }
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────────
+
+// Primary CTA — red (brand accent). Replaces .btn.btn-primary.
+.tj-btn-primary {
+  display: inline-block;
+  font-family: var(--tj-body);
+  color: var(--tj-white);
+  background: var(--tj-red);
+  border: 1px solid var(--tj-red);
+  border-radius: var(--tj-radius);
+  padding: 0.375rem 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--tj-red-hover);
+    border-color: var(--tj-red-hover);
+    color: var(--tj-white);
+    text-decoration: none;
+  }
+}
+
+// Destructive action — dark red. Replaces .btn.btn-danger.
+.tj-btn-danger {
+  display: inline-block;
+  font-family: var(--tj-body);
+  color: var(--tj-white);
+  background: var(--tj-incorrect);
+  border: 1px solid var(--tj-incorrect);
+  border-radius: var(--tj-radius);
+  padding: 0.375rem 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--tj-white);
+    filter: brightness(1.2);
+    text-decoration: none;
+  }
+}
+
+// Full-width modifier — replaces .btn-block.
+.tj-btn--full {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-bottom: var(--tj-space-3);
+  box-sizing: border-box;
+}
+
+// ── Responsive helpers ────────────────────────────────────────────────────
+// Replaces .d-none.d-lg-block; hides at small viewport.
+
+.tj-hide-sm {
+  @media (max-width: 575px) {
+    display: none;
+  }
+}
+
