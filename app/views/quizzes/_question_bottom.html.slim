@@ -1,16 +1,13 @@
-.container.py-2
-  .row
-    .col
-      -if @quiz.lesson.blank?
-        p#quiz-name=@question.topic.name
-      -else
-        p#quiz-name=@question.lesson.title
-    .col         
-      =render "flagged_question_icon"
-            
+.tjk-container.tj-quiz-footer
+  .tj-quiz-footer__bar
+    -if @quiz.lesson.blank?
+      p#quiz-name=@question.topic.name
+    -else
+      p#quiz-name=@question.lesson.title
+    =render "flagged_question_icon"
 
 -unless @quiz.counts_for_leaderboard
-  .row.col-lg-8.mx-auto.alert.alert-warning 
+  .tj-quiz-warning
     | This quiz is currently not counting towards your leaderboard points.  The first attempt at a lesson homework will count, or the first four quizzes for a particular topic.
 
 dialog#feedbackModal

@@ -1,0 +1,100 @@
+// Quiz surface — design tokens only, no Bootstrap.
+// Covers: quizzes/show, _question_top, _question_bottom, _multiple_choice, _short_answer, select_topic.
+
+// ── Progress bar ───────────────────────────────────────────────────────────
+
+.tj-progress {
+  height: 0.5rem;
+  background: #dee2e6;
+  border-radius: var(--tj-radius-pill);
+  overflow: hidden;
+  margin-bottom: var(--tj-space-3);
+}
+
+.tj-progress__bar {
+  height: 100%;
+  background: var(--tj-red);
+  border-radius: var(--tj-radius-pill);
+  transition: width 0.3s ease;
+}
+
+// ── HUD bar (streak / correct / multiplier) ────────────────────────────────
+
+.tj-quiz-hud {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: var(--tj-space-3);
+}
+
+.tj-quiz-hud__item {
+  display: flex;
+  align-items: center;
+  gap: var(--tj-space-2);
+  text-align: center;
+  padding: 0 var(--tj-space-3);
+}
+
+// ── Quiz body — optional lesson sidebar ───────────────────────────────────
+
+.tj-quiz-content {
+  display: flex;
+  align-items: center;
+  gap: var(--tj-space-3);
+  flex-wrap: wrap;
+}
+
+.tj-quiz-main {
+  flex: 1 1 60%;
+  min-width: 0;
+}
+
+.tj-quiz-lesson {
+  flex: 0 1 30%;
+  text-align: center;
+}
+
+.tj-lesson-thumb {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--tj-radius);
+  margin: 0 auto;
+}
+
+// ── Question footer bar ─────────────────────────────────────────────────────
+
+.tj-quiz-footer {
+  padding-top: var(--tj-space-2);
+  padding-bottom: var(--tj-space-2);
+}
+
+.tj-quiz-footer__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tj-space-3);
+}
+
+// ── Icon-only button (flag question) ───────────────────────────────────────
+
+.tj-btn-icon {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1;
+}
+
+// ── Warning notice (non-counting quiz) ─────────────────────────────────────
+
+.tj-quiz-warning {
+  max-width: 66%;
+  margin: var(--tj-space-2) auto;
+  padding: var(--tj-space-3);
+  background: var(--tj-warning-bg);
+  border: 1px solid var(--tj-warning-bd);
+  color: var(--tj-warning-fg);
+  border-radius: var(--tj-radius);
+}
