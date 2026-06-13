@@ -194,3 +194,6 @@ body, .tj-body {
 
 /* Display toggle — replaces Bootstrap .d-none (collapses from layout) */
 .tj-hidden { display: none; }
+
+/* Visibility toggle — hides visually but keeps element in layout flow */
+.tj-invisible { visibility: hidden; }
