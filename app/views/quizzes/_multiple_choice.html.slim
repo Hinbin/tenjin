@@ -1,10 +1,10 @@
 div.lead.text-center ==@question.question_text
 -if @question.boolean?
   -@question.answers.order(text: :desc).each do |a|
-    button.btn.btn-dark.btn-block.m-2.question-button.multiple-choice-button id="response-#{a.id}"
+    button.tj-btn-dark.tj-btn--full.question-button.multiple-choice-button id="response-#{a.id}"
       = a.text
 -else
   -@question.answers.shuffle.each do |a|
-    button.btn.btn-dark.btn-block.m-2.question-button.multiple-choice-button id="response-#{a.id}"
+    button.tj-btn-dark.tj-btn--full.question-button.multiple-choice-button id="response-#{a.id}"
       = a.text
-button.btn.btn-dark.btn-block.m-2.next-button.invisible#nextButton onclick='location.reload()' Next Question
+button.tj-btn-dark.tj-btn--full.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question

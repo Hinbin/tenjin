@@ -35,7 +35,7 @@ function processShortResponse (serverResponse, guess) {
 
   const nextBtn = document.getElementById('nextButton')
   if (nextBtn) {
-    nextBtn.classList.remove('invisible')
+    nextBtn.classList.remove('tj-invisible')
     nextBtn.focus()
   }
 }
