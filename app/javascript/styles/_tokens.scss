@@ -192,5 +192,8 @@ body, .tj-body {
 .tj-answer-correct   { background: var(--tj-correct);   color: #fff; }
 .tj-answer-incorrect { background: var(--tj-incorrect); color: #fff; }
 
-/* Visibility toggle — replaces Bootstrap .invisible (keeps layout space) */
+/* Display toggle — replaces Bootstrap .d-none (collapses from layout) */
+.tj-hidden { display: none; }
+
+/* Visibility toggle — hides visually but keeps element in layout flow */
 .tj-invisible { visibility: hidden; }
