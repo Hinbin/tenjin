@@ -281,11 +281,7 @@ Devise.setup do |config|
   config.omniauth :wonde,
     ENV["WONDE_CLIENT_ID"],
     ENV["WONDE_SECRET"],
-    provider_ignores_state: true,
-    redirect_uri: ENV["WONDE_CALLBACK_URL"],
-    setup: (lambda do |env|
-      env["omniauth.strategy"].options["token_params"] = {redirect_uri: ENV["WONDE_CALLBACK_URL"]}
-    end)
+    redirect_uri: ENV["WONDE_CALLBACK_URL"]
 
   config.omniauth :google_oauth2,
     ENV["GOOGLE_CLIENT_ID"],

@@ -47,23 +47,25 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(auth, current_user = nil)
-    user = find_by(provider: auth["provider"], upi: auth["upi"])
-    user = find_by(oauth_provider: auth["provider"], oauth_uid: auth["uid"]) if user.nil?
+    # Wonde users are stored with capitalized provider; the OmniAuth strategy returns "wonde"
+    provider = (auth.provider == "wonde") ? "Wonde" : auth.provider
+    user = find_by(provider: provider, upi: auth.info&.upi)
+    user = find_by(oauth_provider: auth.provider, oauth_uid: auth.uid) if user.nil?
 
     return user if user.present?
 
     # If signed in and its an oauth2 google request, assume linking of accounts
-    return unless auth["provider"] == "google_oauth2" && current_user.present?
+    return unless auth.provider == "google_oauth2" && current_user.present?
 
     save_oauth_user_details(auth, current_user)
   end
 
   def self.save_oauth_user_details(auth, current_user)
-    return if auth["info"].blank?
+    return if auth.info.blank?
 
-    current_user.oauth_uid = auth["uid"]
-    current_user.oauth_provider = auth["provider"]
-    current_user.oauth_email = auth["info"]["email"]
+    current_user.oauth_uid = auth.uid
+    current_user.oauth_provider = auth.provider
+    current_user.oauth_email = auth.info.email
     current_user.save!
     current_user
   end

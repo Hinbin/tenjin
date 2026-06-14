@@ -48,7 +48,7 @@ gem "devise"
 gem "devise_invitable"
 gem "omniauth"
 gem "omniauth-oauth2"
-gem "omniauth-wonde", path: "omniauth-wonde/"
+gem "omniauth-wonde", "~> 0.2"
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
 
