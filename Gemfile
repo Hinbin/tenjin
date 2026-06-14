@@ -88,31 +88,32 @@ end
 
 group :development do
   gem "listen", "~> 3.3"
-  gem "stringio"
 
   # Debugging
-  gem "better_errors"
-  gem "binding_of_caller"
   gem "web-console", ">= 3.3.0"
-
-  # Pry for debugging goodness
-  gem "pry-rails"
+  gem "debug", platforms: %i[mri windows], require: "debug/prelude"
 
   # Log messages sent to/from server
   gem "httplog"
 
   # Hunt for n+1
   gem "bullet"
+
+  # Security scanning
+  gem "brakeman", require: false
+  gem "bundler-audit", require: false
 end
 
 group :test do
   gem "capybara"
-  gem "rspec-retry"
   gem "cuprite", require: "capybara/cuprite"
   gem "shoulda-matchers", "~> 7.0"
 
   gem "simplecov", require: false
   gem "rspec_junit_formatter"
+
+  # Readable RSpec diffs
+  gem "super_diff"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
