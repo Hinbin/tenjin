@@ -9,7 +9,7 @@ RSpec.describe "Super views a school", :default_creates, :js do
     let!(:school_admin) { create(:school_admin, school: school) }
     let(:new_email) { FFaker::Internet.email }
 
-    before { visit(school_path(school)) }
+    before { visit(system_school_path(school)) }
 
     it "flashes a confirmation when an email is saved" do
       fill_in "user-email-#{school_admin.id}", with: new_email

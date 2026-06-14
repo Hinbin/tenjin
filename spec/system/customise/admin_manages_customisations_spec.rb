@@ -21,7 +21,7 @@ RSpec.describe "Admin manages customisations", :default_creates, :js do
     let!(:retired_customisation) { create(:dashboard_customisation, retired: true) }
     let!(:sticky_customisation) { create(:dashboard_customisation, sticky: true, purchasable: true) }
 
-    before { visit customisations_path }
+    before { visit system_customisations_path }
 
     it "orders cards by sticky, then available, then unavailable, with status badges" do
       within("section.available-customisations") do
@@ -42,7 +42,7 @@ RSpec.describe "Admin manages customisations", :default_creates, :js do
     let(:available_customisation) { create(:dashboard_customisation, purchasable: true) }
 
     before do
-      visit(edit_customisation_path(available_customisation))
+      visit(edit_system_customisation_path(available_customisation))
     end
 
     it "updates the name" do
@@ -78,7 +78,7 @@ RSpec.describe "Admin manages customisations", :default_creates, :js do
 
   context "when creating a dashboard style" do
     before do
-      visit new_customisation_path
+      visit new_system_customisation_path
     end
 
     it "creates the customisation" do
@@ -91,7 +91,7 @@ RSpec.describe "Admin manages customisations", :default_creates, :js do
 
   context "when creating a leaderboard icon" do
     before do
-      visit new_customisation_path
+      visit new_system_customisation_path
     end
 
     it "creates the customisation" do

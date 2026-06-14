@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
+    -if content_for?(:title)
+      =yield(:title)
+    -else
+      title Tenjin
+    meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
+    = csrf_meta_tags
+    = csp_meta_tag
+    = render 'layouts/google_analytics' if Rails.env.production?
+    = stylesheet_pack_tag 'application', media: 'all', 'data-turbo-track': 'reload'
+    = javascript_pack_tag 'application', media: 'all', 'data-turbo-track': 'reload'
+    - unless Rails.env.test?
+      = render partial: 'layouts/cookie_consent'
+    link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"
+    link rel="icon" type="image/png" sizes="32x32" href="/icon-32x32.png"
+    link rel="icon" type="image/png" sizes="16x16" href="/icon-16x16.png"
+    link rel="manifest" href="/manifest.webmanifest"
+    meta name="theme-color" content="#333333"
+    = content_for(:page_meta)
+
+  body data-action=action_name data-controller=controller_name
+    = render('shared/user_navigation') if current_user.present?
+    = render('shared/admin_navigation') if current_admin.present?
+    - if current_user.nil? && current_admin.nil?
+      = render('shared/logged_out_navigation')
+      = render('shared/student_login_modal') unless devise_controller?
+    #flashes = render('shared/flashes')
+    = yield

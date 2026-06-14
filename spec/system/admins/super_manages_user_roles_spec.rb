@@ -9,7 +9,7 @@ RSpec.describe "Super manages user roles", :default_creates, :js do
     let!(:quiz_subject) { create(:subject) } if requires_subject
     let(:full_name) { "#{teacher.forename} #{teacher.surname}" }
 
-    before { visit(manage_roles_users_path(school: teacher.school)) }
+    before { visit(manage_roles_system_users_path(school: teacher.school)) }
 
     it "adds the role to the user" do
       select quiz_subject.name, from: "user[subject]" if requires_subject
@@ -21,7 +21,7 @@ RSpec.describe "Super manages user roles", :default_creates, :js do
     context "when the role is already assigned" do
       before do
         requires_subject ? teacher.add_role(role_name.to_sym, quiz_subject) : teacher.add_role(role_name.to_sym)
-        visit(manage_roles_users_path(school: teacher.school))
+        visit(manage_roles_system_users_path(school: teacher.school))
       end
 
       it "removes the role from the user" do
@@ -49,7 +49,7 @@ RSpec.describe "Super manages user roles", :default_creates, :js do
   describe "employees list" do
     before do
       teacher
-      visit(manage_roles_users_path(school: school))
+      visit(manage_roles_system_users_path(school: school))
     end
 
     it "lists employees from the school" do

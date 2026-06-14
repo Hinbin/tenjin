@@ -8,7 +8,7 @@ RSpec.describe "Super manages subjects", :default_creates, :js do
   describe "creating a subject" do
     let(:new_subject_name) { FFaker::Lorem.word }
 
-    before { visit(subjects_path) }
+    before { visit(system_subjects_path) }
 
     it "adds the new subject to the index" do
       click_link("Add Subject")
@@ -21,7 +21,7 @@ RSpec.describe "Super manages subjects", :default_creates, :js do
   describe "editing a subject" do
     let(:new_subject_name) { FFaker::Lorem.word }
 
-    before { visit(subject_path(quiz_subject)) }
+    before { visit(system_subject_path(quiz_subject)) }
 
     it "updates the displayed name" do
       fill_in("subject[name]", with: new_subject_name)
@@ -32,7 +32,7 @@ RSpec.describe "Super manages subjects", :default_creates, :js do
 
   describe "deactivating a subject" do
     def deactivate_subject
-      visit(subject_path(quiz_subject))
+      visit(system_subject_path(quiz_subject))
       page.accept_confirm { click_button("Deactivate Subject") }
       find("table#active-subjects")
     end

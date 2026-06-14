@@ -1,6 +1,6 @@
 nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-dark
   .container-fluid
-    a.navbar-brand href=schools_path
+    a.navbar-brand href=system_schools_path
       i.fas.fa-vihara.fa-2x.text-white
       h1#branding-text.navbar-text.text-uppercase.text-white.d-inline-block
         | Tenjin
@@ -10,19 +10,19 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
 
     div#navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.me-auto
-        li.nav-item class=('active' if request.path.start_with?(schools_path))
-          a.nav-link href=schools_path Schools
-        li.nav-item class=('active' if current_page?(show_stats_schools_path))
-          a.nav-link href=show_stats_schools_path Statistics
-        li.nav-item class=('active' if request.path.start_with?(subjects_path))
-          a.nav-link href=subjects_path Subjects
+        li.nav-item class=('active' if request.path.start_with?(system_schools_path))
+          a.nav-link href=system_schools_path Schools
+        li.nav-item class=('active' if current_page?(stats_system_schools_path))
+          a.nav-link href=stats_system_schools_path Statistics
+        li.nav-item class=('active' if request.path.start_with?(system_subjects_path))
+          a.nav-link href=system_subjects_path Subjects
         - if current_admin.super?
-          li.nav-item class=('active' if request.path.start_with?(customisations_path))
-            a.nav-link href=customisations_path Customisations
-          li.nav-item class=('active' if request.path.start_with?(school_groups_path))
-            a.nav-link href=school_groups_path School Groups
-          li.nav-item class=('active' if current_page?(manage_roles_users_path))
-            a.nav-link href=manage_roles_users_path Roles
-          li.nav-item class=('active' if current_page?(admin_path(current_admin)))
-            a.nav-link href=admin_path(current_admin) Admin Options
+          li.nav-item class=('active' if request.path.start_with?(system_customisations_path))
+            a.nav-link href=system_customisations_path Customisations
+          li.nav-item class=('active' if request.path.start_with?(system_school_groups_path))
+            a.nav-link href=system_school_groups_path School Groups
+          li.nav-item class=('active' if current_page?(manage_roles_system_users_path))
+            a.nav-link href=manage_roles_system_users_path Roles
+          li.nav-item class=('active' if current_page?(system_admin_path(current_admin)))
+            a.nav-link href=system_admin_path(current_admin) Admin Options
       = button_to 'Logout', destroy_admin_session_path, method: :delete, class: 'btn btn-light', form: { class: 'd-inline', data: { turbo: false } }

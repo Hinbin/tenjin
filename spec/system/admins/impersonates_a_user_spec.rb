@@ -8,7 +8,7 @@ RSpec.describe "Admin impersonates a user", :default_creates, :js do
   shared_examples "an impersonator" do
     context "when impersonating a student" do
       let!(:student) { create(:student, school: school) }
-      before { visit(school_path(school)) }
+      before { visit(system_school_path(school)) }
 
       it "signs in as the student" do
         click_button "Become User"
@@ -18,7 +18,7 @@ RSpec.describe "Admin impersonates a user", :default_creates, :js do
 
     context "when impersonating a school admin" do
       let!(:school_admin) { create(:school_admin, school: school) }
-      before { visit(school_path(school)) }
+      before { visit(system_school_path(school)) }
 
       it "signs in as the school admin" do
         within("#schoolAdminTable") { click_button "Become User" }

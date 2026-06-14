@@ -1,0 +1,40 @@
+.container
+  span.display-4 Schools
+  .table-responsive
+    table.table
+      tr
+        th Name
+        th Students
+        th Weekly Questions
+        th Monthly Questions
+        th Sync Status
+        - if current_admin.super?
+          th Permitted?
+          th School Group
+          th Force Sync
+
+      - @schools.each do |school|
+        tr
+          td =link_to(school.name, [:system, school])
+          td = @student_counts[school.id].to_i
+          td = @weekly_questions[school.id].to_i
+          td = @monthly_questions[school.id].to_i
+          td =sync_status_icon(school.sync_status)
+          - if current_admin.super?
+            td
+              = button_to system_school_path(school, school: { permitted: !school.permitted } ),
+                method: :patch,
+                class: 'btn btn-link p-0 border-0',
+                form: { class: 'd-inline', data: { turbo: true } } do
+                = boolean_icon(school.permitted?)
+            td = form_with model: [:system, school], data: { turbo: true, controller: 'auto-submit' } do |f|
+              = f.select :school_group_id,
+                options_from_collection_for_select(@school_groups, :id, :name, school.school_group_id),
+                { include_blank: '' },
+                id: ('school-group-select-' + school.id.to_s),
+                class: 'form-select',
+                data: { action: 'change->auto-submit#submit' }
+          td = button_to 'Sync', sync_system_school_path(school), class: 'btn w-100 btn-primary', method: :patch, form: { class: 'd-inline', data: { turbo: true } }
+    -if current_admin.super?
+      =link_to(new_system_school_path)
+        button.btn.btn-dark type="button" Add School

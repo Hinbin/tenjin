@@ -120,27 +120,4 @@ RSpec.describe "user controller" do
       end
     end
   end
-
-  describe "managing roles" do
-    describe "as a super admin" do
-      let(:super_admin) { create(:super_admin) }
-      before { sign_in super_admin }
-
-      it "does not allow roles to be added to students" do
-        patch set_role_user_path(student, user: {role: "school_admin", subject: school})
-        expect(response).to redirect_to(root_path)
-      end
-
-      it "allows roles to be added to non-students" # pending — counterpart missing
-    end
-
-    describe "as a student" do
-      before { sign_in student }
-
-      it "requires super admin authentication" do
-        patch set_role_user_path(teacher, user: {role: "school_admin", subject: school})
-        expect(response).to redirect_to(new_admin_session_path)
-      end
-    end
-  end
 end

@@ -16,7 +16,7 @@
                 h2.text-uppercase.text-white Stickied
               -unless style.purchasable?
                 h2.text-uppercase.text-white Unavailable
-              =link_to 'Edit', edit_customisation_path(style), class: 'btn btn-light-outline'
+              =link_to 'Edit', edit_system_customisation_path(style), class: 'btn btn-light-outline'
             -else
               p.text-white#cost
                 == customisation_cost(style, bought_customisations)
@@ -45,7 +45,7 @@
                       p Stickied
                     -unless icon.purchasable?
                       p Unavailable
-                    =link_to 'Edit', edit_customisation_path(icon), class: 'btn btn-dark-outline'
+                    =link_to 'Edit', edit_system_customisation_path(icon), class: 'btn btn-dark-outline'
                 -else
                   p#cost
                     == customisation_cost(icon, bought_customisations)

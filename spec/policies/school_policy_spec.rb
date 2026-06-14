@@ -5,41 +5,37 @@ require "rails_helper"
 RSpec.describe SchoolPolicy, :default_creates do
   subject(:policy) { described_class.new(actor, school) }
 
-  describe "#show?" do
-    context "as a super admin" do
-      let(:actor) { build_stubbed(:super_admin) }
-      it { is_expected.to be_show }
+  describe "#reset_all_passwords?" do
+    context "as a school admin of the school" do
+      let(:actor) { school_admin }
+      it { is_expected.to be_reset_all_passwords }
     end
 
-    context "as a school group admin" do
-      let(:actor) { build_stubbed(:school_group_admin) }
-      it { is_expected.to be_show }
-    end
-  end
-
-  describe "#new?" do
-    context "as a super admin" do
-      let(:actor) { build_stubbed(:super_admin) }
-      it { is_expected.to be_new }
+    context "as a school admin of another school" do
+      let(:actor) { create(:school_admin, school: create(:school)) }
+      it { is_expected.not_to be_reset_all_passwords }
     end
 
-    context "as a school group admin" do
-      let(:actor) { build_stubbed(:school_group_admin) }
-      it { is_expected.not_to be_new }
+    context "as a student" do
+      let(:actor) { student }
+      it { is_expected.not_to be_reset_all_passwords }
     end
   end
 
-  describe "Scope" do
-    subject(:resolved) { described_class::Scope.new(actor, School).resolve }
+  describe "#sync?" do
+    context "as a school admin of the school" do
+      let(:actor) { school_admin }
+      it { is_expected.to be_sync }
+    end
 
-    let!(:another_school) { create(:school) }
+    context "as a school admin of another school" do
+      let(:actor) { create(:school_admin, school: create(:school)) }
+      it { is_expected.not_to be_sync }
+    end
 
-    context "as a school group admin" do
-      let(:actor) { build_stubbed(:school_group_admin) }
-
-      it "includes every school" do
-        expect(resolved).to include(school, another_school)
-      end
+    context "as a student" do
+      let(:actor) { student }
+      it { is_expected.not_to be_sync }
     end
   end
 end

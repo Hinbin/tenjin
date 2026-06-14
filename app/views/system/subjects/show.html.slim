@@ -1,0 +1,13 @@
+.container
+  .row
+    .col.py-2
+      h1.display-4#subject_name = @subject.name
+      = simple_form_for [:system, @subject] do |f|
+       =f.input :name
+       =f.input :active
+       =f.button :submit, class: "btn btn-primary w-100"
+      = button_to 'Deactivate Subject',
+        system_subject_path(@subject),
+        method: :delete,
+        class: 'btn w-100 btn-danger my-5',
+        form: { data: { turbo: true, turbo_confirm: 'Are you sure?' } }

@@ -28,18 +28,6 @@ class UserPolicy < ApplicationPolicy
     user.has_role?(:school_admin)
   end
 
-  def become?
-    user.super? || user.school_group?
-  end
-
-  def set_role?
-    user.super? && record.employee?
-  end
-
-  alias_method :remove_role?, :set_role?
-  alias_method :update_email?, :set_role?
-  alias_method :send_welcome_email?, :set_role?
-
   alias_method :reset_password?, :show?
   alias_method :unlink_oauth_account?, :show?
 

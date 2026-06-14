@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    resource.is_a?(Admin) ? schools_path : dashboard_path
+    resource.is_a?(Admin) ? system_schools_path : dashboard_path
   end
 
   private
@@ -38,6 +38,6 @@ class ApplicationController < ActionController::Base
   end
 
   def pundit_user
-    admin_signed_in? ? current_admin : current_user
+    current_user
   end
 end

@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Super resets year data", :default_creates, :js do
   before do
     sign_in super_admin
-    visit admin_path(super_admin)
+    visit system_admin_path(super_admin)
   end
 
   it "flashes confirmation after triggering the reset" do
