@@ -20,16 +20,10 @@ class Quiz::AddLeaderboardPoint < ApplicationService
   protected
 
   def upsert_score(topic, user, score)
-    binds = [
-      ActiveRecord::Relation::QueryAttribute.new("score", score, ActiveRecord::Type::Integer.new),
-      ActiveRecord::Relation::QueryAttribute.new("user_id", user, ActiveRecord::Type::Integer.new),
-      ActiveRecord::Relation::QueryAttribute.new("topic_id", topic, ActiveRecord::Type::Integer.new)
-    ]
-    TopicScore.connection.exec_insert <<~SQL, "Upsert topic score", binds
-      INSERT INTO "topic_scores"("score","user_id","topic_id","created_at","updated_at")
-      VALUES ($1, $2, $3, current_timestamp, current_timestamp)
-      ON CONFLICT ("user_id","topic_id")
-      DO UPDATE SET "score"=topic_scores.score + $1,"updated_at"=excluded."updated_at"
-    SQL
+    TopicScore.upsert_all(
+      [{score: score, user_id: user, topic_id: topic}],
+      unique_by: %i[user_id topic_id],
+      on_duplicate: Arel.sql("score = topic_scores.score + EXCLUDED.score, updated_at = EXCLUDED.updated_at")
+    )
   end
 end

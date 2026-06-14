@@ -38,64 +38,49 @@ class Challenge::UpdateChallengeProgress < ApplicationService
     return unless @quiz.topic == challenge.topic
 
     completed = progress >= challenge.number_required
+    required = challenge.number_required.to_i
 
-    int = ActiveRecord::Type::Integer.new
-    bool = ActiveRecord::Type::Boolean.new
-    binds = [
-      ActiveRecord::Relation::QueryAttribute.new("progress", progress, int),
-      ActiveRecord::Relation::QueryAttribute.new("user_id", @quiz.user_id, int),
-      ActiveRecord::Relation::QueryAttribute.new("challenge_id", challenge.id, int),
-      ActiveRecord::Relation::QueryAttribute.new("number_required", challenge.number_required, int),
-      ActiveRecord::Relation::QueryAttribute.new("completed", completed, bool)
-    ]
-    ChallengeProgress.connection.exec_query <<~SQL, "Upsert progress", binds
-      INSERT INTO challenge_progresses("progress","user_id", "challenge_id", "completed", "created_at","updated_at")
-      values ($1, $2, $3, $5, current_timestamp, current_timestamp)
-      ON CONFLICT ("user_id", "challenge_id")
-      DO UPDATE
-        SET progress =  CASE
-                          WHEN challenge_progresses.progress > $4 THEN $1
-                          else challenge_progresses.progress
-                        END,
-            completed  = CASE
-                            WHEN challenge_progresses.progress >= $4 OR $1 >= $4
-                              OR challenge_progresses.completed = true
-                              THEN true
-                            ELSE false
-                         END
-      RETURNING id, completed, awarded
-    SQL
+    ChallengeProgress.upsert_all(
+      [{progress: progress, user_id: @quiz.user_id, challenge_id: challenge.id, completed: completed}],
+      unique_by: %i[user_id challenge_id],
+      on_duplicate: Arel.sql(<<~SQL),
+        progress = CASE
+                     WHEN challenge_progresses.progress > #{required} THEN EXCLUDED.progress
+                     ELSE challenge_progresses.progress
+                   END,
+        completed = CASE
+                      WHEN challenge_progresses.progress >= #{required}
+                        OR EXCLUDED.progress >= #{required}
+                        OR challenge_progresses.completed = true
+                        THEN true
+                      ELSE false
+                    END
+      SQL
+      returning: %i[id completed awarded]
+    )
   end
 
   def upsert_points(points, challenge)
     return unless topic_matches_quiz?(challenge)
 
     completed = points >= challenge.number_required
+    required = challenge.number_required.to_i
 
-    int = ActiveRecord::Type::Integer.new
-    bool = ActiveRecord::Type::Boolean.new
-    binds = [
-      ActiveRecord::Relation::QueryAttribute.new("progress", points, int),
-      ActiveRecord::Relation::QueryAttribute.new("user_id", @quiz.user_id, int),
-      ActiveRecord::Relation::QueryAttribute.new("challenge_id", challenge.id, int),
-      ActiveRecord::Relation::QueryAttribute.new("completed", completed, bool),
-      ActiveRecord::Relation::QueryAttribute.new("number_required", challenge.number_required, int)
-    ]
-    ChallengeProgress.connection.exec_query <<~SQL, "Upsert points", binds
-      INSERT INTO challenge_progresses("progress", "user_id", "challenge_id", "completed", "created_at", "updated_at")
-      values ($1, $2, $3, $4, current_timestamp, current_timestamp)
-      ON CONFLICT ("user_id", "challenge_id")
-      DO UPDATE
-        SET progress = challenge_progresses.progress + $1,
-            completed = CASE
-                          WHEN challenge_progresses.progress >= $5
-                            OR (challenge_progresses.progress + $1) >= $5
-                            OR challenge_progresses.completed = true
-                            THEN true
-                          ELSE false
-                        END
-      RETURNING id, completed, awarded
-    SQL
+    ChallengeProgress.upsert_all(
+      [{progress: points, user_id: @quiz.user_id, challenge_id: challenge.id, completed: completed}],
+      unique_by: %i[user_id challenge_id],
+      on_duplicate: Arel.sql(<<~SQL),
+        progress = challenge_progresses.progress + EXCLUDED.progress,
+        completed = CASE
+                      WHEN challenge_progresses.progress >= #{required}
+                        OR (challenge_progresses.progress + EXCLUDED.progress) >= #{required}
+                        OR challenge_progresses.completed = true
+                        THEN true
+                      ELSE false
+                    END
+      SQL
+      returning: %i[id completed awarded]
+    )
   end
 
   def topic_matches_quiz?(challenge)
