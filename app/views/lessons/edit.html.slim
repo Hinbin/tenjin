@@ -1,6 +1,6 @@
 .container
   section.page-section.text-center.pt-2#createLesson
     h1.page-section-header.text-uppercase Update Lesson
-    h3.text-uppercase =@lesson.subject.name
+    h3.text-uppercase = @lesson.subject.name
     ==render_small_separator
     =render 'form'

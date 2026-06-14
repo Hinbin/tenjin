@@ -1,7 +1,7 @@
 header.masthead.masthead-container.masthead-full.text-white
-  div.container.py-5
-    div.row.justify-content-center.align-items-center
-      div.col-6.text-center.bg-white.text-dark.rounded
+  .container.py-5
+    .row.justify-content-center.align-items-center
+      .col-6.text-center.bg-white.text-dark.rounded
         h2 Log in
         = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
           .form-inputs
@@ -23,4 +23,4 @@ header.masthead.masthead-container.masthead-full.text-white
             = f.button :submit, "Log in", class: 'btn btn-primary'
         = render "devise/shared/links"
 footer.fixed-bottom.text-end.px-3.py-3.text-white
-  =link_to 'About', page_path('about'), class: 'text-light'
+  = link_to 'About', page_path('about'), class: 'text-light'

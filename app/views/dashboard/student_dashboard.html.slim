@@ -1,5 +1,5 @@
--content_for :title
-  title=('Dashboard')
+- content_for :title
+  title = 'Dashboard'
 section.page-section.text-center#newQuiz
   .container#startAQuizContainer
     h1.page-section-header.text-uppercase Start a Quiz
@@ -7,13 +7,13 @@ section.page-section.text-center#newQuiz
     ==render_small_separator
     .carousel.slide.col-md-8.col-lg-5.mx-auto#subjectCarousel data-bs-ride="carousel"
       ol.carousel-indicators
-        -@subjects.each_with_index do |s, i|
+        - @subjects.each_with_index do |s, i|
           li data-bs-target="#subjectCarousel" data-bs-slide-to=i class=('active' if i.zero?)
       .carousel-inner
-        -@subjects.each_with_index do |s, i|
+        - @subjects.each_with_index do |s, i|
             .carousel-item class=('active' if i.zero?)
               a href=new_quiz_path(subject: s.name)
-                =image_pack_tag(subject_image(s), class: 'w-100 subject-carousel-item-image')
+                = image_pack_tag(subject_image(s), class: 'w-100 subject-carousel-item-image')
                 .carousel-caption
                   h3.text-uppercase = s.name
       a.carousel-control-prev href="#subjectCarousel" role="button" data-bs-slide="prev"
@@ -22,7 +22,7 @@ section.page-section.text-center#newQuiz
       a.carousel-control-next href="#subjectCarousel" role="button" data-bs-slide="next"
         span.carousel-control-next-icon aria-hidden="true"
         span.visually-hidden Next
-=render('shared/homework')
+= render('shared/homework')
 section#challenges.page-section.text-center
   .container
     h1.page-section-header.text-uppercase Challenges
@@ -39,12 +39,16 @@ section#challenges.page-section.text-center
           tbody
             - @challenges.each do |c|
                 - topic_value = c.daily? ? 'Lucky Dip' : c.topic.id.to_s
-                tr.challenge-row data-challenge=c.id data-topic=topic_value data-subject=c.topic.subject_id data-controller='quiz-starter' data-quiz-starter-subject-value=c.topic.subject_id.to_s data-quiz-starter-topic-value=topic_value data-action='click->quiz-starter#start'
+                tr.challenge-row(data-challenge=c.id data-topic=topic_value data-subject=c.topic.subject_id
+                  data-controller='quiz-starter'
+                  data-quiz-starter-subject-value=c.topic.subject_id.to_s
+                  data-quiz-starter-topic-value=topic_value
+                  data-action='click->quiz-starter#start')
                   td.text-start = c.stringify
                   td = challenge_progress_display(c, @challenge_progresses)
                   td.d-none.d-sm-table-cell
                     = c.points
                     i.fas.fa-star style='color: yellow'
                   td = challenge_time_left(c)
--if current_user.oauth_email.blank?
+- if current_user.oauth_email.blank?
   input#oAuthEmail type='hidden'

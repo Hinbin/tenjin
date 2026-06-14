@@ -1,0 +1,6 @@
+linters:
+  RuboCop:
+    enabled: false
+
+  LineLength:
+    max: 140

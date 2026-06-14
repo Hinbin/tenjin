@@ -14,10 +14,10 @@
           td.questionsAvailable = @question_counts[subject.id].to_i
           td.asked_questions = @subject_statistics[subject.id][:asked_questions]
           td.asked_questions_this_week = @subject_statistics[subject.id][:asked_questions_this_week]
-    -if current_admin.super?
-      =link_to(new_system_subject_path)
+    - if current_admin.super?
+      = link_to(new_system_subject_path)
         button.btn.w-100.btn-primary type="button" Add Subject
-  -if current_admin.super?
+  - if current_admin.super?
     .display-4.my-5 Deactivated Subjects
     .table-responsive
       table.table#deactivated-subjects

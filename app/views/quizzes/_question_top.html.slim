@@ -1,6 +1,10 @@
 .container.pt-5
   .progress.mb-3
-    .progress-bar role="progressbar" style="width:#{@percent_complete}%" aria-valuenow="#{@percent_complete}" aria-valuemin="0" aria-valuemax="100"
+    .progress-bar(role="progressbar"
+      style="width:#{@percent_complete}%"
+      aria-valuenow="#{@percent_complete}"
+      aria-valuemin="0"
+      aria-valuemax="100")
   .row.justify-content-around data-controller="quiz-stats tooltip"
     .col-3.text-center
       ul.list-inline

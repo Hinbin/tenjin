@@ -2,9 +2,9 @@ doctype html
 html
   head
     meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
-    -if content_for?(:title)
-      =yield(:title)
-    -else
+    - if content_for?(:title)
+      = yield(:title)
+    - else
       title Tenjin
     meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
     = csrf_meta_tags

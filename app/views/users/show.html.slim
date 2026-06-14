@@ -8,13 +8,16 @@ section.page-section.text-center
         ==render_small_separator
     = render('user_password') if policy(current_user).reset_password?
     .row.justify-content-center.py-3
-      -if current_user.oauth_uid.blank?
+      - if current_user.oauth_uid.blank?
         .col-sm-3.text-sm-right.py-2
           p.text-end-md Link Account to Google
         .col-sm-3
-          = button_to user_google_oauth2_omniauth_authorize_path, method: :post, form: { data: { turbo: false } }, class: 'btn btn-link p-0 border-0 bg-transparent text-start-md' do
+          = button_to user_google_oauth2_omniauth_authorize_path,
+            method: :post,
+            form: { data: { turbo: false } },
+            class: 'btn btn-link p-0 border-0 bg-transparent text-start-md' do
             = image_pack_tag 'images/btn_google_signin_dark_normal_web.png', id: 'loginGoogle'
-      -else
+      - else
         .col-sm-3.text-sm-right.py-2
           p.text-end-md Unlink Account from Google
         .col-sm-3

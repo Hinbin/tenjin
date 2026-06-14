@@ -1,11 +1,11 @@
--content_for :title
-  title=("Edit #{@customisation.name}")
+- content_for :title
+  title = ("Edit #{@customisation.name}")
 section.page-section.text-center.available-customisations
   .container
-    -if @customisation.dashboard_style? || @customisation.image.attached?
+    - if @customisation.dashboard_style? || @customisation.image.attached?
       .card.dashboard-style style=render_dashboard_style(@customisation)
         .card-body.m-5
-          h2.m-5.page-section-header.text-uppercase.text-white =@customisation.name
+          h2.m-5.page-section-header.text-uppercase.text-white = @customisation.name
           ==render_small_separator(@customisation)
     ul
     - @customisation.errors.full_messages.each do |e|

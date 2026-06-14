@@ -5,7 +5,12 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
         i.fas.fa-vihara.fa-2x.d-inline-block.align-middle.text-white
         h1#branding-text.navbar-text.text-uppercase.align-middle.text-white.d-inline-block
           | Tenjin
-    button.navbar-toggler type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+    button.navbar-toggler(type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation")
         span.navbar-toggler-icon
 
     #navbarSupportedContent.collapse.navbar-collapse
@@ -29,20 +34,20 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
           li.nav-item
             a.nav-link href=dashboard_path
               | Classrooms
-          -if current_user.has_role? :school_admin
+          - if current_user.has_role? :school_admin
             li.nav-item
               a.nav-link href=users_path
                 | User Admin
-          -if current_user.has_role? :school_admin
+          - if current_user.has_role? :school_admin
             li.nav-item
               a.nav-link href=classrooms_path
                 | Setup Classrooms
-          -if current_user.has_role? :question_author, :any
+          - if current_user.has_role? :question_author, :any
             li.nav-item
               a.nav-link href=questions_path
                 | Edit Questions
 
-      -if current_user.student?
+      - if current_user.student?
         a href=show_available_customisations_path
           table
             td
@@ -52,4 +57,7 @@ nav#navbar-main.navbar.navbar-expand-md.navbar-dark.justify-content-between.bg-b
         a#current_user.text-light href=user_path(current_user)
           => current_user.forename
           = current_user.surname
-      = button_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-light-outline', form: { class: 'd-inline', data: { turbo: false } }
+      = button_to 'Logout', destroy_user_session_path,
+        method: :delete,
+        class: 'btn btn-light-outline',
+        form: { class: 'd-inline', data: { turbo: false } }

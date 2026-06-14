@@ -5,10 +5,15 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
       h1#branding-text.navbar-text.text-uppercase.text-white.d-inline-block
         | Tenjin
 
-    button.navbar-toggler type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+    button.navbar-toggler(type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation")
       span.navbar-toggler-icon
 
-    div#navbarSupportedContent.collapse.navbar-collapse
+    #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.me-auto
         li.nav-item class=('active' if request.path.start_with?(system_schools_path))
           a.nav-link href=system_schools_path Schools
@@ -25,4 +30,7 @@ nav#navbar-main.navbar.navbar-expand-sm.navbar-dark.justify-content-between.bg-d
             a.nav-link href=manage_roles_system_users_path Roles
           li.nav-item class=('active' if current_page?(system_admin_path(current_admin)))
             a.nav-link href=system_admin_path(current_admin) Admin Options
-      = button_to 'Logout', destroy_admin_session_path, method: :delete, class: 'btn btn-light', form: { class: 'd-inline', data: { turbo: false } }
+      = button_to 'Logout', destroy_admin_session_path,
+        method: :delete,
+        class: 'btn btn-light',
+        form: { class: 'd-inline', data: { turbo: false } }

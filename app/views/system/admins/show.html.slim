@@ -3,8 +3,9 @@
     .col
       h1.display-4 Admin Page
       =link_to 'Invite new admin', new_admin_invitation_path, class: 'btn btn-primary w-100'
+      - reset_year_confirm = 'ARE YOU REALLY REALLY SURE?!  This will delete all current data in leaderboards, homeworks and more.'
       = button_to 'Reset Year Data', reset_year_system_admin_path(current_admin),
                   method: :post,
                   id: 'reset-button',
                   class: 'btn btn-danger w-100 my-5',
-                  form: { data: { turbo: true, turbo_confirm: 'ARE YOU REALLY REALLY SURE?!  This will delete all current data in leaderboards, homeworks and more.' } }
+                  form: { data: { turbo: true, turbo_confirm: reset_year_confirm } }

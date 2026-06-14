@@ -2,7 +2,14 @@ section.page-section.text-center.pt-2#Users
   .container
     h1.page-section-header.text-uppercase Students
     ==render_small_separator
-    .col.table-responsive data-controller='datatable' data-datatable-options-value=({ paginationSize: 10, initialSort: [{ column: 'reset_password', dir: 'asc' }, { column: 'name', dir: 'asc' }], columns: [{ title: 'Name', field: 'name' }, { title: 'Username', field: 'username' }, { title: 'Classes', field: 'classes' }, { title: 'Reset Password?', field: 'reset_password' }] }.to_json)
+    - students_table_options = { paginationSize: 10,
+        initialSort: [{ column: 'reset_password', dir: 'asc' },
+          { column: 'name', dir: 'asc' }],
+        columns: [{ title: 'Name', field: 'name' },
+          { title: 'Username', field: 'username' },
+          { title: 'Classes', field: 'classes' },
+          { title: 'Reset Password?', field: 'reset_password' }] }.to_json
+    .col.table-responsive data-controller='datatable' data-datatable-options-value=students_table_options
       = render 'shared/table_search'
       .mb-2
         button.btn.btn-secondary.btn-sm.me-2 type='button' data-action='click->datatable#copy' Copy
@@ -22,18 +29,23 @@ section.page-section.text-center.pt-2#Users
                 = s.surname
               td = s.username
               td.d-none.d-lg-table-cell = user_class_names(s)
-              td =link_to('Reset Password', reset_password_user_path(id: s.id), class: 'btn btn-dark reset-password reset-password-student', data: { controller: 'password-reset', action: 'click->password-reset#reset' })
-    -if current_user.has_role? :school_admin
-      =render('users/employee_table')
+              td = link_to('Reset Password', reset_password_user_path(id: s.id),
+                class: 'btn btn-dark reset-password reset-password-student',
+                data: { controller: 'password-reset', action: 'click->password-reset#reset' })
+    - if current_user.has_role? :school_admin
+      = render('users/employee_table')
     h1.page-section-header.text-uppercase.pt-5 Danger Zone
     ==render_small_separator
-    button.btn.btn-danger.text-white#resetPrintModalButton data-bs-toggle="modal" data-bs-target='#resetAllPasswordsModal' Reset and print all passwords
-div.modal.fade#resetAllPasswordsModal
-  div.modal-dialog role="document"
-    div.modal-content data-controller='confirm-text'
-      div.modal-body
+    button.btn.btn-danger.text-white#resetPrintModalButton(data-bs-toggle="modal"
+      data-bs-target='#resetAllPasswordsModal') Reset and print all passwords
+.modal.fade#resetAllPasswordsModal
+  .modal-dialog role="document"
+    .modal-content data-controller='confirm-text'
+      .modal-body
         p.alert.alert-danger.text-center This action cannot be undone.
-        p It will reset all username and passwords for your school.  Users will not be able to log in again until you give them their new password, which will be random.
+        p
+          | It will reset all username and passwords for your school.
+            Users will not be able to log in again until you give them their new password, which will be random.
         p It should only be used when setting up your school to use Tenjin for the first time.
         p
           | To confirm this action, type the name of your school,
@@ -41,6 +53,11 @@ div.modal.fade#resetAllPasswordsModal
           |  in the box below and click confirm.
         .row.justify-content-center
           input.px-2#confirmAllPasswordResetTextbox data-confirm-text-target='input' data-action='input->confirm-text#check'
-          = button_to 'Confirm', reset_all_passwords_school_path(current_user.school), method: :patch, class: 'btn btn-danger disabled', id: 'confirmAllPasswordResetButton', data: { 'confirm-text-target': 'button' }, form: { class: 'd-inline', data: { turbo: true } }
-      div.modal-footer
+          = button_to 'Confirm', reset_all_passwords_school_path(current_user.school),
+            method: :patch,
+            class: 'btn btn-danger disabled',
+            id: 'confirmAllPasswordResetButton',
+            data: { 'confirm-text-target': 'button' },
+            form: { class: 'd-inline', data: { turbo: true } }
+      .modal-footer
         button.btn.btn-secondary type="button" data-bs-dismiss="modal" Close

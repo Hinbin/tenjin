@@ -1,4 +1,5 @@
-.table-wrapper data-controller='datatable' data-datatable-options-value=({ paginationSize: 50, placeholder: 'No questions have been found' }.to_json)
+- table_options = { paginationSize: 50, placeholder: 'No questions have been found' }.to_json
+.table-wrapper data-controller='datatable' data-datatable-options-value=table_options
   = render 'shared/table_search'
   table.table#questionTable data-datatable-target='table'
     thead
@@ -10,7 +11,7 @@
         th % Correct
         th Lesson
     tbody
-      -@questions.order(:created_at).each_with_index do |q, index|
+      - @questions.order(:created_at).each_with_index do |q, index|
         tr id="question-#{q.id}"
           td = index + 1
           td.question-text = link_to q.question_text.blank? ? 'Click here to edit' : q.question_text, q

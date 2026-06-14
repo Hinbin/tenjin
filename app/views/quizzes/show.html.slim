@@ -1,15 +1,19 @@
--content_for :title
-  title=('Quiz - ' + @quiz.subject.name)
-=render('question_top')
+- content_for :title
+  title = ('Quiz - ' + @quiz.subject.name)
+= render('question_top')
 .container
-  -unless @lesson.blank? || @lesson.no_content?
+  - unless @lesson.blank? || @lesson.no_content?
     .row.align-items-center
       .col-md-8
         = render_question
       .col-md-4.text-center#lesson
         h3.h3 = @lesson.title
         .videoLink src=@lesson.video_url
-          img.img-fluid.card-img-top video_id=@lesson.video_id category=@lesson.category src=@lesson.thumbnail_url data-bs-toggle="modal" data-bs-target="#videoModal"
-  -else
+          img.img-fluid.card-img-top(video_id=@lesson.video_id
+            category=@lesson.category
+            src=@lesson.thumbnail_url
+            data-bs-toggle="modal"
+            data-bs-target="#videoModal")
+  - else
     = render_question
 = render('question_bottom')

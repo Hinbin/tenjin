@@ -1,4 +1,4 @@
-h3.h3 =role.humanize
+h3.h3 = role.humanize
 .table-responsive
   table.table id="#{role}-table"
     thead
@@ -20,7 +20,7 @@ h3.h3 =role.humanize
           - if role == 'school_admin'
             td = r.school.name
           - else
-            td =select_tag 'user[subject]',
+            td = select_tag 'user[subject]',
                 options_from_collection_for_select(Subject.with_role(role, r), :id, :name),
                 class: 'form-select',
                 form: "form-#{role}-#{r.id}"

@@ -15,11 +15,11 @@
 
       - @schools.each do |school|
         tr
-          td =link_to(school.name, [:system, school])
+          td = link_to(school.name, [:system, school])
           td = @student_counts[school.id].to_i
           td = @weekly_questions[school.id].to_i
           td = @monthly_questions[school.id].to_i
-          td =sync_status_icon(school.sync_status)
+          td = sync_status_icon(school.sync_status)
           - if current_admin.super?
             td
               = button_to system_school_path(school, school: { permitted: !school.permitted } ),
@@ -34,7 +34,10 @@
                 id: ('school-group-select-' + school.id.to_s),
                 class: 'form-select',
                 data: { action: 'change->auto-submit#submit' }
-          td = button_to 'Sync', sync_system_school_path(school), class: 'btn w-100 btn-primary', method: :patch, form: { class: 'd-inline', data: { turbo: true } }
-    -if current_admin.super?
-      =link_to(new_system_school_path)
+          td = button_to 'Sync', sync_system_school_path(school),
+            class: 'btn w-100 btn-primary',
+            method: :patch,
+            form: { class: 'd-inline', data: { turbo: true } }
+    - if current_admin.super?
+      = link_to(new_system_school_path)
         button.btn.btn-dark type="button" Add School

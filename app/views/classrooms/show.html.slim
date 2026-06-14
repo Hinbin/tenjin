@@ -1,13 +1,19 @@
--content_for :title
-  title=('Classroom - ' + @classroom.name)
+- content_for :title
+  title = ('Classroom - ' + @classroom.name)
 .container
-  h1.h1.mt-3.text-center =@classroom.name
+  h1.h1.mt-3.text-center = @classroom.name
   section.page-section.text-center.pt-2#homework
     h1.page-section-header.text-uppercase Homework
     ==render_small_separator
     .row.justify-content-center
-      =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: @classroom.id}), class: 'btn w-100 btn-primary'
-      .col.mx-auto data-controller='datatable' data-datatable-options-value=({ paginationSize: 5, placeholder: 'No homeworks have been found', initialSort: [{ column: 'due', dir: 'desc' }], columns: [{ title: 'Topic', field: 'topic' }, { title: 'Completion', field: 'completion' }, { title: 'Due', field: 'due', sorter: 'ukDateTime' }] }.to_json)
+      = link_to 'Set Homework', new_homework_path(classroom: {classroom_id: @classroom.id}), class: 'btn w-100 btn-primary'
+      - homework_table_options = { paginationSize: 5,
+          placeholder: 'No homeworks have been found',
+          initialSort: [{ column: 'due', dir: 'desc' }],
+          columns: [{ title: 'Topic', field: 'topic' },
+            { title: 'Completion', field: 'completion' },
+            { title: 'Due', field: 'due', sorter: 'ukDateTime' }] }.to_json
+      .col.mx-auto data-controller='datatable' data-datatable-options-value=homework_table_options
         table.table.table-hover#homework-table data-datatable-target='table'
           thead
             tr
@@ -15,11 +21,11 @@
               th Completion
               th Due
           tbody
-            -@homeworks.each do |h|
+            - @homeworks.each do |h|
               tr.homework-data data-id=h.id
-                td =link_to h.topic.name, homework_path(h)
-                td =report_progress(h)
-                td =h.due_date.strftime("%d/%m/%y %H:%M")
+                td = link_to h.topic.name, homework_path(h)
+                td = report_progress(h)
+                td = h.due_date.strftime("%d/%m/%y %H:%M")
   section.page-section.text-center.pt-2#students
     h1.page-section-header.text-uppercase Students
     ==render_small_separator
@@ -37,11 +43,13 @@
             th Reset Password
             th Homeworks
         tbody
-          -@students.each do |s|
+          - @students.each do |s|
             tr.student-data data-id=s.id
-              td =link_to s.forename, user_path(s)
-              td =s.surname
-              td =s.username
-              td =link_to('Reset Password', reset_password_user_path(id: s.id), class: 'btn btn-dark reset-password reset-password-student', data: { controller: 'password-reset', action: 'click->password-reset#reset' })
-              td =link_to(s) do
+              td = link_to s.forename, user_path(s)
+              td = s.surname
+              td = s.username
+              td = link_to('Reset Password', reset_password_user_path(id: s.id),
+                class: 'btn btn-dark reset-password reset-password-student',
+                data: { controller: 'password-reset', action: 'click->password-reset#reset' })
+              td = link_to(s) do
                 ==student_homeworks(s, @homework_progress)

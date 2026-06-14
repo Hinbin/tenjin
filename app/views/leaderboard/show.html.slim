@@ -1,7 +1,11 @@
 - content_for :title
-  title=('Leaderboard - ' + @subject.name)
+  title = ('Leaderboard - ' + @subject.name)
 
-- alpine_data = { subjectName: @subject.name, schoolName: @school.name, schoolGroupName: @school_group&.name, topicId: @topic&.id, canSeeLiveToggle: %w[employee school_admin].include?(current_user.role) }
+- alpine_data = { subjectName: @subject.name,
+    schoolName: @school.name,
+    schoolGroupName: @school_group&.name,
+    topicId: @topic&.id,
+    canSeeLiveToggle: %w[employee school_admin].include?(current_user.role) }
 
 .container
   .row.py-3
@@ -33,19 +37,29 @@
               .col.col-6 x-data="{ open: false }" @click.outside="open = false"
                 .mb-3
                   .dropdown.filter#Class-dropdown
-                    button.btn.btn-secondary.dropdown-toggle type="button" @click="open = !open" x-text="selectedFilterText('Class', 'Select Class')"
+                    button.btn.btn-secondary.dropdown-toggle(type="button"
+                      @click="open = !open"
+                      x-text="selectedFilterText('Class', 'Select Class')")
                     .dropdown-menu :class="open && 'show'"
                       template x-for="opt in classroomFilterOptions()" :key="opt"
-                        button.dropdown-item type="button" :id="'Class-' + opt.replace(/ /g, '-')" @click="setFilter('Class', opt); open = false" x-text="opt"
+                        button.dropdown-item(type="button"
+                          :id="'Class-' + opt.replace(/ /g, '-')"
+                          @click="setFilter('Class', opt); open = false"
+                          x-text="opt")
 
               template x-if="schoolFilterOptions().length"
                 .col.col-6 x-data="{ open: false }" @click.outside="open = false"
                   .mb-3
                     .dropdown.filter#Schools-dropdown
-                      button.btn.btn-secondary.dropdown-toggle type="button" @click="open = !open" x-text="selectedFilterText('Schools', 'Select School')"
+                      button.btn.btn-secondary.dropdown-toggle(type="button"
+                        @click="open = !open"
+                        x-text="selectedFilterText('Schools', 'Select School')")
                       .dropdown-menu :class="open && 'show'"
                         template x-for="opt in schoolFilterOptions()" :key="opt"
-                          button.dropdown-item type="button" :id="'Schools-' + opt.replace(/ /g, '-')" @click="setFilter('Schools', opt); open = false" x-text="opt"
+                          button.dropdown-item(type="button"
+                            :id="'Schools-' + opt.replace(/ /g, '-')"
+                            @click="setFilter('Schools', opt); open = false"
+                            x-text="opt")
 
               template x-if="!live"
                 .col

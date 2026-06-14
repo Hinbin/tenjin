@@ -1,7 +1,7 @@
 section.page-section.text-center#newQuiz
   .container
     h1.page-section-header.text-uppercase Select Topic
-    p.lead=@subject.name
+    p.lead = @subject.name
     ==render_small_separator
 
     = simple_form_for(Quiz.new) do |f|

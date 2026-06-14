@@ -1,17 +1,17 @@
--content_for :title
-  title=('Questions - ' + @lesson.title)
+- content_for :title
+  title = ('Questions - ' + @lesson.title)
 .container
-  h1.h1.mt-3.text-center ="Questions for #{@lesson.title}"
+  h1.h1.mt-3.text-center = "Questions for #{@lesson.title}"
   ==render_small_separator
 
-  -@questions.order(:created_at).each_with_index do |q, index|
+  - @questions.order(:created_at).each_with_index do |q, index|
     .card
       .col-12
-        p ==q.question_text
-      -q.answers.each do |a|
+        p == q.question_text
+      - q.answers.each do |a|
         .col
           - if a.correct?
             p
-              strong =a.text
+              strong = a.text
           - else
             p = a.text

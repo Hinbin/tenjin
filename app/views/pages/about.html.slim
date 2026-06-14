@@ -1,11 +1,11 @@
--content_for :title
-  title=('About')
+- content_for :title
+  title = 'About'
 .section.pt-4
   h1.page-section-header.text-uppercase.text-center About
   ==render_small_separator
 .row.justify-content-center
   .col-8
-    -if ENV['OGAT']
-      =render('about_ogat')
-    -else
-      =render('about_standard')
+    - if ENV['OGAT']
+      = render('about_ogat')
+    - else
+      = render('about_standard')

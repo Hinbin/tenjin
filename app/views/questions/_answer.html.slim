@@ -1,18 +1,20 @@
 tr
   td
-    =f.text_field(:text, id: "answer-text-#{f.index}",
+    = f.text_field(:text, id: "answer-text-#{f.index}",
                     placeholder: "Click here to add answer",
                     class: 'form-control text-answer',
                     readonly: (@question.boolean? ? true : false))
-    -unless @question.short_answer? || @question.question_type.nil?
+    - unless @question.short_answer? || @question.question_type.nil?
       td
-        =f.check_box(:correct,
+        = f.check_box(:correct,
             onchange: "this.setAttribute('data-params', '#{f.object_name}[correct]=' + this.checked*this.checked)",
             id: "answer-check-#{f.index}",
             class: 'form-check-input')
-    -unless @question.boolean?
+    - unless @question.boolean?
       td
         - if @question.persisted?
-          = link_to 'Remove', '#', class: 'btn btn-danger', data: { object_name: f.object_name, action: 'click->nested-fields#removeRecord' }
+          = link_to 'Remove', '#',
+            class: 'btn btn-danger',
+            data: { object_name: f.object_name, action: 'click->nested-fields#removeRecord' }
         - else
           = link_to 'Remove', '#', class: 'btn btn-danger', data: { action: 'click->nested-fields#removeRow' }

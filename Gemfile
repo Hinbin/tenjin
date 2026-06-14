@@ -83,6 +83,7 @@ group :development, :test do
   gem "vcr"
 
   # Linting
+  gem "slim_lint"
   gem "standard"
 end
 

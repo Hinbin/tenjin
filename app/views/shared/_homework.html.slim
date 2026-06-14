@@ -14,11 +14,19 @@ section.page-section.text-center.homework-image id="homework" style=render_dashb
               th Complete?
           tbody
             - @homework_progress.each do |h|
-              tr.homework-row data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id data-lesson=(h.homework.lesson.id unless h.homework.lesson_id.blank?) data-controller='quiz-starter' data-quiz-starter-subject-value=h.homework.topic.subject_id.to_s data-quiz-starter-topic-value=h.homework.topic.id.to_s data-quiz-starter-lesson-value=(h.homework.lesson_id.to_s if h.homework.lesson_id.present?) data-action='click->quiz-starter#start'
+              tr.homework-row(data-homework=h.homework.id
+                data-topic=h.homework.topic.id
+                data-subject=h.homework.topic.subject_id
+                data-lesson=(h.homework.lesson.id unless h.homework.lesson_id.blank?)
+                data-controller='quiz-starter'
+                data-quiz-starter-subject-value=h.homework.topic.subject_id.to_s
+                data-quiz-starter-topic-value=h.homework.topic.id.to_s
+                data-quiz-starter-lesson-value=(h.homework.lesson_id.to_s if h.homework.lesson_id.present?)
+                data-action='click->quiz-starter#start')
                 td.d-none.d-sm-table-cell = h.homework.topic.subject.name
-                -if h.homework.lesson.blank?
+                - if h.homework.lesson.blank?
                   td.d-none.d-sm-table-cell = h.homework.topic.name
-                -else
+                - else
                   td.d-none.d-sm-table-cell = h.homework.lesson.title
                 td = number_to_percentage(h.homework.required, precision:0)
                 td = h.homework.due_date.strftime('%a, %e %b')

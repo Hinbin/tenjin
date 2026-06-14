@@ -11,9 +11,9 @@ section.page-section.pt-2#Users
     =render partial: 'role_table',
       locals: {role: 'question_author',
       role_collection: @question_authors} if @question_authors.present?
-    -if @employees.present?
+    - if @employees.present?
       .col
-        h1.text-center =link_to @school.name, system_school_path(@school)
+        h1.text-center = link_to @school.name, system_school_path(@school)
         h2.h2.text-center.text-uppercase School Users
         ==render_small_separator
         .table-responsive

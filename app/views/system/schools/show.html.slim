@@ -5,17 +5,17 @@
       table.table
         tr
           td Students
-          td =@school.users.where(role:'student').count
+          td = @school.users.where(role: 'student').count
         tr
           td Employees
-          td =@school.users.where(role:'employee').count
-      =render('school_statistics_table')
+          td = @school.users.where(role: 'employee').count
+      = render('school_statistics_table')
   .row
     .col
       h3.h3 School Admins
-      -if @school_admins.count.zero?
+      - if @school_admins.count.zero?
         p No current admins
-      -else
+      - else
         table.table#schoolAdminTable
           thead
             tr
@@ -25,18 +25,26 @@
               th
               th Login As
           tbody
-            -@school_admins.each do |sa|
+            - @school_admins.each do |sa|
               - form_id = "edit-school-admin-#{sa.id}"
               tr.school-admin-data
-                td =sa.username
-                -if current_admin.super?
+                td = sa.username
+                - if current_admin.super?
                   td = text_field_tag 'user[email]', sa.email, form: form_id, class: 'form-control', id: ('user-email-' + sa.id.to_s)
-                  td = button_to 'Save Email', update_email_system_user_path(sa), method: :patch, class: 'btn btn-primary', id: ('save-email-' + sa.id.to_s), form: { id: form_id, class: 'd-inline', data: { turbo: true } }
-                  td = button_to 'Send Setup Email', send_welcome_email_system_user_path(sa), class: 'btn btn-primary', form: { class: 'd-inline', data: { turbo: true } }
-                td = button_to 'Become User', become_system_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary', form: { class: 'd-inline', data: { turbo: true } }
-      -if current_admin.super?
+                  td = button_to 'Save Email', update_email_system_user_path(sa),
+                    method: :patch,
+                    class: 'btn btn-primary',
+                    id: ('save-email-' + sa.id.to_s),
+                    form: { id: form_id, class: 'd-inline', data: { turbo: true } }
+                  td = button_to 'Send Setup Email', send_welcome_email_system_user_path(sa),
+                    class: 'btn btn-primary',
+                    form: { class: 'd-inline', data: { turbo: true } }
+                td = button_to 'Become User', become_system_admin_path(@current_admin, user_id: sa.id ),
+                  class: 'btn btn-primary',
+                  form: { class: 'd-inline', data: { turbo: true } }
+      - if current_admin.super?
         .d-flex.justify-content-center
-          =link_to 'Manage User Roles', manage_roles_system_users_path(school: @school), class: 'btn btn-dark'
+          = link_to 'Manage User Roles', manage_roles_system_users_path(school: @school), class: 'btn btn-dark'
 
   .row.py-4
     .col
@@ -51,11 +59,11 @@
             th Role
             th Login As
         tbody
-          -@users.each do |u|
+          - @users.each do |u|
             tr.user-data id="user-#{u.id}"
-              td =u.username
+              td = u.username
               td
                 => u.forename
                 = u.surname
-              td =u.role.humanize
-              td =button_to 'Become User', become_system_admin_path(@current_admin, user_id: u.id ), class: 'btn btn-primary'
+              td = u.role.humanize
+              td = button_to 'Become User', become_system_admin_path(@current_admin, user_id: u.id ), class: 'btn btn-primary'

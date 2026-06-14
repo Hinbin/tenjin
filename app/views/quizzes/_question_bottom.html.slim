@@ -1,21 +1,22 @@
 .container.py-2
   .row
     .col
-      -if @quiz.lesson.blank?
-        p#quiz-name=@question.topic.name
-      -else
-        p#quiz-name=@question.lesson.title
+      - if @quiz.lesson.blank?
+        p#quiz-name = @question.topic.name
+      - else
+        p#quiz-name = @question.lesson.title
     .col
       p.text-end
-        =link_to flag_icon,
+        = link_to flag_icon,
           flagged_questions_path(flagged_question: {user_id: current_user.id, question_id: @question.id }),
           class: 'btn',
           id: 'unfairFlag',
           data: { controller: 'unfair-flag', action: 'click->unfair-flag#flag' }
 
--unless @quiz.counts_for_leaderboard
+- unless @quiz.counts_for_leaderboard
   .row.col-lg-8.mx-auto.alert.alert-warning
-    | This quiz is currently not counting towards your leaderboard points.  The first attempt at a lesson homework will count, or the first four quizzes for a particular topic.
+    | This quiz is currently not counting towards your leaderboard points.
+      The first attempt at a lesson homework will count, or the first four quizzes for a particular topic.
 
 #feedbackModal.modal.fade
   .modal-dialog role="document"
@@ -32,4 +33,7 @@
       .modal-body.p-0.p-md-2
         button.btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
         .ratio.ratio-16x9
-          iframe#video(allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen)
+          iframe#video(allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowscriptaccess="always"
+            src=""
+            allowfullscreen)

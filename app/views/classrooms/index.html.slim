@@ -1,5 +1,5 @@
--content_for :title
-  title=('Classrooms')
+- content_for :title
+  title = 'Classrooms'
 .container
   section.page-section.text-center.pt-2#classrooms data-controller='sync-notice'
     p
@@ -8,8 +8,9 @@
     ==sync_status_button
     h1.page-section-header.text-uppercase Classrooms
     ==render_small_separator
+    - datatable_options = { paginationSize: 25, placeholder: 'No classrooms have been found' }.to_json
     .row.justify-content-center
-      .col.mx-auto data-controller='datatable' data-datatable-options-value=({ paginationSize: 25, placeholder: 'No classrooms have been found' }.to_json)
+      .col.mx-auto data-controller='datatable' data-datatable-options-value=datatable_options
         = render 'shared/table_search'
         table.table.table-hover#classroom-table data-datatable-target='table'
           thead
@@ -18,10 +19,10 @@
               th.d-none.d-lg-table-cell Number Students
               th Subject
           tbody
-            -@classrooms.each do |c|
+            - @classrooms.each do |c|
               tr
-                td =c.name
-                td.d-none.d-lg-table-cell =c.enrollments.size
+                td = c.name
+                td.d-none.d-lg-table-cell = c.enrollments.size
                 td
                   = form_with url: classroom_path(c.id), method: :patch, data: { turbo: true, controller: 'auto-submit' } do
                     = select_tag :subject,

@@ -8,9 +8,12 @@
 
     - @school_groups.each do |sg|
       tr
-        td =sg.name
+        td = sg.name
         td = link_to 'Edit', system_school_group_path(sg.id), class: 'btn btn-primary'
-        td = button_to 'Delete', system_school_group_path(sg.id), method: :delete, class: 'btn btn-danger', form: { data: { turbo: true, turbo_confirm: 'Are you sure?' } }
+        td = button_to 'Delete', system_school_group_path(sg.id),
+          method: :delete,
+          class: 'btn btn-danger',
+          form: { data: { turbo: true, turbo_confirm: 'Are you sure?' } }
 
-  =link_to(new_system_school_group_path)
+  = link_to(new_system_school_group_path)
     button.btn.btn-dark type="button" Add School Group
