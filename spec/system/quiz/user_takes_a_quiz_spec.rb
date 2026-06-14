@@ -37,7 +37,9 @@ RSpec.describe "User takes a quiz", :default_creates, :js do
           expect(page).to have_content(lesson.title)
         end
 
-        it "shows the lesson video link" # pending — no positive assertion for .videoLink
+        it "shows the lesson video link" do
+          expect(page).to have_css(".videoLink")
+        end
       end
     end
 
@@ -181,7 +183,9 @@ RSpec.describe "User takes a quiz", :default_creates, :js do
           expect(page).to have_content(lesson.title)
         end
 
-        it "shows the lesson video link" # pending — no positive assertion for .videoLink
+        it "shows the lesson video link" do
+          expect(page).to have_css(".videoLink")
+        end
       end
 
       it "does not show a lesson video" do

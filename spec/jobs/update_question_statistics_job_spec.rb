@@ -118,7 +118,13 @@ RSpec.describe UpdateQuestionStatisticsJob, :default_creates do
     end
 
     context "when a user statistic already exists for the current week" do
-      it "does not create a duplicate statistic"
+      before do
+        create(:user_statistic, user: student, week_beginning: Date.current.beginning_of_week)
+      end
+
+      it "does not create a duplicate statistic" do
+        expect { described_class.perform_now }.not_to change(UserStatistic, :count)
+      end
     end
   end
 end

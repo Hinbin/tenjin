@@ -91,13 +91,23 @@ RSpec.describe User do
       end
 
       context "when a user record already exists" do
-        it "preserves the existing username" do
-          pending "from_wonde overwrites username for existing users — model behavior needs investigation"
-          described_class.create(upi: user_api_data.upi, username: "test")
+        let(:existing_upi) { user_api_data.data.first.upi }
+
+        before do
+          described_class.create!(
+            upi: existing_upi,
+            username: "test",
+            provider: "Wonde",
+            role: "employee",
+            school: school_api_data
+          )
           classroom_api_data.employees = user_api_data
           allow(school_api).to receive(:get).and_return(contact_details_api_data)
+        end
+
+        it "preserves the existing username" do
           described_class.from_wonde(school_api_data, classroom_api_data, classroom)
-          expect(described_class.first.username).to eq("test")
+          expect(described_class.find_by!(upi: existing_upi).username).to eq("test")
         end
       end
     end

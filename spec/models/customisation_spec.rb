@@ -44,6 +44,10 @@ RSpec.describe Customisation do
   end
 
   context "when not retired" do
-    it "is purchasable" # pending — counterpart to "when retired" context
+    let!(:customisation) { create(:customisation, retired: false, purchasable: true, customisation_type: "leaderboard_icon") }
+
+    it "is purchasable" do
+      expect(customisation.reload).to be_purchasable
+    end
   end
 end

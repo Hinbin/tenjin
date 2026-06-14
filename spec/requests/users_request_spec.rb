@@ -37,8 +37,21 @@ RSpec.describe "user controller" do
         expect(flash[:alert]).to be_present
       end
     end
+  end
 
-    it "allows an authorized user to reset all passwords" # pending — counterpart missing
+  context "when authorized as a school admin" do
+    let(:school_admin) { create(:school_admin, school: school) }
+
+    before { sign_in school_admin }
+
+    it "enqueues a password reset job" do
+      expect { reset_all_link }.to have_enqueued_job(ResetUserPasswordsJob)
+    end
+
+    it "redirects to the users page" do
+      reset_all_link
+      expect(response).to redirect_to(users_path)
+    end
   end
 
   describe "GET #index authorization" do

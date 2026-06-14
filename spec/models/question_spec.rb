@@ -35,8 +35,6 @@ RSpec.describe Question, :default_creates do
       it "is valid" do
         expect(question).to be_valid
       end
-
-      it "is invalid with non-boolean answer text"
     end
 
     context "when false answer precedes true" do
@@ -49,8 +47,14 @@ RSpec.describe Question, :default_creates do
       it "is valid" do
         expect(question).to be_valid
       end
+    end
 
-      it "is invalid with non-boolean answer text"
+    context "with non-boolean answer text" do
+      before { boolean_question.answers.first.update!(text: "Maybe") }
+
+      it "is invalid" do
+        expect(boolean_question).not_to be_valid
+      end
     end
   end
 
@@ -76,7 +80,12 @@ RSpec.describe Question, :default_creates do
     end
 
     context "when not changing to a boolean question type" do
-      it "does not replace existing answers"
+      let(:question) { create(:question, question_type: "multiple") }
+
+      it "does not replace existing answers" do
+        expect { question.update!(question_text: "updated text") }
+          .not_to change { question.reload.answers.pluck(:id) }
+      end
     end
   end
 
@@ -96,7 +105,12 @@ RSpec.describe Question, :default_creates do
     end
 
     context "when not switching to a short answer question" do
-      it "does not mark existing answers as correct"
+      let!(:answer) { create(:answer, question: question, correct: false) }
+
+      it "does not mark existing answers as correct" do
+        expect { question.update!(question_text: "updated text") }
+          .not_to change { answer.reload.correct }
+      end
     end
   end
 end

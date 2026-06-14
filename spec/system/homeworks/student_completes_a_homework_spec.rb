@@ -24,7 +24,9 @@ RSpec.describe "Student completes a homework", :default_creates, :js do
     end
 
     context "with the homework not yet started" do
-      it "does not show a tick next to the homework row"
+      it "does not show a tick next to the homework row" do
+        expect(page).to have_no_css(".homework-row[data-homework='#{homework.id}'] > td > i.fa-check")
+      end
     end
   end
 

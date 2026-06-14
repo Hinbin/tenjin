@@ -34,7 +34,5 @@ RSpec.describe "User views lessons", :default_creates, :js do
       find("a", text: "View Questions").click
       expect(page).to have_content(question.question_text.to_plain_text)
     end
-
-    it "shows no questions link when a lesson has no questions" # pending — counterpart missing
   end
 end

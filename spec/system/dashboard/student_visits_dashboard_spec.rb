@@ -34,7 +34,9 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
         expect(page).to have_text("Next Question")
       end
 
-      it "does not show a tick icon"
+      it "does not show a tick icon" do
+        expect(page).to have_no_css("#{challenge_css_selector} td i.fa-check")
+      end
     end
 
     context "when the student has progressed a challenge" do
@@ -81,11 +83,6 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
       end
     end
 
-    context "when the student has no challenge points" do
-      before { visit(dashboard_path) }
-
-      it "does not show challenge points"
-    end
   end
 
   describe "homeworks" do
@@ -102,7 +99,9 @@ RSpec.describe "Student visits the dashboard", :default_creates, :js do
         expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-times")
       end
 
-      it "does not show an exclamation icon"
+      it "does not show an exclamation icon" do
+        expect(page).to have_no_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-exclamation")
+      end
     end
 
     context "when there are 15 outstanding homeworks" do
