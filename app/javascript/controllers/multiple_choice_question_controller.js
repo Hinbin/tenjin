@@ -43,7 +43,7 @@ export default class extends Controller {
         correct = true;
         el.insertAdjacentHTML(
           "beforeend",
-          '<i class="fas fa-check fa-lg float-right my-1"></i>',
+          '<i class="fas fa-check fa-lg float-right my-1 ms-2"></i>',
         );
       }
     }
@@ -51,7 +51,7 @@ export default class extends Controller {
       guess.classList.add("incorrect-answer");
       guess.insertAdjacentHTML(
         "beforeend",
-        '<i class="fas fa-times fa-lg float-right my-1"></i>',
+        '<i class="fas fa-times fa-lg float-right my-1 ms-2"></i>',
       );
     }
   }
