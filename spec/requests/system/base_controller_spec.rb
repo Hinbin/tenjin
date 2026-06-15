@@ -19,13 +19,9 @@ module System
 end
 
 module System
-  class PingPolicy < ApplicationPolicy
-    def initialize(user, _record)
-      @user = user
-    end
-
+  class PingPolicy < System::ApplicationPolicy
     def index?
-      user.is_a?(Admin)
+      admin.is_a?(Admin)
     end
   end
 end

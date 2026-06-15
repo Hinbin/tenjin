@@ -1,29 +1,18 @@
 # frozen_string_literal: true
 
 module System
-  class SchoolGroupPolicy < ApplicationPolicy
+  class SchoolGroupPolicy < System::ApplicationPolicy
+    def new? = super?
+    def create? = super?
+    def update? = super?
+    def destroy? = super?
+
     class Scope < Scope
       def resolve
-        return scope.none unless user.super? || user.school_group?
+        return scope.none unless super? || school_group?
 
         scope.all
       end
-    end
-
-    def new?
-      user.super?
-    end
-
-    def create?
-      user.super?
-    end
-
-    def update?
-      user.super?
-    end
-
-    def destroy?
-      user.super?
     end
   end
 end

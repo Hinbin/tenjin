@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 module System
-  class CustomisationPolicy < ApplicationPolicy
-    def index?
-      user.super?
-    end
+  class CustomisationPolicy < System::ApplicationPolicy
+    def index? = super?
 
     alias_method :show?, :index?
     alias_method :edit?, :index?
@@ -14,7 +12,7 @@ module System
 
     class Scope < Scope
       def resolve
-        scope.all if user.super?
+        scope.all if super?
       end
     end
   end
