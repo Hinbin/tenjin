@@ -13,7 +13,7 @@ RSpec.describe Leaderboard::Query, :default_creates do
     create(:topic_score, topic: topic, user: student)
   end
 
-  context "when returning student data" do
+  describe "student data" do
     let(:leaderboard) { described_class.new(student, id: quiz_subject.name).results.first }
     let(:leaderboard_icon) { create(:customisation, customisation_type: "leaderboard_icon") }
     let(:second_student) { create(:student, school: school) }
@@ -56,7 +56,7 @@ RSpec.describe Leaderboard::Query, :default_creates do
     end
   end
 
-  context "when building a subject leaderboard" do
+  describe "a subject leaderboard" do
     let(:leaderboard) { described_class.new(student, id: quiz_subject.name).results }
     let(:topic_different_subject) { create(:topic) }
     let(:topic_same_subject) { create(:topic, subject: quiz_subject) }
@@ -86,7 +86,7 @@ RSpec.describe Leaderboard::Query, :default_creates do
     end
   end
 
-  context "when building a topic leaderboard" do
+  describe "a topic leaderboard" do
     let(:leaderboard) { described_class.new(student, id: quiz_subject.name, topic: topic.id).results }
     let(:topic_same_subject) { create(:topic, subject: quiz_subject) }
 
@@ -111,7 +111,7 @@ RSpec.describe Leaderboard::Query, :default_creates do
     end
   end
 
-  context "when building a leaderboard for a single school" do
+  describe "a single-school leaderboard" do
     let(:leaderboard) { described_class.new(student, id: quiz_subject.name, topic: topic.id).results }
     let(:different_school) { create(:school) }
 
@@ -132,7 +132,7 @@ RSpec.describe Leaderboard::Query, :default_creates do
     end
   end
 
-  context "when building a school group leaderboard" do
+  describe "a school group leaderboard" do
     let(:school) { create(:school) }
     let(:school_different_school_group) { create(:school) }
     let(:student_no_school_group) { create(:student, school: school_without_school_group) }
@@ -163,7 +163,7 @@ RSpec.describe Leaderboard::Query, :default_creates do
     end
   end
 
-  context "when building an all time leaderboard" do
+  describe "an all-time leaderboard" do
     let(:leaderboard) { described_class.new(student, id: quiz_subject.name, all_time: "true").results }
 
     context "with an all time topic score" do
