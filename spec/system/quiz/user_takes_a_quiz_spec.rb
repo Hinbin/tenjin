@@ -274,7 +274,7 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
       it 'increases the percentage complete' do
         fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
         first(class: 'next-button').click
-        expect(find('.progress-bar')[:'aria-valuenow'].to_f).to be > 0
+        expect(find('.tj-progress__bar')[:'aria-valuenow'].to_f).to be > 0
       end
 
       it 'increases my streak if I am right' do

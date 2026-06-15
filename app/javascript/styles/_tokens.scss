@@ -191,3 +191,9 @@ body, .tj-body {
 /* Answer states */
 .tj-answer-correct   { background: var(--tj-correct);   color: #fff; }
 .tj-answer-incorrect { background: var(--tj-incorrect); color: #fff; }
+
+/* Display toggle — replaces Bootstrap .d-none (collapses from layout) */
+.tj-hidden { display: none; }
+
+/* Visibility toggle — hides visually but keeps element in layout flow */
+.tj-invisible { visibility: hidden; }

@@ -1,20 +1,14 @@
-.container 
+.tjk-container
   =form_with model: @topic, data: { turbo: false } do |f|
-    .row.mt-3.form-group
-      .col-sm-3
-        label for='topic-name' class='form-label' Topic Name: 
-      .col-sm-9
-          =f.text_field(:name,
-          id: 'topic-name',
-          class: 'form-control')      
-    .row
-      .col-sm-3
-        label for="select-default-lesson" class='form-label' Select Default Lesson
-      .col-sm-9
+    .tjk-field.tjk-field--horizontal
+      label.tjk-label.tjk-label--horizontal for='topic-name' Topic Name:
+      .tjk-field__control
+        =f.text_field(:name, id: 'topic-name', class: 'tjk-input')
+    .tjk-field.tjk-field--horizontal
+      label.tjk-label.tjk-label--horizontal for="select-default-lesson" Default Lesson:
+      .tjk-field__control
         =f.select(:default_lesson_id,
           options_from_collection_for_select(Lesson.where(topic: @topic), :id, :title, selected: @topic.default_lesson_id),
           {include_blank: 'No default lesson'},
-          {class: 'custom-select',id: 'select-default-lesson'} )
-    .row.mt-3
-      =f.submit class: 'btn btn-block btn-primary'
-      
+          {class: 'tjk-input', id: 'select-default-lesson'})
+    =f.submit class: 'tj-btn-primary tj-btn--full'

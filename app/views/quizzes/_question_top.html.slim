@@ -1,18 +1,13 @@
-.container.pt-5
-  .progress.mb-3
-    .progress-bar role="progressbar" style="width:#{@percent_complete}%" aria-valuenow="#{@percent_complete}" aria-valuemin="0" aria-valuemax="100"
-  .row.justify-content-around
-    .col-3.text-center
-      ul.list-inline
-        li.list-inline-item
-          i.fas.fa-bolt style='color:black' alt='Streak' title='Streak' data-toggle="tooltip"
-        li.list-inline-item#streak = @quiz.streak
-    .col-3.text-center
-      ul.list-inline
-        li.list-inline-item
-          i.fas.fa-check style='color:green' alt='Correct' title='Correct' data-toggle="tooltip"    
-        li.list-inline-item#answeredCorrect = @quiz.answered_correct
-    .col-3.text-center
-      ul.list-inline
-        li.list-inline-item#multiplier = @multiplier.multiplier
-        i.fas.fa-times style='color:blue' alt='Multiplier' title='Multiplier' data-toggle="tooltip"
+.tjk-container style='padding-top: var(--tj-space-5)'
+  .tj-progress
+    .tj-progress__bar role="progressbar" style="width:#{@percent_complete}%" aria-valuenow="#{@percent_complete}" aria-valuemin="0" aria-valuemax="100"
+  .tj-quiz-hud
+    .tj-quiz-hud__item
+      i.fas.fa-bolt style='color: var(--tj-streak)' alt='Streak' title='Streak'
+      span#streak = @quiz.streak
+    .tj-quiz-hud__item
+      i.fas.fa-check style='color: var(--tj-correct-icon)' alt='Correct' title='Correct'
+      span#answeredCorrect = @quiz.answered_correct
+    .tj-quiz-hud__item
+      span#multiplier = @multiplier.multiplier
+      i.fas.fa-times style='color: var(--tj-multiplier)' alt='Multiplier' title='Multiplier'

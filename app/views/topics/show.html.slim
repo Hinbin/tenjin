@@ -1,55 +1,26 @@
-.container
+.tjk-container
   turbo-frame id=dom_id(@topic)
-    .row.mt-3.form-group
-      .col-sm-3
-        label for='topic-name' class='form-label' Topic Name: 
-      .col-sm-9
-        =text_field_tag('topic[name]',
-          @topic.name,
-          id: 'topic-name',
-          class: 'form-control-plaintext',
-          disabled: true)
-    .row.form-group
-      .col-sm-3
-        label for="select-default-lesson" class='form-label' Default Lesson:
-      .col-sm-6
+    .tjk-field.tjk-field--horizontal
+      label.tjk-label.tjk-label--horizontal for='topic-name' Topic Name:
+      .tjk-field__control
+        =text_field_tag('topic[name]', @topic.name, id: 'topic-name', class: 'tjk-input', disabled: true)
+    .tjk-field.tjk-field--horizontal
+      label.tjk-label.tjk-label--horizontal for="select-default-lesson" Default Lesson:
+      .tjk-field__control
         -if @topic.default_lesson.nil?
-           =text_field_tag('topic[default_lesson_id]',
-            "None",
-            id: 'topic-name',
-            class: 'form-control-plaintext',
-            disabled: true)
-        -else        
-          =text_field_tag('topic[default_lesson_id]',
-            @topic.default_lesson.title,
-            id: 'topic-name',
-            class: 'form-control-plaintext',
-            disabled: true)
-    .row
-      .col
-        =link_to 'Edit Topic', edit_topic_path(@topic), class: 'btn btn-primary btn-block', data: { turbo: false }
-  .row.my-2
-    .col
-      =link_to 'Add Question', new_question_path(question: { topic_id: @topic }), class:'btn btn-primary btn-block'
-  .row.my-2
-    .col
-      = render 'question_table'
-  .row.my-2
-    .col
-      = link_to 'Download Questions',
-          download_topic_questions_path(topic_id: @topic),
-          class:'btn btn-primary btn-block'
-      = link_to 'Import Questions',
-          import_topic_questions_path(topic_id: @topic),
-          class:'btn btn-primary btn-block'          
-
-  .row.my-5
-    .col
-      =link_to 'Archive Topic',
-        archive_topic_path(@topic),
-        class: 'btn btn-warning btn-block',
-        data: {turbo_method: :patch, turbo_confirm: 'Archive this topic and remove active challenges for it?'}
-      =link_to 'Delete Topic',
-        topic_path(@topic),
-        class: 'btn btn-danger btn-block',
-        data: {turbo_method: :delete, turbo_confirm: 'Are you sure?  This cannot be undone'}
+          =text_field_tag('topic[default_lesson_id]', "None", id: 'topic-name', class: 'tjk-input', disabled: true)
+        -else
+          =text_field_tag('topic[default_lesson_id]', @topic.default_lesson.title, id: 'topic-name', class: 'tjk-input', disabled: true)
+    =link_to 'Edit Topic', edit_topic_path(@topic), class: 'tj-btn-primary tj-btn--full', data: { turbo: false }
+  =link_to 'Add Question', new_question_path(question: { topic_id: @topic }), class: 'tj-btn-primary tj-btn--full'
+  = render 'question_table'
+  = link_to 'Download Questions', download_topic_questions_path(topic_id: @topic), class: 'tj-btn-primary tj-btn--full'
+  = link_to 'Import Questions', import_topic_questions_path(topic_id: @topic), class: 'tj-btn-primary tj-btn--full'
+  =link_to 'Archive Topic',
+    archive_topic_path(@topic),
+    class: 'tj-btn-warning tj-btn--full',
+    data: {turbo_method: :patch, turbo_confirm: 'Archive this topic and remove active challenges for it?'}
+  =link_to 'Delete Topic',
+    topic_path(@topic),
+    class: 'tj-btn-danger tj-btn--full',
+    data: {turbo_method: :delete, turbo_confirm: 'Are you sure?  This cannot be undone'}
