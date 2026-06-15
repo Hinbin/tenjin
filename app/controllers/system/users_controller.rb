@@ -7,8 +7,8 @@ module System
       return if role.blank?
 
       user = authorize find_user
-      User::ChangeUserRole.call(user, role, :add, set_user_role_params[:subject])
-      redirect_to manage_roles_system_users_path(school: user.school)
+      result = User::ChangeUserRole.call(user: user, role: role, action: :add, subject: set_user_role_params[:subject])
+      handle_role_result(result, user)
     end
 
     def remove_role
@@ -16,8 +16,8 @@ module System
       return if role.blank?
 
       user = authorize find_user
-      User::ChangeUserRole.call(user, role, :remove, set_user_role_params[:subject])
-      redirect_to manage_roles_system_users_path(school: user.school)
+      result = User::ChangeUserRole.call(user: user, role: role, action: :remove, subject: set_user_role_params[:subject])
+      handle_role_result(result, user)
     end
 
     def manage_roles
@@ -50,6 +50,15 @@ module System
     end
 
     private
+
+    def handle_role_result(result, user)
+      case result
+      in {success: true}
+        redirect_to manage_roles_system_users_path(school: user.school)
+      in {success: false, error:}
+        redirect_to manage_roles_system_users_path(school: user.school), alert: error
+      end
+    end
 
     def find_user
       User.find(params[:id])

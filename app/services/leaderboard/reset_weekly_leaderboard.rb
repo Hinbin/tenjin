@@ -3,60 +3,54 @@
 class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
   def call
     ClassroomWinner.destroy_all
-    update_classroom_winners
-    create_leaderboard_awards
+    process_all_schools
     copy_points_to_all_time_scores
     reset_weekly_leaderboard_tables
   end
 
-  protected
+  private
 
-  def update_classroom_winners
-    School.find_each do |sc|
-      Classroom.where(school: sc).where.associated(:subject).find_each do |c|
-        top = build_leaderboard_for_subject(c.subject.name, sc.id)
-        top = filter_by_classroom_name(top, c)
+  def process_all_schools
+    School.find_each do |school|
+      Subject.find_each do |subject|
+        leaderboard = build_leaderboard(school, subject)
+        next if leaderboard.blank?
 
-        next if top.blank?
-
-        create_winners_for_top_scoring_students(top, c)
+        create_classroom_winners(school, subject, leaderboard)
+        create_awards(school, subject, leaderboard)
       end
     end
   end
 
-  def build_leaderboard_for_subject(subject_name, school_id)
-    Leaderboard::BuildLeaderboard.call(nil, id: subject_name, school: school_id).sort_by { |s| -s[:score] }
+  def build_leaderboard(school, subject)
+    Leaderboard::Query.new(nil, id: subject.name, school: school.id)
+      .results
+      .sort_by { |s| -s[:score] }
+  end
+
+  def create_classroom_winners(school, subject, leaderboard)
+    Classroom.where(school: school, subject: subject).find_each do |classroom|
+      top = filter_by_classroom_name(leaderboard, classroom)
+      next if top.blank?
+
+      top_score = top.first.score
+      top_scorers(top).each do |entry|
+        ClassroomWinner.create(classroom: classroom, user_id: entry.id, score: top_score)
+      end
+    end
+  end
+
+  def create_awards(school, subject, leaderboard)
+    top_scorers(leaderboard).each do |entry|
+      LeaderboardAward.create(school: school, subject: subject, user_id: entry.id)
+    end
   end
 
   def filter_by_classroom_name(leaderboard, classroom)
     leaderboard.select do |elem|
       next if elem[:classroom_names].blank?
 
-      elem[:classroom_names].include? classroom.name
-    end
-  end
-
-  def create_winners_for_top_scoring_students(leaderboard, classroom)
-    top_score = leaderboard[0].score
-    top_scorers(leaderboard).each do |entry|
-      ClassroomWinner.create(classroom: classroom, user_id: entry.id, score: top_score)
-    end
-  end
-
-  def create_leaderboard_awards
-    School.find_each do |sc|
-      Subject.find_each do |su|
-        top = build_leaderboard_for_subject(su.name, sc.id)
-        next if top.blank?
-
-        create_awards_for_top_scoring_students(top, su, sc)
-      end
-    end
-  end
-
-  def create_awards_for_top_scoring_students(leaderboard, subject, school)
-    top_scorers(leaderboard).each do |entry|
-      LeaderboardAward.create(school: school, subject: subject, user_id: entry.id)
+      elem[:classroom_names].include?(classroom.name)
     end
   end
 

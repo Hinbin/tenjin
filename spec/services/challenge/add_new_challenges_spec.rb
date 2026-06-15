@@ -28,18 +28,14 @@ RSpec.describe Challenge::AddNewChallenges, :default_creates do
       expect(Challenge.first.points).to eq(40)
     end
 
-    context "with daily flag" do
-      it "marks the challenge as daily" do
-        described_class.call(daily: true)
-        expect(Challenge.first.daily).to be true
-      end
+    it "marks the challenge as daily when daily: true" do
+      described_class.call(daily: true)
+      expect(Challenge.first).to be_daily
     end
 
-    context "without daily flag" do
-      it "defaults to a non-daily challenge" do
-        described_class.call
-        expect(Challenge.first.daily).to be false
-      end
+    it "defaults to a non-daily challenge" do
+      described_class.call
+      expect(Challenge.first).not_to be_daily
     end
   end
 end

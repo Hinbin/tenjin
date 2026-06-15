@@ -17,7 +17,7 @@ module System
 
     def stats
       authorize current_admin, :show_stats?
-      @school_statistics = School::CompileSchoolStatistics.call
+      @school_statistics = School::Statistics.new
       @customisation_statistics = Customisation.select(:name, :customisation_type, "COUNT(customisations.id)")
         .left_joins(:customisation_unlocks)
         .group(:id)
@@ -27,7 +27,7 @@ module System
 
     def show
       @school = authorize find_school
-      @school_statistics = School::CompileSchoolStatistics.call(@school)
+      @school_statistics = School::Statistics.new(@school)
       @school_admins = User.where(school: @school).with_role(:school_admin)
       @users = User.where(school: @school)
     end

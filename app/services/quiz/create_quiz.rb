@@ -1,37 +1,35 @@
 # frozen_string_literal: true
 
 # Creates a Quiz session object and initialises it appropriately
-class Quiz::CreateQuiz < ApplicationService
-  def initialize(params)
-    @user = params[:user]
-    @topic_id = params[:topic]
-    @subject = params[:subject]
-    @lesson = (Lesson.find(params[:lesson]) if params[:lesson].present?)
+class Quiz::CreateQuiz < ApplicationCommand
+  def initialize(user:, topic:, subject:, lesson: nil)
+    @user = user
+    @topic_id = topic
+    @subject = subject
+    @lesson = (Lesson.find(lesson) if lesson.present?)
     @lucky_dip = @topic_id == Quiz::LUCKY_DIP
     @topic = Topic.find(@topic_id) unless @lucky_dip
     @quiz = Quiz.new
   end
 
   def call
-    return OpenStruct.new(success?: false, user: @user, errors: "User not found") if @user.blank?
+    return failure("User not found") if @user.blank?
 
     initialise_quiz
 
-    unless quiz_cooldown_expired?
-      return OpenStruct.new(success?: false, cooldown: @seconds_left,
-        errors: "You need to wait #{@seconds_left} seconds to start another quiz")
-    end
+    @seconds_left = @user.seconds_left_on_cooldown
+    return failure({code: :cooldown, seconds_left: @seconds_left}) if @seconds_left.positive?
 
     initialise_questions
-    return OpenStruct.new(success?: false, errors: "No questions are available for this topic") if @quiz.questions.empty?
+    return failure("No questions are available for this topic") if @quiz.questions.empty?
 
     @quiz.save!
     @user.time_of_last_quiz = Time.current
     @user.save!
-    OpenStruct.new(success?: true, quiz: @quiz, errors: nil)
+    success(quiz: @quiz)
   end
 
-  protected
+  private
 
   def initialise_quiz
     @quiz.user_id = @user.id
@@ -103,11 +101,6 @@ class Quiz::CreateQuiz < ApplicationService
       .includes(:topic)
       .order(Arel.sql("RANDOM()"))
       .take(10)
-  end
-
-  def quiz_cooldown_expired?
-    @seconds_left = @user.seconds_left_on_cooldown
-    @seconds_left <= 0
   end
 
   def check_if_quiz_counts_for_leaderboard

@@ -6,23 +6,32 @@ RSpec.describe Challenge::ProcessExpiredChallenges, :default_creates do
   let!(:challenge) { create(:challenge, end_date: expiry) }
   let!(:progress) { create(:challenge_progress, challenge: challenge, user: student, completed: completed) }
 
-  subject { described_class.call }
+  shared_examples "purges the challenge" do
+    it "deletes the challenge and its progress" do
+      expect { described_class.call }
+        .to change(ChallengeProgress, :count).by(-1)
+        .and change(Challenge, :count).by(-1)
+    end
+  end
+
+  shared_examples "retains the challenge" do
+    it "leaves the challenge and its progress intact" do
+      expect { described_class.call }.not_to change(Challenge, :count)
+      expect(ChallengeProgress.exists?(progress.id)).to be true
+    end
+  end
 
   context "when end_date is in the past" do
     let(:expiry) { 1.hour.ago }
 
     context "with a completed challenge" do
       let(:completed) { true }
-
-      it("deletes the progress") { expect { subject }.to change(ChallengeProgress, :count).by(-1) }
-      it("deletes the challenge") { expect { subject }.to change(Challenge, :count).by(-1) }
+      include_examples "purges the challenge"
     end
 
     context "with an incomplete challenge" do
       let(:completed) { false }
-
-      it("deletes the progress") { expect { subject }.to change(ChallengeProgress, :count).by(-1) }
-      it("deletes the challenge") { expect { subject }.to change(Challenge, :count).by(-1) }
+      include_examples "purges the challenge"
     end
   end
 
@@ -31,16 +40,12 @@ RSpec.describe Challenge::ProcessExpiredChallenges, :default_creates do
 
     context "with a completed challenge" do
       let(:completed) { true }
-
-      it("does not delete the progress") { expect { subject }.not_to change(ChallengeProgress, :count) }
-      it("does not delete the challenge") { expect { subject }.not_to change(Challenge, :count) }
+      include_examples "retains the challenge"
     end
 
     context "with an incomplete challenge" do
       let(:completed) { false }
-
-      it("does not delete the progress") { expect { subject }.not_to change(ChallengeProgress, :count) }
-      it("does not delete the challenge") { expect { subject }.not_to change(Challenge, :count) }
+      include_examples "retains the challenge"
     end
   end
 end

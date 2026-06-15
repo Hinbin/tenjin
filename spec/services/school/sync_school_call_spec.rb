@@ -62,7 +62,7 @@ RSpec.describe School::SyncSchool, :vcr do
       end
 
       it "disables classrooms that no longer exist in the MIS" do
-        expect(Classroom.find_by(client_id: "1234").disabled).to be true
+        expect(Classroom.find_by(client_id: "1234")).to be_disabled
       end
     end
   end

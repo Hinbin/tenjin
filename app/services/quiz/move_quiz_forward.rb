@@ -21,6 +21,6 @@ class Quiz::MoveQuizForward < ApplicationService
     return unless @quiz.num_questions_asked >= @quiz.questions.length
 
     @quiz.active = false
-    Homework::UpdateHomeworkProgress.call(@quiz)
+    Homework::UpdateHomeworkProgress.call(quiz: @quiz)
   end
 end

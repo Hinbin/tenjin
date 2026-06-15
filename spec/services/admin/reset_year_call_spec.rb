@@ -17,47 +17,18 @@ RSpec.describe Admin::ResetYear do
     create(:classroom_winner, user: first_enrollment.user, classroom: first_enrollment.classroom)
   end
 
-  before do
-    described_class.call
-  end
+  before { described_class.call }
 
-  it "removes topic scores" do
+  it "purges all year-bound data", :aggregate_failures do
     expect(TopicScore.count).to be_zero
-  end
-
-  it "removes all time topic scores" do
     expect(AllTimeTopicScore.count).to be_zero
-  end
-
-  it "removes homeworks" do
     expect(Homework.count).to be_zero
-  end
-
-  it "removes homework progress" do
     expect(HomeworkProgress.count).to be_zero
-  end
-
-  it "removes enrollments" do
     expect(Enrollment.count).to be_zero
-  end
-
-  it "removes challenges" do
     expect(Challenge.count).to be_zero
-  end
-
-  it "removes challenge progress" do
     expect(ChallengeProgress.count).to be_zero
-  end
-
-  it "removes leaderboard awards" do
     expect(LeaderboardAward.count).to be_zero
-  end
-
-  it "removes classrooms" do
     expect(Classroom.count).to be_zero
-  end
-
-  it "removes classroom winners" do
     expect(ClassroomWinner.count).to be_zero
   end
 end

@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
-class Customisation::RefreshCustomisationsInStore < ApplicationService
+class Customisation::RefreshCustomisationsInStore < ApplicationCommand
   def call
-    disable_all_customisations
-    make_six_purchasable("dashboard_style")
-    make_six_purchasable("leaderboard_icon")
-    OpenStruct.new(success?: true, errors: nil)
+    ApplicationRecord.transaction do
+      disable_all_customisations
+      make_six_purchasable("dashboard_style")
+      make_six_purchasable("leaderboard_icon")
+    end
+    success
+  rescue ActiveRecord::ActiveRecordError => e
+    failure(e.message)
   end
+
+  private
 
   def disable_all_customisations
     Customisation.where(purchasable: true).update_all(purchasable: false)

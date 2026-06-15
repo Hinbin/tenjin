@@ -1,38 +1,41 @@
 # frozen_string_literal: true
 
-class Quiz::CheckAnswer < ApplicationService
-  def initialize(params)
-    @quiz = params[:quiz]
-    @question = params[:question]
+class Quiz::CheckAnswer < ApplicationCommand
+  def initialize(quiz:, question:, answer_given:)
+    @quiz = quiz
+    @question = question
     @asked_question = AskedQuestion.find_by(quiz: @quiz, question: @question)
-    @answer_given = params[:answer_given]
+    @answer_given = answer_given
   end
 
   def call
+    return failure(:no_answer_provided) if blank_answer?
+
     check_answer_correct unless already_answered?
 
     Quiz::MoveQuizForward.call(quiz: @quiz)
     @quiz.save
-    {
-      answer: Answer.where(question: @question, correct: true),
+
+    success(Quiz::CheckAnswerOutcome.new(
+      question: @question,
       streak: @quiz.streak,
-      answeredCorrect: @quiz.answered_correct,
+      answered_correct: @quiz.answered_correct,
       multiplier: Multiplier.for_streak(@quiz.streak)
-    }
+    ))
   end
 
-  protected
+  private
+
+  def blank_answer?
+    !@question.short_answer? && @answer_given[:id].blank?
+  end
 
   def already_answered?
     !@asked_question.correct.nil?
   end
 
   def check_answer_correct
-    if @question.short_answer?
-      check_short_answer
-    else
-      check_multiple_choice
-    end
+    @question.short_answer? ? check_short_answer : check_multiple_choice
   end
 
   def check_short_answer
@@ -47,16 +50,10 @@ class Quiz::CheckAnswer < ApplicationService
   end
 
   def check_multiple_choice
-    raise "no valid answer given to multiple choice" if @answer_given[:id].blank?
-
     answer = Answer.where(id: @answer_given[:id]).pick(:correct)
     return if answer.nil?
 
-    if answer
-      process_correct_answer
-    else
-      process_incorrect_answer
-    end
+    answer ? process_correct_answer : process_incorrect_answer
   end
 
   def process_correct_answer

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
+RSpec.describe Leaderboard::Query, :default_creates do
   let(:student) { create(:student, forename: "Aaaron", school: school) } # Ensure first alphabetically
   let(:school) { create(:school, school_group: nil) }
   let(:second_school) { create(:school, school_group: school.school_group) }
@@ -14,7 +14,7 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
   end
 
   context "when returning student data" do
-    let(:leaderboard) { described_class.call(student, id: quiz_subject.name).first }
+    let(:leaderboard) { described_class.new(student, id: quiz_subject.name).results.first }
     let(:leaderboard_icon) { create(:customisation, customisation_type: "leaderboard_icon") }
     let(:second_student) { create(:student, school: school) }
 
@@ -41,7 +41,7 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
       end
 
       it "includes the leaderboard icon for that student" do
-        expect(described_class.call(student, id: quiz_subject.name)
+        expect(described_class.new(student, id: quiz_subject.name).results
           .find { |user| user["id"] == second_student.id }.icon).to eq(leaderboard_icon.value)
       end
     end
@@ -50,14 +50,14 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
       before { create(:topic_score, topic: topic, user: second_student) }
 
       it "returns a nil icon for that student" do
-        expect(described_class.call(student, id: quiz_subject.name)
+        expect(described_class.new(student, id: quiz_subject.name).results
           .find { |user| user["id"] == second_student.id }.icon).to be_nil
       end
     end
   end
 
   context "when building a subject leaderboard" do
-    let(:leaderboard) { described_class.call(student, id: quiz_subject.name) }
+    let(:leaderboard) { described_class.new(student, id: quiz_subject.name).results }
     let(:topic_different_subject) { create(:topic) }
     let(:topic_same_subject) { create(:topic, subject: quiz_subject) }
 
@@ -87,7 +87,7 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
   end
 
   context "when building a topic leaderboard" do
-    let(:leaderboard) { described_class.call(student, id: quiz_subject.name, topic: topic.id) }
+    let(:leaderboard) { described_class.new(student, id: quiz_subject.name, topic: topic.id).results }
     let(:topic_same_subject) { create(:topic, subject: quiz_subject) }
 
     context "with a student who scored in the topic" do
@@ -112,7 +112,7 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
   end
 
   context "when building a leaderboard for a single school" do
-    let(:leaderboard) { described_class.call(student, id: quiz_subject.name, topic: topic.id) }
+    let(:leaderboard) { described_class.new(student, id: quiz_subject.name, topic: topic.id).results }
     let(:different_school) { create(:school) }
 
     context "with a student from the same school" do
@@ -136,7 +136,7 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
     let(:school) { create(:school) }
     let(:school_different_school_group) { create(:school) }
     let(:student_no_school_group) { create(:student, school: school_without_school_group) }
-    let(:leaderboard) { described_class.call(student, id: quiz_subject.name, school_group: "true") }
+    let(:leaderboard) { described_class.new(student, id: quiz_subject.name, school_group: "true").results }
 
     context "with a student from a different school group" do
       before { create(:topic_score, topic: topic, school: school_different_school_group) }
@@ -164,7 +164,7 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
   end
 
   context "when building an all time leaderboard" do
-    let(:leaderboard) { described_class.call(student, id: quiz_subject.name, all_time: "true") }
+    let(:leaderboard) { described_class.new(student, id: quiz_subject.name, all_time: "true").results }
 
     context "with an all time topic score" do
       let!(:all_time_score) { create(:all_time_topic_score, user: student, topic: topic) }

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+# Lazy memoized leaderboard query. Caller invokes `.results`; the underlying
+# Arel query runs once and the result array is cached.
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ClassLength
-class Leaderboard::BuildLeaderboard < ApplicationService
+class Leaderboard::Query
   def initialize(user, params)
     @user = user if user.present?
     @subject = Subject.find_by(name: params[:id])
@@ -11,12 +13,15 @@ class Leaderboard::BuildLeaderboard < ApplicationService
     @all_time = true if params[:all_time] == "true"
   end
 
-  def call
-    @query = @all_time ? base_query(all_time_topic_scores) : base_query(topic_scores)
-    User.find_by_sql(@query.to_sql)
+  def results
+    @results ||= User.find_by_sql(build_query.to_sql)
   end
 
   protected
+
+  def build_query
+    @query = @all_time ? base_query(all_time_topic_scores) : base_query(topic_scores)
+  end
 
   def topic_scores
     TopicScore.arel_table
@@ -154,5 +159,4 @@ class Leaderboard::BuildLeaderboard < ApplicationService
       .as("n3")
   end
 end
-
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/ClassLength

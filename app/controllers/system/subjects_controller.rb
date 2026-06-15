@@ -6,7 +6,7 @@ module System
       @subjects, @deactivated_subjects = policy_scope(Subject).order(:name).partition(&:active?)
       @question_counts = Question.counts_by_subject
       @subject_statistics = @subjects.each_with_object({}) do |subject, h|
-        h[subject.id] = Subject::CompileSubjectStatistics.call(subject)
+        h[subject.id] = Subject::Statistics.new(subject)
       end
     end
 

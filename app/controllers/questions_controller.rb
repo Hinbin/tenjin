@@ -122,8 +122,12 @@ class QuestionsController < ApplicationController
     end
 
     data = params[:file].read
-    result = Question::ImportQuestions.call(data, @topic, params[:file].original_filename)
-    flash[:notice] = result.error
+    case Question::ImportQuestions.call(data: data, topic: @topic, filename: params[:file].original_filename)
+    in {success: true, payload: {number_questions_imported:}}
+      flash[:notice] = "Imported #{number_questions_imported} questions"
+    in {success: false, error:}
+      flash[:alert] = "Import failed: #{error}"
+    end
     redirect_to topic_questions_path(topic_id: @topic)
   end
 

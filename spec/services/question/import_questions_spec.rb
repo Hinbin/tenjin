@@ -11,49 +11,40 @@ RSpec.describe Question::ImportQuestions, :default_creates do
   let(:topic_filename) { "#{topic.name}.json" }
 
   def import_multiple_lessons
-    described_class.call(JSON.generate(multiple_lessons), topic, topic_filename)
+    described_class.call(data: JSON.generate(multiple_lessons), topic: topic, filename: topic_filename)
   end
 
-  it "imports all questions successfully" do
-    expect(import_multiple_lessons.success?).to be true
+  it "imports questions, answers, and lessons" do
+    expect { import_multiple_lessons }
+      .to change(Question, :count).by(multiple_lessons.length)
+      .and change(Answer, :count).by(multiple_lessons.length * 4)
+      .and change(Lesson, :count).by(multiple_lessons.length)
+  end
+
+  it "returns success with the imported count and assigns the lesson title from the data" do
+    result = import_multiple_lessons
+    expect(result).to be_success
+    expect(result.payload[:number_questions_imported]).to eq(multiple_lessons.length)
+    expect(Lesson.first.title).to eq(multiple_lessons[0]["lesson"])
   end
 
   it "imports boolean questions" do
-    result = described_class.call(JSON.generate([build(:question_import_hash_boolean)]), topic, topic_filename)
-    expect(result.success?).to be true
+    result = described_class.call(data: JSON.generate([build(:question_import_hash_boolean)]), topic: topic, filename: topic_filename)
+    expect(result).to be_success
   end
 
   it "imports questions with no lesson information" do
-    result = described_class.call(JSON.generate(no_lessons), topic, topic_filename)
-    expect(result.success?).to be true
-  end
-
-  it "reports the number of questions imported" do
-    expect(import_multiple_lessons.number_questions_imported).to eq(multiple_lessons.length)
-  end
-
-  it "saves questions to the database" do
-    expect { import_multiple_lessons }.to change(Question, :count).by(multiple_lessons.length)
-  end
-
-  it "saves four answers per question to the database" do
-    expect { import_multiple_lessons }.to change(Answer, :count).by(multiple_lessons.length * 4)
-  end
-
-  it "creates a lesson for each unique lesson name" do
-    expect { import_multiple_lessons }.to change(Lesson, :count).by(multiple_lessons.length)
-  end
-
-  it "assigns the lesson name from the import data" do
-    import_multiple_lessons
-    expect(Lesson.first.title).to eq(multiple_lessons[0]["lesson"])
+    result = described_class.call(data: JSON.generate(no_lessons), topic: topic, filename: topic_filename)
+    expect(result).to be_success
   end
 
   context "when question type is missing" do
     before { multiple_lessons[0] = multiple_lessons[0].except("question_type") }
 
-    it "fails validation" do
-      expect(import_multiple_lessons.success?).to be false
+    it "fails validation with a missing-key error" do
+      result = import_multiple_lessons
+      expect(result).to be_failure
+      expect(result.error).to match(/Question missing key/)
     end
   end
 
@@ -61,7 +52,27 @@ RSpec.describe Question::ImportQuestions, :default_creates do
     before { multiple_lessons[0]["question_text"] = "" }
 
     it "fails validation" do
-      expect(import_multiple_lessons.success?).to be false
+      expect(import_multiple_lessons).to be_failure
+    end
+  end
+
+  context "when answers is not an array" do
+    before { multiple_lessons[0]["answers"] = "not an array" }
+
+    it "fails validation with an answers-not-array error" do
+      result = import_multiple_lessons
+      expect(result).to be_failure
+      expect(result.error).to match(/Answers for question not in array/)
+    end
+  end
+
+  context "when an answer is missing the text key" do
+    before { multiple_lessons[0]["answers"][0] = multiple_lessons[0]["answers"][0].except("text") }
+
+    it "fails validation with a missing-text error" do
+      result = import_multiple_lessons
+      expect(result).to be_failure
+      expect(result.error).to match(/Text key missing for answer/)
     end
   end
 
@@ -72,13 +83,13 @@ RSpec.describe Question::ImportQuestions, :default_creates do
 
     it "assigns questions to the existing lesson without creating a duplicate" do
       expect {
-        described_class.call(JSON.generate(single_lesson), topic, topic_filename)
+        described_class.call(data: JSON.generate(single_lesson), topic: topic, filename: topic_filename)
       }.not_to change(Lesson, :count)
     end
 
     it "creates questions under the existing lesson" do
       expect {
-        described_class.call(JSON.generate(single_lesson), topic, topic_filename)
+        described_class.call(data: JSON.generate(single_lesson), topic: topic, filename: topic_filename)
       }.to change(Question, :count).by(single_lesson.length)
     end
   end

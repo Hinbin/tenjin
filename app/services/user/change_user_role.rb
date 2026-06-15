@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-# Adds a role to a user
-class User::ChangeUserRole < ApplicationService
-  def initialize(user, role, action, subject = nil)
+# Adds or removes a role on a user, optionally scoped to a subject.
+class User::ChangeUserRole < ApplicationCommand
+  SUBJECT_SCOPED_ROLES = %w[lesson_author question_author].freeze
+  GLOBAL_ROLES = %w[school_admin].freeze
+
+  def initialize(user:, role:, action:, subject: nil)
     @user = user
     @role = role
     @action = action
@@ -10,33 +13,28 @@ class User::ChangeUserRole < ApplicationService
   end
 
   def call
-    return return_error("User not found") if @user.blank?
-    return return_error("Role not found") if @role.blank?
-    return return_error('Action must be "add" or "remove"') unless %i[add remove].include? @action
+    return failure("User not found") if @user.blank?
+    return failure("Role not found") if @role.blank?
+    return failure('Action must be "add" or "remove"') unless %i[add remove].include?(@action)
 
-    if %w[lesson_author question_author].include?(@role) && @subject.blank?
-      return return_error("Must include a subject with a lesson or question author role")
+    if SUBJECT_SCOPED_ROLES.include?(@role) && @subject.blank?
+      return failure("Must include a subject with a lesson or question author role")
     end
 
-    change_user_role
+    return failure("Unrecognised role: #{@role}") unless GLOBAL_ROLES.include?(@role) || SUBJECT_SCOPED_ROLES.include?(@role)
 
-    OpenStruct.new(success?: true, user: @user, role: @role, action: @action)
+    change_user_role
+    success
   end
 
   private
 
-  def return_error(msg)
-    OpenStruct.new(success?: false, user: @user, role: @role, action: @action, errors: msg)
-  end
-
   def change_user_role
     method = (@action == :add) ? :add_role : :remove_role
-    if @role == "school_admin"
+    if GLOBAL_ROLES.include?(@role)
       @user.send(method, @role)
-    elsif %w[question_author lesson_author].include?(@role)
+    elsif SUBJECT_SCOPED_ROLES.include?(@role)
       @user.send(method, @role, @subject)
-    else
-      raise ArgumentError, "Unrecognised role: #{@role}"
     end
   end
 end

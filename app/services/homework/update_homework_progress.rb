@@ -1,19 +1,24 @@
 # frozen_string_literal: true
 
-class Homework::UpdateHomeworkProgress < ApplicationService
-  def initialize(quiz)
+class Homework::UpdateHomeworkProgress < ApplicationCommand
+  def initialize(quiz:)
     @quiz = quiz
   end
 
   def call
     @completed_homework = false
+    @save_errors = []
+
     homework_progresses.find_each do |progress|
       check_percentage_correct(progress)
     end
-    OpenStruct.new(success?: true, completed?: @completed_homework, errors: nil)
+
+    return failure(@save_errors.join("; "), payload: {completed: @completed_homework}) if @save_errors.any?
+
+    success(completed: @completed_homework)
   end
 
-  protected
+  private
 
   def homework_progresses
     HomeworkProgress.includes(:homework, :topic).where(user: @quiz.user)
@@ -32,6 +37,8 @@ class Homework::UpdateHomeworkProgress < ApplicationService
       progress.completed = true
       @completed_homework = true
     end
-    progress.save if progress.changed?
+    return unless progress.changed?
+
+    @save_errors << progress.errors.full_messages.join(", ") unless progress.save
   end
 end

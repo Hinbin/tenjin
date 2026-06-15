@@ -6,8 +6,9 @@ class QuizzesController < ApplicationController
   rescue_from Pundit::NotAuthorizedError, with: :quiz_not_authorized
 
   def index
-    quizzes = policy_scope(Quiz)
-    redirect_to Quiz::SelectCorrectQuiz.call(quizzes: quizzes)
+    policy_scope(Quiz)
+    quiz = Quiz.current_for(current_user)
+    redirect_to(quiz || "/quizzes/new")
   end
 
   def show
@@ -57,16 +58,32 @@ class QuizzesController < ApplicationController
       topic: topic_id,
       subject: subject,
       lesson: quiz_params[:lesson_id])
-    result.success? ? authorize(result.quiz) : authorize(current_user, :show?, policy_class: UserPolicy)
-    return fail_quiz_creation(result) unless result.success?
 
-    redirect_to result.quiz
+    case result
+    in {success: true, payload: {quiz:}}
+      authorize(quiz)
+      redirect_to quiz
+    in {success: false, error: {code: :cooldown, seconds_left:}}
+      authorize(current_user, :show?, policy_class: UserPolicy)
+      flash[:alert] = "You need to wait #{seconds_left} seconds to start another quiz"
+      redirect_to dashboard_path
+    in {success: false, error:}
+      authorize(current_user, :show?, policy_class: UserPolicy)
+      flash[:alert] = error
+      redirect_to dashboard_path
+    end
   end
 
   def update
     @quiz = authorize find_quiz
     @question = question_for_quiz(@quiz)
-    render(json: Quiz::CheckAnswer.call(quiz: @quiz, question: @question, answer_given: answer_params))
+
+    case Quiz::CheckAnswer.call(quiz: @quiz, question: @question, answer_given: answer_params)
+    in {success: true, payload: Quiz::CheckAnswerOutcome => outcome}
+      render json: Quiz::AnswerOutcomeSerializer.new(outcome)
+    in {success: false, error: :no_answer_provided}
+      render json: {error: "No answer provided"}, status: :unprocessable_entity
+    end
   end
 
   private
@@ -77,11 +94,6 @@ class QuizzesController < ApplicationController
     elsif question.topic.default_lesson.present?
       question.topic.default_lesson
     end
-  end
-
-  def fail_quiz_creation(result)
-    flash[:alert] = result.errors
-    redirect_to dashboard_path
   end
 
   def select_quiz_topic(subject)

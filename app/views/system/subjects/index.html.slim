@@ -12,8 +12,8 @@
         tr id=('subject-' + subject.id.to_s)
           td.name = link_to(subject.name, [:system, subject])
           td.questionsAvailable = @question_counts[subject.id].to_i
-          td.asked_questions = @subject_statistics[subject.id][:asked_questions]
-          td.asked_questions_this_week = @subject_statistics[subject.id][:asked_questions_this_week]
+          td.asked_questions = @subject_statistics[subject.id].asked_questions
+          td.asked_questions_this_week = @subject_statistics[subject.id].asked_questions_this_week
     - if current_admin.super?
       = link_to(new_system_subject_path)
         button.btn.w-100.btn-primary type="button" Add Subject

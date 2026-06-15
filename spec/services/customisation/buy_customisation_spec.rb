@@ -13,15 +13,15 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
 
   context "when buying a new dashboard style" do
     it "creates a customisation unlock" do
-      expect { described_class.call(student, customisation) }.to change(CustomisationUnlock, :count).by(1)
+      expect { described_class.call(user: student, customisation: customisation) }.to change(CustomisationUnlock, :count).by(1)
     end
 
     it "deducts the correct number of challenge points" do
-      expect { described_class.call(student, customisation) }.to change { student.reload.challenge_points }.by(-5)
+      expect { described_class.call(user: student, customisation: customisation) }.to change { student.reload.challenge_points }.by(-5)
     end
 
     context "after purchase" do
-      before { described_class.call(student, customisation) }
+      before { described_class.call(user: student, customisation: customisation) }
 
       it "sets the new customisation as active" do
         expect(ActiveCustomisation.where(customisation: customisation)).not_to be_empty
@@ -37,11 +37,11 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
     let(:customisation) { create(:customisation, cost: 5, customisation_type: "leaderboard_icon") }
 
     it "creates a customisation unlock" do
-      expect { described_class.call(student, customisation) }.to change(CustomisationUnlock, :count).by(1)
+      expect { described_class.call(user: student, customisation: customisation) }.to change(CustomisationUnlock, :count).by(1)
     end
 
     context "after purchase" do
-      before { described_class.call(student, customisation) }
+      before { described_class.call(user: student, customisation: customisation) }
 
       it "sets the new icon as active" do
         expect(ActiveCustomisation.where(customisation: customisation)).not_to be_empty
@@ -57,19 +57,37 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
     before { CustomisationUnlock.destroy_all }
 
     it "creates a customisation unlock" do
-      expect { described_class.call(student, customisation) }.to change(CustomisationUnlock, :count).by(1)
+      expect { described_class.call(user: student, customisation: customisation) }.to change(CustomisationUnlock, :count).by(1)
     end
   end
 
   context "when the student does not have enough points" do
     let(:student) { create(:student, school: school, challenge_points: 3) }
 
-    it "returns an insufficient points error" do
-      expect(described_class.call(student, customisation).errors).to eq("You do not have enough points")
+    it "returns a failure result with the error message" do
+      result = described_class.call(user: student, customisation: customisation)
+      expect(result).to be_failure
+      expect(result.error).to eq "You do not have enough points"
     end
 
     it "does not create a customisation unlock" do
-      expect { described_class.call(student, customisation) }.not_to change(CustomisationUnlock, :count)
+      expect { described_class.call(user: student, customisation: customisation) }.not_to change(CustomisationUnlock, :count)
+    end
+  end
+
+  context "when the customisation is nil" do
+    it "returns a failure result" do
+      result = described_class.call(user: student, customisation: nil)
+      expect(result).to be_failure
+      expect(result.error).to eq "Customisation not found"
+    end
+  end
+
+  context "when the user is nil" do
+    it "returns a failure result" do
+      result = described_class.call(user: nil, customisation: customisation)
+      expect(result).to be_failure
+      expect(result.error).to eq "User not found"
     end
   end
 
@@ -79,11 +97,11 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
     end
 
     it "does not deduct any points" do
-      expect { described_class.call(student, customisation) }.not_to change { student.reload.challenge_points }
+      expect { described_class.call(user: student, customisation: customisation) }.not_to change { student.reload.challenge_points }
     end
 
     context "after re-activating" do
-      before { described_class.call(student, customisation) }
+      before { described_class.call(user: student, customisation: customisation) }
 
       it "sets the customisation as active" do
         expect(ActiveCustomisation.where(customisation: customisation)).not_to be_empty
