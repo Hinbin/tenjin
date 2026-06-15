@@ -29,7 +29,7 @@ module ApplicationHelper
     return '' if style.nil?
 
     if style.image.attached?
-      "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(#{rails_blob_url(style.image)}) no-repeat;"
+      "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(#{rails_storage_proxy_url(style.image)}) no-repeat;"
     else
       "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), #{style.value};"
     end
