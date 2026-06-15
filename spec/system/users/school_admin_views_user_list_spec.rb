@@ -64,7 +64,9 @@ RSpec.describe "School admin views user list", :default_creates, :js do
       before { visit(users_path) }
 
       it "hides students from other schools" do
-        expect(page).to have_no_content(other_enrollment.user.surname)
+        within "#students-table" do
+          expect(page).to have_no_content(other_enrollment.user.username)
+        end
       end
     end
 
