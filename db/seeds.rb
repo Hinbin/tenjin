@@ -43,6 +43,15 @@ end
                                       name: attributes[:name]).tap do |customisation|
     customisation.assign_attributes(attributes)
     customisation.save!(validate: false)
+
+    if attributes[:customisation_type] == 'dashboard_style'
+      image_path = Rails.root.join("db/seeds/images/#{attributes[:value]}.png")
+      if File.exist?(image_path) && (!customisation.image.attached? || customisation.image.blob.content_type == 'image/svg+xml')
+        customisation.image.purge
+        customisation.image.attach(io: File.open(image_path), filename: "#{attributes[:value]}.png",
+                                   content_type: 'image/png')
+      end
+    end
   end
 end
 

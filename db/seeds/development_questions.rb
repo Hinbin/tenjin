@@ -168,18 +168,23 @@ end
 # both states. Idempotent on topic + challenge_type so re-running the seed is safe.
 def seed_challenges
   challenge_types = Challenge.challenge_types.keys
+  global_index = 0
 
-  Topic.find_each.with_index do |topic, index|
-    challenge_type = challenge_types[index % challenge_types.length]
-    active = index.even?
+  Subject.find_each do |subject|
+    subject.topics.first(3).each do |topic|
+      challenge_type = challenge_types[global_index % challenge_types.length]
+      active = global_index.even?
 
-    Challenge.find_or_initialize_by(topic:, challenge_type:).tap do |challenge|
-      challenge.daily = false
-      challenge.number_required = number_required_for(challenge_type)
-      challenge.points = challenge.number_required * 10
-      challenge.start_date = active ? 1.day.ago : 14.days.ago
-      challenge.end_date = active ? 6.days.from_now : 7.days.ago
-      challenge.save!
+      Challenge.find_or_initialize_by(topic:, challenge_type:).tap do |challenge|
+        challenge.daily = false
+        challenge.number_required = number_required_for(challenge_type)
+        challenge.points = challenge.number_required * 10
+        challenge.start_date = active ? 1.day.ago : 14.days.ago
+        challenge.end_date = active ? 6.days.from_now : 7.days.ago
+        challenge.save!
+      end
+
+      global_index += 1
     end
   end
 end
