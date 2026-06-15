@@ -1,42 +1,30 @@
-.container#questionEditor
+.tjk-container#questionEditor
   = render('question_edit_form')
-  .row.mt-3
-    .col    
-      = link_to 'Back to Topic Questions',
-        topic_path(@question.topic),
-        class: 'btn btn-block btn-secondary'
-  .row.mt-5
-    .col
-      h1 Statistics
-  .row.text-center
-    .col
-      p
-        ' Times Asked:
-        = times_asked(@question)
-    .col
-      p
-        ' Percent Correct:
-        = percentage_correct(@question)
-    .col
-      p
-        ' Flags:
-        = @question.flagged_questions.size
-  .row
-    .col
-      = link_to 'Reset Question Flags',
-        reset_flags_question_path,
-        data: { turbo_method: 'patch'},
-        class: 'btn btn-block btn-secondary'
-
-  .row.mt-5
-    .col
-      = link_to 'Delete Question',
-        question_path(@question),
-        data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' },
-        class: 'btn btn-danger btn-block'
+  = link_to 'Back to Topic Questions',
+    topic_path(@question.topic),
+    class: 'tj-btn-secondary tj-btn--full'
+  h1 Statistics
+  .tj-stats-grid
+    p
+      ' Times Asked:
+      = times_asked(@question)
+    p
+      ' Percent Correct:
+      = percentage_correct(@question)
+    p
+      ' Flags:
+      = @question.flagged_questions.size
+  = link_to 'Reset Question Flags',
+    reset_flags_question_path,
+    data: { turbo_method: 'patch'},
+    class: 'tj-btn-secondary tj-btn--full'
+  = link_to 'Delete Question',
+    question_path(@question),
+    data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' },
+    class: 'tj-btn-danger tj-btn--full'
 
 dialog#noCorrectAnswerModal
   .modal-content
     .modal-body Please select at least one correct answer
     .modal-footer
-      button.btn.btn-secondary type='button' onclick='this.closest("dialog").close()' Close
+      button.tj-btn-secondary type='button' onclick='this.closest("dialog").close()' Close

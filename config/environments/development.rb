@@ -67,5 +67,8 @@ Rails.application.configure do
     Bullet.alert = true
     Bullet.rails_logger = true
     Bullet.add_footer = true
+    # embeds_attachments is correctly eager-loaded for topics with embedded images;
+    # Bullet flags it as unused on topics where no questions have embeds.
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'ActionText::RichText', association: :embeds_attachments
   end
 end
