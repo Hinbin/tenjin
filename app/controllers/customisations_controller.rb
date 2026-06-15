@@ -7,8 +7,8 @@ class CustomisationsController < ApplicationController
 
   def index
     authorize current_admin, policy_class: CustomisationPolicy
-    @customisations = policy_scope(Customisation).where(retired: false)
-    @retired_customisations = policy_scope(Customisation).where(retired: true)
+    @customisations = policy_scope(Customisation).where(retired: false).with_attached_image
+    @retired_customisations = policy_scope(Customisation).where(retired: true).with_attached_image
   end
 
   def new

@@ -32,7 +32,7 @@
     border-bottom: 2px solid var(--tj-ink);
   }
 
-  tbody tr:hover {
+  tbody tr[data-action]:hover {
     background-color: var(--tj-red);
     color: var(--tj-white);
     transition: background-color var(--tj-dur-hover) var(--tj-ease);

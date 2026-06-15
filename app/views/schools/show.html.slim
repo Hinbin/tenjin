@@ -24,14 +24,16 @@
             th Login As
         tbody
           -@school_admins.each do |sa|
-            = form_with model: sa, url: update_email_user_path(sa), method: :patch do |f|
-              tr.school-admin-data
-                td =sa.username
-                -if current_admin.super?
-                  td =f.text_field :email, class: 'tjk-input', id: ('user-email-' + sa.id.to_s)
-                  td =f.submit 'Save Email', class: 'tj-btn-primary', id: ('save-email-' + sa.id.to_s)
-                  td =link_to 'Send Setup Email', send_welcome_email_user_path(sa), class: 'tj-btn-primary', data: {turbo_method: "post"}, remote: true
-                td =link_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'tj-btn-primary', data: {turbo_method: "post"}
+            = form_with model: sa, url: update_email_user_path(sa), method: :patch, id: "email-form-#{sa.id}" do |f|
+            tr.school-admin-data
+              td =sa.username
+              -if current_admin.super?
+                td
+                  input.tjk-input type='text' name='user[email]' value=sa.email id=('user-email-' + sa.id.to_s) form="email-form-#{sa.id}"
+                td
+                  input.tj-btn-primary type='submit' value='Save Email' id=('save-email-' + sa.id.to_s) form="email-form-#{sa.id}"
+                td =link_to 'Send Setup Email', send_welcome_email_user_path(sa), class: 'tj-btn-primary', data: {turbo_method: "post"}, remote: true
+              td =link_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'tj-btn-primary', data: {turbo_method: "post"}
   -if current_admin.super?
     div style='display:flex; justify-content:center; margin: var(--tj-space-3) 0'
       =link_to 'Manage User Roles', manage_roles_users_path(school: @school), class: 'tj-btn-dark'
