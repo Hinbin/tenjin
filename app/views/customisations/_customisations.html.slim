@@ -1,5 +1,5 @@
--dashboard_styles = customisations.dashboard_style.with_attached_image
-- if dashboard_styles.count > 0
+-dashboard_styles = customisations.dashboard_style.with_attached_image.load
+- if dashboard_styles.any?
   section.page-section.text-center.dashboard-styles
     .tjk-container
       h3.text-uppercase Dashboard Styles
@@ -27,8 +27,8 @@
                     =f.submit 'Buy', class: 'btn-light-outline buy-btn'
 
 
--leaderboard_icon_styles = customisations.leaderboard_icon
-- if leaderboard_icon_styles.count > 0
+-leaderboard_icon_styles = customisations.leaderboard_icon.load
+- if leaderboard_icon_styles.any?
   section.page-section.text-center.icons
     .tjk-container
       h3.text-uppercase Leaderboard Icons

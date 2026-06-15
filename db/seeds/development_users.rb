@@ -172,6 +172,8 @@ students = 24.times.map do |index|
   )
 end
 
+students.first(10).each { |student| student.update!(challenge_points: 1000) }
+
 classrooms.values.flatten.each_with_index do |classroom, index|
   enroll(user: teachers[index % teachers.length], classroom:)
   enroll(user: school_admin, classroom:)

@@ -67,8 +67,6 @@ group :development do
   #httplog to get all messages sent to/from server
   gem 'httplog'
 
-  # Pry for debugging goodness
-  gem 'pry-rails'
 
   # All them rules for development
   gem 'rubocop', '~> 1.87', require: false
