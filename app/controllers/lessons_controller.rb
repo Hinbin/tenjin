@@ -77,16 +77,16 @@ class LessonsController < ApplicationController
   end
 
   def set_permitted_lessons_and_subjects
-    if @author
-      @editable_subjects = Subject.with_role(:lesson_author, current_user)
-      editable_topic_ids = Topic.where(subject_id: @editable_subjects.pluck(:id)).pluck(:id)
-      @lessons = policy_scope(Lesson)
-                 .or(Lesson.where(topic_id: editable_topic_ids))
-                 .includes(:topic)
-                 .order('topics.name, lessons.title')
-    else
-      @lessons = policy_scope(Lesson).includes(:topic).order('topics.name, lessons.title')
-    end
+    @lessons = author_scoped_lessons
     @lessons_by_subject = @lessons.group_by { |l| l.topic.subject_id }
+  end
+
+  def author_scoped_lessons
+    base = policy_scope(Lesson).includes(:topic).order('topics.name, lessons.title')
+    return base unless @author
+
+    @editable_subjects = Subject.with_role(:lesson_author, current_user)
+    editable_topic_ids = Topic.where(subject_id: @editable_subjects.pluck(:id)).pluck(:id)
+    base.or(Lesson.where(topic_id: editable_topic_ids))
   end
 end
