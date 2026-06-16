@@ -10,6 +10,39 @@
   padding-right: var(--tj-space-3);
 }
 
+// ── Quiz surface ───────────────────────────────────────────────────────────
+
+.tj-progress {
+  height: .5rem;
+  background: #dee2e6;
+  border-radius: var(--tj-radius-pill);
+  overflow: hidden;
+  margin-bottom: var(--tj-space-3);
+}
+
+.tj-progress__bar {
+  height: 100%;
+  background: var(--tj-red);
+  border-radius: var(--tj-radius-pill);
+  transition: width .3s ease;
+}
+
+.tj-quiz-hud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: var(--tj-space-3);
+}
+
+.tj-quiz-hud__item {
+  display: flex;
+  align-items: center;
+  gap: var(--tj-space-2);
+  padding: 0 var(--tj-space-3);
+  text-align: center;
+}
+
 // ── Masthead form panel ────────────────────────────────────────────────────
 // Replaces .container.py-5 > .row.justify-content-center.align-items-center > .col-6
 // inside masthead surfaces (login, password-reset, set-invitation-password).

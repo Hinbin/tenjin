@@ -67,12 +67,10 @@ Rails.application.configure do
     Bullet.alert = true
     Bullet.rails_logger = true
     Bullet.add_footer = true
-
-    # with_attached_image joins blob + its variant/preview sub-associations;
-    # we don't use variants/previews and rails_blob_url uses the blob internally
-    # so Bullet can't see it — both are safe to ignore.
-    Bullet.add_safelist type: :unused_eager_loading, class_name: 'ActiveStorage::Attachment', association: :blob
-    Bullet.add_safelist type: :unused_eager_loading, class_name: 'ActiveStorage::Blob', association: :variant_records
-    Bullet.add_safelist type: :unused_eager_loading, class_name: 'ActiveStorage::Blob', association: :preview_image_attachment
+    # rails_blob_url accesses the blob via URL helpers rather than the ORM association
+    # proxy, so Bullet can't track it and incorrectly reports these as unused eager loads.
+    Bullet.add_safelist(type: :unused_eager_loading, class_name: 'ActiveStorage::Attachment', association: :blob)
+    Bullet.add_safelist(type: :unused_eager_loading, class_name: 'ActiveStorage::Blob', association: :variant_records)
+    Bullet.add_safelist(type: :unused_eager_loading, class_name: 'ActiveStorage::Blob', association: :preview_image_attachment)
   end
 end

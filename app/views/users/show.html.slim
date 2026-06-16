@@ -1,30 +1,22 @@
 section.page-section.text-center
-  .container
-    .row
-      .col
-        h1.page-section-header.text-uppercase
-          => @user.forename
-          = @user.surname
-        ==render_small_separator   
+  .tjk-container
+    h1.page-section-header.text-uppercase
+      => @user.forename
+      = @user.surname
+    ==render_small_separator
     = render('user_password') if policy(current_user).reset_password?
-    .row.justify-content-center.py-3
+    div style='display:flex; justify-content:center; gap:var(--tj-space-3); flex-wrap:wrap; padding: var(--tj-space-3) 0'
       -if current_user.oauth_uid.blank?
-        .col-sm-3.text-sm-right.py-2      
-          p.text-right-md Link Account to Google
-        .col-sm-3
-          =button_to user_google_oauth2_omniauth_authorize_path,
-            data: { turbo: false },
-            class: 'btn btn-outline',
-            id: 'loginGoogle' do
-            =image_pack_tag('images/btn_google_signin_dark_normal_web.png',
-              class: 'text-left-md')
+        p Link Account to Google
+        =button_to user_google_oauth2_omniauth_authorize_path,
+          data: { turbo: false },
+          id: 'loginGoogle' do
+          =image_pack_tag('images/btn_google_signin_dark_normal_web.png')
       -else
-        .col-sm-3.text-sm-right.py-2      
-          p.text-right-md Unlink Account from Google
-        .col-sm-3
-          =link_to "Unlink #{current_user.oauth_email}",
-            unlink_oauth_account_user_path(current_user),
-            class: 'btn btn-danger',
-            data: { turbo_confirm: 'Are you sure?', turbo_method: "delete" }
+        p Unlink Account from Google
+        =link_to "Unlink #{current_user.oauth_email}",
+          unlink_oauth_account_user_path(current_user),
+          class: 'tj-btn-danger',
+          data: { turbo_confirm: 'Are you sure?', turbo_method: "delete" }
   - if @user.student?
     = render('shared/homework')

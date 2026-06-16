@@ -32,7 +32,7 @@
     border-bottom: 2px solid var(--tj-ink);
   }
 
-  tbody tr:hover {
+  tbody tr[data-action]:hover {
     background-color: var(--tj-red);
     color: var(--tj-white);
     transition: background-color var(--tj-dur-hover) var(--tj-ease);
@@ -93,7 +93,7 @@
   box-sizing: border-box;
 }
 
-// Secondary action — grey. Replaces .btn.btn-secondary.
+// Secondary button — gray. Replaces .btn.btn-secondary.
 .tj-btn-secondary {
   display: inline-block;
   font-family: var(--tj-body);
@@ -113,7 +113,7 @@
   }
 }
 
-// Warning action — amber. Replaces .btn.btn-warning.
+// Warning button — yellow. Replaces .btn.btn-warning.
 .tj-btn-warning {
   display: inline-block;
   font-family: var(--tj-body);
@@ -141,12 +141,24 @@
 }
 
 // ── Responsive helpers ────────────────────────────────────────────────────
-// Replaces .d-none.d-lg-block; hides at small viewport.
 
+// Hide below small breakpoint (replaces .d-none.d-sm-block and similar).
 .tj-hide-sm {
   @media (max-width: 575px) {
     display: none;
   }
+}
+
+// Hide below large breakpoint (replaces .d-none.d-lg-block).
+.tj-hide-md {
+  @media (max-width: 991px) {
+    display: none;
+  }
+}
+
+// Scrollable table wrapper (replaces Bootstrap .table-responsive).
+.tj-table-responsive {
+  overflow-x: auto;
 }
 
 // ── Stats grid ────────────────────────────────────────────────────────────

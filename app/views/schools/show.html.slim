@@ -1,66 +1,64 @@
-.container
-  .row
-    .col
-      h1.display-4 = @school.name
-      table.table
-        tr
-          td Students
-          td =@school.users.where(role:'student').count
-        tr
-          td Employees
-          td =@school.users.where(role:'employee').count
-      =render('school_statistics_table')
-  .row
-    .col
-      h3.h3 School Admins
-      -if @school_admins.count.zero?
-        p No current admins
-      -else
-        table.table#schoolAdminTable
-          thead
-            tr
-              th Username
-              th Email
-              th 
-              th
-              th Login As
-          tbody
-            -@school_admins.each do |sa|
-              = form_with model: sa, url: update_email_user_path(sa), method: :patch do |f|
-                tr.school-admin-data
-                  td =sa.username
-                  -if current_admin.super?
-                    td =f.text_field :email, class: 'form-control', id: ('user-email-' + sa.id.to_s)
-                    td =f.submit 'Save Email', class: 'btn btn-primary', id: ('save-email-' + sa.id.to_s)
-                    td =link_to 'Send Setup Email', send_welcome_email_user_path(sa), class: 'btn btn-primary', data: {turbo_method: "post"}, remote: true
-                  td =link_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'btn btn-primary', data: {turbo_method: "post"}
-      -if current_admin.super?
-        .d-flex.justify-content-center
-          =link_to 'Manage User Roles', manage_roles_users_path(school: @school), class: 'btn btn-dark'
-    
-  .row.py-4
-    .col
-      h3.h3 Users
-      div data-controller='table' data-table-page-length-value='25'
-        input.form-control.mb-2 type='search' placeholder='Search users…' data-table-target='search' data-action='input->table#search'
-        .table-responsive
-          table.table#users-table
-            thead
-              tr
-                th Username
-                th Name
-                th Role
-                th Login As
-            tbody
-              -@users.each do |u|
-                tr.user-data id="user-#{u.id}"
-                  td =u.username
-                  td
-                    => u.forename
-                    = u.surname
-                  td =u.role.humanize
-                  td =button_to 'Become User', become_admin_path(@current_admin, user_id: u.id ), class: 'btn btn-primary'
-        .d-flex.justify-content-between.align-items-center.mt-2
-          button.btn.btn-sm.btn-secondary type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
-          span data-table-target='info'
-          button.btn.btn-sm.btn-secondary type='button' data-table-target='next' data-action='click->table#next' Next ›
+.tjk-container
+  h1.display-4 = @school.name
+  table.tj-table
+    tr
+      td Students
+      td =@school.users.where(role:'student').count
+    tr
+      td Employees
+      td =@school.users.where(role:'employee').count
+  =render('school_statistics_table')
+
+  h3.h3 School Admins
+  -if @school_admins.count.zero?
+    p No current admins
+  -else
+    .tj-table-responsive
+      table.tj-table#schoolAdminTable
+        thead
+          tr
+            th Username
+            th Email
+            th
+            th
+            th Login As
+        tbody
+          -@school_admins.each do |sa|
+            = form_with model: sa, url: update_email_user_path(sa), method: :patch, id: "email-form-#{sa.id}" do |f|
+            tr.school-admin-data
+              td =sa.username
+              -if current_admin.super?
+                td
+                  input.tjk-input type='text' name='user[email]' value=sa.email id=('user-email-' + sa.id.to_s) form="email-form-#{sa.id}"
+                td
+                  input.tj-btn-primary type='submit' value='Save Email' id=('save-email-' + sa.id.to_s) form="email-form-#{sa.id}"
+                td =link_to 'Send Setup Email', send_welcome_email_user_path(sa), class: 'tj-btn-primary', data: {turbo_method: "post"}, remote: true
+              td =link_to 'Become User', become_admin_path(@current_admin, user_id: sa.id ), class: 'tj-btn-primary', data: {turbo_method: "post"}
+  -if current_admin.super?
+    div style='display:flex; justify-content:center; margin: var(--tj-space-3) 0'
+      =link_to 'Manage User Roles', manage_roles_users_path(school: @school), class: 'tj-btn-dark'
+
+  h3.h3 style='padding-top: var(--tj-space-4)' Users
+  div data-controller='table' data-table-page-length-value='25'
+    input.tjk-input type='search' placeholder='Search users…' data-table-target='search' data-action='input->table#search' style='margin-bottom: var(--tj-space-2)'
+    .tj-table-responsive
+      table.tj-table#users-table
+        thead
+          tr
+            th Username
+            th Name
+            th Role
+            th Login As
+        tbody
+          -@users.each do |u|
+            tr.user-data id="user-#{u.id}"
+              td =u.username
+              td
+                => u.forename
+                = u.surname
+              td =u.role.humanize
+              td =button_to 'Become User', become_admin_path(@current_admin, user_id: u.id ), class: 'tj-btn-primary'
+    .tj-table-controls
+      button.tj-btn-secondary.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+      span data-table-target='info'
+      button.tj-btn-secondary.tj-btn--sm type='button' data-table-target='next' data-action='click->table#next' Next ›
