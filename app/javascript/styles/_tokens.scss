@@ -183,7 +183,7 @@ body, .tj-body {
 /* The red rule under section headers */
 .tj-hr-primary {
   max-width: 10rem;
-  margin: 0 auto;
+  margin: 0 auto var(--tj-space-3);
   border: 0;
   border-top: 3px solid var(--tj-red);
 }
