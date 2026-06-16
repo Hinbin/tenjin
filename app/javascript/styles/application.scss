@@ -218,7 +218,7 @@ dialog::backdrop {
 
 // Dialog inner layout — replaces Bootstrap .modal-content/.modal-body/.modal-footer
 .tj-dialog-content { display: flex; flex-direction: column; }
-.tj-dialog-header  { display: flex; justify-content: flex-end; padding: var(--tj-space-2) var(--tj-space-3); border-bottom: 1px solid #dee2e6; }
+.tj-dialog-header  { display: flex; justify-content: flex-end; padding: var(--tj-space-2) var(--tj-space-3); }
 .tj-dialog-body    { padding: var(--tj-space-4); }
 .tj-dialog-footer  { display: flex; justify-content: flex-end; gap: var(--tj-space-2); padding: var(--tj-space-3) var(--tj-space-4); border-top: 1px solid #dee2e6; }
 
