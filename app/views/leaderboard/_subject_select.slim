@@ -1,9 +1,8 @@
-.container
-  -@subjects.each do |s|
-    .card.mb-2 data-controller='accordion'
-      .card-header
-        =link_to s.name, '#', data: { action: 'click->accordion#toggle', turbo: false }
-      .card-body.d-none data-accordion-target='body'
-        =link_to 'All', leaderboard_path(id: s.name)
-        - s.topics.order(:name).each do |t|
-          p =link_to t.name, leaderboard_path(id: s.name, topic: t.id)
+-@subjects.each do |s|
+  .tj-accordion data-controller='accordion'
+    .tj-accordion__header
+      =link_to s.name, '#', data: { action: 'click->accordion#toggle', turbo: false }
+    .tj-accordion__body.tj-hidden data-accordion-target='body'
+      =link_to 'All', leaderboard_path(id: s.name)
+      - s.topics.order(:name).each do |t|
+        p =link_to t.name, leaderboard_path(id: s.name, topic: t.id)

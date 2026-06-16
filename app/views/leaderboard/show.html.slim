@@ -1,10 +1,10 @@
 -content_for :title
   title=('Leaderboard - ' + @subject.name)
-.container
-  .row.py-3
-    .col-4.d-none.d-lg-block
+.tjk-container
+  .tj-lb-layout
+    .tj-lb-sidebar
       =render 'subject_select'
-    .col
+    .tj-lb-main
       #liveLeaderboard data={ controller: 'live-leaderboard',
                               'live-leaderboard-url': leaderboard_path(@subject.name, format: :json),
                               'live-leaderboard-subject': @subject.name,

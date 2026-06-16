@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 require 'support/api_data'
-require 'pry'
 
 RSpec.describe 'User views an updating leaderboard', :default_creates, :js, type: :system do
   let(:new_entry) { create(:topic_score, topic: topic, school: school, score: 11) }

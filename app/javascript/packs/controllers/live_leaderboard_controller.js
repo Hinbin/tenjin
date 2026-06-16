@@ -32,7 +32,7 @@ export default class extends Controller {
     this.topic = this.data.get('topic')
 
     this._closeDropdowns = () => {
-      this.element.querySelectorAll('.dropdown-menu.show').forEach(el => el.classList.remove('show'))
+      this.element.querySelectorAll('.tj-dropdown__menu.show').forEach(el => el.classList.remove('show'))
     }
     document.addEventListener('click', this._closeDropdowns)
 
@@ -317,37 +317,35 @@ export default class extends Controller {
 
     this.element.innerHTML = `
       <div>
-        <div class="row">
-          <div class="d-none d-md-block col">
+        <div class="tj-lb-header">
+          <div class="tj-lb-title">
             <h1>${this.escape(this.name)}</h1>
           </div>
-          <div class="col">
+          <div class="tj-lb-winner">
             ${this.renderClassroomWinner()}
           </div>
         </div>
         ${this.renderLiveToggle()}
-        <div class="form-row align-items-center d-flex justify-content-around row">
+        <div class="tj-lb-controls">
           ${this.renderFilters()}
           ${this.renderShowAllToggle()}
           ${this.renderAllTimeToggle()}
         </div>
-        <div class="row">
-          <table id="leaderboardTable" class="table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th></th>
-                <th>Name</th>
-                <th></th>
-                <th class="d-none d-lg-block">${this.contextualHeader()}</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${this.sortedLeaderboard().map((entry) => this.renderEntry(entry)).join('')}
-            </tbody>
-          </table>
-        </div>
+        <table id="leaderboardTable" class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th></th>
+              <th>Name</th>
+              <th></th>
+              <th class="tj-lb-context-col">${this.contextualHeader()}</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${this.sortedLeaderboard().map((entry) => this.renderEntry(entry)).join('')}
+          </tbody>
+        </table>
         ${this.connected ? '<span id="connected"></span>' : ''}
       </div>
     `
@@ -357,12 +355,10 @@ export default class extends Controller {
     if (this.user.role !== 'employee' && this.user.role !== 'school_admin') return ''
 
     return `
-      <div class="row">
-        <div class="col">
-          <div id="toggleLive" class="custom-control custom-switch form-group">
-            <input type="checkbox" class="custom-control-input" id="liveSwitch" ${this.live ? 'checked' : ''} data-action="live-leaderboard#toggleLive">
-            <label class="custom-control-label" for="liveSwitch">Live Leaderboard</label>
-          </div>
+      <div class="tj-lb-item">
+        <div id="toggleLive" class="tj-toggle">
+          <input type="checkbox" class="tj-toggle__input" id="liveSwitch" ${this.live ? 'checked' : ''} data-action="live-leaderboard#toggleLive">
+          <label class="tj-toggle__label" for="liveSwitch">Live Leaderboard</label>
         </div>
       </div>
     `
@@ -378,15 +374,13 @@ export default class extends Controller {
     const dropdownId = `${filter.name.replace(' ', '-')}-dropdown`
 
     return `
-      <div class="col-6">
-        <div class="form-group">
-          <div id="${dropdownId}" class="dropdown filter">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-action="click->live-leaderboard#toggleDropdown" aria-haspopup="true" aria-expanded="false">
-              ${this.escape(selected)}
-            </button>
-            <div class="dropdown-menu">
-              ${filter.options.map((option) => this.renderFilterOption(filter.name, option)).join('')}
-            </div>
+      <div class="tj-lb-item">
+        <div id="${dropdownId}" class="tj-dropdown">
+          <button class="tj-btn-dropdown" type="button" data-action="click->live-leaderboard#toggleDropdown" aria-haspopup="true" aria-expanded="false">
+            ${this.escape(selected)}
+          </button>
+          <div class="tj-dropdown__menu">
+            ${filter.options.map((option) => this.renderFilterOption(filter.name, option)).join('')}
           </div>
         </div>
       </div>
@@ -396,7 +390,7 @@ export default class extends Controller {
   renderFilterOption (name, option) {
     const id = `${name}-${option.replace(' ', '-')}`
     return `
-      <button type="button" id="${this.escapeAttribute(id)}" class="dropdown-item" data-filter-name="${this.escapeAttribute(name)}" data-filter-option="${this.escapeAttribute(option)}" data-action="live-leaderboard#selectFilter">
+      <button type="button" id="${this.escapeAttribute(id)}" class="tj-dropdown__item" data-filter-name="${this.escapeAttribute(name)}" data-filter-option="${this.escapeAttribute(option)}" data-action="live-leaderboard#selectFilter">
         ${this.escape(option)}
       </button>
     `
@@ -406,10 +400,10 @@ export default class extends Controller {
     if (this.live) return ''
 
     return `
-      <div class="col">
-        <div id="showAll" class="custom-control custom-switch form-group">
-          <input type="checkbox" class="custom-control-input" id="showAllSwitch" ${this.showAll ? 'checked' : ''} data-action="live-leaderboard#toggleShowAll">
-          <label class="custom-control-label" for="showAllSwitch">Show all</label>
+      <div class="tj-lb-item">
+        <div id="showAll" class="tj-toggle">
+          <input type="checkbox" class="tj-toggle__input" id="showAllSwitch" ${this.showAll ? 'checked' : ''} data-action="live-leaderboard#toggleShowAll">
+          <label class="tj-toggle__label" for="showAllSwitch">Show all</label>
         </div>
       </div>
     `
@@ -419,10 +413,10 @@ export default class extends Controller {
     if (this.live) return ''
 
     return `
-      <div class="col-sm col">
-        <div id="allTime" class="custom-control custom-switch form-group">
-          <input type="checkbox" class="custom-control-input" id="allTimeSwitch" ${this.allTime ? 'checked' : ''} data-action="live-leaderboard#toggleAllTime">
-          <label class="custom-control-label" for="allTimeSwitch">All Time</label>
+      <div class="tj-lb-item">
+        <div id="allTime" class="tj-toggle">
+          <input type="checkbox" class="tj-toggle__input" id="allTimeSwitch" ${this.allTime ? 'checked' : ''} data-action="live-leaderboard#toggleAllTime">
+          <label class="tj-toggle__label" for="allTimeSwitch">All Time</label>
         </div>
       </div>
     `
@@ -437,7 +431,7 @@ export default class extends Controller {
 
     return `
       <div>
-        <p><b class="font-weight-bold">${this.escape(classroom)} winner: </b>${this.escape(winnerText)}</p>
+        <p><b>${this.escape(classroom)} winner: </b>${this.escape(winnerText)}</p>
       </div>
     `
   }
@@ -446,7 +440,6 @@ export default class extends Controller {
     const classNames = []
     if (entry.lastChanged) classNames.push('score-changed')
     if (this.user.id === entry.id) {
-      classNames.push('font-weight-bold')
       classNames.push('current-user')
     }
 
@@ -464,11 +457,11 @@ export default class extends Controller {
 
   renderContextualRow (entry) {
     if (this.currentFilters.some((filter) => filter.name === 'Schools')) {
-      return `<td class="d-none d-lg-block" id="${entry.id}schools-">${this.escape(entry.school_name)}</td>`
+      return `<td class="tj-lb-context-col" id="${entry.id}schools-">${this.escape(entry.school_name)}</td>`
     }
 
     const classroomNames = entry.classroom_names && entry.classroom_names.length > 0 ? entry.classroom_names.join(', ') : ''
-    return `<td class="d-none d-lg-block" id="${entry.id}classrooms-">${this.escape(classroomNames)}</td>`
+    return `<td class="tj-lb-context-col" id="${entry.id}classrooms-">${this.escape(classroomNames)}</td>`
   }
 
   renderIcon (icon) {
@@ -483,17 +476,17 @@ export default class extends Controller {
     let stars = ''
 
     while (numAwards >= 5) {
-      stars += '<i class="fas fa-star" style="color: gold" title="Five wins!" data-toggle="tooltip"></i>'
+      stars += '<i class="fas fa-star" style="color: gold" title="Five wins!"></i>'
       numAwards -= 5
     }
 
     while (numAwards >= 3) {
-      stars += '<i class="fas fa-star" style="color: silver" title="Three wins!" data-toggle="tooltip"></i>'
+      stars += '<i class="fas fa-star" style="color: silver" title="Three wins!"></i>'
       numAwards -= 3
     }
 
     while (numAwards >= 1) {
-      stars += '<i class="fas fa-star" style="color: red" title="Came top of the leaderboard once!" data-toggle="tooltip"></i>'
+      stars += '<i class="fas fa-star" style="color: red" title="Came top of the leaderboard once!"></i>'
       numAwards -= 1
     }
 

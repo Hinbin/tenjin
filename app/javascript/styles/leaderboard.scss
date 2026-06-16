@@ -1,4 +1,195 @@
+// Leaderboard surface — design tokens only, no Bootstrap.
+// Covers: leaderboard/show, _subject_select, live_leaderboard_controller.
+
+// ── Current user row ─────────────────────────────────────────────────────
 
 .current-user {
   font-weight: bold;
+}
+
+// ── Page layout (show.html.slim) ─────────────────────────────────────────
+
+.tj-lb-layout {
+  display: flex;
+  gap: var(--tj-space-3);
+  padding-top: var(--tj-space-3);
+  padding-bottom: var(--tj-space-3);
+}
+
+.tj-lb-sidebar {
+  flex: 0 0 280px;
+
+  @media (max-width: 991.98px) {
+    display: none;
+  }
+}
+
+.tj-lb-main {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+// ── Subject accordion (subject_select partial) ────────────────────────────
+
+.tj-accordion {
+  border: 1px solid #dee2e6;
+  border-radius: var(--tj-radius);
+  margin-bottom: var(--tj-space-2);
+  overflow: hidden;
+}
+
+.tj-accordion__header {
+  padding: var(--tj-space-2) var(--tj-space-3);
+  background: var(--tj-light);
+  font-weight: var(--tj-w-black);
+  font-family: var(--tj-display);
+  border-bottom: 1px solid #dee2e6;
+
+  a {
+    color: var(--tj-ink);
+    text-decoration: none;
+
+    &:hover { color: var(--tj-grey); }
+  }
+}
+
+.tj-accordion__body {
+  padding: var(--tj-space-2) var(--tj-space-3);
+
+  a {
+    display: block;
+    padding: var(--tj-space-1) 0;
+    color: var(--tj-ink);
+    text-decoration: none;
+
+    &:hover { color: var(--tj-grey); }
+  }
+
+  p { margin: 0; }
+}
+
+// ── Live leaderboard rendered HTML ────────────────────────────────────────
+// Classes emitted by live_leaderboard_controller.js render() methods.
+
+.tj-lb-header {
+  display: flex;
+  align-items: center;
+  gap: var(--tj-space-3);
+  margin-bottom: var(--tj-space-2);
+}
+
+.tj-lb-title {
+  flex: 1 1 auto;
+
+  @media (max-width: 767.98px) {
+    display: none;
+  }
+}
+
+.tj-lb-winner {
+  flex: 1 1 auto;
+}
+
+// Controls row: filters + toggles
+.tj-lb-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: var(--tj-space-2);
+  margin-bottom: var(--tj-space-3);
+}
+
+// Flex wrapper for a single filter or toggle item
+.tj-lb-item {
+  flex: 0 1 auto;
+}
+
+// Toggle (custom-switch replacement)
+.tj-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--tj-space-2);
+  margin-bottom: 0;
+}
+
+.tj-toggle__input {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  accent-color: var(--tj-black);
+}
+
+.tj-toggle__label {
+  cursor: pointer;
+  font-family: var(--tj-body);
+  font-weight: var(--tj-w-light);
+}
+
+// Dropdown filter
+.tj-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.tj-btn-dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tj-space-2);
+  padding: 0.375rem 0.75rem;
+  background: var(--tj-light);
+  color: var(--tj-ink);
+  border: 1px solid #dee2e6;
+  border-radius: var(--tj-radius);
+  cursor: pointer;
+  font-family: var(--tj-body);
+  font-weight: var(--tj-w-light);
+
+  &::after {
+    content: '▾';
+    font-size: 0.8em;
+  }
+
+  &:hover {
+    background: #e2e6ea;
+  }
+}
+
+.tj-dropdown__menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 10rem;
+  background: var(--tj-white);
+  border: 1px solid #dee2e6;
+  border-radius: var(--tj-radius);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+
+  &.show { display: block; }
+}
+
+.tj-dropdown__item {
+  display: block;
+  width: 100%;
+  padding: 0.35rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--tj-body);
+  font-weight: var(--tj-w-light);
+  color: var(--tj-ink);
+
+  &:hover {
+    background: var(--tj-light);
+  }
+}
+
+// Responsive table column (class/school)
+.tj-lb-context-col {
+  @media (max-width: 991.98px) {
+    display: none;
+  }
 }

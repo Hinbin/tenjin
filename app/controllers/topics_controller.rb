@@ -17,7 +17,7 @@ class TopicsController < ApplicationController
 
     @topic_lessons = Lesson.where(topic: @topic)
     @questions = Question.with_rich_text_question_text_and_embeds
-                         .includes(:question_statistic, :lesson, :flagged_questions)
+                         .includes(:question_statistic, :lesson)
                          .where(topic: @topic, active: true)
   end
 

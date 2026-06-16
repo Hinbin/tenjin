@@ -51,12 +51,12 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
     end
 
     it 'allows you to buy a dashbord style' do
-      find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
+      find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
       expect(page).to have_css("hr[style*=#{dashboard_customisation.value}]")
     end
 
     it 'deducts the required amount of challenge points' do
-      find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
+      find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
       expect(page).to have_css('#challenge-points',
                                exact_text: student.challenge_points - dashboard_customisation.cost)
     end
@@ -64,7 +64,7 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
     it 'gives a notice if you do not have the required number of points' do
       dashboard_customisation_expensive
       visit(show_available_customisations_path)
-      find("form[action='#{buy_customisation_path(dashboard_customisation_expensive)}'] input.btn").click
+      find("form[action='#{buy_customisation_path(dashboard_customisation_expensive)}'] input.buy-btn").click
       expect(page).to have_css('.alert', text: 'You do not have enough points')
     end
 
@@ -101,16 +101,16 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
 
     context 'when repurchasing a customisation already unlocked' do
       before do
-        find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
+        find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
         second_customisation
         visit(show_available_customisations_path)
-        find("form[action='#{buy_customisation_path(second_customisation)}'] input.btn").click
+        find("form[action='#{buy_customisation_path(second_customisation)}'] input.buy-btn").click
         find('.alert', text: 'Congratulations!')
       end
 
       it 'allows you to buy a previously bought customisation at no cost' do
         visit(show_available_customisations_path)
-        find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.btn").click
+        find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
         find('.alert', text: 'Congratulations!')
         expect(page).to have_css('#challenge-points',
                                  exact_text: student.challenge_points - dashboard_customisation.cost)
@@ -142,12 +142,12 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
     end
 
     it 'allows you to buy an icon' do
-      expect(page).to have_css("form[action='#{buy_customisation_path(icon_customisation)}'] input.btn")
+      expect(page).to have_css("form[action='#{buy_customisation_path(icon_customisation)}'] input.buy-btn")
     end
 
     it 'shows the icon on the leaderboard' do
       create(:topic_score, user: student, topic:)
-      find("form[action='#{buy_customisation_path(icon_customisation)}'] input.btn").click
+      find("form[action='#{buy_customisation_path(icon_customisation)}'] input.buy-btn").click
       visit(leaderboard_path(subject.name))
       expect(page).to have_css('td svg.fa-star', style: 'color: black;')
     end

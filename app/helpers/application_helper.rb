@@ -27,9 +27,13 @@ module ApplicationHelper
 
   def render_dashboard_style(style)
     return '' if style.nil?
-    return '' unless style.image.attached?
 
-    "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(#{rails_blob_url(style.image)}) no-repeat;"
+    if style.image.attached?
+      url = rails_storage_proxy_url(style.image)
+      "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(#{url}) no-repeat;"
+    else
+      "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), #{style.value};"
+    end
   end
 
   def get_user_classes(student)

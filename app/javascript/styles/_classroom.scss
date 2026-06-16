@@ -93,7 +93,11 @@
   box-sizing: border-box;
 }
 
+<<<<<<< frontend/04k-admin
 // Secondary button — gray. Replaces .btn.btn-secondary.
+=======
+// Secondary action — grey. Replaces .btn.btn-secondary.
+>>>>>>> master
 .tj-btn-secondary {
   display: inline-block;
   font-family: var(--tj-body);
@@ -106,13 +110,23 @@
   text-decoration: none;
 
   &:hover {
+<<<<<<< frontend/04k-admin
     color: var(--tj-white);
     filter: brightness(1.15);
+=======
+    background: #5a6268;
+    border-color: #545b62;
+    color: var(--tj-white);
+>>>>>>> master
     text-decoration: none;
   }
 }
 
+<<<<<<< frontend/04k-admin
 // Warning button — yellow. Replaces .btn.btn-warning.
+=======
+// Warning action — amber. Replaces .btn.btn-warning.
+>>>>>>> master
 .tj-btn-warning {
   display: inline-block;
   font-family: var(--tj-body);
@@ -123,6 +137,16 @@
   padding: 0.375rem 0.75rem;
   cursor: pointer;
   text-decoration: none;
+<<<<<<< frontend/04k-admin
+=======
+
+  &:hover {
+    background: #e0a800;
+    border-color: #d39e00;
+    color: #212529;
+    text-decoration: none;
+  }
+>>>>>>> master
 }
 
 // Small size modifier — replaces .btn-sm.
@@ -141,6 +165,7 @@
   }
 }
 
+<<<<<<< frontend/04k-admin
 // Hide below large breakpoint (replaces .d-none.d-lg-block).
 .tj-hide-md {
   @media (max-width: 991px) {
@@ -151,5 +176,26 @@
 // Scrollable table wrapper (replaces Bootstrap .table-responsive).
 .tj-table-responsive {
   overflow-x: auto;
+=======
+// ── Stats grid ────────────────────────────────────────────────────────────
+
+.tj-stats-grid {
+  display: flex;
+  text-align: center;
+  gap: var(--tj-space-3);
+  margin-bottom: var(--tj-space-3);
+  flex-wrap: wrap;
+
+  > * { flex: 1; }
+}
+
+// ── Question card (lesson question index) ─────────────────────────────────
+
+.tj-question-card {
+  border: 1px solid #dee2e6;
+  border-radius: var(--tj-radius);
+  padding: var(--tj-space-3);
+  margin-bottom: var(--tj-space-2);
+>>>>>>> master
 }
 
