@@ -10,7 +10,7 @@ function processMultipleChoiceResponse (serverResponse, guessId) {
       resultEl.classList.add('correct-answer')
       if ('response-' + result.id === guessId) {
         correct = true
-        resultEl.insertAdjacentHTML('beforeend', '<i class="fas fa-check fa-lg float-right my-1"></i>')
+        resultEl.insertAdjacentHTML('beforeend', '<i class="fas fa-check fa-lg" style="float:right;margin:0.25rem 0"></i>')
       }
     }
   }
@@ -19,7 +19,7 @@ function processMultipleChoiceResponse (serverResponse, guessId) {
     const guessEl = document.getElementById(guessId)
     if (guessEl) {
       guessEl.classList.add('incorrect-answer')
-      guessEl.insertAdjacentHTML('beforeend', '<i class="fas fa-times fa-lg float-right my-1"></i>')
+      guessEl.insertAdjacentHTML('beforeend', '<i class="fas fa-times fa-lg" style="float:right;margin:0.25rem 0"></i>')
     }
   }
 

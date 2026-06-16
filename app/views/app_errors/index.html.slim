@@ -1,7 +1,5 @@
-.container
-  .row
-    .col
-      h1 Runtime Errors
+.tjk-container
+  h1 Runtime Errors
       table.table
         thead
           tr
@@ -25,4 +23,4 @@
                 br
                 = app_error.request_id
               td = app_error.context
-              td = link_to 'View', app_error_path(app_error), class: 'btn btn-primary'
+              td = link_to 'View', app_error_path(app_error), class: 'tj-btn-primary'

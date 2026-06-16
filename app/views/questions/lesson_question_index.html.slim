@@ -1,7 +1,7 @@
 -content_for :title
   title=('Questions - ' + @lesson.title)
 .tjk-container
-  h1.h1.mt-3.text-center ="Questions for #{@lesson.title}"
+  h1.h1.mt-3.tj-text-center ="Questions for #{@lesson.title}"
   hr class=("small mb-5 primary-red")
 
   -@questions.order(:created_at).each_with_index do |q, index|

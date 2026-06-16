@@ -1,7 +1,5 @@
-.container
-  .row
-    .col
-      h1 = @app_error.exception_class
+.tjk-container
+  h1 = @app_error.exception_class
       p = @app_error.message
       dl
         dt Time
@@ -27,4 +25,4 @@
         dt Backtrace
         dd
           pre = @app_error.backtrace
-      = link_to 'Back', app_errors_path, class: 'btn btn-primary'
+      = link_to 'Back', app_errors_path, class: 'tj-btn-primary'

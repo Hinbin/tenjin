@@ -11,7 +11,7 @@ function processShortResponse (serverResponse, guess) {
       if (btn) {
         btn.classList.add('correct-answer')
         btn.textContent = 'Correct!'
-        btn.insertAdjacentHTML('beforeend', '<i class="fas fa-check fa-lg float-right my-1"></i>')
+        btn.insertAdjacentHTML('beforeend', '<i class="fas fa-check fa-lg" style="float:right;margin:0.25rem 0"></i>')
       }
       correct = true
     }
@@ -21,7 +21,7 @@ function processShortResponse (serverResponse, guess) {
     if (btn) {
       btn.classList.add('incorrect-answer')
       btn.textContent = 'Incorrect'
-      btn.insertAdjacentHTML('beforeend', '<i class="fas fa-times fa-lg float-right my-1"></i>')
+      btn.insertAdjacentHTML('beforeend', '<i class="fas fa-times fa-lg" style="float:right;margin:0.25rem 0"></i>')
     }
     if (input) {
       input.classList.add('correct-answer')

@@ -331,7 +331,7 @@ export default class extends Controller {
           ${this.renderShowAllToggle()}
           ${this.renderAllTimeToggle()}
         </div>
-        <table id="leaderboardTable" class="table">
+        <table id="leaderboardTable" class="tj-table">
           <thead>
             <tr>
               <th>#</th>

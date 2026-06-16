@@ -1,7 +1,7 @@
 - if flash[:alert].present?
   dialog data-controller='modal' data-auto-open=''
-    .modal-content
-      .modal-body
+    .tj-dialog-content
+      .tj-dialog-body
         p#alert = flash[:alert]
-      .modal-footer
-        button.btn.btn-secondary type='button' data-action='click->modal#close' Close
+      .tj-dialog-footer
+        button.tj-btn-secondary type='button' data-action='click->modal#close' Close

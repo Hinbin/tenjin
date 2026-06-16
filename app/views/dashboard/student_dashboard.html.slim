@@ -1,7 +1,7 @@
 -content_for :title
   title=('Dashboard')
-section.page-section.text-center#newQuiz
-  .container#startAQuizContainer
+section.page-section.tj-text-center#newQuiz
+  .tjk-container#startAQuizContainer
     h1.page-section-header.text-uppercase Start a Quiz
     p.lead Select a subject below
     ==render_small_separator
@@ -18,30 +18,30 @@ section.page-section.text-center#newQuiz
                   h3.text-uppercase = s.name
       a.carousel-control-prev href="#subjectCarousel" role="button" data-slide="prev"
         span.carousel-control-prev-icon aria-hidden="true"
-        span.sr-only Previous
+        span.tj-sr-only Previous
       a.carousel-control-next href="#subjectCarousel" role="button" data-slide="next"
         span.carousel-control-next-icon aria-hidden="true"
-        span.sr-only Next
+        span.tj-sr-only Next
 =render('shared/homework')
-section#challenges.page-section.text-center
-  .container
+section#challenges.page-section.tj-text-center
+  .tjk-container
     h1.page-section-header.text-uppercase Challenges
     ==render_small_separator
-    .row.justify-content-center
-      .col-lg-10.col.mx-auto
-        table.table.table-hover#challenge-table
+    .tj-flex.tj-justify-center
+      div style='flex: 0 1 83.33%; min-width: 0'
+        table.tj-table#challenge-table
           thead
             tr
               th Challenge
               th Progress
-              th.d-none.d-sm-table-cell Points
+              th.tj-sm-table-cell Points
               th Expires in
           tbody
-            - @challenges.each do |c| 
+            - @challenges.each do |c|
                 tr.challenge-row data-challenge=c.id data-topic=(c.daily? ? 'Lucky Dip' : c.topic.id) data-subject=c.topic.subject_id
-                  td.text-left = c.stringify
+                  td = c.stringify
                   td = write_challenge_progress(c, @challenge_progresses)
-                  td.d-none.d-sm-table-cell 
+                  td.tj-sm-table-cell
                     = c.points
                     i.fas.fa-star style='color: yellow'
                   td = challenge_time_left(c)

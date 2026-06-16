@@ -5,7 +5,7 @@
 <%- if devise_mapping.omniauthable? %>
   <%= button_to user_google_oauth2_omniauth_authorize_path,
     data: { turbo: false },
-    class: 'd-flex mx-auto btn btn-outline',
+    class: 'tj-flex tj-mx-auto tj-btn-outline-light',
     id: 'loginGoogle' do %>
     <%= image_pack_tag('images/btn_google_signin_dark_normal_web.png') %>
   <% end %>

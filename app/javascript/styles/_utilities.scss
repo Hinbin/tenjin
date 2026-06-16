@@ -90,3 +90,32 @@
     display: table-cell;
   }
 }
+
+// Hidden below ≥992px, shown as block (for non-table elements).
+.tj-lg-block {
+  display: none;
+
+  @media (min-width: 992px) {
+    display: block;
+  }
+}
+
+// Hidden below ≥992px, shown as table-cell (for th/td elements).
+// Replaces .d-none.d-lg-block on table headers/cells.
+.tj-lg-table-cell {
+  display: none;
+
+  @media (min-width: 992px) {
+    display: table-cell;
+  }
+}
+
+// ── Positioning ────────────────────────────────────────────────────────────
+
+// Fixed footer strip (replaces Bootstrap .fixed-bottom)
+.tj-fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

@@ -1,51 +1,50 @@
 -content_for :title
   title=('Dashboard')
-section.page-section.text-center#myClassrooms
-  .container
+section.page-section.tj-text-center#myClassrooms
+  .tjk-container
     h1.page-section-header.text-uppercase My Classes
     hr class=("small mb-5 primary-red")
-    .row.justify-content-center
+    .tj-flex.tj-justify-center
       .table-responsive
-        table.table.table-hover#classroomTable
+        table.tj-table#classroomTable
           thead
             tr
               th Name
-              th.d-none.d-lg-block Description
+              th.tj-lg-table-cell Description
               th Subject
-              th.d-none.d-lg-block # Students
+              th.tj-lg-table-cell # Students
               th
           tbody
             - @enrollments.each do |e|
               tr data-classroom = e.classroom.id
                 td =e.classroom.name
-                td.d-none.d-lg-block =e.classroom.description
+                td.tj-lg-table-cell =e.classroom.description
                 td =e.subject.name if e.subject.present?
-                td.d-none.d-lg-block =e.classroom.enrollments.size
-                td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'btn btn-dark'
+                td.tj-lg-table-cell =e.classroom.enrollments.size
+                td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'tj-btn-dark'
 - if @other_classrooms.present?
-  section.page-section.text-center#otherClassrooms
-    .container
+  section.page-section.tj-text-center#otherClassrooms
+    .tjk-container
       h1.page-section-header.text-uppercase Other Classrooms
       hr class=("small mb-5 primary-red")
-      .row.justify-content-center
+      .tj-flex.tj-justify-center
         div data-controller='table' data-table-page-length-value='25'
           .table-responsive
-            table.table.table-hover#otherClassroomTable
+            table.tj-table#otherClassroomTable
               thead
                 tr
                   th Name
-                  th.d-none.d-lg-block Description
+                  th.tj-lg-table-cell Description
                   th Subject
               tbody
                 - @other_classrooms.each do |c|
                   tr data-classroom = c.id
                     td =c.name
-                    td.d-none.d-lg-block =c.description
+                    td.tj-lg-table-cell =c.description
                     td =c.subject.name if c.subject.present?
-          .d-flex.justify-content-between.align-items-center.mt-2
-            button.btn.btn-sm.btn-secondary type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+          .tj-flex.tj-justify-between.tj-items-center style='margin-top: 0.5rem'
+            button.tj-btn-secondary.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
             span data-table-target='info'
-            button.btn.btn-sm.btn-secondary type='button' data-table-target='next' data-action='click->table#next' Next ›
+            button.tj-btn-secondary.tj-btn--sm type='button' data-table-target='next' data-action='click->table#next' Next ›
 -if current_user.oauth_email.blank?
   input#oAuthEmail type='hidden'
-

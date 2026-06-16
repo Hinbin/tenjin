@@ -1,7 +1,7 @@
-.container
+.tjk-container
   span.display-4 Subjects
-  .table-responsive
-    table.table#active-subjects
+  .tj-table-responsive
+    table.tj-table#active-subjects
       tr
         th Name
         th Questions Available
@@ -17,11 +17,11 @@
           td.asked_questions_this_week = @subject_statistics[:asked_questions_this_week]
     -if current_admin.super?
       =link_to(new_subject_path)
-        button.btn.btn-block.btn-primary type="button" Add Subject
+        button.tj-btn-primary.tj-btn--full type="button" Add Subject
   -if current_admin.super?
     .display-4.my-5 Deactivated Subjects
-    .table-responsive
-      table.table#deactivated-subjects
+    .tj-table-responsive
+      table.tj-table#deactivated-subjects
         tr
           th Name
           th Questions Available
