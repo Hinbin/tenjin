@@ -40,4 +40,17 @@ Topic.find_each.with_index do |topic, index|
   topic.update!(default_lesson: lessons.first) if topic.default_lesson.blank? && lessons.first.present?
 end
 
+# Assign roughly 4 out of every 5 questions to a lesson, rotating evenly across
+# the topic's lessons. The remaining 1-in-5 stay unassigned so both states are
+# represented in seed data.
+Topic.find_each do |topic|
+  lessons = topic.lessons.to_a
+  next if lessons.empty?
+
+  topic.questions.order(:id).each_with_index do |question, idx|
+    lesson_id = idx % 5 < 4 ? lessons[idx % lessons.length].id : nil
+    question.update_column(:lesson_id, lesson_id)
+  end
+end
+
 Rails.logger.info('Development lessons seeded.')

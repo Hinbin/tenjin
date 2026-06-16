@@ -79,12 +79,14 @@ class LessonsController < ApplicationController
   def set_permitted_lessons_and_subjects
     if @author
       @editable_subjects = Subject.with_role(:lesson_author, current_user)
+      editable_topic_ids = Topic.where(subject_id: @editable_subjects.pluck(:id)).pluck(:id)
       @lessons = policy_scope(Lesson)
-                 .or(Lesson
-                  .includes(:topic)
-                  .where(topics: { subject: @editable_subjects.pluck(:id) })).order('topics.name, lessons.title')
+                 .or(Lesson.where(topic_id: editable_topic_ids))
+                 .includes(:topic)
+                 .order('topics.name, lessons.title')
     else
       @lessons = policy_scope(Lesson).includes(:topic).order('topics.name, lessons.title')
     end
+    @lessons_by_subject = @lessons.group_by { |l| l.topic.subject_id }
   end
 end

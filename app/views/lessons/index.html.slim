@@ -10,13 +10,14 @@
       - @subject_author = current_user.has_role? :lesson_author, s if @author
       h1.py-4.h1.subject-title=s.name
       .tj-card-grid
-        -@lessons.where(topics: { subject:s } ).each do |l|
+        -(@lessons_by_subject[s.id] || []).each do |l|
           -unless l.no_content?
             .tj-card
-              .tj-card-body.videoLink src=l.generate_video_src
+              .videoLink src=l.generate_video_src
+                img style='width:100%;height:auto;display:block' video_id=l.video_id category=l.category src=l.generate_thumbnail_src
+              .tj-card-body
                 h3.h4.lesson-title =l.title
                 p =l.topic.name
-                img style='width:100%;height:auto' video_id=l.video_id category=l.category src=l.generate_thumbnail_src
               -if @subject_author
                 .tj-card-footer
                   p = 'Questions: ' + l.questions_count.to_s
@@ -36,7 +37,7 @@
             th
             th
           tbody
-            - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|
+            - (@lessons_by_subject[s.id] || []).select(&:no_content?).each do |l|
               tr
                 td = l.title
                 td = Question.where(lesson: l, active: true).count
@@ -56,7 +57,7 @@
             th Lesson Title
             th Questions
             th
-            - @lessons.where(topics: { subject:s }, category: 'no_content').each do |l|
+            - (@lessons_by_subject[s.id] || []).select(&:no_content?).each do |l|
               tr
                 td = l.title
                 td = Question.where(lesson: l, active: true).count
