@@ -26,6 +26,9 @@
 
 @import "bootstrap";
 @import "~bootstrap/scss/bootstrap";
+@import 'classroom';
+@import 'customisations';
+@import 'lessons';
 @import '@fortawesome/fontawesome-free';
 @import 'pages';
 @import 'dashboard';
