@@ -1,0 +1,92 @@
+// Tenjin utility classes — phase 04i-0
+// Replacements for Bootstrap utility classes used in views.
+// Phase 0 adds only the classes missing from existing tj-*/tjk-* helpers.
+
+// ── Layout ─────────────────────────────────────────────────────────────────
+
+// Full-width container (replaces Bootstrap .container-fluid)
+.tj-container-fluid {
+  width: 100%;
+  padding-left: var(--tj-space-3);
+  padding-right: var(--tj-space-3);
+}
+
+// ── Flex helpers ───────────────────────────────────────────────────────────
+
+.tj-flex             { display: flex; }
+.tj-justify-center   { justify-content: center; }
+.tj-justify-between  { justify-content: space-between; }
+.tj-items-center     { align-items: center; }
+
+// Horizontal centering (replaces Bootstrap .mx-auto)
+.tj-mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// ── Typography ─────────────────────────────────────────────────────────────
+
+.tj-text-center { text-align: center; }
+.tj-text-right  { text-align: right; }
+
+// ── Alerts ─────────────────────────────────────────────────────────────────
+
+// Warning alert (replaces .alert.alert-warning)
+.tj-alert-warning {
+  background: var(--tj-warning-bg);
+  border: 1px solid var(--tj-warning-bd);
+  color: var(--tj-warning-fg);
+  border-radius: var(--tj-radius);
+  padding: var(--tj-space-2) var(--tj-space-3);
+}
+
+// Info alert (replaces .alert.alert-info)
+.tj-alert-info {
+  background: #d1ecf1;
+  border: 1px solid #bee5eb;
+  color: #0c5460;
+  border-radius: var(--tj-radius);
+  padding: var(--tj-space-2) var(--tj-space-3);
+}
+
+// Dismissible alert close button (replaces Bootstrap .close inside .alert-dismissible)
+.tj-alert-close {
+  float: right;
+  font-size: 1.25rem;
+  font-weight: var(--tj-w-black);
+  line-height: 1;
+  color: inherit;
+  opacity: 0.5;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 var(--tj-space-1);
+}
+.tj-alert-close:hover { opacity: 0.75; }
+
+// ── Accessibility ──────────────────────────────────────────────────────────
+
+// Screen-reader-only (replaces Bootstrap .sr-only)
+.tj-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ── Responsive table-cell ──────────────────────────────────────────────────
+
+// Hidden at xs, shown as table-cell at ≥576px.
+// Replaces the two-class pattern .d-none.d-sm-table-cell on <td>/<th> elements.
+.tj-sm-table-cell {
+  display: none;
+
+  @media (min-width: 576px) {
+    display: table-cell;
+  }
+}
