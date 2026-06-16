@@ -212,6 +212,10 @@ dialog::backdrop {
   width: 800px;
 }
 
+#studentLoginModal {
+  width: 480px;
+}
+
 // Dialog inner layout — replaces Bootstrap .modal-content/.modal-body/.modal-footer
 .tj-dialog-content { display: flex; flex-direction: column; }
 .tj-dialog-header  { display: flex; justify-content: flex-end; padding: var(--tj-space-2) var(--tj-space-3); border-bottom: 1px solid #dee2e6; }
