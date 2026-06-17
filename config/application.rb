@@ -20,5 +20,14 @@ module Csquiz
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     config.middleware.use AppErrorMiddleware
+
+    # Also compile the mailer stylesheet (bootstrap-email inlines it into emails)
+    config.dartsass.builds = {
+      "application.scss"        => "application.css",
+      "application-mailer.scss" => "application-mailer.css"
+    }
+    # Add bootstrap-email gem's SCSS core to asset paths so dartsass can
+    # resolve @import 'bootstrap-email' in application-mailer.scss.
+    config.assets.paths << Gem::Specification.find_by_name("bootstrap-email").gem_dir + "/core"
   end
 end

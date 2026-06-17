@@ -1,0 +1,127 @@
+// Place all the styles related to the dashboard controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/ 
+
+.tj-table > tbody > tr:hover {
+  background-color: #ef4035;
+  transition: background-color 0.3s linear;
+}
+
+.homework-image{
+  @media (min-width: 992px) {
+    background-attachment: fixed !important;
+  }
+  background-size: cover !important;
+  background-position: center !important; 
+  color: white;
+}
+
+.homework-table{
+  background-color:rgba(0, 0, 0, 0.3)
+}
+
+#newQuiz{
+  background-color: white;
+}
+
+hr.primary {
+  @extend %hr-primary-shared;
+}
+
+.dashboard-style{
+  background-size: cover !important;
+  background-position: center !important; 
+}
+
+.subject-carousel-item-text {
+  color: white;
+  pointer-events: none;
+  max-width: 15rem;
+}
+
+.subject-carousel-item-image {
+  filter: brightness(50%);
+}
+
+// ── Subject carousel (student dashboard) ────────────────────────────────────
+
+.tj-carousel {
+  position: relative;
+  overflow: hidden;
+  max-width: 30rem;
+  margin: 0 auto;
+  border-radius: var(--tj-radius);
+}
+
+.tj-carousel__track {
+  display: flex;
+  transition: transform 0.35s ease;
+  will-change: transform;
+}
+
+.tj-carousel__item {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+}
+
+.tj-carousel__img {
+  width: 100%;
+  display: block;
+}
+
+.tj-carousel__caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: white;
+  padding: 0.5rem;
+  pointer-events: none;
+}
+
+.tj-carousel__prev,
+.tj-carousel__next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: white;
+  font-size: 1.25rem;
+  padding: 0.25rem 0.625rem;
+  cursor: pointer;
+  z-index: 2;
+  line-height: 1;
+  border-radius: var(--tj-radius);
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.tj-carousel__prev { left: 0.5rem; }
+.tj-carousel__next { right: 0.5rem; }
+
+.tj-carousel__indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0 0;
+}
+
+.tj-carousel__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s;
+
+  &.tj-carousel__dot--active {
+    background: #000;
+  }
+}
