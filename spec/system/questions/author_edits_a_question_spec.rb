@@ -247,8 +247,10 @@ RSpec.describe 'Author edits a question', :default_creates, :js, type: :system d
       end
 
       def add_new_answer
+        initial_count = all('.text-answer').count
         click_link('Add Answer')
-        all('.text-answer').last.set("#{answer_text}\n")
+        expect(page).to have_css('.text-answer', count: initial_count + 1)
+        all('.text-answer').last.set(answer_text)
         click_button('Save Question')
         find_by_id('flash-notice', text: 'Question successfully updated')
       end

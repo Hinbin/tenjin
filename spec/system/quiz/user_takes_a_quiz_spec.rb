@@ -77,12 +77,12 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
 
       it 'uses icons to show which questions are right' do
         find(id: correct_response_selector).click
-        expect(page).to have_css('svg.fa-check')
+        expect(page).to have_css('i.fa-check')
       end
 
       it 'uses icons to show which questions are wrong' do
         find(id: incorrect_response_selector).click
-        expect(page).to have_css('svg.fa-times')
+        expect(page).to have_css('i.fa-times')
       end
     end
 
@@ -90,26 +90,26 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
       let(:flagged_question) { create(:flagged_question, user: student, question:) }
 
       it 'shows an option to flag a problem with a question' do
-        expect(page).to have_css('svg.fa-flag')
+        expect(page).to have_css('i.fa-flag')
       end
 
       it 'allows me to flag a question' do
-        find(:css, 'svg.fa-flag').click
-        expect(page).to have_css('svg.fa-flag[data-prefix="fas"]')
+        find('button[title="Flag unfair question"]').click
+        expect(page).to have_css('i.fas.fa-flag')
                     .and have_text('You have flagged this question as unfair')
       end
 
       it 'shows if I have already flagged a particular question' do
         flagged_question
         visit quiz_path(Quiz.first)
-        expect(page).to have_css('svg.fa-flag[data-prefix="fas"]')
+        expect(page).to have_css('i.fas.fa-flag')
       end
 
       it 'allows me to unflag a question' do
         flagged_question
         visit quiz_path(Quiz.first)
-        find(:css, 'svg.fa-flag').click
-        expect(page).to have_css('svg.fa-flag[data-prefix="far"]')
+        find('button[title="Flag unfair question"]').click
+        expect(page).to have_css('i.far.fa-flag')
       end
     end
   end
@@ -224,12 +224,12 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
 
     it 'uses icons to show when I am right' do
       fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
-      expect(page).to have_css('svg.fa-check')
+      expect(page).to have_css('i.fa-check')
     end
 
     it 'uses icons to show when I am wrong' do
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      expect(page).to have_css('svg.fa-times')
+      expect(page).to have_css('i.fa-times')
     end
 
     it 'shows the next question button if there is no correct answer returned' do

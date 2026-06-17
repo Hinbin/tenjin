@@ -1,5 +1,27 @@
 // questionTable now uses table_controller.js (no DataTables).
 
+// add/remove answer rows: use document-level delegation so clicks work
+// even during a Turbo navigation (the form element changes mid-flight).
+document.addEventListener('click', (event) => {
+  if (page.controller() !== 'questions') return
+
+  const removeBtn = event.target.closest('.remove_record')
+  if (removeBtn) {
+    event.preventDefault()
+    const prev = removeBtn.previousElementSibling
+    if (prev && prev.matches('input[type=hidden]')) prev.value = '1'
+    removeBtn.closest('tr')?.remove()
+  }
+
+  const addBtn = event.target.closest('.add_fields')
+  if (addBtn) {
+    event.preventDefault()
+    const time = new Date().getTime()
+    const regexp = new RegExp(addBtn.dataset.id, 'g')
+    document.querySelector('.fields')?.insertAdjacentHTML('beforeend', addBtn.dataset.fields.replace(regexp, time))
+  }
+})
+
 document.addEventListener('turbo:load', () => {
   if (page.controller() !== 'questions') return
 
@@ -22,24 +44,6 @@ document.addEventListener('turbo:load', () => {
       const formParams = new URLSearchParams(new FormData(form)).toString()
       Turbo.visit(currentPath + '?' + formParams)
     })
-  })
-
-  document.querySelector('form')?.addEventListener('click', (event) => {
-    const removeBtn = event.target.closest('.remove_record')
-    if (removeBtn) {
-      event.preventDefault()
-      const prev = removeBtn.previousElementSibling
-      if (prev && prev.matches('input[type=hidden]')) prev.value = '1'
-      removeBtn.closest('tr')?.remove()
-    }
-
-    const addBtn = event.target.closest('.add_fields')
-    if (addBtn) {
-      event.preventDefault()
-      const time = new Date().getTime()
-      const regexp = new RegExp(addBtn.dataset.id, 'g')
-      document.querySelector('.fields')?.insertAdjacentHTML('beforeend', addBtn.dataset.fields.replace(regexp, time))
-    }
   })
 })
 

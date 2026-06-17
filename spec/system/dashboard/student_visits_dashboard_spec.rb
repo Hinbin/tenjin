@@ -43,7 +43,7 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
     it 'shows challenge as complete if finished' do
       completed_challenge
       visit(dashboard_path)
-      expect(page).to have_css('td svg.fa-check')
+      expect(page).to have_css('td i.fa-check')
     end
 
     it 'only shows challenges for subjects I take' do
@@ -96,19 +96,19 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
 
     it 'shows completed homeworks with a cross (times) icon' do
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-times")
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-times")
     end
 
     it 'shows completed homeworks with a tick icon' do
       HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-check")
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-check")
     end
 
     it 'shows overdue homeworks with an exclamation icon' do
       homework.update_attribute(:due_date, Time.now - 1.day)
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > svg.fa-exclamation")
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-exclamation")
     end
 
     it 'shows homeworks completed in the last week only' do

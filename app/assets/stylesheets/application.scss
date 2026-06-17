@@ -6,6 +6,19 @@
   box-sizing: border-box;
 }
 
+// Form elements don't inherit font properties from the parent by default in
+// most browsers — UA stylesheets override them. This reset mirrors what
+// Bootstrap's _reboot.scss provided and fixes buttons/inputs using browser
+// default font-size instead of the body's 1.25rem.
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 @import 'tokens';
 @import 'utilities';
 @import 'layout';
