@@ -4,24 +4,13 @@
 #
 version: 2.1
 
-orbs: 
+orbs:
   browser-tools: circleci/browser-tools@2.4.2
-  node: circleci/node@5.2.0
 
 commands:
   shared_steps:
     steps:
       - checkout
-
-      - node/install:
-          node-version: "22"
-          install-yarn: false
-      - run:
-          name: Install Yarn
-          command: |
-            npm install --global yarn@1.22.22
-            node --version
-            yarn --version
 
       - run:
           name: Configure bundler
@@ -47,18 +36,6 @@ commands:
           paths:
             - vendor/bundle
 
-      - restore_cache:
-          name: Restore yarn cache
-          keys:
-            - tenjin-yarn-{{ checksum "yarn.lock" }}
-            - tenjin-yarn-
-      - run: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
-      - save_cache:
-          name: Store yarn cache
-          key: tenjin-yarn-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
-            
       - run: sudo apt update
       - run: sudo apt-get install -y libvips-dev
 
@@ -68,7 +45,7 @@ commands:
           command: |
             google-chrome --version
             chromedriver --version
-          name: Check install            
+          name: Check install
 
 
 default_job: &default_job
@@ -87,8 +64,8 @@ jobs:
           name: run RuboCop
           command: bundle exec rubocop
       - run:
-          name: build JavaScript
-          command: yarn build
+          name: build CSS (dartsass)
+          command: bundle exec rails dartsass:build
   test:
     <<: *default_job
     parallelism: 4
@@ -112,7 +89,7 @@ jobs:
       # Wait for DB
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-      # Database setup   
+      # Database setup
       - run: bin/rails db:create db:schema:load
 
       # run tests!

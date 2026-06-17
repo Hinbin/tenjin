@@ -4,17 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Tenjin is a Rails 7 quiz and homework platform for schools. Students answer questions, earn leaderboard points, and complete homework. Teachers manage classrooms, subjects, topics, and questions.
+Tenjin is a Rails 8 quiz and homework platform for schools. Students answer questions, earn leaderboard points, and complete homework. Teachers manage classrooms, subjects, topics, and questions.
 
 ## Commands
 
 ```sh
 # Setup
 bundle install
-yarn install
 bin/rails db:create db:schema:load
 
-# Development server (Rails + webpacker-dev-server)
+# Development server (Rails + dartsass watcher; no Node/webpack)
 bin/dev
 
 # Tests
@@ -26,10 +25,12 @@ bin/rails parallel:prepare                           # (re)build parallel test D
 # Linting
 bundle exec rubocop
 bundle exec reek
-yarn build                                           # JS asset compilation via shakapacker webpack (no JS test runner)
+
+# CSS compilation (dartsass-rails; no JS build step needed)
+bin/rails dartsass:build
 
 # Before CI-style runs
-bin/rails webpacker:compile
+bin/rails assets:precompile
 bin/rails db:create db:schema:load
 bundle exec rspec
 ```
@@ -49,9 +50,9 @@ Known local Ruby paths:
 
 ## Architecture
 
-**Ruby/Rails stack:** Rails 7.2, PostgreSQL (`csquiz_development` / `csquiz_test`), Puma, Delayed Job for background work, Active Storage on S3 in production, Devise + Pundit + Rolify for auth/authz.
+**Ruby/Rails stack:** Rails 8.0, PostgreSQL (`csquiz_development` / `csquiz_test`), Puma, Solid Queue for background work, Active Storage on S3 in production, Devise + Pundit + Rolify for auth/authz.
 
-**Frontend:** Shakapacker (Webpack 5) bundles JS. Stimulus controllers (`@hotwired/stimulus` v3), Turbo, and Bootstrap 4 + jQuery-era libs. `app/javascript/components/` is empty — there is no React in this app. Match nearby patterns rather than introducing a new frontend architecture for small changes.
+**Frontend:** **Propshaft + importmap-rails (no-build JS) + dartsass-rails (SCSS)**. No Node/webpack/yarn. Stimulus controllers (`@hotwired/stimulus` v3) registered explicitly in `app/javascript/controllers/index.js`. Turbo + ActionCable. Custom Tenjin design system CSS (no Bootstrap). There is no React in this app — match existing Slim + SCSS + Stimulus patterns.
 
 **Service objects** under `app/services/<domain>/` encapsulate multi-step workflows. All inherit from `ApplicationService` which provides a `.call` class method. Use service objects for domain logic; keep controllers thin.
 
@@ -61,7 +62,7 @@ Known local Ruby paths:
 
 **User roles** (via rolify): `student`, `employee`, `contact`, `school_admin`. Role checks appear throughout policies and controllers.
 
-**Background jobs:** Delayed Job. Keep web and worker behavior compatible; do not introduce ActiveJob backends without aligning with the existing DJ setup.
+**Background jobs:** Solid Queue (Active Job adapter). Workers run via `bin/jobs start`.
 
 ## Environment & Deployment
 
@@ -80,6 +81,6 @@ Known local Ruby paths:
 ## Style
 
 - RuboCop (`.rubocop.yml`) with new cops enabled; Reek (`config.reek`) for code smells.
-- ESLint extends `standard` (`.eslintrc.js`).
 - Views use Slim templates.
 - `frozen_string_literal: true` at top of all Ruby files.
+- No JS build step; there is no ESLint runner — lint JS by eye.
