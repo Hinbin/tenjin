@@ -164,13 +164,13 @@ RSpec.describe 'Admins', :default_creates, type: :request do
     it 'shows the schools menu option' do
       get schools_path
       html = Capybara.string(response.body)
-      expect(html).to have_css('.nav-link', text: 'Schools')
+      expect(html).to have_css('.tj-navbar__link', text: 'Schools')
     end
 
     it 'hides school groups menu option' do
       get schools_path
       html = Capybara.string(response.body)
-      expect(html).to have_no_css('.nav-link', text: 'School Groups')
+      expect(html).to have_no_css('.tj-navbar__link', text: 'School Groups')
     end
 
     it 'hides add subject button' do
