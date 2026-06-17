@@ -5,9 +5,9 @@
   meta property="og:description" content="Quizzes: learn, compete, succeed!"
 
 header.masthead.text-white style='display:flex; align-items:center; justify-content:center'
-  div.text-center
+  div.tj-text-center
     h1.section-heading.text-uppercase#mastheadText Learn, Compete, Succeed
-    hr.small.mb-5.primary-red
-footer.fixed-bottom.text-right.px-3.py-3.text-white
+    hr.small.primary-red style='margin-bottom: 3rem'
+footer.tj-fixed-bottom.tj-text-right.text-white style='padding: 1rem'
   = link_to 'About', page_path('about'), class: 'text-light'
 = render('student_login_modal')

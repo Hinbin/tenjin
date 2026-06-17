@@ -65,7 +65,7 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
       dashboard_customisation_expensive
       visit(show_available_customisations_path)
       find("form[action='#{buy_customisation_path(dashboard_customisation_expensive)}'] input.buy-btn").click
-      expect(page).to have_css('.alert', text: 'You do not have enough points')
+      expect(page).to have_css('.tj-alert-info', text: 'You do not have enough points')
     end
 
     it 'shows the cost of the customisation' do
@@ -105,13 +105,13 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
         second_customisation
         visit(show_available_customisations_path)
         find("form[action='#{buy_customisation_path(second_customisation)}'] input.buy-btn").click
-        find('.alert', text: 'Congratulations!')
+        find('.tj-alert-info', text: 'Congratulations!')
       end
 
       it 'allows you to buy a previously bought customisation at no cost' do
         visit(show_available_customisations_path)
         find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
-        find('.alert', text: 'Congratulations!')
+        find('.tj-alert-info', text: 'Congratulations!')
         expect(page).to have_css('#challenge-points',
                                  exact_text: student.challenge_points - dashboard_customisation.cost)
       end

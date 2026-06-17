@@ -8,11 +8,11 @@ body {
 }
 
 #mastheadText {
-  @include media-breakpoint-up(sm) {
+  @media (min-width: 576px) {
     font-size: 4rem;
   }
 
-  @include media-breakpoint-up(lg) {
+  @media (min-width: 992px) {
     font-size: 8rem;
   }
 }
@@ -30,6 +30,7 @@ body {
   background-position: center;
   background-attachment: fixed;
   height: 100vh;
+  color: white;
 }
 
 .btn-light-outline {

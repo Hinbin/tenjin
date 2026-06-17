@@ -11,16 +11,16 @@
     | This quiz is currently not counting towards your leaderboard points.  The first attempt at a lesson homework will count, or the first four quizzes for a particular topic.
 
 dialog#feedbackModal
-  .modal-content
-    .modal-body
+  .tj-dialog-content
+    .tj-dialog-body
       p#feedback You have flagged this question as unfair.  Thanks for your feedback!
-    .modal-footer
-      button.btn.btn-secondary type='button' onclick='this.closest("dialog").close()' Close
+    .tj-dialog-footer
+      button.tj-btn-secondary type='button' onclick='this.closest("dialog").close()' Close
 
 dialog#videoModal
-  .modal-content
-    .modal-body.p-0.p-md-2
-      button.close type='button' aria-label='Close' onclick='this.closest("dialog").close()'
+  .tj-dialog-content
+    .tj-dialog-body style='padding: 0'
+      button type='button' aria-label='Close' onclick='this.closest("dialog").close()' style='float:right; background:none; border:none; font-size:1.5rem; cursor:pointer'
         span aria-hidden='true' &times;
-      .embed-responsive.embed-responsive-16by9
-        iframe.embed-responsive-item#video allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen=true
+      .tj-embed-16by9
+        iframe#video allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowscriptaccess="always" src="" allowfullscreen=true

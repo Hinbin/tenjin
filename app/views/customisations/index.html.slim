@@ -3,12 +3,12 @@
 section.page-section
   .tjk-container
     =link_to 'New Customisation', new_customisation_path, class: 'tj-btn-primary tj-btn--full'
-section.page-section.text-center.available-customisations
+section.page-section.tj-text-center.available-customisations
   .tjk-container
     h1.page-section-header.text-uppercase Available Customisations
     ==render_small_separator
     =render partial: "customisations", locals: {customisations: @customisations.order(sticky: :desc, purchasable: :desc), bought_customisations: []}
-section.page-section.text-center.retired-customisations
+section.page-section.tj-text-center.retired-customisations
   .tjk-container
     h1.page-section-header.text-uppercase Retired Customisations
     ==render_small_separator

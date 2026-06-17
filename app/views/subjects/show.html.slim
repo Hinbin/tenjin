@@ -3,8 +3,8 @@
   = simple_form_for @subject do |f|
     =f.input :name
     =f.input :active
-    =f.button :submit, class: "btn btn-primary btn-block"
+    =f.button :submit, class: "tj-btn-primary tj-btn--full"
   =link_to 'Deactivate Subject',
     subject_path(@subject),
-    class: 'btn btn-block btn-danger my-5',
+    class: 'tj-btn-danger tj-btn--full',
     data: {turbo_confirm: "Are you sure?", turbo_method: "delete"}

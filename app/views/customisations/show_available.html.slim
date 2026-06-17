@@ -1,13 +1,13 @@
 -content_for :title
   title=('Customisations')
-section.page-section.text-center.available-styles
+section.page-section.tj-text-center.available-styles
   .tjk-container
     h1.page-section-header.text-uppercase Available Styles
     ==render_small_separator
     p style='margin: var(--tj-space-1) 0' Different styles available every week!
     =render partial: "customisations", locals: {customisations: @available_styles, bought_customisations: @bought_customisations}
 
-section.page-section.text-center.purchased-styles
+section.page-section.tj-text-center.purchased-styles
   .tjk-container
     h1.page-section-header.text-uppercase Purchased Styles
     ==render_small_separator

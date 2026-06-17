@@ -1,8 +1,8 @@
 .tjk-container
-  section.page-section.text-center.pt-2#createLesson
+  section.page-section.tj-text-center style='padding-top: 0.5rem' id='createLesson'
     h1.page-section-header.text-uppercase Update Lesson
     h3.text-uppercase =@lesson.subject.name
-    hr class=("small mb-5 primary-red")
+    hr class=("small primary-red") style='margin-bottom: 3rem'
     =simple_form_for @lesson do |f|
       =f.input :title, wrapper: :horizontal_form
       =f.input :video_id, label: 'URL:', wrapper: :horizontal_form

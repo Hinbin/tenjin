@@ -6,6 +6,9 @@
 
 .tjk-field {
   margin-bottom: var(--tj-space-3);
+  border: 0;
+  padding: 0;
+  min-width: 0;
 
   &--invalid {
     .tjk-input,

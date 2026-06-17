@@ -16,7 +16,7 @@ RSpec.describe 'User visits the homepage', :default_creates, :js, :vcr, type: :s
     visit root_path
     click_button 'Login'
     find_by_id('loginGoogle').click
-    find('.alert', text: 'authenticated')
+    find('.tj-alert-info', text: 'authenticated')
   end
 
   it 'change passwords' do
@@ -45,7 +45,7 @@ RSpec.describe 'User visits the homepage', :default_creates, :js, :vcr, type: :s
     it 'links to Google accounts' do
       visit(user_path(student_no_oauth))
       find_by_id('loginGoogle').click
-      find('.alert', text: 'linked')
+      find('.tj-alert-info', text: 'linked')
       log_in_via_google
       expect(page).to have_text(student_no_oauth.forename).and have_text(student_no_oauth.surname)
     end
