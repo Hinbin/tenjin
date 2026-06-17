@@ -134,10 +134,8 @@ gem 'aws-sdk-rails'
 # Investigate memory leaks
 gem 'scout_apm'
 
-# Heroku dyno management & statistics
+# Worker autoscaling metrics (supported on Render via the HireFire integration)
 gem 'hirefire-resource'
-gem 'barnes'
-#skylight for response metrics?
 
 
 # New image manipulator gem

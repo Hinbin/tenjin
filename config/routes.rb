@@ -3,6 +3,9 @@
 Rails.application.routes.draw do
   get '/.well-known/appspecific/com.chrome.devtools.json', to: proc { [204, {}, ['']] }
 
+  # Lightweight health check for the platform load balancer (Render, etc.)
+  get 'up' => 'rails/health#show', as: :rails_health_check
+
   devise_for :admins, controllers: { invitations: 'admins/invitations' }
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   

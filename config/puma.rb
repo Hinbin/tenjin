@@ -33,10 +33,6 @@ workers ENV.fetch("WEB_CONCURRENCY") { 2 }
 #
 preload_app!
 
-# Start Barnes to support Heroku runtime metrics.
-#
-on_worker_boot { Barnes.start }
-
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
 

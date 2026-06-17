@@ -1,0 +1,50 @@
+# See https://docs.docker.com/engine/reference/builder/#dockerignore-file
+
+# Git
+.git
+.gitignore
+
+# CI / editor / agent tooling
+.circleci
+.vscode
+.claude
+AGENTS.md
+CLAUDE.md
+design
+
+# Node toolchain (no JS build step — Propshaft + importmap + dartsass)
+node_modules
+.eslintrc.js
+babel.config.js
+postcss.config.js
+.postcssrc.yml
+.browserslistrc
+
+# Ignore bundler config
+/.bundle
+
+# Ignore all default key files (provided via RAILS_MASTER_KEY env on Render)
+config/master.key
+config/credentials/*.key
+
+# Ignore all environment files
+.env*
+!.env.test
+
+# Ignore runtime files
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Ignore storage (uploads in dev/test) and assets generated at build time
+/storage/*
+!/storage/.keep
+/public/assets
+
+# Ignore CI/test artifacts
+/coverage
+/spec/examples.txt
+/tmp/screenshots

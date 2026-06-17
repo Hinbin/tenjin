@@ -35,8 +35,14 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
-  config.action_cable.url = 'wss://tenjin.herokuapp.com/cable'
-  config.action_cable.allowed_request_origins = [ 'https://tenjin.herokuapp.com/cable', 'http://tenjin.herokuapp.com/cable' ]
+  # Derived from DEFAULT_HOST so the same image runs on any domain (Render, custom domain, etc.)
+  if ENV["DEFAULT_HOST"].present?
+    config.action_cable.url = "wss://#{ENV['DEFAULT_HOST']}/cable"
+    config.action_cable.allowed_request_origins = [
+      "https://#{ENV['DEFAULT_HOST']}",
+      "http://#{ENV['DEFAULT_HOST']}"
+    ]
+  end
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
