@@ -1,4 +1,4 @@
-import updateQuizStatistics from './questions_shared'
+import updateQuizStatistics from './questions_shared.js'
 
 function processShortResponse (serverResponse, guess) {
   const results = serverResponse.answer

@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
-import consumer from '../channels/consumer'
+import consumer from '../channels/consumer.js'
 
 const maxUsersToDisplay = 10
 
