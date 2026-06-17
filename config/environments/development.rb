@@ -43,6 +43,7 @@ Rails.application.configure do
 
   # Provide a default URL host for mailers
   config.action_mailer.default_url_options = { host: 'localhost', port: ENV.fetch('PORT') { 3000 } }
+  config.action_mailer.preview_paths = [Rails.root.join("spec/mailers/previews")]
 
   config.active_support.deprecation = :log
 

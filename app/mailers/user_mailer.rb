@@ -6,6 +6,6 @@ class UserMailer < ApplicationMailer
   def setup_email
     @user = params[:user]
     @password = params[:password]
-    make_bootstrap_mail(to: @user.email, subject: 'Welcome to Tenjin')
+    mail(to: @user.email, subject: 'Welcome to Tenjin')
   end
 end
