@@ -20,7 +20,9 @@ services:
     dockerfilePath: ./Dockerfile
     plan: free
     healthCheckPath: /up
-    preDeployCommand: bundle exec rails db:migrate
+    # Free tier has no pre-deploy hook, so migrate on boot then start Puma.
+    # db:prepare loads the schema on a fresh DB and is a no-op once migrated.
+    dockerCommand: sh -c "bundle exec rails db:prepare && bundle exec puma -C config/puma.rb"
     envVars:
       - key: RAILS_ENV
         value: production
