@@ -46,6 +46,7 @@ RUN apt-get update -qq && \
       libpq-dev \
       libvips-dev \
       libpoppler-glib-dev \
+      libyaml-dev \
       pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
