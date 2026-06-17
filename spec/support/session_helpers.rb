@@ -85,13 +85,13 @@ module SessionHelpers
     fill_in('user_login', with: username)
     fill_in('user_password', with: password)
     click_button 'loginModal'
-    find('.alert', text: 'Signed in successfully')
+    find('.tj-alert-info', text: 'Signed in successfully')
   end
 
   def update_password(new_password)
     find_by_id('user_password').set(new_password)
     click_button('Update Password')
-    find('.alert')
+    find('.tj-alert-info')
   end
 
   def create_file_blob(filename:, content_type:, metadata: nil)

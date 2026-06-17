@@ -1,28 +1,28 @@
 .tjk-container
   h1 = @app_error.exception_class
-      p = @app_error.message
-      dl
-        dt Time
-        dd = l(@app_error.created_at, format: :long)
-        dt Request ID
-        dd = @app_error.request_id
-        dt URL
-        dd = @app_error.url
-        dt Controller
-        dd = [@app_error.controller, @app_error.action].compact.join('#')
-        dt User
-        dd = @app_error.user_id
-        dt Admin
-        dd = @app_error.admin_id
-        dt Job
-        dd = [@app_error.job_class, @app_error.job_id].compact.join(' ')
-        dt Context
-        dd
-          pre = JSON.pretty_generate(@app_error.context)
-        dt Params
-        dd
-          pre = JSON.pretty_generate(@app_error.params)
-        dt Backtrace
-        dd
-          pre = @app_error.backtrace
-      = link_to 'Back', app_errors_path, class: 'tj-btn-primary'
+  p = @app_error.message
+  dl
+    dt Time
+    dd = l(@app_error.created_at, format: :long)
+    dt Request ID
+    dd = @app_error.request_id
+    dt URL
+    dd = @app_error.url
+    dt Controller
+    dd = [@app_error.controller, @app_error.action].compact.join('#')
+    dt User
+    dd = @app_error.user_id
+    dt Admin
+    dd = @app_error.admin_id
+    dt Job
+    dd = [@app_error.job_class, @app_error.job_id].compact.join(' ')
+    dt Context
+    dd
+      pre = JSON.pretty_generate(@app_error.context)
+    dt Params
+    dd
+      pre = JSON.pretty_generate(@app_error.params)
+    dt Backtrace
+    dd
+      pre = @app_error.backtrace
+  = link_to 'Back', app_errors_path, class: 'tj-btn-primary'
