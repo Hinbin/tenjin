@@ -57,7 +57,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
         first(class: 'next-button').click
-        expect(page).to have_css('svg.fa-check')
+        expect(page).to have_css('i.fa-check')
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
         first(class: 'next-button').click
-        expect(page).to have_css('svg.fa-check')
+        expect(page).to have_css('i.fa-check')
       end
     end
 
@@ -100,7 +100,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
         first(class: 'next-button').click
-        expect(page).to have_css('svg.fa-check')
+        expect(page).to have_css('i.fa-check')
       end
     end
 
@@ -114,7 +114,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         visit(dashboard_path)
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         click_through_quiz
-        expect(page).to have_css('svg.fa-check')
+        expect(page).to have_css('i.fa-check')
       end
 
       it 'only increases points for this student' do

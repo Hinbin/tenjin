@@ -18,7 +18,7 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
 
     it 'visits from the challenge star' do
       visit(dashboard_path)
-      find('svg.fa-star').click
+      find('a.tj-navbar__points').click
       expect(page).to have_current_path(show_available_customisations_path)
     end
 
@@ -149,7 +149,7 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
       create(:topic_score, user: student, topic:)
       find("form[action='#{buy_customisation_path(icon_customisation)}'] input.buy-btn").click
       visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td svg.fa-star', style: 'color: black;')
+      expect(page).to have_css("td i.fa-star[style*='color: black']")
     end
   end
 end

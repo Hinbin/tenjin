@@ -11,8 +11,8 @@ html
     = csrf_meta_tags
     = csp_meta_tag
     = render 'layouts/google_analytics' if Rails.env.production?          
-    = stylesheet_pack_tag 'application', media: 'all', 'data-turbo-track': 'reload', defer: true
-    = javascript_pack_tag 'application', media: 'all', 'data-turbo-track': 'reload', defer: true
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = javascript_importmap_tags
     - unless Rails.env.test?
       = render partial: 'layouts/cookie_consent'
     link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"

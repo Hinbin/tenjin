@@ -146,4 +146,7 @@ gem 'barnes'
 # New image manipulator gem
 gem "ruby-vips"
 
-gem "shakapacker", "~> 8.4"
+# Rails 8 asset stack: no Node/webpack
+gem "propshaft"
+gem "importmap-rails"
+gem "dartsass-rails"

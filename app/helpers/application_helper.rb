@@ -10,9 +10,9 @@ module ApplicationHelper
   end
 
   def subject_image_tag(name, **)
-    image_pack_tag("images/#{name.parameterize}.jpg", **)
-  rescue Shakapacker::Manifest::MissingEntryError
-    image_pack_tag('images/default-subject.jpg', **)
+    filename = "#{name.parameterize}.jpg"
+    path = Rails.root.join("app/assets/images/#{filename}")
+    image_tag(path.exist? ? filename : 'default-subject.jpg', **)
   end
 
   def render_small_separator(style = nil)

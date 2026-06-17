@@ -15,7 +15,10 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git checkout *)",
-      "Bash(git switch *)"
+      "Bash(git switch *)",
+      "Bash(bundle exec rails dartsass:build *)",
+      "Bash(bundle exec rails assets:precompile *)",
+      "Bash(bundle exec reek *)"
     ]
   }
 }

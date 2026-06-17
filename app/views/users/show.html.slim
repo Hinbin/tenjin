@@ -11,7 +11,7 @@ section.page-section.tj-text-center
         =button_to user_google_oauth2_omniauth_authorize_path,
           data: { turbo: false },
           id: 'loginGoogle' do
-          =image_pack_tag('images/btn_google_signin_dark_normal_web.png')
+          =image_tag('btn_google_signin_dark_normal_web.png')
       -else
         p Unlink Account from Google
         =link_to "Unlink #{current_user.oauth_email}",
