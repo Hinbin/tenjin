@@ -1,0 +1,55 @@
+# Render Blueprint for a $0 TEST deploy of Tenjin.
+#
+# Differences from the production render.yaml:
+#   * Single Free web service (spins down when idle, ~512MB RAM).
+#   * No separate worker — Solid Queue runs inside Puma (SOLID_QUEUE_IN_PUMA).
+#   * WEB_CONCURRENCY=1 to fit the 512MB free instance.
+#
+# NOTE: Render's *free* Postgres usually cannot be created from a Blueprint.
+# Create it manually first (Dashboard -> New -> Postgres -> Free plan), then
+# either copy its Internal Database URL into DATABASE_URL below as a plain
+# value, or remove the `fromDatabase` block and set DATABASE_URL by hand.
+#
+# This config is for testing only. Free Postgres is deleted after 30 days and
+# has no backups — never put real data on it. Use render.yaml for production.
+
+services:
+  - type: web
+    name: tenjin-test
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /up
+    preDeployCommand: bundle exec rails db:migrate
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RACK_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
+      # Keep memory low on the 512MB free instance.
+      - key: WEB_CONCURRENCY
+        value: "1"
+      - key: RAILS_MAX_THREADS
+        value: "3"
+      # Run the Solid Queue worker inside this web process (no worker service).
+      - key: SOLID_QUEUE_IN_PUMA
+        value: "true"
+      # Decrypts config/credentials.yml.enc (AWS keys, SES, etc.)
+      - key: RAILS_MASTER_KEY
+        sync: false
+      # Public hostname; drives Action Cable URL/origins and mailer URLs.
+      # Use the onrender.com URL Render assigns, e.g. tenjin-test.onrender.com
+      - key: DEFAULT_HOST
+        sync: false
+      - key: DEFAULT_MAIL_SENDER
+        sync: false
+      - key: AWS_S3_BUCKET
+        sync: false
+      # Set this to the Internal Database URL of the free Postgres you created
+      # manually (see note above).
+      - key: DATABASE_URL
+        sync: false
