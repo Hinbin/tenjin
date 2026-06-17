@@ -1,0 +1,73 @@
+# Render Blueprint for Tenjin.
+# Apply with: Render Dashboard -> Blueprints -> New, pointing at this repo.
+# Secrets marked `sync: false` must be filled in via the Render dashboard the
+# first time the blueprint is applied.
+
+databases:
+  - name: tenjin-db
+    databaseName: tenjin_production
+    user: tenjin
+    plan: basic-256mb # bump to a Standard plan for production traffic
+    postgresMajorVersion: "16"
+
+# Shared environment so the web and worker services stay in lock-step.
+envVarGroups:
+  - name: tenjin-shared
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RACK_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
+      - key: RAILS_MAX_THREADS
+        value: "5"
+      # Decrypts config/credentials.yml.enc (AWS keys, SES, etc.)
+      - key: RAILS_MASTER_KEY
+        sync: false
+      # Public hostname; drives Action Cable URL/origins and mailer URLs.
+      - key: DEFAULT_HOST
+        sync: false
+      - key: DEFAULT_MAIL_SENDER
+        sync: false
+      - key: AWS_S3_BUCKET
+        sync: false
+      # Optional monitoring / autoscaling tokens (leave blank to disable).
+      - key: SCOUT_KEY
+        sync: false
+      - key: HIREFIRE_TOKEN
+        sync: false
+
+services:
+  - type: web
+    name: tenjin-web
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: standard
+    healthCheckPath: /up
+    # Runs once per deploy, before traffic is switched to the new version.
+    preDeployCommand: bundle exec rails db:migrate
+    envVars:
+      - fromGroup: tenjin-shared
+      - key: WEB_CONCURRENCY
+        value: "2"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tenjin-db
+          property: connectionString
+
+  - type: worker
+    name: tenjin-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: standard
+    # Overrides the image's default CMD (puma) to run the Solid Queue worker.
+    dockerCommand: bundle exec bin/jobs start
+    envVars:
+      - fromGroup: tenjin-shared
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tenjin-db
+          property: connectionString
