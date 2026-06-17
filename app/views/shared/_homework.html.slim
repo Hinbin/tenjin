@@ -1,25 +1,23 @@
-section.page-section.text-center.homework-image id="homework" style=render_dashboard_style(@dashboard_style)
-  .container
+section.page-section.tj-text-center.homework-image id="homework" style=render_dashboard_style(@dashboard_style)
+  .tjk-container
     h1.page-section-header.text-uppercase Homework
     ==render_small_separator
-    .row
-      .col
-        table.table.table-hover.text-white.homework-table
-          thead
-            tr
-              th.d-none.d-sm-table-cell Subject
-              th.d-none.d-sm-table-cell Topic/Lesson
-              th %
-              th Due Date
-              th Complete?
-          tbody
-            - @homework_progress.each do |h|
-              tr.homework-row data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id data-lesson=(h.homework.lesson.id unless h.homework.lesson_id.blank?)
-                td.d-none.d-sm-table-cell = h.homework.topic.subject.name
-                -if h.homework.lesson.blank?
-                  td.d-none.d-sm-table-cell = h.homework.topic.name
-                -else
-                  td.d-none.d-sm-table-cell = h.homework.lesson.title
-                td = number_to_percentage(h.homework.required, precision:0)
-                td = h.homework.due_date.strftime('%a, %e %b')
-                td = check_overdue(h)
+    table.tj-table.homework-table
+      thead
+        tr
+          th.tj-sm-table-cell Subject
+          th.tj-sm-table-cell Topic/Lesson
+          th %
+          th Due Date
+          th Complete?
+      tbody
+        - @homework_progress.each do |h|
+          tr.homework-row data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id data-lesson=(h.homework.lesson.id unless h.homework.lesson_id.blank?)
+            td.tj-sm-table-cell = h.homework.topic.subject.name
+            -if h.homework.lesson.blank?
+              td.tj-sm-table-cell = h.homework.topic.name
+            -else
+              td.tj-sm-table-cell = h.homework.lesson.title
+            td = number_to_percentage(h.homework.required, precision:0)
+            td = h.homework.due_date.strftime('%a, %e %b')
+            td = check_overdue(h)

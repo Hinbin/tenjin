@@ -11,7 +11,7 @@ export default class extends Controller {
           id: 'Click Menu',
           text: 'To get started, click here to expand the menu',
           attachTo: {
-            element: '.navbar-toggler',
+            element: '.tj-navbar__toggler',
             on: 'bottom'
           },
           buttons: [

@@ -5,23 +5,23 @@ section.page-section.tj-text-center#newQuiz
     h1.page-section-header.text-uppercase Start a Quiz
     p.lead Select a subject below
     ==render_small_separator
-    .carousel.slide.col-md-8.col-lg-5.mx-auto#subjectCarousel data-ride="carousel"
-      ol.carousel-indicators
-        -@subjects.each_with_index do |s, i|
-          li data-target="#subjectCarousel" data-slide-to=i class=('active' if i.zero?)
-      .carousel-inner
-        -@subjects.each_with_index do |s, i|
-            .carousel-item class=('active' if i.zero?)
-              a href=new_quiz_path(subject: s.name)
-                =subject_image_tag(s.name, class: 'w-100 subject-carousel-item-image')
-                .carousel-caption
-                  h3.text-uppercase = s.name
-      a.carousel-control-prev href="#subjectCarousel" role="button" data-slide="prev"
-        span.carousel-control-prev-icon aria-hidden="true"
+    .tj-carousel data-controller="carousel"
+      .tj-carousel__track data-carousel-target="track"
+        - @subjects.each do |s|
+          .tj-carousel__item
+            a href=new_quiz_path(subject: s.name)
+              = subject_image_tag(s.name, class: 'subject-carousel-item-image tj-carousel__img')
+              .tj-carousel__caption
+                h3.text-uppercase = s.name
+      button.tj-carousel__prev type="button" aria-label="Previous" data-action="click->carousel#prev"
+        i.fas.fa-chevron-left aria-hidden="true"
         span.tj-sr-only Previous
-      a.carousel-control-next href="#subjectCarousel" role="button" data-slide="next"
-        span.carousel-control-next-icon aria-hidden="true"
+      button.tj-carousel__next type="button" aria-label="Next" data-action="click->carousel#next"
+        i.fas.fa-chevron-right aria-hidden="true"
         span.tj-sr-only Next
+      .tj-carousel__indicators data-carousel-target="indicators"
+        - @subjects.each_with_index do |s, i|
+          button.tj-carousel__dot type="button" data-action="click->carousel#goTo" data-carousel-index-param=i aria-label=s.name
 =render('shared/homework')
 section#challenges.page-section.tj-text-center
   .tjk-container

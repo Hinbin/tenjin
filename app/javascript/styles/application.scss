@@ -11,6 +11,14 @@
  * It is generally better to create a new file per style scope.
  *
  */
+// Box-sizing reset — Bootstrap's reboot provided this globally; without it
+// width:100% + padding causes inputs to overflow their containers to the right.
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 @import 'tokens';
 @import 'utilities';
 @import 'layout';
@@ -25,11 +33,10 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:300,900,900i');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,900;1,400;1,900&display=swap');
 
-@import "bootstrap";
-@import "~bootstrap/scss/bootstrap";
 @import 'classroom';
 @import 'customisations';
 @import 'lessons';
+@import 'quiz';
 @import '@fortawesome/fontawesome-free';
 @import 'pages';
 @import 'dashboard';
@@ -163,8 +170,23 @@ hr.secondary {
   }
 }
 
+// Bootstrap .display-4 compat — used on pages not yet migrated to page-section-header.
+// Raleway 300 at 3.5rem matches the original Bootstrap display heading look.
+.display-4 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+  font-family: "Raleway", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+               "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  @media (max-width: 767.98px) {
+    font-size: 2rem;
+  }
+}
+
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
+  margin-top: 0;
   margin-bottom: 0.5rem;
   font-family: "Raleway", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-weight: 900;

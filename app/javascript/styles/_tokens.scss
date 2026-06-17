@@ -198,3 +198,6 @@ body, .tj-body {
 
 /* Visibility toggle — hides visually but keeps element in layout flow */
 .tj-invisible { visibility: hidden; }
+
+/* Text transform — Bootstrap .text-uppercase no longer provided by Bootstrap reset */
+.text-uppercase { text-transform: uppercase; }
