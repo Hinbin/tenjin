@@ -16,6 +16,6 @@ dialog#studentLoginModal
           = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' } if devise_mapping.rememberable?
           = f.button :submit, "Login", class: 'tj-btn-primary tj-btn--full', id: 'loginModal'
       div style='margin: var(--tj-space-3) 0; text-align: center'
-        =button_to image_pack_tag('images/btn_google_signin_dark_normal_web.png'),
+        =button_to image_tag('btn_google_signin_dark_normal_web.png'),
           user_google_oauth2_omniauth_authorize_path,
           {data: {turbo: :false}, style: 'display:flex; margin: 0 auto; background: none; border: none; cursor: pointer', id: 'loginGoogle'}
