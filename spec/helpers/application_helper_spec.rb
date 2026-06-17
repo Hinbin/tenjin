@@ -15,7 +15,5 @@ RSpec.describe ApplicationHelper, type: :helper do
     it 'does not match a longer asset name as a substring' do
       expect(helper.subject_image_tag('Ience')).to include('default-subject')
     end
-
-
   end
 end
