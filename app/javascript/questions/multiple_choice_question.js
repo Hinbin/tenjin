@@ -1,4 +1,4 @@
-import updateQuizStatistics from './questions_shared.js'
+import updateQuizStatistics from 'questions/questions_shared'
 
 function processMultipleChoiceResponse (serverResponse, guessId) {
   const results = serverResponse.answer

@@ -1,37 +1,37 @@
-import { application } from "./application.js"
+import { application } from "controllers/application"
 
-import AccordionController from "./accordion_controller.js"
+import AccordionController from "controllers/accordion_controller"
 application.register("accordion", AccordionController)
 
-import AlertController from "./alert_controller.js"
+import AlertController from "controllers/alert_controller"
 application.register("alert", AlertController)
 
-import CarouselController from "./carousel_controller.js"
+import CarouselController from "controllers/carousel_controller"
 application.register("carousel", CarouselController)
 
-import ClassroomController from "./classroom_controller.js"
+import ClassroomController from "controllers/classroom_controller"
 application.register("classroom", ClassroomController)
 
-import DashboardController from "./dashboard_controller.js"
+import DashboardController from "controllers/dashboard_controller"
 application.register("dashboard", DashboardController)
 
-import FormController from "./form_controller.js"
+import FormController from "controllers/form_controller"
 application.register("form", FormController)
 
-import HomeworkController from "./homework_controller.js"
+import HomeworkController from "controllers/homework_controller"
 application.register("homework", HomeworkController)
 
-import LiveLeaderboardController from "./live_leaderboard_controller.js"
+import LiveLeaderboardController from "controllers/live_leaderboard_controller"
 application.register("live-leaderboard", LiveLeaderboardController)
 
-import ModalController from "./modal_controller.js"
+import ModalController from "controllers/modal_controller"
 application.register("modal", ModalController)
 
-import NavbarController from "./navbar_controller.js"
+import NavbarController from "controllers/navbar_controller"
 application.register("navbar", NavbarController)
 
-import TableController from "./table_controller.js"
+import TableController from "controllers/table_controller"
 application.register("table", TableController)
 
-import UsersController from "./users_controller.js"
+import UsersController from "controllers/users_controller"
 application.register("users", UsersController)

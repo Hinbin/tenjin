@@ -24,7 +24,7 @@
 @import 'shepherd';
 
 // Font Awesome 5 — webfont delivery (no JS/SVG injection)
-$fa-font-path: "/assets";
+$fa-font-path: ".";
 @import "fontawesome/fontawesome";
 @import "fontawesome/solid";
 @import "fontawesome/regular";
