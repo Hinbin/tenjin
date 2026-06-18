@@ -72,3 +72,7 @@ db/CSV Output - *.csv
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+# Ignore key files for decrypting credentials and more.
+/config/*.key
+
