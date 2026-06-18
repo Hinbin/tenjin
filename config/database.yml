@@ -80,3 +80,8 @@ test:
 #
 production:
   <<: *default
+  # When Solid Queue runs inside Puma (SOLID_QUEUE_IN_PUMA), its worker threads,
+  # dispatcher, and supervisor share this connection pool with Puma's request
+  # threads. Add headroom for Solid Queue's connections so it doesn't exit on
+  # boot ("configured to use N threads but the database connection pool is M").
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i + (ENV["SOLID_QUEUE_IN_PUMA"].to_s.strip.empty? ? 0 : 6) %>
