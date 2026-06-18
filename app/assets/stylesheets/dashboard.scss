@@ -1,127 +1,380 @@
-// Place all the styles related to the dashboard controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/ 
-
-.tj-table > tbody > tr:hover {
-  background-color: #ef4035;
-  transition: background-color 0.3s linear;
-}
-
-.homework-image{
-  @media (min-width: 992px) {
-    background-attachment: fixed !important;
-  }
-  background-size: cover !important;
-  background-position: center !important; 
-  color: white;
-}
-
-.homework-table{
-  background-color:rgba(0, 0, 0, 0.3)
-}
-
-#newQuiz{
-  background-color: white;
-}
+// dashboard.scss — skin-aware student dashboard layout (Plan 01, Phase 1).
+//
+// Builds on Phase 0 primitives (.tjs-card / .tjs-btn / .tjs-bar / .tjs-section-head).
+// Body[data-skin] provides the token layer (_tokens.scss) + per-skin treatment (_structure.scss).
+// All new dashboard elements are automatically reskinnable with zero extra per-skin rules.
 
 hr.primary {
   @extend %hr-primary-shared;
 }
 
-.dashboard-style{
-  background-size: cover !important;
-  background-position: center !important; 
-}
+// ── Dashboard shell ──────────────────────────────────────────────────────────
 
-.subject-carousel-item-text {
-  color: white;
-  pointer-events: none;
-  max-width: 15rem;
-}
-
-.subject-carousel-item-image {
-  filter: brightness(50%);
-}
-
-// ── Subject carousel (student dashboard) ────────────────────────────────────
-
-.tj-carousel {
+.tjs-dashboard {
   position: relative;
-  overflow: hidden;
-  max-width: 30rem;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.tjs-dashboard__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
   margin: 0 auto;
-  border-radius: var(--tj-radius);
-}
-
-.tj-carousel__track {
+  padding: 16px 16px 48px;
   display: flex;
-  transition: transform 0.35s ease;
-  will-change: transform;
-}
+  flex-direction: column;
+  gap: 28px;
 
-.tj-carousel__item {
-  flex: 0 0 100%;
-  min-width: 0;
-  position: relative;
-}
-
-.tj-carousel__img {
-  width: 100%;
-  display: block;
-}
-
-.tj-carousel__caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: white;
-  padding: 0.5rem;
-  pointer-events: none;
-}
-
-.tj-carousel__prev,
-.tj-carousel__next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.4);
-  border: none;
-  color: white;
-  font-size: 1.25rem;
-  padding: 0.25rem 0.625rem;
-  cursor: pointer;
-  z-index: 2;
-  line-height: 1;
-  border-radius: var(--tj-radius);
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.7);
+  @media (min-width: 768px) {
+    padding: 24px 24px 64px;
+    max-width: 900px;
   }
 }
 
-.tj-carousel__prev { left: 0.5rem; }
-.tj-carousel__next { right: 0.5rem; }
+// ── Player header ────────────────────────────────────────────────────────────
 
-.tj-carousel__indicators {
+.tjs-dashboard__header {
   display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0 0;
+  align-items: center;
+  gap: 12px;
 }
 
-.tj-carousel__dot {
-  width: 0.625rem;
-  height: 0.625rem;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.3);
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.2s;
+.tjs-dashboard__player-text {
+  flex: 1;
+  min-width: 0;
+}
 
-  &.tj-carousel__dot--active {
-    background: #000;
+.tjs-dashboard__greeting {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tjs-dashboard__name {
+  font-size: 1.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tjs-dashboard__stats {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+// ── Section wrapper ──────────────────────────────────────────────────────────
+
+.tjs-dashboard__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+// ── Homework rows ────────────────────────────────────────────────────────────
+
+.tjs-hw-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.homework-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+  // tjs-card provides surface/border/radius
+
+  &:disabled { opacity: 0.6; pointer-events: none; }
+}
+
+.homework-row--hero {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 16px;
+}
+
+// hero: the top strip (icon + body + status)
+.homework-row__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.homework-row__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.homework-row__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.homework-row__title {
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.homework-row--hero .homework-row__title {
+  font-size: 16px;
+  white-space: normal;
+}
+
+.homework-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.homework-row__status {
+  flex-shrink: 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+// ── Challenge table + challenge cards ────────────────────────────────────────
+
+#challenge-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tjs-challenge-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+
+  &:disabled { opacity: 0.6; pointer-events: none; }
+}
+
+.tjs-challenge-card--active {
+  border-left: 3px solid var(--n1) !important;
+  background: color-mix(in srgb, var(--n1) 6%, var(--surface)) !important;
+}
+
+.tjs-challenge-card__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.tjs-challenge-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tjs-challenge-card__title {
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.tjs-challenge-card__pts {
+  flex-shrink: 0;
+}
+
+.challenge-progress {
+  display: inline-block;
+  font-family: var(--f-pixel);
+  font-size: 11px;
+  color: var(--dim);
+  margin-top: 4px;
+}
+
+// ── Topic list (sibling to #challenge-table inside Practise) ────────────────
+
+.tjs-topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+// ── Topic cards ──────────────────────────────────────────────────────────────
+
+.tjs-topic-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+
+  &:disabled { opacity: 0.6; pointer-events: none; }
+}
+
+.tjs-topic-card__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.tjs-topic-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tjs-topic-card__name {
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
+
+.tjs-topic-card__cta {
+  flex-shrink: 0;
+  color: var(--dim);
+}
+
+// ── Quick Start card ─────────────────────────────────────────────────────────
+
+.tjs-quick-start {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+
+  &:disabled { opacity: 0.6; pointer-events: none; }
+}
+
+.tjs-quick-start__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--n1) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--n1) 32%, transparent);
+}
+
+.tjs-quick-start__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tjs-quick-start__topic {
+  font-size: 1.05rem;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── Subject switcher grid ────────────────────────────────────────────────────
+
+.tjs-subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.tjs-subject-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover { text-decoration: none; }
+}
+
+.tjs-subject-tile--active {
+  border-color: var(--n1) !important;
+}
+
+.tjs-subject-tile__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+// ── Per-skin button/card overrides for dashboard elements ─────────────────────
+
+// Famicom: square corners on icon chips
+body[data-skin="famicom"] {
+  .tjs-challenge-card__icon,
+  .tjs-topic-card__icon,
+  .tjs-quick-start__icon,
+  .tjs-subject-tile__icon,
+  .homework-row__icon {
+    border-radius: 0;
+    border: 1.5px solid var(--edge);
+  }
+
+  .tjs-challenge-card--active {
+    box-shadow: 3px 3px 0 var(--edge);
+  }
+}
+
+// Arcade: neon glow on active challenge border
+body[data-skin="arcade"] {
+  .tjs-challenge-card--active {
+    box-shadow:
+      -3px 0 12px color-mix(in srgb, var(--n1) 30%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+}
+
+// Kawaii: sticker-style hero homework card
+body[data-skin="kawaii"] {
+  .homework-row--hero {
+    box-shadow: 0 6px 0 color-mix(in srgb, var(--line) 60%, transparent),
+                0 10px 24px rgba(0, 0, 0, 0.25);
   }
 }
