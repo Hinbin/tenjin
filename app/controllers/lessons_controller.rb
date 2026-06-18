@@ -58,9 +58,9 @@ class LessonsController < ApplicationController
     unless @lesson.valid?
       @topics = Topic.where(active: true, subject_id: @lesson.topic.subject_id).order(:name)
 
-      return render :edit, status: :unprocessable_entity if @lesson.persisted?
+      return render :edit, status: :unprocessable_content if @lesson.persisted?
 
-      return render :new, status: :unprocessable_entity
+      return render :new, status: :unprocessable_content
     end
 
     @lesson.save!

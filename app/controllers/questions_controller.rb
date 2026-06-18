@@ -52,7 +52,7 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: 'Question successfully updated'
     else
-      render :show, status: :unprocessable_entity
+      render :show, status: :unprocessable_content
     end
   end
 

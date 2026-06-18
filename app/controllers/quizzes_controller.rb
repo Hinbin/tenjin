@@ -69,7 +69,7 @@ class QuizzesController < ApplicationController
     authorize @quiz
     if @question.blank?
       return render(json: { error: 'Quiz question could not be found' },
-                    status: :unprocessable_entity)
+                    status: :unprocessable_content)
     end
 
     render(json: Quiz::CheckAnswer.call(quiz: @quiz, question: @question, answer_given: answer_params))
