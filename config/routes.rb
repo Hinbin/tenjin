@@ -82,6 +82,9 @@ Rails.application.routes.draw do
   get 'quizzes/new/:subject', to: 'quizzes#new'
   get 'dashboard/', to: 'dashboard#show'
 
+  # Dev-only skin styleguide (Plan 01, Phase 0). Blocked in production by the controller.
+  get 'styleguide', to: 'styleguide#show' unless Rails.env.production?
+
   get "/pages/*id" => 'pages#show', as: :page, format: false
 
   authenticated :user do

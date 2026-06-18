@@ -1,0 +1,12 @@
+/ _stat.html.slim — small stat chip: icon + value + label (Plan 01, Phase 0).
+/
+/ Locals:
+/   icon:  Symbol  — glyph key (required)
+/   value: String  — main number/value (required)
+/   label: String  — sub-label (required)
+/   color: String  — CSS colour token (default: 'var(--n1)')
+- color ||= 'var(--n1)'
+.tjs-card.tjs-stat style="display:flex;flex-direction:column;align-items:center;min-width:50px;padding:7px 9px;"
+  = glyph(icon, size: 16, color: color, css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
+  div.tjs-display style="font-family:var(--f-pixel);font-size:14px;color:var(--ink);margin-top:3px;" = value
+  div style="font-family:var(--f-body);font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;" = label

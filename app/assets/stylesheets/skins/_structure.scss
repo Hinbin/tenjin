@@ -1,0 +1,290 @@
+// skins/_structure.scss — STRUCTURE LAYER.
+//
+// Per-skin surface treatment that a single CSS variable can't express — glass blur, neon glow,
+// pixel offset shadows, sticker borders. Keyed off the body[data-skin] / [data-mode] attributes
+// the layout renders. Colours/shapes come from the token vars (_tokens.scss); this file only
+// decides HOW those tokens are applied per skin.
+//
+// Ported from cardStyle()/btnStyle() in
+// design/tenjin-design-system/project/flow/skins/sk-data.jsx.
+//
+// STATUS: arcade + famicom are the two structural extremes (glass/glow vs solid/hard) and are
+// the reference implementations. kawaii + minimal are solid first cuts — an executor should
+// eyeball them against the prototype during Phase 0 and tighten shadows/spacing if needed.
+
+// ════════ BACKDROP — shared FX layer primitives ════════
+// All backdrop layers are position:absolute, pointer-events:none, z-index 0.
+// Visibility/motion is gated in _motion.scss; base state keeps content visible.
+
+.tjs-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+// Hide all backdrop layers by default; enable only for the skins that use them.
+.tjs-backdrop__blob,
+.tjs-backdrop__dots,
+.tjs-backdrop__dither,
+.tjs-backdrop__scanlines,
+.tjs-backdrop__grid,
+.tjs-backdrop-petals { display: none; }
+
+// Glow blobs: arcade + kawaii
+body[data-skin="arcade"],
+body[data-skin="kawaii"] {
+  .tjs-backdrop__blob {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(24px);
+    pointer-events: none;
+  }
+
+  .tjs-backdrop__blob--1 {
+    top: -40px; left: -30px;
+    width: 230px; height: 230px;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--n1) 22%, transparent), transparent);
+  }
+
+  .tjs-backdrop__blob--2 {
+    top: 120px; right: -50px;
+    width: 210px; height: 210px;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--n2) 20%, transparent), transparent);
+  }
+
+  &[data-mode="dark"] .tjs-backdrop__blob--1 { opacity: 0.85; }
+  &[data-mode="dark"] .tjs-backdrop__blob--2 { opacity: 0.70; }
+  &[data-mode="light"] .tjs-backdrop__blob--1 { opacity: 0.55; }
+  &[data-mode="light"] .tjs-backdrop__blob--2 { opacity: 0.45; }
+}
+
+// Polka dots: kawaii only
+body[data-skin="kawaii"] .tjs-backdrop__dots {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(color-mix(in srgb, var(--n1) 24%, transparent) 2px, transparent 2.5px);
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(#000, transparent 78%);
+  mask-image: linear-gradient(#000, transparent 78%);
+}
+
+body[data-skin="kawaii"][data-mode="dark"]  .tjs-backdrop__dots { opacity: 0.50; }
+body[data-skin="kawaii"][data-mode="light"] .tjs-backdrop__dots { opacity: 0.70; }
+
+// Dither / checker: famicom only
+body[data-skin="famicom"] .tjs-backdrop__dither {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-conic-gradient(
+    color-mix(in srgb, var(--grid) 40%, transparent) 0% 25%,
+    transparent 0% 50%
+  );
+  background-size: 8px 8px;
+  -webkit-mask-image: linear-gradient(#000, transparent 70%);
+  mask-image: linear-gradient(#000, transparent 70%);
+}
+
+body[data-skin="famicom"][data-mode="dark"]  .tjs-backdrop__dither { opacity: 0.50; }
+body[data-skin="famicom"][data-mode="light"] .tjs-backdrop__dither { opacity: 0.40; }
+
+// CRT scanlines: arcade + famicom, dark only
+body[data-skin="arcade"],
+body[data-skin="famicom"] {
+  &[data-mode="dark"] .tjs-backdrop__scanlines {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 40;
+    opacity: 0.40;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.18) 3px
+    );
+  }
+}
+
+// Vaporwave grid floor: arcade only
+body[data-skin="arcade"] .tjs-backdrop__grid {
+  display: block;
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 180px;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(transparent, #000 60%);
+  mask-image: linear-gradient(transparent, #000 60%);
+}
+
+.tjs-backdrop__grid-inner {
+  position: absolute;
+  left: -50%; right: -50%;
+  bottom: 0;
+  height: 432px;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--grid) 50%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--grid) 50%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transform: perspective(180px) rotateX(68deg);
+  transform-origin: bottom;
+}
+
+// Petals: zen only
+body[data-skin="zen"] .tjs-backdrop-petals {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+// ── Per-skin avatar treatment ─────────────────────────────────────────────
+body[data-skin="arcade"] .tjs-avatar {
+  border-radius: 50%;
+  box-shadow: 0 0 10px color-mix(in srgb, currentColor 48%, transparent);
+}
+
+body[data-skin="kawaii"] .tjs-avatar {
+  border-radius: 42%;
+}
+
+body[data-skin="famicom"] .tjs-avatar {
+  border-radius: 0;
+  border: var(--bd) solid var(--edge);
+  box-shadow: 2px 2px 0 var(--edge);
+}
+
+// ── Per-skin pill treatment ───────────────────────────────────────────────
+body[data-skin="famicom"] .tjs-pill {
+  border-radius: 0;
+  background: transparent;
+  border: 1.5px solid currentColor;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+// ════════ ARCADE — glass + neon glow ════════
+body[data-skin="arcade"] {
+  background: radial-gradient(120% 80% at 50% -10%, var(--bg1), var(--bg0) 70%);
+
+  .tjs-display { text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .tjs-card {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .tjs-btn { text-transform: uppercase; letter-spacing: 1px; }
+  .tjs-btn--primary { box-shadow: 0 0 20px color-mix(in srgb, var(--n1) 40%, transparent); }
+
+  .tjs-icon--glow { filter: drop-shadow(0 0 5px currentColor); }
+  .tjs-bar__fill { box-shadow: 0 0 10px color-mix(in srgb, var(--n1) 60%, transparent); }
+}
+
+// ════════ FAMICOM — solid + hard pixel offset ════════
+body[data-skin="famicom"] {
+  background: var(--bg0);
+
+  .tjs-display { text-transform: uppercase; }
+
+  .tjs-card {
+    border: var(--bd) solid var(--edge);
+    box-shadow: calc(var(--bd) + 1px) calc(var(--bd) + 1px) 0 var(--edge);
+  }
+
+  .tjs-btn {
+    text-transform: uppercase;
+    border: var(--bd) solid var(--edge);
+    box-shadow: calc(var(--bd) + 1px) calc(var(--bd) + 1px) 0 var(--edge);
+  }
+
+  .tjs-bar { border: 1.5px solid var(--edge); }
+  .tjs-bar__fill { box-shadow: none; }
+}
+
+// ════════ KAWAII — sticker borders + soft drop ════════
+body[data-skin="kawaii"] {
+  background: radial-gradient(130% 90% at 50% -10%, var(--bg1), var(--bg0) 75%);
+
+  .tjs-display { letter-spacing: 0; }
+
+  .tjs-card {
+    border: var(--bd) solid var(--line);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  }
+
+  &[data-mode="light"] .tjs-card {
+    box-shadow: 0 4px 0 color-mix(in srgb, var(--line) 60%, transparent),
+                0 8px 22px rgba(80, 50, 90, 0.10);
+  }
+
+  .tjs-btn--primary {
+    box-shadow: 0 5px 0 color-mix(in srgb, var(--n1) 62%, #000);
+  }
+
+  .tjs-bar__fill { box-shadow: none; }
+  .tjs-bar { border-radius: 999px; }
+}
+
+// ════════ MINIMAL — hairline + low flat shadow ════════
+body[data-skin="minimal"] {
+  background: var(--bg0);
+
+  .tjs-display { font-weight: 600; }
+
+  .tjs-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.32);
+  }
+
+  &[data-mode="light"] .tjs-card {
+    box-shadow: 0 1px 2px rgba(20, 24, 40, 0.06), 0 4px 12px rgba(20, 24, 40, 0.06);
+  }
+
+  .tjs-btn--primary { box-shadow: none; }
+  .tjs-bar__fill { box-shadow: none; }
+  .tjs-bar { border-radius: 3px; }
+}
+
+// ════════ ZEN — paper surfaces + drifting petals ════════
+body[data-skin="zen"] {
+  background: radial-gradient(130% 95% at 50% -15%, var(--bg1), var(--bg0) 72%);
+
+  .tjs-display {
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .tjs-card {
+    border: var(--bd) solid var(--line);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18), 0 1px 2px rgba(0, 0, 0, 0.10);
+  }
+
+  &[data-mode="light"] .tjs-card {
+    box-shadow: 0 1px 4px rgba(60, 40, 50, 0.06), 0 4px 14px rgba(60, 40, 50, 0.06);
+  }
+
+  // pill-shaped primary button (btnR: 999)
+  .tjs-btn--primary {
+    box-shadow: 0 3px 10px color-mix(in srgb, var(--n1) 28%, transparent);
+  }
+
+  .tjs-bar { border-radius: 999px; }
+  .tjs-bar__fill { box-shadow: none; }
+
+  // petals backdrop (motion-gated in _motion.scss)
+  .tjs-backdrop-petals {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+}

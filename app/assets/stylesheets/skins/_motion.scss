@@ -1,0 +1,61 @@
+// skins/_motion.scss — animations for the reskinnable flow.
+// Ported from design/tenjin-design-system/project/flow/skins/skins.css.
+//
+// ⚠️ MOTION-SAFETY RULE (the prototype hit this bug repeatedly — do NOT regress it):
+// An entrance animation's BASE (un-animated) state must be the VISIBLE end-state. Never tie
+// always-rendered content's visibility to an animation — under a frozen animation clock
+// (offscreen / print / reduced-motion) a `from { opacity: 0 }` keyframe holds content hidden
+// forever. So: opacity/visibility stays at the visible value by default; motion is layered on
+// ONLY inside `@media (prefers-reduced-motion: no-preference)`.
+
+@keyframes tjs-grid { from { background-position: 0 0; } to { background-position: 0 40px; } }
+@keyframes tjs-pop { 0% { transform: scale(0.82); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes tjs-slideup { from { transform: translateY(14px); } to { transform: translateY(0); } }
+@keyframes tjs-shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+@keyframes tjs-flash-good { 0% { opacity: 0; } 30% { opacity: 0.55; } 100% { opacity: 0; } }
+@keyframes tjs-flash-bad { 0% { opacity: 0; } 30% { opacity: 0.6; } 100% { opacity: 0; } }
+@keyframes tjs-confetti { 0% { transform: translateY(-14px) rotate(0); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(150px) rotate(560deg); opacity: 0; } }
+@keyframes tjs-aura { 0% { transform: scale(0.6); opacity: 0.65; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes tjs-shimmer { to { background-position: 200% center; } }
+
+// Petal drift — zen skin only; six staggered pseudo-elements on .tjs-backdrop-petals
+@keyframes tjs-petal {
+  0%   { transform: translateY(-10px) translateX(0) rotate(0deg);   opacity: 0; }
+  8%   { opacity: 0.55; }
+  100% { transform: translateY(110vh)  translateX(60px) rotate(480deg); opacity: 0; }
+}
+
+.tjs-tile { transition: transform .13s ease, box-shadow .2s ease, border-color .15s; }
+.tjs-tile:active { transform: scale(0.975); }
+
+// Entrance helpers — base state is already visible; motion only when allowed.
+.tjs-slideup,
+.tjs-pop { opacity: 1; transform: none; }
+
+// Petal spans — visible (via opacity: 0 end-state) even without animation.
+// The <span> elements inside .tjs-backdrop-petals are always in the DOM; opacity
+// stays at 0 by default so they are invisible when motion is off.
+.tjs-petal {
+  position: absolute;
+  top: -16px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50% 0 50% 0;
+  background: var(--n1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tjs-pop { animation: tjs-pop .35s cubic-bezier(.2, 1.4, .4, 1) both; }
+  .tjs-slideup { animation: tjs-slideup .42s cubic-bezier(.2, .8, .2, 1) both; }
+  .tjs-grid { animation: tjs-grid 1.6s linear infinite; }
+
+  // Six petals with staggered positions, durations, and delays
+  .tjs-petal:nth-child(1) { left:  8%; animation: tjs-petal 9s  2.0s linear infinite; }
+  .tjs-petal:nth-child(2) { left: 22%; animation: tjs-petal 11s 0.5s linear infinite; }
+  .tjs-petal:nth-child(3) { left: 41%; animation: tjs-petal 8s  4.0s linear infinite; }
+  .tjs-petal:nth-child(4) { left: 57%; animation: tjs-petal 12s 1.2s linear infinite; }
+  .tjs-petal:nth-child(5) { left: 74%; animation: tjs-petal 10s 3.5s linear infinite; }
+  .tjs-petal:nth-child(6) { left: 88%; animation: tjs-petal 9s  0.8s linear infinite; }
+}

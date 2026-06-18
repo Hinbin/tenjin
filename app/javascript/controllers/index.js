@@ -33,5 +33,8 @@ application.register("navbar", NavbarController)
 import TableController from "controllers/table_controller"
 application.register("table", TableController)
 
+import ThemeController from "controllers/theme_controller"
+application.register("theme", ThemeController)
+
 import UsersController from "controllers/users_controller"
 application.register("users", UsersController)

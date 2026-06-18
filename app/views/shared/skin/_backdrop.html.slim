@@ -1,0 +1,17 @@
+/ _backdrop.html.slim — per-skin decorative FX layer (Plan 01, Phase 0).
+/
+/ All FX layer elements are always rendered; CSS (_structure.scss) shows only the ones
+/ the active skin uses. This lets live skin-switching in the styleguide work without
+/ a page reload. MOTION-SAFE: base state is invisible; animation layered on only under
+/ @media (prefers-reduced-motion: no-preference) — content is never hidden by this.
+.tjs-backdrop aria-hidden="true"
+  .tjs-backdrop__blob.tjs-backdrop__blob--1
+  .tjs-backdrop__blob.tjs-backdrop__blob--2
+  .tjs-backdrop__dots
+  .tjs-backdrop__dither
+  .tjs-backdrop__scanlines
+  .tjs-backdrop__grid
+    .tjs-backdrop__grid-inner.tjs-grid
+  .tjs-backdrop-petals
+    - 6.times do
+      span.tjs-petal

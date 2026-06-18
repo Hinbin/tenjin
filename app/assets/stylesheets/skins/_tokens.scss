@@ -1,0 +1,149 @@
+// skins/_tokens.scss — TOKEN LAYER of the reskinnable theme engine.
+//
+// Two-layer architecture (see app/services/theme/resolver.rb + skin_catalog.rb):
+//   1. TOKENS (this file)     — colour/shape/font CSS custom properties. The real per-request
+//                               values are injected on <body style="…"> by Theme::Resolver, so
+//                               the :root block below is only a no-flash FALLBACK (arcade /
+//                               Neon Tokyo / dark) for any element rendered before/without body
+//                               attributes.
+//   2. STRUCTURE (_structure) — per-skin treatment a single var can't express (glass blur, neon
+//                               glow, pixel offset shadow, sticker borders), keyed off
+//                               [data-skin].
+//
+// Surfaces should build out of the skin-aware primitives at the bottom (.tjs-card / .tjs-btn /
+// .tjs-bar …) rather than hand-rolling colours, so every new screen is automatically reskinnable.
+
+:root {
+  --bg0: #0a0712; --bg1: #170c26; --grid: #3a1f5c; --surface: rgba(28,18,46,0.72);
+  --line: rgba(255,255,255,0.10); --ink: #f3ecff; --dim: #9d90b8;
+  --n1: #ff2d95; --n2: #27e6e6; --n3: #b14dff; --gold: #ffd23f;
+  --edge: #000; --track: rgba(255,255,255,0.12); --on-accent: #0a0712;
+  --f-display: 'Zen Dots', system-ui, sans-serif;
+  --f-body: 'Zen Kaku Gothic New', system-ui, sans-serif;
+  --f-pixel: 'DotGothic16', monospace;
+  --r-lg: 22px; --r-md: 16px; --r-sm: 11px; --btn-r: 14px; --bd: 1px;
+  --g: 0.6; // glow/accent intensity 0..1
+}
+
+// ── App-shell background (the skin's figure gradient lives in _structure per skin) ──
+body[data-skin] {
+  background: var(--bg0);
+  color: var(--ink);
+  font-family: var(--f-body);
+}
+
+// ── Skin-aware primitives (generic base; per-skin treatment added in _structure) ──
+.tjs-card {
+  position: relative;
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--bd) solid var(--line);
+  border-radius: var(--r-md);
+  box-sizing: border-box;
+}
+
+.tjs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--btn-r);
+  font-family: var(--f-display);
+  padding: 10px 18px;
+  line-height: 1;
+}
+
+.tjs-btn--primary { background: var(--n1); color: var(--on-accent); }
+
+.tjs-btn--ghost {
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--bd) solid var(--line);
+}
+
+// Heading / display type
+.tjs-display {
+  font-family: var(--f-display);
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+// Progress bar (glow added per-skin in _structure)
+.tjs-bar {
+  height: 8px;
+  border-radius: var(--r-sm);
+  background: var(--track);
+  overflow: hidden;
+}
+.tjs-bar__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--n1);
+  transition: width 0.5s cubic-bezier(.2,.8,.2,1);
+}
+
+// ── New atoms (Phase 0) ──────────────────────────────────────────────────
+
+// Pill / badge
+.tjs-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  line-height: 1.3;
+  font-family: var(--f-body);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+// Avatar emblem circle
+.tjs-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: color-mix(in srgb, currentColor 16%, var(--surface));
+  border: var(--bd) solid currentColor;
+}
+
+// Section header
+.tjs-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin: 0 2px 12px;
+
+  &__title {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+
+    h2 { margin: 0; font-size: 1.06rem; }
+  }
+
+  &__jp {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  &__action {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    color: var(--dim);
+    font-family: var(--f-body);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+}
