@@ -28,7 +28,7 @@ class CustomisationsController < ApplicationController
     if @customisation.save
       redirect_to customisations_path, notice: "Created new customisation #{@customisation.name}"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

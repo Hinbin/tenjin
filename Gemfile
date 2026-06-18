@@ -17,7 +17,7 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem 'recipient_interceptor'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.0'
+gem 'rails', '~> 8.1'
 
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 7.2'
@@ -33,9 +33,6 @@ gem 'turbo-rails'
 gem 'bootsnap', '>= 1.4.4', require: false
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
-
   # Use the following gems for rspec testing
   gem 'rspec-rails'
   gem 'parallel_tests', require: false
@@ -63,10 +60,6 @@ group :development do
   # better errors for debugging
   gem 'better_errors'
   gem 'binding_of_caller'
-  
-  #httplog to get all messages sent to/from server
-  gem 'httplog'
-
 
   # All them rules for development
   gem 'rubocop', '~> 1.87', require: false
@@ -130,9 +123,6 @@ gem 'aws-sdk-s3'
 
 # SES email
 gem 'aws-sdk-rails'
-
-# Investigate memory leaks
-gem 'scout_apm'
 
 # Worker autoscaling metrics (supported on Render via the HireFire integration)
 gem 'hirefire-resource'
