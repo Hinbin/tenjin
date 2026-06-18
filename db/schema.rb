@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_10_000200) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_18_000100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -312,7 +312,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_000200) do
     t.boolean "counts_for_leaderboard"
     t.datetime "created_at", precision: nil, null: false
     t.bigint "lesson_id"
+    t.integer "max_streak", default: 0, null: false
     t.integer "num_questions_asked"
+    t.datetime "progression_recorded_at"
     t.integer "question_order", array: true
     t.integer "streak"
     t.bigint "subject_id"
@@ -536,12 +538,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_000200) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "current_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
+    t.boolean "dark_mode", default: true, null: false
     t.boolean "disabled"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "forename"
     t.datetime "last_sign_in_at", precision: nil
     t.inet "last_sign_in_ip"
+    t.date "last_streak_day"
+    t.integer "level", default: 1, null: false
     t.string "oauth_email"
     t.string "oauth_provider"
     t.string "oauth_uid"
@@ -553,6 +558,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_000200) do
     t.integer "role", null: false
     t.bigint "school_id"
     t.integer "sign_in_count", default: 0, null: false
+    t.integer "streak_days", default: 0, null: false
     t.string "surname"
     t.datetime "time_of_last_quiz", precision: nil
     t.integer "tutorials", default: 0, null: false
@@ -560,6 +566,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_000200) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "upi"
     t.string "username"
+    t.integer "xp", default: 0, null: false
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["upi"], name: "index_users_on_upi"
     t.index ["username"], name: "index_users_on_username", unique: true
