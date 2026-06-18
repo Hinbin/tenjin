@@ -67,9 +67,9 @@ Known local Ruby paths:
 ## Environment & Deployment
 
 - Ruby: `3.4.9` in Gemfile; `.ruby-version` may lag — check both before changing Ruby.
-- Deploy target: Heroku (`heroku-24` stack, Ubuntu 24.04). `Procfile` runs `db:migrate` on release, Puma for web, `rails jobs:work` for worker.
-- Production secrets via Rails encrypted credentials (`config/credentials.yml.enc`). Env vars: `AWS_S3_BUCKET`, `DEFAULT_MAIL_SENDER`, `DEFAULT_HOST`, `RAILS_MAX_THREADS`, `WEB_CONCURRENCY`, `PORT`.
-- When changing Ruby, gems, buildpacks, or native extensions: verify `heroku-24` compatibility and keep Gemfile, Gemfile.lock, `.ruby-version`, and CircleCI images in sync.
+- Deploy target: Render via Docker (`Dockerfile` + `render.yaml` blueprint). Boot sequence is `bin/render-start` (migrate then start Puma); health check at `/up`. Worker autoscaling via the `hirefire-resource` integration. Solid Queue can run inside Puma (`SOLID_QUEUE_IN_PUMA=true`) on small instances instead of a separate worker.
+- Production secrets via Rails encrypted credentials (`config/credentials.yml.enc`, decrypted with `RAILS_MASTER_KEY`). Env vars: `AWS_S3_BUCKET`, `DEFAULT_MAIL_SENDER`, `DEFAULT_HOST`, `RAILS_MAX_THREADS`, `WEB_CONCURRENCY`, `DATABASE_URL`.
+- When changing Ruby, gems, or native extensions: verify they build in the `Dockerfile` and keep Gemfile, Gemfile.lock, `.ruby-version`, the Dockerfile base image, and CircleCI images in sync.
 
 ## Testing
 

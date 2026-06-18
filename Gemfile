@@ -124,9 +124,6 @@ gem 'aws-sdk-s3'
 # SES email
 gem 'aws-sdk-rails'
 
-# Investigate memory leaks
-gem 'scout_apm'
-
 # Worker autoscaling metrics (supported on Render via the HireFire integration)
 gem 'hirefire-resource'
 
