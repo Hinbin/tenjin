@@ -1,49 +1,112 @@
--content_for :title
-  title=('Dashboard')
-section.page-section.tj-text-center#newQuiz
-  .tjk-container#startAQuizContainer
-    h1.page-section-header.text-uppercase Start a Quiz
-    p.lead Select a subject below
-    ==render_small_separator
-    .tj-carousel data-controller="carousel"
-      .tj-carousel__track data-carousel-target="track"
-        - @subjects.each do |s|
-          .tj-carousel__item
-            a href=new_quiz_path(subject: s.name)
-              = subject_image_tag(s.name, class: 'subject-carousel-item-image tj-carousel__img')
-              .tj-carousel__caption
-                h3.text-uppercase = s.name
-      button.tj-carousel__prev type="button" aria-label="Previous" data-action="click->carousel#prev"
-        i.fas.fa-chevron-left aria-hidden="true"
-        span.tj-sr-only Previous
-      button.tj-carousel__next type="button" aria-label="Next" data-action="click->carousel#next"
-        i.fas.fa-chevron-right aria-hidden="true"
-        span.tj-sr-only Next
-      .tj-carousel__indicators data-carousel-target="indicators"
-        - @subjects.each_with_index do |s, i|
-          button.tj-carousel__dot type="button" data-action="click->carousel#goTo" data-carousel-index-param=i aria-label=s.name
-=render('shared/homework')
-section#challenges.page-section.tj-text-center
-  .tjk-container
-    h1.page-section-header.text-uppercase Challenges
-    ==render_small_separator
-    .tj-flex.tj-justify-center
-      div style='flex: 0 1 83.33%; min-width: 0'
-        table.tj-table#challenge-table
-          thead
-            tr
-              th Challenge
-              th Progress
-              th.tj-sm-table-cell Points
-              th Expires in
-          tbody
-            - @challenges.each do |c|
-                tr.challenge-row data-challenge=c.id data-topic=(c.daily? ? 'Lucky Dip' : c.topic.id) data-subject=c.topic.subject_id
-                  td = c.stringify
-                  td = write_challenge_progress(c, @challenge_progresses)
-                  td.tj-sm-table-cell
-                    = c.points
-                    i.fas.fa-star style='color: yellow'
-                  td = challenge_time_left(c)
--if current_user.oauth_email.blank?
+- content_for :title
+  title Dashboard
+
+.tjs-dashboard
+  / Backdrop FX (Phase 0 — skin-specific; hidden via _structure.scss per skin)
+  .tjs-backdrop
+    .tjs-backdrop__blob.tjs-backdrop__blob--1
+    .tjs-backdrop__blob.tjs-backdrop__blob--2
+    .tjs-backdrop__dots
+    .tjs-backdrop__dither
+    .tjs-backdrop__scanlines
+    .tjs-backdrop__grid
+      .tjs-backdrop__grid-inner
+    .tjs-backdrop-petals
+
+  .tjs-dashboard__inner
+
+    / ── Player header ────────────────────────────────────────────────────
+    header.tjs-dashboard__header
+      = render 'shared/skin/avatar', glyph_name: 'torii', color: 'var(--n1)', size: 48
+      .tjs-dashboard__player-text
+        div.tjs-dashboard__greeting style="font-family:var(--f-body);font-size:11px;color:var(--dim);"
+          | おかえり · Welcome back
+        .tjs-display.tjs-dashboard__name
+          = "#{current_user.forename} #{current_user.surname}".strip
+      .tjs-dashboard__stats
+        = render 'shared/skin/stat', icon: :star, value: current_user.challenge_points.to_i, label: 'pts', color: 'var(--gold)'
+
+    / ── 1. HOMEWORK DUE ──────────────────────────────────────────────────
+    - if @homework_progress.any?
+      - any_outstanding = @homework_progress.any? { |h| !h.completed }
+      - hw_title = any_outstanding ? 'Homework Due' : 'Homework'
+      section.tjs-dashboard__section data-section='homework'
+        = render 'shared/skin/section_head', en: hw_title, jp: '宿題', action: 'All', action_href: '#'
+        .tjs-hw-rows
+          = render 'shared/homework'
+
+    / ── 2. PRACTISE — challenges (outstanding first) then topics ─────────
+    section.tjs-dashboard__section data-section='practise'
+      = render 'shared/skin/section_head', en: 'Practise', jp: '練習'
+      / Challenge cards — #challenge-table scopes the spec selector
+      #challenge-table
+        - @challenges.sort_by { |c| challenge_complete?(c) ? 1 : 0 }.each do |c|
+          - done      = challenge_complete?(c)
+          - col       = done ? 'var(--dim)' : 'var(--n1)'
+          - extra_cls = done ? 'tjs-card tjs-challenge-card challenge-row' : 'tjs-card tjs-challenge-card challenge-row tjs-challenge-card--active'
+          - topic_id  = c.daily? ? 'Lucky Dip' : c.topic.id
+          button class=extra_cls data-challenge=c.id data-topic=topic_id data-subject=c.topic.subject_id type='button'
+            .tjs-challenge-card__icon style="color:#{col};"
+              = glyph(:target, size: 20, color: col)
+            .tjs-challenge-card__body
+              .tjs-challenge-card__title style="color:#{col};"
+                = c.stringify
+              span.challenge-progress
+                == write_challenge_progress(c, @challenge_progresses)
+            - unless done
+              .tjs-challenge-card__pts
+                = render 'shared/skin/pill', text: "+#{c.points}", glyph_name: :star, color: 'var(--gold)'
+
+      / Topic cards are outside #challenge-table to avoid selector ambiguity
+      - if @topics&.any?
+        - meta = @active_subject ? subject_meta(@active_subject.name) : subject_meta('')
+        .tjs-topic-list
+          - @topics.each do |t|
+            - pct = topic_mastery_pct(t.id)
+            button.tjs-card.tjs-topic-card.topic-row data-topic=t.id data-subject=@active_subject.id type='button'
+              .tjs-topic-card__icon style="color:#{meta[:neon]};"
+                = glyph(meta[:glyph], size: 20, color: meta[:neon])
+              .tjs-topic-card__body
+                .tjs-topic-card__name
+                  = t.name
+                .tjs-bar
+                  .tjs-bar__fill style="width:#{pct}%;background:#{meta[:neon]};"
+              .tjs-topic-card__cta
+                = glyph(:chevron, size: 16, color: 'var(--dim)')
+
+    / ── 3. QUICK START ───────────────────────────────────────────────────
+    - if @last_topic
+      section.tjs-dashboard__section data-section='quick-start'
+        = render 'shared/skin/section_head', en: 'Quick Start', jp: '再開'
+        - qs_glow = current_skin == 'arcade' ? 'tjs-icon--glow' : nil
+        button.tjs-card.tjs-quick-start.topic-row data-topic=@last_topic.id data-subject=@last_topic.subject_id type='button'
+          .tjs-quick-start__icon
+            = glyph(:play, size: 26, color: 'var(--n1)', css_class: qs_glow)
+          .tjs-quick-start__body
+            div style="font-family:var(--f-body);font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px;"
+              | Resume where you left off
+            .tjs-display.tjs-quick-start__topic
+              = @last_topic.name
+          span.tjs-btn.tjs-btn--primary
+            | Start
+            = glyph(:chevron, size: 14)
+
+    / ── 4. SWITCH SUBJECT ────────────────────────────────────────────────
+    - if @subjects.length > 1
+      section.tjs-dashboard__section data-section='subjects'
+        = render 'shared/skin/section_head', en: 'Switch Subject', jp: '科目変更'
+        .tjs-subject-grid
+          - @subjects.each do |s|
+            - meta   = subject_meta(s.name)
+            - active = s == @active_subject
+            - tile_cls = active ? 'tjs-card tjs-subject-tile tjs-subject-tile--active' : 'tjs-card tjs-subject-tile'
+            a class=tile_cls href=dashboard_path(active_subject: s.id)
+              .tjs-subject-tile__icon style="color:#{meta[:neon]};"
+                = glyph(meta[:glyph], size: 22, color: meta[:neon])
+              .tjs-subject-tile__name style="font-family:var(--f-body);font-size:12px;font-weight:700;color:#{active ? meta[:neon] : 'var(--ink)'};margin-top:6px;"
+                = s.name
+              - if active
+                = render 'shared/skin/pill', text: 'Active', color: meta[:neon]
+
+- if current_user.oauth_email.blank?
   input#oAuthEmail type='hidden'
