@@ -1,0 +1,14 @@
+/ _pill.html.slim — skin-aware badge/pill (Plan 01, Phase 0).
+/
+/ Locals:
+/   text:       String  — label text (required)
+/   color:      String  — CSS colour token for text + border (default: 'var(--dim)')
+/   glyph_name: Symbol  — optional leading glyph (default: nil)
+/
+/ famicom gets a square box; all others get a pill (border-radius: 999).
+- color      ||= 'var(--dim)'
+- glyph_name ||= nil
+span.tjs-pill style="color:#{color};"
+  - if glyph_name
+    = glyph(glyph_name, size: 12, color: color)
+  = text

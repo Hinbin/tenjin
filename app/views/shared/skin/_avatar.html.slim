@@ -1,0 +1,14 @@
+/ _avatar.html.slim — skin-aware avatar emblem (Plan 01, Phase 0).
+/
+/ Locals:
+/   glyph_name: String   — glyph key from GlyphHelper (default: 'torii')
+/   color:      String   — CSS colour token, e.g. 'var(--n1)' (default: 'var(--n1)')
+/   size:       Integer  — diameter in px (default: 46)
+/
+/ Per-skin treatment: arcade gets neon glow ring; famicom gets pixel hard-shadow;
+/ kawaii gets rounded-square sticker shape; minimal/zen get subtle shadow.
+- glyph_name ||= 'torii'
+- color       ||= 'var(--n1)'
+- size        ||= 46
+.tjs-avatar style="width:#{size}px;height:#{size}px;color:#{color};"
+  = glyph(glyph_name, size: size / 2, color: color)

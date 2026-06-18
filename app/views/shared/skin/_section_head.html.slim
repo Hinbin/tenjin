@@ -1,0 +1,19 @@
+/ _section_head.html.slim — section header with English label + optional JP subtitle (Plan 01, Phase 0).
+/
+/ Locals:
+/   en:     String — main heading text (required)
+/   jp:     String — Japanese subtitle (default: nil)
+/   action: String — link text for trailing action (default: nil)
+/   action_href: String — href for the trailing action (default: '#')
+- jp          ||= nil
+- action      ||= nil
+- action_href ||= '#'
+.tjs-section-head
+  .tjs-section-head__title
+    h2.tjs-display = en
+    - if jp
+      span.tjs-section-head__jp style="font-family:var(--f-pixel);color:var(--n2);" = jp
+  - if action
+    a.tjs-section-head__action href=action_href
+      = action
+      = glyph(:chevron, size: 13)

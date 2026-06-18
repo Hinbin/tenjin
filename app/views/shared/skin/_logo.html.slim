@@ -1,0 +1,12 @@
+/ _logo.html.slim — Tenjin wordmark, adapts per skin (Plan 01, Phase 0).
+/
+/ Locals:
+/   size: Integer — base size in px for the mark glyph (default: 22)
+/
+/ Mark glyph adapts: kawaii → heart, famicom → star, arcade/minimal/zen → torii.
+- size ||= 22
+.tjs-logo style="display:flex;align-items:center;gap:9px;"
+  = glyph(current_skin_logo_glyph, size: size + 4, color: 'var(--n1)', css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
+  .tjs-logo__text style="line-height:1;"
+    .tjs-display style="font-size:#{size}px;" TENJIN
+    div style="font-family:var(--f-pixel);font-size:10px;color:var(--n1);letter-spacing:3px;margin-top:3px;" 天神
