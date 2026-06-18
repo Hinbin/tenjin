@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-raise "Development question seeds can only be loaded in development, not #{Rails.env}." unless Rails.env.development?
+unless Rails.env.development? || ENV['SEED_TEST_USERS'] == 'true'
+  raise "Development question seeds can only be loaded in development or with SEED_TEST_USERS=true, not #{Rails.env}."
+end
 
 require 'csv'
 

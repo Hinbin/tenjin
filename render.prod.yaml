@@ -48,7 +48,11 @@ services:
     plan: standard
     healthCheckPath: /up
     # Runs once per deploy, before traffic is switched to the new version.
-    preDeployCommand: bundle exec rails db:migrate
+    # `db:prepare` loads the schema on a fresh database (first deploy) and runs
+    # pending migrations afterwards, so it is safe on both the initial deploy and
+    # every subsequent one. (`db:migrate` alone does not load the schema into an
+    # empty database.)
+    preDeployCommand: bundle exec rails db:prepare
     envVars:
       - fromGroup: tenjin-shared
       - key: WEB_CONCURRENCY

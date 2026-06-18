@@ -55,8 +55,10 @@ end
   end
 end
 
-case Rails.env
-when 'development'
+# Load the full set of fake accounts, questions and lessons in development, or on
+# an explicitly opted-in non-production deploy (SEED_TEST_USERS=true). The real
+# production blueprint never sets that flag, so this can never run on the live site.
+if Rails.env.development? || ENV['SEED_TEST_USERS'] == 'true'
   load Rails.root.join('db/seeds/development_questions.rb')
   load Rails.root.join('db/seeds/development_users.rb')
   load Rails.root.join('db/seeds/development_lessons.rb')

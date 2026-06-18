@@ -11,4 +11,12 @@
 set -e
 
 bundle exec rails db:prepare
+
+# On the test deploy (SEED_TEST_USERS=true) load fake accounts + demo content so
+# the site is usable without Wonde. Idempotent (find_or_initialize_by), so it is
+# safe to run on every boot. The production blueprint never sets this flag.
+if [ "$SEED_TEST_USERS" = "true" ]; then
+  bundle exec rails db:seed
+fi
+
 exec bundle exec puma -C config/puma.rb

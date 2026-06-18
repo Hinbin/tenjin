@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
-unless Rails.env.development?
-  raise "Development user seeds can only be loaded in development, not #{Rails.env}."
+# These fake accounts may only be created in development, or on a non-production
+# deploy that explicitly opts in via SEED_TEST_USERS (e.g. the free Render test
+# instance, which runs as RAILS_ENV=production but is never the real site).
+unless Rails.env.development? || ENV['SEED_TEST_USERS'] == 'true'
+  raise "Development user seeds can only be loaded in development or with SEED_TEST_USERS=true, not #{Rails.env}."
 end
 
 PASSWORD = 'password'

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-raise "Development lesson seeds can only be loaded in development, not #{Rails.env}." unless Rails.env.development?
+unless Rails.env.development? || ENV['SEED_TEST_USERS'] == 'true'
+  raise "Development lesson seeds can only be loaded in development or with SEED_TEST_USERS=true, not #{Rails.env}."
+end
 
 # A small pool of real, freely available educational videos. Each topic gets one or
 # two lessons drawn from this pool so the seeded database has browsable lesson content.

@@ -41,6 +41,10 @@ services:
       # Run the Solid Queue worker inside this web process (no worker service).
       - key: SOLID_QUEUE_IN_PUMA
         value: "true"
+      # Seed fake accounts + demo content on boot so the test site is usable
+      # without Wonde. NEVER set this on the production blueprint.
+      - key: SEED_TEST_USERS
+        value: "true"
       # Decrypts config/credentials.yml.enc (AWS keys, SES, etc.)
       - key: RAILS_MASTER_KEY
         sync: false
