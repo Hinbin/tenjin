@@ -57,6 +57,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
         first(class: 'next-button').click
+        visit(dashboard_path)
         expect(page).to have_css('i.fa-check')
       end
     end
@@ -72,6 +73,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
         first(class: 'next-button').click
+        visit(dashboard_path)
         expect(page).to have_css('i.fa-check')
       end
     end
@@ -92,7 +94,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         visit(dashboard_path)
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
-        expect(page).to have_text('Next Question')
+        expect(page).to have_css('.next-button', visible: :visible)
       end
 
       it 'flags the challenge complete' do
@@ -100,6 +102,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         first(class: 'question-button').click
         first(class: 'next-button').click
+        visit(dashboard_path)
         expect(page).to have_css('i.fa-check')
       end
     end
@@ -114,6 +117,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         visit(dashboard_path)
         find(:css, '#challenge-table tbody tr:nth-child(1)').click
         click_through_quiz
+        visit(dashboard_path)
         expect(page).to have_css('i.fa-check')
       end
 

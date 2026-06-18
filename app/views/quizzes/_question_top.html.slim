@@ -1,13 +1,17 @@
-.tjk-container style='padding-top: var(--tj-space-5)'
-  .tj-progress
-    .tj-progress__bar role="progressbar" style="width:#{@percent_complete}%" aria-valuenow="#{@percent_complete}" aria-valuemin="0" aria-valuemax="100"
-  .tj-quiz-hud
-    .tj-quiz-hud__item
-      i.fas.fa-bolt style='color: var(--tj-streak)' alt='Streak' title='Streak'
-      span#streak = @quiz.streak
-    .tj-quiz-hud__item
-      i.fas.fa-check style='color: var(--tj-correct-icon)' alt='Correct' title='Correct'
-      span#answeredCorrect = @quiz.answered_correct
-    .tj-quiz-hud__item
-      span#multiplier = @multiplier.multiplier
-      i.fas.fa-times style='color: var(--tj-multiplier)' alt='Multiplier' title='Multiplier'
+/ Quiz top bar + HUD — skin-aware (Plan 01, Phase 2). Rendered inside the .tjs-quiz shell (show).
+/ KEEP: #streak / #answeredCorrect / #multiplier (questions_shared.js live-updates them) and the
+/ .tj-progress__bar progressbar (system spec reads aria-valuenow).
+- accent = subject_neon(@quiz.subject)
+.tjs-quiz__top
+  a.tjs-quiz__close href=dashboard_path aria-label='Exit quiz'
+    = glyph(:x, size: 18, color: 'var(--dim)')
+  .tjs-quiz__progress
+    .tjs-bar
+      .tjs-bar__fill.tj-progress__bar role='progressbar' aria-valuenow=@percent_complete aria-valuemin='0' aria-valuemax='100' style="width:#{@percent_complete}%;background:#{accent};"
+  span.tjs-quiz__count = "#{@quiz.num_questions_asked + 1}/#{@quiz.questions.length}"
+.tjs-quiz__hud
+  / streak-aura container — Phase 4 wires the equipped streak-aura cosmetic into this mount
+  .tjs-streak-aura data-quiz-target='streakAura'
+    = render 'shared/skin/meter', icon: :flame, color: 'var(--n1)', label: 'streak', value: @quiz.streak, value_id: 'streak'
+  = render 'shared/skin/meter', icon: :check, color: 'var(--n2)', label: 'correct', value: @quiz.answered_correct, value_id: 'answeredCorrect'
+  = render 'shared/skin/meter', icon: :bolt, color: 'var(--gold)', label: 'mult', value: @multiplier.multiplier, value_id: 'multiplier'

@@ -32,6 +32,14 @@ function processShortResponse (serverResponse, guess) {
   }
 
   updateQuizStatistics(serverResponse)
+  document.dispatchEvent(new CustomEvent('quiz:answered', {
+    detail: {
+      correct,
+      streak: serverResponse.streak,
+      multiplier: serverResponse.multiplier,
+      answeredCorrect: serverResponse.answeredCorrect
+    }
+  }))
 
   const nextBtn = document.getElementById('nextButton')
   if (nextBtn) {

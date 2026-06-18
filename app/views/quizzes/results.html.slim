@@ -1,0 +1,49 @@
+/ Quiz results / complete screen — skin-aware (Plan 01, Phase 2). Rendered by
+/ QuizzesController#finish_quiz once a quiz is no longer active. Presentation only; scoring and
+/ progression already happened. Motion-safe: .tjs-pop / .tjs-slideup base states are visible.
+- content_for :title
+  title Quiz Complete
+- accent   = subject_neon(@quiz.subject)
+- accuracy = @quiz.accuracy_percent
+- rank     = quiz_rank(accuracy)
+.tjs-quiz.tjs-results
+  = render 'shared/skin/backdrop'
+  .tjs-results__inner
+    .tjs-results__heading = @quiz.topic&.name || 'Quiz Complete'
+
+    .tjs-results__rank.tjs-pop
+      .tjs-display.tjs-results__grade style="color:#{rank[:color]};" = rank[:grade]
+      .tjs-display.tjs-results__rank-en = rank[:en]
+      .tjs-results__rank-jp style="color:#{rank[:color]};" = rank[:jp]
+
+    .tjs-results__points.tjs-slideup
+      .tjs-results__points-label Points earned
+      .tjs-results__points-value = "+#{@quiz.points_earned}"
+
+    .tjs-results__stats
+      .tjs-card.tjs-results__stat
+        = glyph(:target, size: 18, color: accent, css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
+        .tjs-results__stat-value = "#{accuracy}%"
+        .tjs-results__stat-label Accuracy
+      .tjs-card.tjs-results__stat
+        = glyph(:check, size: 18, color: 'var(--n2)', css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
+        .tjs-results__stat-value = "#{@quiz.answered_correct}/#{@quiz.total_questions}"
+        .tjs-results__stat-label Correct
+      .tjs-card.tjs-results__stat
+        = glyph(:flame, size: 18, color: 'var(--n1)', css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
+        .tjs-results__stat-value = "×#{@quiz.max_streak}"
+        .tjs-results__stat-label Best combo
+
+    .tjs-card.tjs-results__run
+      .tjs-results__run-head
+        span.tjs-results__run-title This run
+        span.tjs-results__run-meta style="color:#{accent};" = "#{@quiz.answered_correct}/#{@quiz.total_questions} correct"
+      .tjs-bar
+        .tjs-bar__fill style="width:#{accuracy}%;background:#{accent};"
+
+    .tjs-results__actions
+      = form_with url: quizzes_path, method: :post, data: { turbo: false }, class: 'tjs-results__replay' do
+        input type='hidden' name='quiz[subject]' value=@quiz.subject.id
+        input type='hidden' name='quiz[topic_id]' value=(@quiz.topic&.id || 'Lucky Dip')
+        button.tjs-btn.tjs-btn--primary type='submit' Play Again
+      a.tjs-btn.tjs-btn--ghost.tjs-results__home href=dashboard_path Back to Home

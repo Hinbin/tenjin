@@ -1,15 +1,21 @@
--content_for :title
+- content_for :title
   title=('Quiz - ' + @quiz.subject.name)
-=render('question_top')
-.tjk-container
-  -unless @lesson.blank? || @lesson.no_content?
-    .tj-quiz-content
-      .tj-quiz-main
-        = render_question
-      .tj-quiz-lesson#lesson
-        h3.h3 = @lesson.title
-        div.videoLink src=@lesson.generate_video_src
-          img.tj-lesson-thumb video_id=@lesson.video_id category=@lesson.category src=@lesson.generate_thumbnail_src
-  -else
-    = render_question
-= render('question_bottom')
+.tjs-quiz data-controller='quiz'
+  = render 'shared/skin/backdrop'
+  / full-bleed answer-reveal flash (motion-safe: base opacity 0, animates only when motion allowed)
+  .tjs-quiz__flash data-quiz-target='flash' aria-hidden='true'
+  .tjs-quiz__inner
+    = render 'question_top'
+    - unless @lesson.blank? || @lesson.no_content?
+      .tj-quiz-content
+        .tj-quiz-main
+          = render_question
+        .tj-quiz-lesson#lesson
+          h3.h3 = @lesson.title
+          div.videoLink src=@lesson.generate_video_src
+            img.tj-lesson-thumb video_id=@lesson.video_id category=@lesson.category src=@lesson.generate_thumbnail_src
+    - else
+      = render_question
+    = render 'question_bottom'
+  / combo-pop mount (+points / COMBO ×n) — populated by quiz_controller.js, motion-safe
+  .tjs-quiz__pop data-quiz-target='pop' aria-hidden='true'

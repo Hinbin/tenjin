@@ -1,10 +1,18 @@
-section.page-section.tj-text-center#newQuiz
-  .tjk-container
-    h1.page-section-header.text-uppercase Select Topic
-    p.lead=@subject.name
+/ Topic picker — skin-aware (Plan 01, Phase 2). KEEP the simple_form select (#quiz_topic_id) and
+/ its "Create Quiz" submit — session_helpers#navigate_to_quiz and the create flow depend on them.
+- content_for :title
+  title=('Quiz - ' + @subject.name)
+.tjs-quiz
+  = render 'shared/skin/backdrop'
+  .tjs-quiz__inner.tjs-topic-pick
+    = render 'shared/skin/section_head', en: 'Select Topic', jp: '単元'
+    / Legacy dashboard-style accent separator (equipped dashboard_style cosmetic); retired in Phase 4.
     ==render_small_separator
-
-    = simple_form_for(Quiz.new) do |f|
-        = f.input :topic_id, label: 'Pick a topic:',as: :select, collection: @topics, include_blank: false
+    .tjs-card.tjs-topic-pick__card
+      .tjs-topic-pick__subject
+        = render 'shared/skin/avatar', glyph_name: 'book', color: subject_neon(@subject), size: 44
+        .tjs-display.tjs-topic-pick__subject-name = @subject.name
+      = simple_form_for(Quiz.new) do |f|
+        = f.input :topic_id, label: 'Pick a topic', as: :select, collection: @topics, include_blank: false, input_html: { class: 'tjk-input' }
         = f.input :subject, as: :hidden, input_html: { value: @subject.id }
-        = f.button :submit, class: 'tj-btn-dark tj-btn--full'
+        = f.button :submit, class: 'tjs-btn tjs-btn--primary tjs-topic-pick__submit'
