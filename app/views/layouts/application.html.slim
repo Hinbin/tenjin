@@ -11,6 +11,9 @@ html
     = csrf_meta_tags
     = csp_meta_tag
     = render 'layouts/google_analytics' if Rails.env.production?          
+    link rel="preconnect" href="https://fonts.googleapis.com" /
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" /
+    link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Yusei+Magic&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&family=Zen+Old+Mincho:wght@400;500;600;700;900&family=Shippori+Mincho:wght@400;500;600;700&display=swap" /
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_importmap_tags
     - unless Rails.env.test?
