@@ -14,7 +14,7 @@ FactoryBot.define do
     end
 
     factory :question_import_hash_with_lesson do
-      sequence(:lesson) { |n| FFaker::Lorem.word + n.to_s }
+      sequence(:lesson) { |n| "Lesson #{n}" }
     end
 
     factory :question_import_hash_boolean do
