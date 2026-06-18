@@ -1,0 +1,32 @@
+// skins/_motion.scss — animations for the reskinnable flow.
+// Ported from design/tenjin-design-system/project/flow/skins/skins.css.
+//
+// ⚠️ MOTION-SAFETY RULE (the prototype hit this bug repeatedly — do NOT regress it):
+// An entrance animation's BASE (un-animated) state must be the VISIBLE end-state. Never tie
+// always-rendered content's visibility to an animation — under a frozen animation clock
+// (offscreen / print / reduced-motion) a `from { opacity: 0 }` keyframe holds content hidden
+// forever. So: opacity/visibility stays at the visible value by default; motion is layered on
+// ONLY inside `@media (prefers-reduced-motion: no-preference)`.
+
+@keyframes tjs-grid { from { background-position: 0 0; } to { background-position: 0 40px; } }
+@keyframes tjs-pop { 0% { transform: scale(0.82); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes tjs-slideup { from { transform: translateY(14px); } to { transform: translateY(0); } }
+@keyframes tjs-shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+@keyframes tjs-flash-good { 0% { opacity: 0; } 30% { opacity: 0.55; } 100% { opacity: 0; } }
+@keyframes tjs-flash-bad { 0% { opacity: 0; } 30% { opacity: 0.6; } 100% { opacity: 0; } }
+@keyframes tjs-confetti { 0% { transform: translateY(-14px) rotate(0); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(150px) rotate(560deg); opacity: 0; } }
+@keyframes tjs-aura { 0% { transform: scale(0.6); opacity: 0.65; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes tjs-shimmer { to { background-position: 200% center; } }
+
+.tjs-tile { transition: transform .13s ease, box-shadow .2s ease, border-color .15s; }
+.tjs-tile:active { transform: scale(0.975); }
+
+// Entrance helpers — base state is already visible; motion only when allowed.
+.tjs-slideup,
+.tjs-pop { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .tjs-pop { animation: tjs-pop .35s cubic-bezier(.2, 1.4, .4, 1) both; }
+  .tjs-slideup { animation: tjs-slideup .42s cubic-bezier(.2, .8, .2, 1) both; }
+  .tjs-grid { animation: tjs-grid 1.6s linear infinite; }
+}

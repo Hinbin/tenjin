@@ -22,7 +22,7 @@ html
     meta name="theme-color" content="#333333"
     = content_for(:page_meta)
 
-  body data-action=action_name data-controller=controller_name
+  body data-action=action_name data-controller=theme_controllers data-skin=theme_selection.skin data-palette=theme_selection.palette data-mode=theme_mode style=theme_inline_style data-theme-catalog-value=(content_for(:theme_catalog).presence || "{}")
     = render('shared/user_navigation') if current_user.present?  
     = render('shared/admin_navigation') if current_admin.present?
     = render('shared/logged_out_navigation') if current_user.nil? && current_admin.nil?

@@ -1,0 +1,72 @@
+/ Dev-only skin styleguide (Plan 01, Phase 0).
+/ Proves the theme engine: every primitive below is skin-aware, switched live via the body's
+/ `theme` Stimulus controller. Feeds the controller the full resolved catalog (this page only).
+- content_for :theme_catalog, theme_catalog_json
+- content_for :title
+  title Skin Styleguide
+
+.tjs-styleguide style="max-width:1100px;margin:0 auto;padding:2rem 1.25rem;"
+  h1.tjs-display style="font-size:2rem;margin-bottom:0.25rem;" Skin Styleguide
+  p style="color:var(--dim);margin-top:0;" Phase 0 proving ground — switch skin · palette · mode and watch every primitive reskin.
+
+  / ── Switcher ──────────────────────────────────────────────
+  .tjs-card style="padding:1rem;margin:1.25rem 0;display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-start;"
+    div
+      .tjs-display style="font-size:0.8rem;margin-bottom:0.4rem;" Skin
+      .tjs-flex style="display:flex;gap:0.4rem;flex-wrap:wrap;"
+        - @skins.each do |id, meta|
+          button.tjs-btn.tjs-btn--ghost type="button" data-action="theme#select" data-theme-skin-param=id style="padding:6px 12px;"
+            = meta[:label]
+    div
+      .tjs-display style="font-size:0.8rem;margin-bottom:0.4rem;" Palette
+      .tjs-flex style="display:flex;gap:0.4rem;flex-wrap:wrap;"
+        / Indices 0–3 map to whichever skin is active (palette lists are equal length here).
+        - 4.times do |idx|
+          button.tjs-btn.tjs-btn--ghost type="button" data-action="theme#select" data-theme-palette-param=idx style="padding:6px 12px;"
+            = "P#{idx}"
+    div
+      .tjs-display style="font-size:0.8rem;margin-bottom:0.4rem;" Mode
+      .tjs-flex style="display:flex;gap:0.4rem;"
+        button.tjs-btn.tjs-btn--ghost type="button" data-action="theme#select" data-theme-mode-param="dark" style="padding:6px 12px;" Dark
+        button.tjs-btn.tjs-btn--ghost type="button" data-action="theme#select" data-theme-mode-param="light" style="padding:6px 12px;" Light
+    div
+      .tjs-display style="font-size:0.8rem;margin-bottom:0.4rem;" &nbsp;
+      button.tjs-btn.tjs-btn--ghost type="button" data-action="theme#reset" style="padding:6px 12px;" Reset
+
+  / ── Buttons ───────────────────────────────────────────────
+  h2.tjs-display style="font-size:1.1rem;margin-top:2rem;" Buttons
+  .tjs-flex style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;"
+    button.tjs-btn.tjs-btn--primary type="button" Primary
+    button.tjs-btn.tjs-btn--ghost type="button" Ghost
+
+  / ── Cards ─────────────────────────────────────────────────
+  h2.tjs-display style="font-size:1.1rem;margin-top:2rem;" Cards
+  .tjs-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;"
+    .tjs-card style="padding:1.1rem;"
+      .tjs-display style="font-size:1rem;" Plain card
+      p style="color:var(--dim);margin:0.4rem 0 0.8rem;" Surface, ink and border from tokens.
+      .tjs-bar
+        .tjs-bar__fill style="width:64%;"
+    .tjs-card.tjs-tile style="padding:1.1rem;cursor:pointer;"
+      .tjs-display style="font-size:1rem;" Interactive tile
+      p style="color:var(--dim);margin:0.4rem 0 0;" Hover/press transition (.tjs-tile).
+
+  / ── Stylised subject tile (no photo) ──────────────────────
+  h2.tjs-display style="font-size:1.1rem;margin-top:2rem;" Subject tile (no photo)
+  .tjs-grid style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;"
+    - [["chip","Computer Science","CS","--n1"],["scroll","History","HI","--n2"],["globe","Geography","GE","--n3"],["tag","Business","BU","--gold"]].each do |g, name, short, tok|
+      .tjs-card.tjs-tile style="padding:1.1rem;display:flex;flex-direction:column;gap:0.6rem;cursor:pointer;"
+        .tjs-flex style="display:flex;justify-content:space-between;align-items:center;"
+          span style="color:var(#{tok});"
+            = glyph(g, size: 26, color: "var(#{tok})", css_class: "tjs-icon--glow")
+          span.tjs-display style="font-size:1.6rem;color:var(--line);" = short
+        .tjs-display style="font-size:0.95rem;" = name
+        .tjs-bar style="height:6px;"
+          .tjs-bar__fill style="width:62%;background:var(#{tok});"
+
+  / ── Glyph row ─────────────────────────────────────────────
+  h2.tjs-display style="font-size:1.1rem;margin-top:2rem;" Glyphs
+  .tjs-flex style="display:flex;flex-wrap:wrap;gap:1rem;color:var(--n1);"
+    - %i[chip scroll globe flame bolt star check x target trophy torii sakura crown gem dice sparkle heart].each do |g|
+      span title=g
+        = glyph(g, size: 24, color: "var(--ink)")

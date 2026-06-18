@@ -1,0 +1,75 @@
+// skins/_structure.scss — STRUCTURE LAYER.
+//
+// Per-skin surface treatment that a single CSS variable can't express — glass blur, neon glow,
+// pixel offset shadows, sticker borders. Keyed off the body[data-skin] / [data-mode] attributes
+// the layout renders. Colours/shapes come from the token vars (_tokens.scss); this file only
+// decides HOW those tokens are applied per skin.
+//
+// Ported from cardStyle()/btnStyle() in
+// design/tenjin-design-system/project/flow/skins/sk-data.jsx.
+//
+// STATUS: arcade + famicom are the two structural extremes (glass/glow vs solid/hard) and are
+// the reference implementations. kawaii + minimal are solid first cuts — an executor should
+// eyeball them against the prototype during Phase 0 and tighten shadows/spacing if needed.
+
+// ════════ ARCADE — glass + neon glow ════════
+body[data-skin="arcade"] {
+  background: radial-gradient(120% 80% at 50% -10%, var(--bg1), var(--bg0) 70%);
+
+  .tjs-display { text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .tjs-card {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .tjs-btn { text-transform: uppercase; letter-spacing: 1px; }
+  .tjs-btn--primary { box-shadow: 0 0 20px color-mix(in srgb, var(--n1) 40%, transparent); }
+
+  .tjs-icon--glow { filter: drop-shadow(0 0 5px currentColor); }
+  .tjs-bar__fill { box-shadow: 0 0 10px color-mix(in srgb, var(--n1) 60%, transparent); }
+}
+
+// ════════ FAMICOM — solid + hard pixel offset ════════
+body[data-skin="famicom"] {
+  background: var(--bg0);
+
+  .tjs-display { text-transform: uppercase; }
+
+  .tjs-card {
+    border: var(--bd) solid var(--edge);
+    box-shadow: calc(var(--bd) + 1px) calc(var(--bd) + 1px) 0 var(--edge);
+  }
+
+  .tjs-btn {
+    text-transform: uppercase;
+    border: var(--bd) solid var(--edge);
+    box-shadow: calc(var(--bd) + 1px) calc(var(--bd) + 1px) 0 var(--edge);
+  }
+
+  .tjs-bar { border: 1.5px solid var(--edge); }
+  .tjs-bar__fill { box-shadow: none; }
+}
+
+// ════════ KAWAII — sticker borders + soft drop ════════
+body[data-skin="kawaii"] {
+  background: radial-gradient(130% 90% at 50% -10%, var(--bg1), var(--bg0) 75%);
+
+  .tjs-card { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35); }
+  &[data-mode="light"] .tjs-card { box-shadow: 0 8px 22px rgba(80, 50, 90, 0.10); }
+
+  .tjs-btn--primary { box-shadow: 0 5px 0 color-mix(in srgb, var(--n1) 62%, #000); }
+}
+
+// ════════ MINIMAL — hairline + low flat shadow ════════
+body[data-skin="minimal"] {
+  background: var(--bg0);
+
+  .tjs-card { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
+  &[data-mode="light"] .tjs-card {
+    box-shadow: 0 1px 2px rgba(20, 24, 40, 0.05), 0 6px 16px rgba(20, 24, 40, 0.05);
+  }
+
+  .tjs-btn--primary { box-shadow: none; }
+}
