@@ -30,6 +30,20 @@ module ThemeHelper
     [controller_name, 'theme', *extra].compact_blank.join(' ')
   end
 
+  # The active skin id (falls back to default when no user session).
+  def current_skin
+    theme_selection.skin
+  end
+
+  # Logo mark glyph: kawaii → heart, famicom → star, others → torii.
+  def current_skin_logo_glyph
+    case current_skin
+    when 'kawaii'  then :heart
+    when 'famicom' then :star
+    else                :torii
+    end
+  end
+
   # Full resolved catalog for client-side live switching (styleguide / settings only — do NOT put
   # this on the global body; it's ~32 var-maps). Shape:
   #   { "arcade" => { "0" => { "dark" => {vars}, "light" => {vars} }, … }, … }
