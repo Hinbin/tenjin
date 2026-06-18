@@ -39,7 +39,7 @@ plugin :tmp_restart
 # Optionally run the Solid Queue worker inside the Puma process instead of as a
 # separate service. Set SOLID_QUEUE_IN_PUMA=true to enable (used by the free
 # single-service test deploy; production runs a dedicated worker instead).
-plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"].present?
+plugin :solid_queue unless ENV["SOLID_QUEUE_IN_PUMA"].to_s.strip.empty?
 
 # Prevent timeouts in development mode
 worker_timeout (24*60*60) if ENV['RAILS_ENV']=='development'
