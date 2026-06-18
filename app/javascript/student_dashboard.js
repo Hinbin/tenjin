@@ -1,5 +1,5 @@
 document.addEventListener('turbo:load', () => {
-  document.querySelectorAll('.challenge-row, .homework-row').forEach(row => {
+  document.querySelectorAll('.challenge-row, .homework-row, .topic-row').forEach(row => {
     row.addEventListener('click', (event) => {
       const tr = event.currentTarget
       const pickedSubject = tr.dataset.subject

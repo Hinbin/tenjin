@@ -21,7 +21,7 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
                                   challenge: challenge_one, progress: 100, completed: true)
     end
     let(:quiz) { create(:new_quiz) }
-    let(:challenge_css_selector) { "#challenge-table tr[data-topic='#{topic.id}']" }
+    let(:challenge_css_selector) { "#challenge-table [data-topic='#{topic.id}']" }
 
     before do
       challenge_one
@@ -37,13 +37,13 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
     it 'shows progress for full marks challenges' do
       progressed_challenge
       visit(dashboard_path)
-      expect(page).to have_css('td', exact_text: progressed_challenge.progress)
+      expect(page).to have_css('.challenge-progress', exact_text: progressed_challenge.progress.to_s)
     end
 
     it 'shows challenge as complete if finished' do
       completed_challenge
       visit(dashboard_path)
-      expect(page).to have_css('td i.fa-check')
+      expect(page).to have_css('.challenge-progress i.fa-check')
     end
 
     it 'only shows challenges for subjects I take' do
@@ -67,10 +67,9 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
     end
 
     it 'shows the number of challenge points I have received in the nav bar' do
-      User.first.challenge_points = 25
-      User.first.save!
+      student.update!(challenge_points: 25)
       visit(dashboard_path)
-      expect(page).to have_css('p', exact_text: 25)
+      expect(page).to have_css('#challenge-points', text: '25')
     end
   end
 
@@ -91,24 +90,24 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
     it 'limits homeworks owing to the last 15' do
       create_list(:homework_progress, 14, user: student, completed: false)
       visit(dashboard_path)
-      expect(page).to have_css('tr.homework-row', count: 15)
+      expect(page).to have_css('.homework-row', count: 15)
     end
 
     it 'shows completed homeworks with a cross (times) icon' do
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-times")
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] .homework-row__status i.fa-times")
     end
 
     it 'shows completed homeworks with a tick icon' do
       HomeworkProgress.where(homework: homework, user: student).first.update_attribute(:completed, true)
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-check")
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] .homework-row__status i.fa-check")
     end
 
     it 'shows overdue homeworks with an exclamation icon' do
       homework.update_attribute(:due_date, Time.now - 1.day)
       visit(dashboard_path)
-      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] > td:last-child > i.fa-exclamation")
+      expect(page).to have_css(".homework-row[data-homework='#{homework.id}'] .homework-row__status i.fa-exclamation")
     end
 
     it 'shows homeworks completed in the last week only' do
@@ -151,7 +150,7 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
     it 'only shows my homeworks' do
       create(:homework)
       visit(dashboard_path)
-      expect(page).to have_css('tr.homework-row', count: 1)
+      expect(page).to have_css('.homework-row', count: 1)
     end
   end
 end
