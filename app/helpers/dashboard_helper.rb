@@ -1,6 +1,28 @@
 # frozen_string_literal: true
 
 module DashboardHelper
+  SUBJECT_META = {
+    'Computer Science' => { glyph: :chip, neon: 'var(--n1)', short: 'CS', jp: 'コンピュータ' },
+    'Mathematics' => { glyph: :target, neon: 'var(--n2)', short: 'MAT', jp: '数学' },
+    'Science' => { glyph: :bolt,   neon: 'var(--n3)', short: 'SCI', jp: '科学'          },
+    'English' => { glyph: :scroll, neon: 'var(--n2)', short: 'ENG', jp: '英語'          },
+    'History' => { glyph: :book,   neon: 'var(--n3)', short: 'HIS', jp: '歴史'          },
+    'Geography' => { glyph: :globe, neon: 'var(--n1)', short: 'GEO', jp: '地理' }
+  }.freeze
+
+  def subject_meta(name)
+    SUBJECT_META[name] || { glyph: :book, neon: 'var(--n2)', short: name.upcase.first(3), jp: name.first(6) }
+  end
+
+  def challenge_complete?(challenge)
+    @challenge_progresses.any? { |cp| cp.challenge_id == challenge.id && cp.completed }
+  end
+
+  def topic_mastery_pct(topic_id, max_score: 500)
+    score = @topic_scores&.dig(topic_id)&.score.to_i
+    (score * 100.0 / max_score).round.clamp(0, 100)
+  end
+
   def write_challenge_progress(challenge, challenge_progresses)
     challenge_progress = challenge_progresses.select { |cp| cp.challenge_id == challenge.id }
     return '0%' if challenge_progress.empty?
