@@ -25,7 +25,7 @@ RSpec.describe 'Author edits a question', :default_creates, :js, type: :system d
     Capybara.reset_sessions!
     sign_in student
     visit dashboard_path
-    find('h3', text: subject.name.upcase)
+    find('.tjs-dashboard')
     visit new_quiz_path(subject: topic.subject.name)
   end
 
