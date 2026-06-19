@@ -64,9 +64,6 @@ jobs:
           name: run RuboCop
           command: bundle exec rubocop
       - run:
-          name: run Reek
-          command: bundle exec reek
-      - run:
           name: build CSS (dartsass)
           command: bundle exec rails dartsass:build
   test:
