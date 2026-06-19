@@ -319,7 +319,7 @@ export default class extends Controller {
       <div>
         <div class="tj-lb-header">
           <div class="tj-lb-title">
-            <h1>${this.escape(this.name)}</h1>
+            <h1 class="tj-lb-heading">${this.escape(this.name)}</h1>
           </div>
           <div class="tj-lb-winner">
             ${this.renderClassroomWinner()}
@@ -331,15 +331,15 @@ export default class extends Controller {
           ${this.renderShowAllToggle()}
           ${this.renderAllTimeToggle()}
         </div>
-        <table id="leaderboardTable" class="tj-table">
+        <table id="leaderboardTable" class="tj-table tj-lb-table">
           <thead>
-            <tr>
-              <th>#</th>
-              <th></th>
+            <tr class="tj-lb-head-row">
+              <th class="tj-lb-th-rank">#</th>
+              <th class="tj-lb-th-avatar"></th>
               <th>Name</th>
               <th></th>
               <th class="tj-lb-context-col">${this.contextualHeader()}</th>
-              <th>Score</th>
+              <th class="tj-lb-th-score">Score</th>
             </tr>
           </thead>
           <tbody>
@@ -430,27 +430,39 @@ export default class extends Controller {
     const winnerText = winner.map((winner) => `${winner[1]} - ${winner[2]} points`).join(', ')
 
     return `
-      <div>
+      <div class="tj-lb-winner-badge">
         <p><b>${this.escape(classroom)} winner: </b>${this.escape(winnerText)}</p>
       </div>
     `
   }
 
   renderEntry (entry) {
-    const classNames = []
+    const classNames = ['tj-lb-row']
     if (entry.lastChanged) classNames.push('score-changed')
-    if (this.user.id === entry.id) {
-      classNames.push('current-user')
+    const isCurrentUser = this.user.id === entry.id
+    if (isCurrentUser) {
+      classNames.push('current-user', 'tj-lb-row--current')
     }
 
+    let medalClass = ''
+    if (entry.position === 1) { classNames.push('tj-lb-row--top3', 'tj-lb-row--gold'); medalClass = 'tj-lb-rank--gold' }
+    else if (entry.position === 2) { classNames.push('tj-lb-row--top3', 'tj-lb-row--silver'); medalClass = 'tj-lb-rank--silver' }
+    else if (entry.position === 3) { classNames.push('tj-lb-row--top3', 'tj-lb-row--bronze'); medalClass = 'tj-lb-rank--bronze' }
+
+    const phase4Row = isCurrentUser ? ' data-phase4-hook="row"' : ''
+    const phase4Avatar = isCurrentUser ? ' data-phase4-hook="avatar"' : ''
+    const phase4Nameplate = isCurrentUser ? ' data-phase4-hook="nameplate"' : ''
+
+    const deltaHtml = entry.lastChanged ? '<span class="tj-lb-delta tj-lb-delta--up" aria-hidden="true">▲</span>' : ''
+
     return `
-      <tr id="row-${entry.id}" class="${classNames.join(' ')}">
-        <td id="pos-${entry.id}">${entry.position}</td>
-        <td id="icon-${entry.id}">${this.renderIcon(entry.icon)}</td>
-        <td id="name-${entry.id}">${this.escape(entry.name)}</td>
-        <td id="awards-${entry.id}">${this.renderAwards(entry.awards)}</td>
+      <tr id="row-${entry.id}" class="${classNames.join(' ')}"${phase4Row}>
+        <td id="pos-${entry.id}" class="tj-lb-rank ${medalClass}">${entry.position}</td>
+        <td id="icon-${entry.id}" class="tj-lb-avatar-cell"${phase4Avatar}>${this.renderIcon(entry.icon)}</td>
+        <td id="name-${entry.id}" class="tj-lb-name-cell"${phase4Nameplate}>${this.escape(entry.name)}</td>
+        <td id="awards-${entry.id}" class="tj-lb-awards">${this.renderAwards(entry.awards)}</td>
         ${this.renderContextualRow(entry)}
-        <td id="score-${entry.id}">${this.escape(String(entry.score))}</td>
+        <td id="score-${entry.id}" class="tj-lb-score">${this.escape(String(entry.score))}${deltaHtml}</td>
       </tr>
     `
   }
