@@ -28,6 +28,7 @@ pin "controllers/homework_controller",          to: "controllers/homework_contro
 pin "controllers/live_leaderboard_controller",  to: "controllers/live_leaderboard_controller.js"
 pin "controllers/modal_controller",             to: "controllers/modal_controller.js"
 pin "controllers/navbar_controller",            to: "controllers/navbar_controller.js"
+pin "controllers/quiz_controller",              to: "controllers/quiz_controller.js"
 pin "controllers/table_controller",             to: "controllers/table_controller.js"
 pin "controllers/theme_controller",             to: "controllers/theme_controller.js"
 pin "controllers/users_controller",             to: "controllers/users_controller.js"

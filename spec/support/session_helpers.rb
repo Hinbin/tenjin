@@ -4,7 +4,7 @@ module SessionHelpers
   def log_in
     sign_in student
     visit root_path
-    expect(page).to have_css('.tjs-dashboard')
+    expect(page).to have_text('PRACTICE')
   end
 
   def stub_omniauth # rubocop:disable Metrics/MethodLength

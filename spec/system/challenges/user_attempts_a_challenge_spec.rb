@@ -54,9 +54,10 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
 
       it 'flags the challenge complete' do
         visit(dashboard_path)
-        find(:css, '#challenge-table .challenge-row:first-child').click
+        first('#challenge-table .challenge-row', minimum: 1).click
         first(class: 'question-button').click
         first(class: 'next-button').click
+        visit(dashboard_path)
         expect(page).to have_css('i.fa-check')
       end
     end
@@ -69,9 +70,10 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
 
       it 'flags the challenge complete' do
         visit(dashboard_path)
-        find(:css, '#challenge-table .challenge-row:first-child').click
+        first('#challenge-table .challenge-row', minimum: 1).click
         first(class: 'question-button').click
         first(class: 'next-button').click
+        visit(dashboard_path)
         expect(page).to have_css('i.fa-check')
       end
     end
@@ -84,22 +86,23 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
 
       it 'links you to the correct quiz when clicked' do
         visit(dashboard_path)
-        find(:css, '#challenge-table .challenge-row:first-child').click
+        first('#challenge-table .challenge-row', minimum: 1).click
         expect(page).to have_css('p', exact_text: challenge_single_question.topic.name)
       end
 
       it 'allows me to answer a question after creating a quiz from a challenge' do # turbolinks bug
         visit(dashboard_path)
-        find(:css, '#challenge-table .challenge-row:first-child').click
+        first('#challenge-table .challenge-row', minimum: 1).click
         first(class: 'question-button').click
-        expect(page).to have_text('Next Question')
+        expect(page).to have_css('.next-button', visible: :visible)
       end
 
       it 'flags the challenge complete' do
         visit(dashboard_path)
-        find(:css, '#challenge-table .challenge-row:first-child').click
+        first('#challenge-table .challenge-row', minimum: 1).click
         first(class: 'question-button').click
         first(class: 'next-button').click
+        visit(dashboard_path)
         expect(page).to have_css('i.fa-check')
       end
     end
@@ -112,8 +115,9 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
       it 'flags the challenge complete' do
         create(:question, topic: create(:topic, subject:))
         visit(dashboard_path)
-        find(:css, '#challenge-table .challenge-row:first-child').click
+        first('#challenge-table .challenge-row', minimum: 1).click
         click_through_quiz
+        visit(dashboard_path)
         expect(page).to have_css('i.fa-check')
       end
 
@@ -121,7 +125,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
         second_enrollment = create(:enrollment, classroom:)
         create(:question, topic: create(:topic, subject:))
         visit(dashboard_path)
-        find(:css, '#challenge-table .challenge-row:first-child').click
+        first('#challenge-table .challenge-row', minimum: 1).click
         click_through_quiz
         sign_out student
         sign_in second_enrollment.user

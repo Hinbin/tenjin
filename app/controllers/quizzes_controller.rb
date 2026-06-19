@@ -19,20 +19,11 @@ class QuizzesController < ApplicationController
   def show
     authorize @quiz
     return missing_question if @question.blank?
+    return finish_quiz unless @quiz.active?
 
     set_quiz_status_variables
     find_lesson
-    return render 'show' if @quiz.active?
-
-    percent_correct = calculate_percent_correct
-
-    flash[:notice] = if percent_correct > 60
-                       "Finished!  You got #{percent_correct}%.  Well done!"
-                     else
-                       "Finished!  You got #{percent_correct}%"
-                     end
-
-    redirect_to dashboard_path
+    render 'show'
   end
 
   def new
@@ -76,6 +67,13 @@ class QuizzesController < ApplicationController
   end
 
   private
+
+  # A finished quiz renders the skin-aware results screen. Progression (streak/XP/level) is
+  # recorded here, idempotently, so refreshing the results page is safe.
+  def finish_quiz
+    Progression::RecordQuiz.call(user: current_user, quiz: @quiz)
+    render 'results'
+  end
 
   def find_lesson
     if @question.lesson.present?
@@ -139,12 +137,6 @@ class QuizzesController < ApplicationController
       return flash[:alert] = 'Quiz does not belong to you' if exception.record.active?
     end
     redirect_to dashboard_path
-  end
-
-  def calculate_percent_correct
-    return 0 if @quiz.answered_correct.blank? || @quiz.questions.blank?
-
-    ((@quiz.answered_correct / @quiz.questions.length.to_f) * 100.to_f).round
   end
 
   def set_quiz_status_variables

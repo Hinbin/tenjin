@@ -70,10 +70,11 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
         expect(flash[:alert]).to match(/Quiz does not belong to you/)
       end
 
-      it 'prevents me from looking at a finished quiz' do
+      it 'shows the results screen for a finished quiz' do
         quiz = create(:new_quiz, user: student, active: false, question_order: [question.id])
         get quiz_path(id: quiz.id)
-        expect(flash[:notice]).to match(/Finished!  You got 0%/)
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include('Points earned')
       end
     end
 

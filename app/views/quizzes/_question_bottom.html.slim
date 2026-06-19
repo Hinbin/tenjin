@@ -1,13 +1,12 @@
-.tjk-container.tj-quiz-footer
-  .tj-quiz-footer__bar
-    -if @quiz.lesson.blank?
-      p#quiz-name=@question.topic.name
-    -else
-      p#quiz-name=@question.lesson.title
-    =render "flagged_question_icon"
+.tjs-quiz__footer
+  -if @quiz.lesson.blank?
+    p#quiz-name.tjs-quiz__footer-name=@question.topic.name
+  -else
+    p#quiz-name.tjs-quiz__footer-name=@question.lesson.title
+  =render "flagged_question_icon"
 
 -unless @quiz.counts_for_leaderboard
-  .tj-quiz-warning
+  .tjs-card.tj-quiz-warning
     | This quiz is currently not counting towards your leaderboard points.  The first attempt at a lesson homework will count, or the first four quizzes for a particular topic.
 
 dialog#feedbackModal

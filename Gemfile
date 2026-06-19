@@ -71,6 +71,9 @@ group :development do
   gem "rubocop-rails", require: false
   gem 'rubocop-rspec'
 
+  # Code smell detection (config in config.reek)
+  gem 'reek', require: false
+
   # Hunt for n+1
   gem 'bullet'
 

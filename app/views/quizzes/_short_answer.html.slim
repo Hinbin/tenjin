@@ -1,4 +1,13 @@
-p.lead.tj-text-center ==@question.question_text
-input.tjk-input.tj-text-center#shortAnswerText autofocus='' autocomplete='off'
-button.tj-btn-dark.tj-btn--full.question-button#shortAnswerButton Check Answer
-button.tj-btn-dark.tj-btn--full.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question
+/ Short-answer question — skin-aware (Plan 01, Phase 2).
+/ KEEP: #shortAnswerText / #shortAnswerButton (short_response_question.js) + .question-button;
+/ #nextButton / .next-button / .tj-invisible. .correct-answer / .incorrect-answer drive the reveal.
+.tjs-question
+  - if @question.topic.present?
+    .tjs-question__pill
+      = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
+  .tjs-question__text ==@question.question_text
+  input.tjk-input.tjs-quiz__input.tj-text-center#shortAnswerText autofocus='' autocomplete='off'
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__submit.question-button#shortAnswerButton Check Answer
+  / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
+  .tjs-quiz__fx data-quiz-target='answerFx' aria-hidden='true'
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__next.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question

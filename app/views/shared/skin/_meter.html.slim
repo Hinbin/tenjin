@@ -1,0 +1,17 @@
+/ _meter.html.slim — skin-aware HUD meter: glyph + value + label (Plan 01, Phase 2).
+/
+/ A larger sibling of _stat used by the live quiz HUD. The value sits in its own span so JS can
+/ live-update it (questions_shared.js writes to #streak / #answeredCorrect / #multiplier).
+/
+/ Locals:
+/   icon:     Symbol  — glyph key (required)
+/   value:    String  — main number/value (required)
+/   label:    String  — sub-label (required)
+/   color:    String  — accent CSS colour token (default: 'var(--n1)')
+/   value_id: String  — optional id for the value span (live-update hook; default: nil)
+- color    ||= 'var(--n1)'
+- value_id ||= nil
+.tjs-card.tjs-meter style="color:#{color};"
+  = glyph(icon, size: 16, color: color, css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
+  div.tjs-meter__value id=value_id = value
+  div.tjs-meter__label = label

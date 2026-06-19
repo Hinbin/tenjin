@@ -30,6 +30,9 @@ application.register("modal", ModalController)
 import NavbarController from "controllers/navbar_controller"
 application.register("navbar", NavbarController)
 
+import QuizController from "controllers/quiz_controller"
+application.register("quiz", QuizController)
+
 import TableController from "controllers/table_controller"
 application.register("table", TableController)
 

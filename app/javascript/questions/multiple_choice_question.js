@@ -24,12 +24,26 @@ function processMultipleChoiceResponse (serverResponse, guessId) {
   }
 
   updateQuizStatistics(serverResponse)
+  dispatchAnswered(correct, serverResponse)
 
   const nextBtn = document.getElementById('nextButton')
   if (nextBtn) {
     nextBtn.classList.remove('tj-invisible')
     nextBtn.focus()
   }
+}
+
+// Notify quiz_controller (Stimulus) so it can run the reskinned flash / shake / combo juice.
+// Presentation only — keeps all scoring in this file.
+function dispatchAnswered (correct, serverResponse) {
+  document.dispatchEvent(new CustomEvent('quiz:answered', {
+    detail: {
+      correct,
+      streak: serverResponse.streak,
+      multiplier: serverResponse.multiplier,
+      answeredCorrect: serverResponse.answeredCorrect
+    }
+  }))
 }
 
 document.addEventListener('click', (event) => {
