@@ -1,23 +1,34 @@
-// Leaderboard surface — design tokens only, no Bootstrap.
-// Covers: leaderboard/show, _subject_select, live_leaderboard_controller.
+// Leaderboard surface — skin-aware reskin (Phase 3).
+// All colour/shape values come from skin token vars (--bg0, --n1, --gold, --r-md, etc.)
+// injected on <body> by Theme::Resolver. Legacy tj-* selectors are preserved where
+// the live_leaderboard_controller.js tests reference them directly.
 
-// ── Current user row ─────────────────────────────────────────────────────
+// ── Index page (subject picker) ───────────────────────────────────────────
 
-.current-user {
-  font-weight: bold;
+.tj-lb-index {
+  display: flex;
+  justify-content: center;
+  padding: var(--tj-space-3, 1.5rem) 0;
+}
+
+.tj-lb-index-card {
+  width: 100%;
+  max-width: 480px;
+  padding: var(--tj-space-3, 1.5rem);
 }
 
 // ── Page layout (show.html.slim) ─────────────────────────────────────────
 
 .tj-lb-layout {
   display: flex;
-  gap: var(--tj-space-3);
-  padding-top: var(--tj-space-3);
-  padding-bottom: var(--tj-space-3);
+  gap: var(--tj-space-3, 1.5rem);
+  padding-top: var(--tj-space-3, 1.5rem);
+  padding-bottom: var(--tj-space-3, 1.5rem);
 }
 
 .tj-lb-sidebar {
-  flex: 0 0 280px;
+  flex: 0 0 260px;
+  padding: var(--tj-space-3, 1.5rem);
 
   @media (max-width: 991.98px) {
     display: none;
@@ -27,55 +38,194 @@
 .tj-lb-main {
   flex: 1 1 0;
   min-width: 0;
+  padding: var(--tj-space-3, 1.5rem);
 }
 
-// ── Subject accordion (subject_select partial) ────────────────────────────
+// ── Subject navigation panel ──────────────────────────────────────────────
+
+.tj-lb-nav {
+  .tjs-section-head { margin-bottom: 1rem; }
+}
 
 .tj-accordion {
-  border: 1px solid #dee2e6;
-  border-radius: var(--tj-radius);
-  margin-bottom: var(--tj-space-2);
+  border: var(--bd, 1px) solid var(--line, rgba(255,255,255,0.10));
+  border-radius: var(--r-sm, 8px);
+  margin-bottom: 0.5rem;
   overflow: hidden;
 }
 
 .tj-accordion__header {
-  padding: var(--tj-space-2) var(--tj-space-3);
-  background: var(--tj-light);
-  font-weight: var(--tj-w-black);
-  font-family: var(--tj-display);
-  border-bottom: 1px solid #dee2e6;
+  padding: 0.55rem 1rem;
+  background: color-mix(in srgb, var(--surface, rgba(28,18,46,0.72)) 80%, var(--n1, #ff2d95) 5%);
+  font-weight: 700;
+  font-family: var(--f-display, system-ui, sans-serif);
 
   a {
-    color: var(--tj-ink);
+    color: var(--ink, #f3ecff);
     text-decoration: none;
 
-    &:hover { color: var(--tj-grey); }
+    &:hover { color: var(--n1, #ff2d95); }
   }
 }
 
 .tj-accordion__body {
-  padding: var(--tj-space-2) var(--tj-space-3);
+  padding: 0.5rem 1rem;
 
   a {
     display: block;
-    padding: var(--tj-space-1) 0;
-    color: var(--tj-ink);
+    padding: 0.2rem 0;
+    color: var(--dim, #9d90b8);
     text-decoration: none;
+    font-size: 0.9em;
 
-    &:hover { color: var(--tj-grey); }
+    &:hover { color: var(--ink, #f3ecff); }
   }
 
   p { margin: 0; }
 }
 
-// ── Live leaderboard rendered HTML ────────────────────────────────────────
-// Classes emitted by live_leaderboard_controller.js render() methods.
+// ── Leaderboard table ─────────────────────────────────────────────────────
+
+.tj-lb-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+// Header row
+.tj-lb-head-row th {
+  padding: 0.35rem 0.5rem;
+  font-family: var(--f-display, system-ui, sans-serif);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--dim, #9d90b8);
+  border-bottom: var(--bd, 1px) solid var(--line, rgba(255,255,255,0.10));
+}
+
+.tj-lb-th-rank  { width: 2.2rem; text-align: center; }
+.tj-lb-th-avatar { width: 3rem; }
+.tj-lb-th-score { text-align: right; }
+
+// Responsive context column (class / school)
+.tj-lb-context-col {
+  @media (max-width: 991.98px) {
+    display: none;
+  }
+}
+
+// ── Ranked rows ──────────────────────────────────────────────────────────
+
+.tj-lb-row {
+  border-bottom: var(--bd, 1px) solid var(--line, rgba(255,255,255,0.10));
+  transition: background 0.2s ease;
+
+  td {
+    padding: 0.6rem 0.5rem;
+    vertical-align: middle;
+  }
+}
+
+// Top-3 tinted background
+.tj-lb-row--top3 {
+  background: color-mix(in srgb, var(--gold, #ffd23f) 6%, transparent);
+}
+
+// Current-user row (keep the .current-user class for tests; add skin polish here)
+tr.current-user {
+  font-weight: 700;
+  background: color-mix(in srgb, var(--n2, #27e6e6) 10%, transparent);
+}
+
+// Score-changed flash (live updates)
+tr.score-changed {
+  background: color-mix(in srgb, var(--n2, #27e6e6) 18%, transparent);
+  transition: background 0.15s ease;
+}
+
+// ── Rank badge ────────────────────────────────────────────────────────────
+
+.tj-lb-rank {
+  font-family: var(--f-display, system-ui, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  min-width: 2rem;
+  color: var(--dim, #9d90b8);
+}
+
+.tj-lb-rank--gold   { color: var(--gold, #ffd23f); }
+.tj-lb-rank--silver { color: #c0c0c0; }
+.tj-lb-rank--bronze { color: #cd7f32; }
+
+// ── Avatar cell ───────────────────────────────────────────────────────────
+// Phase 4 will replace the icon (data-phase4-hook="avatar") with the equipped avatar cosmetic.
+
+.tj-lb-avatar-cell {
+  width: 2.5rem;
+  text-align: center;
+  color: var(--dim, #9d90b8);
+
+  i { font-size: 1rem; }
+}
+
+// ── Name cell ─────────────────────────────────────────────────────────────
+// Phase 4 hook (data-phase4-hook="nameplate") will add the nameplate frame here.
+
+.tj-lb-name-cell {
+  font-family: var(--f-body, system-ui, sans-serif);
+}
+
+// ── Awards cell ───────────────────────────────────────────────────────────
+
+.tj-lb-awards { white-space: nowrap; }
+
+// ── Score cell + live-update delta ───────────────────────────────────────
+
+.tj-lb-score {
+  font-family: var(--f-display, system-ui, sans-serif);
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// ▲ delta indicator — visible only on .score-changed rows; motion-safe
+.tj-lb-delta {
+  display: inline-block;
+  font-size: 0.6em;
+  vertical-align: middle;
+  margin-left: 4px;
+  color: var(--n2, #27e6e6);
+  opacity: 0;
+  pointer-events: none;
+}
+
+tr.score-changed .tj-lb-delta--up {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  tr.score-changed .tj-lb-delta--up {
+    animation: tjs-slideup 0.3s cubic-bezier(.2,.8,.2,1) both;
+  }
+}
+
+// ── Winner badge ─────────────────────────────────────────────────────────
+
+.tj-lb-winner-badge {
+  color: var(--gold, #ffd23f);
+  font-size: 0.85rem;
+
+  p { margin: 0; }
+}
+
+// ── Leaderboard header ────────────────────────────────────────────────────
 
 .tj-lb-header {
   display: flex;
   align-items: center;
-  gap: var(--tj-space-3);
-  margin-bottom: var(--tj-space-2);
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .tj-lb-title {
@@ -86,44 +236,54 @@
   }
 }
 
-.tj-lb-winner {
-  flex: 1 1 auto;
+// Leaderboard heading: display font, no text-transform so specs can match subject names
+.tj-lb-heading {
+  font-family: var(--f-display, system-ui, sans-serif);
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: var(--ink, #f3ecff);
+  line-height: 1.15;
+  margin: 0;
 }
 
-// Controls row: filters + toggles
+.tj-lb-winner {
+  flex: 1 1 auto;
+  text-align: right;
+}
+
+// ── Controls row: filters + toggles ──────────────────────────────────────
+
 .tj-lb-controls {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  gap: var(--tj-space-2);
-  margin-bottom: var(--tj-space-3);
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
 }
 
-// Flex wrapper for a single filter or toggle item
-.tj-lb-item {
-  flex: 0 1 auto;
-}
+.tj-lb-item { flex: 0 1 auto; }
 
-// Toggle (custom-switch replacement)
+// Toggle (checkbox + label)
 .tj-toggle {
   display: flex;
   align-items: center;
-  gap: var(--tj-space-2);
+  gap: 0.5rem;
   margin-bottom: 0;
 }
 
 .tj-toggle__input {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.1rem;
+  height: 1.1rem;
   cursor: pointer;
-  accent-color: var(--tj-black);
+  accent-color: var(--n1, #ff2d95);
 }
 
 .tj-toggle__label {
   cursor: pointer;
-  font-family: var(--tj-body);
-  font-weight: var(--tj-w-light);
+  font-family: var(--f-body, system-ui, sans-serif);
+  font-size: 0.875rem;
+  color: var(--dim, #9d90b8);
 }
 
 // Dropdown filter
@@ -135,23 +295,24 @@
 .tj-btn-dropdown {
   display: inline-flex;
   align-items: center;
-  gap: var(--tj-space-2);
-  padding: 0.375rem 0.75rem;
-  background: var(--tj-light);
-  color: var(--tj-ink);
-  border: 1px solid #dee2e6;
-  border-radius: var(--tj-radius);
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  background: var(--surface, rgba(28,18,46,0.72));
+  color: var(--ink, #f3ecff);
+  border: var(--bd, 1px) solid var(--line, rgba(255,255,255,0.10));
+  border-radius: var(--btn-r, 14px);
   cursor: pointer;
-  font-family: var(--tj-body);
-  font-weight: var(--tj-w-light);
+  font-family: var(--f-body, system-ui, sans-serif);
+  font-size: 0.875rem;
 
   &::after {
     content: '▾';
-    font-size: 0.8em;
+    font-size: 0.75em;
+    color: var(--dim, #9d90b8);
   }
 
   &:hover {
-    background: #e2e6ea;
+    background: color-mix(in srgb, var(--surface, rgba(28,18,46,0.72)) 85%, var(--n1, #ff2d95) 15%);
   }
 }
 
@@ -162,10 +323,10 @@
   left: 0;
   z-index: 1000;
   min-width: 10rem;
-  background: var(--tj-white);
-  border: 1px solid #dee2e6;
-  border-radius: var(--tj-radius);
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+  background: var(--bg1, #170c26);
+  border: var(--bd, 1px) solid var(--line, rgba(255,255,255,0.10));
+  border-radius: var(--r-sm, 8px);
+  box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.4);
 
   &.show { display: block; }
 }
@@ -178,18 +339,107 @@
   border: none;
   text-align: left;
   cursor: pointer;
-  font-family: var(--tj-body);
-  font-weight: var(--tj-w-light);
-  color: var(--tj-ink);
+  font-family: var(--f-body, system-ui, sans-serif);
+  font-size: 0.875rem;
+  color: var(--ink, #f3ecff);
 
   &:hover {
-    background: var(--tj-light);
+    background: color-mix(in srgb, var(--n1, #ff2d95) 12%, transparent);
+    color: var(--ink, #f3ecff);
   }
 }
 
-// Responsive table column (class/school)
-.tj-lb-context-col {
-  @media (max-width: 991.98px) {
-    display: none;
+// ── Per-skin structural overrides ─────────────────────────────────────────
+
+// ARCADE — neon glow on medal rows + controls
+body[data-skin="arcade"] {
+  .tj-lb-row--gold {
+    background: color-mix(in srgb, var(--gold, #ffd23f) 10%, transparent);
+    box-shadow: inset 2px 0 0 var(--gold, #ffd23f);
   }
+
+  .tj-lb-row--silver {
+    background: color-mix(in srgb, var(--n2, #27e6e6) 8%, transparent);
+    box-shadow: inset 2px 0 0 var(--n2, #27e6e6);
+  }
+
+  .tj-lb-row--bronze {
+    background: color-mix(in srgb, var(--n3, #b14dff) 8%, transparent);
+    box-shadow: inset 2px 0 0 var(--n3, #b14dff);
+  }
+
+  .tj-lb-rank--gold   { text-shadow: 0 0 8px var(--gold, #ffd23f); }
+  .tj-lb-rank--silver { text-shadow: 0 0 6px var(--n2, #27e6e6); }
+  .tj-lb-rank--bronze { text-shadow: 0 0 5px var(--n3, #b14dff); }
+
+  tr.score-changed {
+    box-shadow: inset 0 0 0 1px var(--n2, #27e6e6),
+                0 0 12px color-mix(in srgb, var(--n2, #27e6e6) 25%, transparent);
+  }
+}
+
+// FAMICOM — pixel hard offset on medal rows
+body[data-skin="famicom"] {
+  .tj-lb-row--gold {
+    background: color-mix(in srgb, var(--gold, #ffd23f) 10%, transparent);
+    border-left: 3px solid var(--gold, #ffd23f);
+  }
+
+  .tj-lb-row--silver {
+    background: color-mix(in srgb, #c0c0c0 8%, transparent);
+    border-left: 3px solid #c0c0c0;
+  }
+
+  .tj-lb-row--bronze {
+    background: color-mix(in srgb, #cd7f32 8%, transparent);
+    border-left: 3px solid #cd7f32;
+  }
+
+  .tj-lb-table {
+    border: var(--bd, 1px) solid var(--edge, #000);
+    box-shadow: 2px 2px 0 var(--edge, #000);
+  }
+
+  .tj-lb-rank--gold, .tj-lb-rank--silver, .tj-lb-rank--bronze {
+    font-family: var(--f-pixel, monospace);
+  }
+
+  tr.score-changed { border-left: 3px solid var(--n2, #27e6e6); }
+}
+
+// KAWAII — soft drop + sticker medal ring
+body[data-skin="kawaii"] {
+  .tj-lb-row--gold {
+    background: color-mix(in srgb, var(--gold, #ffd23f) 12%, transparent);
+  }
+
+  .tj-lb-row--silver {
+    background: color-mix(in srgb, #c0c0c0 9%, transparent);
+  }
+
+  .tj-lb-row--bronze {
+    background: color-mix(in srgb, #cd7f32 9%, transparent);
+  }
+
+  tr.score-changed {
+    box-shadow: 0 4px 0 color-mix(in srgb, var(--n2, #27e6e6) 50%, transparent);
+  }
+}
+
+// MINIMAL — hairline accent on medal rows
+body[data-skin="minimal"] {
+  .tj-lb-row--gold   { border-bottom-color: color-mix(in srgb, var(--gold, #ffd23f) 40%, transparent); }
+  .tj-lb-row--silver { border-bottom-color: color-mix(in srgb, #c0c0c0 30%, transparent); }
+  .tj-lb-row--bronze { border-bottom-color: color-mix(in srgb, #cd7f32 30%, transparent); }
+
+  .tj-lb-table { border-top: var(--bd, 1px) solid var(--line, rgba(255,255,255,0.10)); }
+}
+
+// ZEN — paper surface with subtle warm medal tints
+body[data-skin="zen"] {
+  .tj-lb-row--gold   { background: color-mix(in srgb, var(--gold, #ffd23f) 8%, transparent); }
+  .tj-lb-row--silver { background: color-mix(in srgb, #c0c0c0 6%, transparent); }
+  .tj-lb-row--bronze { background: color-mix(in srgb, #cd7f32 6%, transparent); }
+
+  .tj-lb-rank { font-family: var(--f-pixel, monospace); font-size: 0.75rem; }
 }
