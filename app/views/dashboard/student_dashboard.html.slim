@@ -37,7 +37,7 @@
 
     / ── 2. PRACTISE — challenges (outstanding first) then topics ─────────
     section.tjs-dashboard__section data-section='practise'
-      = render 'shared/skin/section_head', en: 'Practise', jp: '練習'
+      = render 'shared/skin/section_head', en: 'Practice', jp: '練習'
       / Challenge cards — #challenge-table scopes the spec selector
       #challenge-table
         - @challenges.sort_by { |c| challenge_complete?(c) ? 1 : 0 }.each do |c|
@@ -57,23 +57,6 @@
               .tjs-challenge-card__pts
                 = render 'shared/skin/pill', text: "+#{c.points}", glyph_name: :star, color: 'var(--gold)'
 
-      / Topic cards are outside #challenge-table to avoid selector ambiguity
-      - if @topics&.any?
-        - meta = @active_subject ? subject_meta(@active_subject.name) : subject_meta('')
-        .tjs-topic-list
-          - @topics.each do |t|
-            - pct = topic_mastery_pct(t.id)
-            button.tjs-card.tjs-topic-card.topic-row data-topic=t.id data-subject=@active_subject.id type='button'
-              .tjs-topic-card__icon style="color:#{meta[:neon]};"
-                = glyph(meta[:glyph], size: 20, color: meta[:neon])
-              .tjs-topic-card__body
-                .tjs-topic-card__name
-                  = t.name
-                .tjs-bar
-                  .tjs-bar__fill style="width:#{pct}%;background:#{meta[:neon]};"
-              .tjs-topic-card__cta
-                = glyph(:chevron, size: 16, color: 'var(--dim)')
-
     / ── 3. QUICK START ───────────────────────────────────────────────────
     - if @last_topic
       section.tjs-dashboard__section data-section='quick-start'
@@ -91,7 +74,7 @@
             | Start
             = glyph(:chevron, size: 14)
 
-    / ── 4. SWITCH SUBJECT ────────────────────────────────────────────────
+    / ── 4. SWITCH SUBJECT + TOPIC LIST ──────────────────────────────────
     - if @subjects.length > 1
       section.tjs-dashboard__section data-section='subjects'
         = render 'shared/skin/section_head', en: 'Switch Subject', jp: '科目変更'
@@ -107,6 +90,39 @@
                 = s.name
               - if active
                 = render 'shared/skin/pill', text: 'Active', color: meta[:neon]
+        - if @topics&.any?
+          - meta = @active_subject ? subject_meta(@active_subject.name) : subject_meta('')
+          .tjs-topic-list
+            - @topics.each do |t|
+              - pct = topic_mastery_pct(t.id)
+              button.tjs-card.tjs-topic-card.topic-row data-topic=t.id data-subject=@active_subject.id type='button'
+                .tjs-topic-card__icon style="color:#{meta[:neon]};"
+                  = glyph(meta[:glyph], size: 20, color: meta[:neon])
+                .tjs-topic-card__body
+                  .tjs-topic-card__name
+                    = t.name
+                  .tjs-bar
+                    .tjs-bar__fill style="width:#{pct}%;background:#{meta[:neon]};"
+                .tjs-topic-card__cta
+                  = glyph(:chevron, size: 16, color: 'var(--dim)')
+    - elsif @topics&.any?
+      / Single-subject: no switcher, but still show topic list
+      section.tjs-dashboard__section data-section='topics'
+        - meta = @active_subject ? subject_meta(@active_subject.name) : subject_meta('')
+        = render 'shared/skin/section_head', en: @active_subject&.name || 'Topics', jp: meta[:jp]
+        .tjs-topic-list
+          - @topics.each do |t|
+            - pct = topic_mastery_pct(t.id)
+            button.tjs-card.tjs-topic-card.topic-row data-topic=t.id data-subject=@active_subject.id type='button'
+              .tjs-topic-card__icon style="color:#{meta[:neon]};"
+                = glyph(meta[:glyph], size: 20, color: meta[:neon])
+              .tjs-topic-card__body
+                .tjs-topic-card__name
+                  = t.name
+                .tjs-bar
+                  .tjs-bar__fill style="width:#{pct}%;background:#{meta[:neon]};"
+              .tjs-topic-card__cta
+                = glyph(:chevron, size: 16, color: 'var(--dim)')
 
 - if current_user.oauth_email.blank?
   input#oAuthEmail type='hidden'

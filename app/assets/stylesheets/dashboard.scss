@@ -215,13 +215,13 @@ hr.primary {
   margin-top: 4px;
 }
 
-// ── Topic list (sibling to #challenge-table inside Practise) ────────────────
+// ── Topic list (below subject grid or as standalone section) ─────────────────
 
 .tjs-topic-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 14px;
 }
 
 // ── Topic cards ──────────────────────────────────────────────────────────────

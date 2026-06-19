@@ -24,6 +24,10 @@
   gap: 16px;
 }
 
+// Lesson quizzes need room for the question column beside the video sidebar; the
+// plain (no-video) quiz stays in the narrow single-column reading width above.
+.tjs-quiz__inner:has(.tj-quiz-content) { max-width: 960px; }
+
 // ── Top bar: exit · progress · count ───────────────────────────────────────
 .tjs-quiz__top {
   display: flex;
@@ -280,30 +284,89 @@ body[data-skin="famicom"] .tjs-quiz {
   height: 0;
 }
 
-// ── Lesson sidebar (legacy markup, kept) ───────────────────────────────────
+// ── Lesson sidebar: question column + compact video card ───────────────────
 .tj-quiz-content {
   display: flex;
   align-items: flex-start;
   gap: var(--tj-space-3);
-  flex-wrap: wrap;
 }
 
 .tj-quiz-main {
-  flex: 1 1 60%;
+  flex: 1 1 0;
   min-width: 0;
 }
 
 .tj-quiz-lesson {
-  flex: 0 1 30%;
-  text-align: center;
+  flex: 0 0 250px;
+  text-align: left;
+}
+
+// Thumbnail + play badge — the whole .videoLink media opens the video modal (lessons.js).
+.tj-lesson-media {
+  position: relative;
+  display: block;
+  border-radius: var(--r-sm);
+  overflow: hidden;
 }
 
 .tj-lesson-thumb {
-  max-width: 100%;
-  height: auto;
   display: block;
-  border-radius: var(--r-sm);
-  margin: 0 auto;
+  width: 100%;
+  height: auto;
+}
+
+.tj-lesson-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, #000 55%, transparent);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  pointer-events: none; // clicks fall through to .videoLink
+
+  .tjs-icon { margin-left: 2px; } // optically centre the triangle
+}
+
+body[data-skin="famicom"] .tj-lesson-play { border-radius: 0; }
+
+// Compact caption replacing the old full-size <h3> title
+.tj-lesson-eyebrow {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--f-body);
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.tj-lesson-title {
+  margin: 2px 0 0;
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  // clamp to two lines so a long title never dominates the sidebar
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Mobile: stack the question above the video (single column)
+@media (max-width: 767.98px) {
+  .tj-quiz-content { flex-direction: column; }
+
+  .tj-quiz-lesson {
+    flex: 0 0 auto;
+    width: 100%;
+  }
 }
 
 // ── Non-counting-quiz warning ──────────────────────────────────────────────
