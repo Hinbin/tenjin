@@ -29,7 +29,7 @@ RSpec.describe 'Pages', :default_creates, type: :request do
     sign_in student
     get root_path
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include('Start a Quiz')
+    expect(response.body).to include('tjs-dashboard')
   end
 
   context 'when looking at the about page' do
