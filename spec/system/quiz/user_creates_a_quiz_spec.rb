@@ -8,22 +8,23 @@ RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
     let(:subject_cs) { create(:computer_science) }
     let(:classroom_cs) { create(:classroom, subject: subject_cs, school:) }
 
-    it 'shows a subject image when there is one available' do
+    before do
       create(:enrollment, classroom: classroom_cs, user: student)
-      log_in
-      expect(page).to have_css('img[src*=computer-science]')
+      create(:enrollment, classroom:, user: student)
+      sign_in student
+      visit root_path
     end
 
-    it 'shows a default subject image if there is not a specific one' do
-      setup_subject_database
-      log_in
-      expect(page).to have_css('img[src*=default-subject]')
+    it 'shows a tile for each enrolled subject' do
+      expect(page).to have_css('.tjs-subject-tile', count: 2)
+    end
+
+    it 'shows the subject name on each tile' do
+      expect(page).to have_css('.tjs-subject-tile', text: subject_cs.name)
     end
 
     it 'takes me to the correct topic select page' do
-      setup_subject_database
-      log_in
-      find(class: 'subject-carousel-item-image').click
+      visit new_quiz_path(subject: subject_cs.name)
       expect(page).to have_text(/Select topic/i)
     end
   end
@@ -114,7 +115,7 @@ RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
     end
 
     it 'allows me to select a topic' do
-      visit(new_quiz_path(params: { subject: subject.name }))
+      visit(new_quiz_path(subject: subject.name))
       find(:xpath, '//select/option[1]')
       expect(page).to have_select('quiz_topic_id', options: ['Lucky Dip', Topic.first.name])
     end
@@ -126,7 +127,7 @@ RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
 
     it 'has a separator of the correct colour' do
       active_customisation
-      visit(new_quiz_path(params: { subject: subject.name }))
+      visit(new_quiz_path(subject: subject.name))
       expect(page).to have_css("hr[style*='#{active_customisation.customisation.value}'")
     end
   end
