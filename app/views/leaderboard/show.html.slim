@@ -2,9 +2,9 @@
   title=('Leaderboard - ' + @subject.name)
 .tjk-container
   .tj-lb-layout
-    .tj-lb-sidebar
+    .tj-lb-sidebar.tjs-card
       =render 'subject_select'
-    .tj-lb-main
+    .tj-lb-main.tjs-card
       #liveLeaderboard data={ controller: 'live-leaderboard',
                               'live-leaderboard-url': leaderboard_path(@subject.name, format: :json),
                               'live-leaderboard-subject': @subject.name,

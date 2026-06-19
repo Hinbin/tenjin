@@ -1,8 +1,13 @@
--@subjects.each do |s|
-  .tj-accordion data-controller='accordion'
-    .tj-accordion__header
-      =link_to s.name, '#', data: { action: 'click->accordion#toggle', turbo: false }
-    .tj-accordion__body.tj-hidden data-accordion-target='body'
-      =link_to 'All', leaderboard_path(id: s.name)
-      - s.topics.order(:name).each do |t|
-        p =link_to t.name, leaderboard_path(id: s.name, topic: t.id)
+.tj-lb-nav
+  .tjs-section-head
+    .tjs-section-head__title
+      h2 Subjects
+      span.tjs-section-head__jp 学科
+  -@subjects.each do |s|
+    .tj-accordion data-controller='accordion'
+      .tj-accordion__header
+        =link_to s.name, '#', data: { action: 'click->accordion#toggle', turbo: false }
+      .tj-accordion__body.tj-hidden data-accordion-target='body'
+        =link_to 'All', leaderboard_path(id: s.name)
+        - s.topics.order(:name).each do |t|
+          p =link_to t.name, leaderboard_path(id: s.name, topic: t.id)
