@@ -8,10 +8,7 @@ class DashboardController < ApplicationController
     @subjects = current_user.subjects.uniq
 
     if current_user.student?
-      @dashboard_style = find_dashboard_style
-      student_homework_progress
-      student_challenges
-      render 'student_dashboard'
+      render_student_dashboard
     else
       teacher_enrollments
       render 'teacher_dashboard'
@@ -20,6 +17,15 @@ class DashboardController < ApplicationController
   end
 
   private
+
+  def render_student_dashboard
+    @dashboard_style = find_dashboard_style
+    student_homework_progress
+    student_challenges
+    student_topics
+    student_last_topic
+    render 'student_dashboard'
+  end
 
   def student_homework_progress
     @homework_progress = HomeworkProgress.includes(homework: [:lesson, { topic: :subject }])
@@ -33,6 +39,29 @@ class DashboardController < ApplicationController
     @challenges = Challenge.includes(topic: :subject)
                            .where(topics: { subject: @subjects })
     @challenge_progresses = ChallengeProgress.where(challenge: @challenges).where(user: current_user).to_a
+  end
+
+  def student_topics
+    @active_subject = active_subject_from_param ||
+                      @subjects.find { |s| s.name == 'Computer Science' } ||
+                      @subjects.first
+    return unless @active_subject
+
+    @topics = @active_subject.topics.where(active: true).order(:name)
+    @topic_scores = TopicScore.where(topic: @topics, user: current_user).index_by(&:topic_id)
+  end
+
+  def active_subject_from_param
+    return unless params[:active_subject].present?
+
+    @subjects.find { |s| s.id == params[:active_subject].to_i }
+  end
+
+  def student_last_topic
+    @last_topic = Quiz.where(user: current_user)
+                      .where.not(topic: nil)
+                      .order(created_at: :desc)
+                      .first&.topic
   end
 
   def teacher_enrollments

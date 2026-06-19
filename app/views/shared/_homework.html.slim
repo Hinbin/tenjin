@@ -1,23 +1,45 @@
-section.page-section.tj-text-center.homework-image id="homework" style=render_dashboard_style(@dashboard_style)
-  .tjk-container
-    h1.page-section-header.text-uppercase Homework
-    ==render_small_separator
-    table.tj-table.homework-table
-      thead
-        tr
-          th.tj-sm-table-cell Subject
-          th.tj-sm-table-cell Topic/Lesson
-          th %
-          th Due Date
-          th Complete?
-      tbody
-        - @homework_progress.each do |h|
-          tr.homework-row data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id data-lesson=(h.homework.lesson.id unless h.homework.lesson_id.blank?)
-            td.tj-sm-table-cell = h.homework.topic.subject.name
-            -if h.homework.lesson.blank?
-              td.tj-sm-table-cell = h.homework.topic.name
-            -else
-              td.tj-sm-table-cell = h.homework.lesson.title
-            td = number_to_percentage(h.homework.required, precision:0)
-            td = h.homework.due_date.strftime('%a, %e %b')
-            td = check_overdue(h)
+- @homework_progress.each_with_index do |h, idx|
+  - subj_meta  = subject_meta(h.homework.topic.subject.name)
+  - due_past   = h.homework.due_date.past?
+  - urgent_col = (due_past && !h.completed) ? 'var(--n1)' : subj_meta[:neon]
+  - is_hero    = (idx == 0)
+  - hw_classes = ['tjs-card', 'homework-row', is_hero ? 'homework-row--hero' : nil].compact.join(' ')
+  button class=hw_classes data-homework=h.homework.id data-topic=h.homework.topic.id data-subject=h.homework.topic.subject_id data-lesson=(h.homework.lesson.id unless h.homework.lesson_id.blank?) type='button'
+    - if is_hero
+      .homework-row__top
+        .homework-row__icon style="color:#{urgent_col};"
+          = glyph(subj_meta[:glyph], size: 22, color: urgent_col)
+        .homework-row__body
+          .homework-row__title
+            - if h.homework.lesson.blank?
+              = h.homework.topic.name
+            - else
+              = h.homework.lesson.title
+          .homework-row__meta
+            span style="font-family:var(--f-pixel);font-size:10px;color:var(--dim);"
+              = h.homework.due_date.strftime('%a, %e %b')
+            span style="font-family:var(--f-pixel);font-size:10px;color:var(--dim);margin-left:8px;"
+              = number_to_percentage(h.homework.required, precision: 0)
+        .homework-row__status
+          = check_overdue(h)
+      .tjs-bar style="margin-top:4px;"
+        .tjs-bar__fill style="width:#{h.homework.required}%;background:#{urgent_col};"
+      span.tjs-btn.tjs-btn--primary style="margin-top:10px;font-size:13px;align-self:flex-start;"
+        = h.completed ? 'Review' : 'Continue'
+        = glyph(:chevron, size: 13)
+    - else
+      .homework-row__icon style="color:#{urgent_col};"
+        = glyph(subj_meta[:glyph], size: 18, color: urgent_col)
+      .homework-row__body
+        .homework-row__title
+          - if h.homework.lesson.blank?
+            = h.homework.topic.name
+          - else
+            = h.homework.lesson.title
+        .homework-row__meta
+          span style="font-family:var(--f-pixel);font-size:10px;color:var(--dim);"
+            = h.homework.due_date.strftime('%a, %e %b')
+          span style="font-family:var(--f-pixel);font-size:10px;color:var(--dim);margin-left:8px;"
+            = number_to_percentage(h.homework.required, precision: 0)
+      .homework-row__status
+        = check_overdue(h)
