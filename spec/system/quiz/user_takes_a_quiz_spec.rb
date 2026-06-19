@@ -131,7 +131,7 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
       find(class: 'next-button').click
       find(class: 'question-button').click
       find(class: 'next-button').click
-      expect(page).to have_text('Points earned').and have_button('Play Again')
+      expect(page).to have_text('This run').and have_button('Play Again')
     end
   end
 
