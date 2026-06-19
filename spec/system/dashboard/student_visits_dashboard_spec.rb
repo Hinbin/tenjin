@@ -63,7 +63,7 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
       visit(dashboard_path)
       find(:css, challenge_css_selector).click
       first(class: 'question-button').click
-      expect(page).to have_text('Next Question')
+      expect(page).to have_text(/next question/i)
     end
 
     it 'shows the number of challenge points I have received in the nav bar' do

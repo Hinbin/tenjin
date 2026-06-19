@@ -23,7 +23,7 @@ RSpec.describe 'Student completes a homework', :default_creates, :js, type: :sys
       first(class: 'question-button').click
       first(class: 'next-button').click
       visit(dashboard_path)
-      expect(page).to have_css('.homework-row > td > i.fa-check')
+      expect(page).to have_css('.homework-row .homework-row__status i.fa-check')
     end
   end
 
