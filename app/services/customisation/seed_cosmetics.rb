@@ -16,6 +16,7 @@
 #   Customisation::SeedCosmetics.call(backfill: false) # seed only
 class Customisation::SeedCosmetics < ApplicationService
   PALETTE_COST = 300 # extra palettes (index >= 1); the prototype prices skins/palettes only by tier
+  LIGHT_MODE_COST = 100 # cheapest item in the shop — a low-cost perk that unlocks the light/dark toggle
 
   def initialize(options = {})
     super()
@@ -26,6 +27,7 @@ class Customisation::SeedCosmetics < ApplicationService
     seed_skins
     seed_palettes
     seed_cosmetics
+    seed_light_mode
     backfill_default_equips if @backfill
     result(success: true)
   end
@@ -52,6 +54,12 @@ class Customisation::SeedCosmetics < ApplicationService
 
   def seed_cosmetics
     Cosmetic::Catalog.types.each { |type| seed_cosmetics_for(type) }
+  end
+
+  # The light-mode perk: a single non-slot Customisation. Students start locked to dark mode and buy
+  # this once to unlock the light/dark toggle in the shop header (Theme::Selection reads dark_mode).
+  def seed_light_mode
+    upsert('light_mode', 'light_mode', name: 'Light Mode', cost: LIGHT_MODE_COST)
   end
 
   def seed_cosmetics_for(type)

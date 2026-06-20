@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class CustomisationsController < ApplicationController
-  before_action :authenticate_user!, only: %i[show_available buy equip]
+  before_action :authenticate_user!, only: %i[show_available buy equip toggle_mode]
 
   def show_available
     authorize current_user, :show? # make it so that it checks if the school is permitted?
     board = Customisation::ShopBoard.call(current_user)
     @shop_categories = board.categories
     @wallet = board.wallet
+    @mode = board.mode
   end
 
   def buy
@@ -23,6 +24,13 @@ class CustomisationsController < ApplicationController
     @customisation = Customisation.find_by(id: buy_params)
     result = Customisation::EquipCustomisation.call(current_user, @customisation)
     equip_notice(result)
+    redirect_to show_available_customisations_path
+  end
+
+  def toggle_mode
+    authorize current_user, :show?
+    result = Customisation::SetMode.call(current_user, ActiveModel::Type::Boolean.new.cast(params[:dark]))
+    flash[:notice] = result.errors unless result.success?
     redirect_to show_available_customisations_path
   end
 

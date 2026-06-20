@@ -38,7 +38,7 @@
           = glyph(:trophy, size: 13, color: 'var(--gold)')
           span.tjs-shop-item__req = item.req
       - else
-        = form_with url: buy_customisation_path(item.customisation), method: :post do |f|
+        = form_with url: buy_customisation_path(item.customisation), method: :post, data: { turbo: false } do |f|
           = f.submit "★ #{item.cost}", class: 'tjs-btn tjs-skin-card__btn buy-btn', disabled: !afford
 
   / ── This skin's palettes ───────────────────────────────────────────────

@@ -76,6 +76,21 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
     end
   end
 
+  context 'when buying the light-mode perk' do
+    let(:light_mode) { create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 4, image: nil) }
+
+    it 'unlocks it and switches the user straight into light mode' do
+      described_class.new(student, light_mode).call
+      expect(student.owns?(light_mode)).to be(true)
+      expect(student.reload.dark_mode).to be(false)
+    end
+
+    it 'does not create a stray active-customisation row for the perk' do
+      described_class.new(student, light_mode).call
+      expect(ActiveCustomisation.where(customisation: light_mode)).to be_empty
+    end
+  end
+
   context 'when buying something I have already bought' do
     before do
       create(:customisation_unlock, customisation: customisation, user: student)

@@ -37,4 +37,33 @@ RSpec.describe 'submitting a customisation', type: :request do
       expect(student.equipped_value(:avatar)).to be_nil
     end
   end
+
+  context 'when toggling the appearance mode' do
+    let!(:light_mode) { create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 100, image: nil) }
+
+    it 'renders the shop with the appearance toggle' do
+      get show_available_customisations_path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('Appearance')
+    end
+
+    it 'always lets a student switch back to dark mode' do
+      student.update!(dark_mode: false)
+      post toggle_mode_customisations_path(dark: 'true')
+      expect(response).to redirect_to(show_available_customisations_path)
+      expect(student.reload.dark_mode).to be(true)
+    end
+
+    it 'keeps light mode locked until the perk is bought' do
+      post toggle_mode_customisations_path(dark: 'false')
+      expect(student.reload.dark_mode).to be(true)
+      expect(flash[:notice]).to match(/locked/i)
+    end
+
+    it 'switches to light mode once the perk is owned' do
+      create(:customisation_unlock, customisation: light_mode, user: student)
+      post toggle_mode_customisations_path(dark: 'false')
+      expect(student.reload.dark_mode).to be(false)
+    end
+  end
 end

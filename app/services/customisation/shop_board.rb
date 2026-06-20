@@ -15,6 +15,9 @@
 #   board.wallet      # => spendable challenge_points
 class Customisation::ShopBoard < ApplicationService
   Category = Struct.new(:type, :en, :jp, :glyph, :blurb, :items, keyword_init: true)
+  # The light/dark switch shown in the shop header: the user's current mode, whether they own the
+  # light-mode perk yet, and the perk record (so the view can render a buy button while locked).
+  ModeStatus = Struct.new(:dark, :owned, :customisation, :cost, keyword_init: true)
   Item = Struct.new(:customisation, :name, :value, :cost, :glyph, :token,
                     :owned, :equipped, :gated, :req, :tagline, :palettes, keyword_init: true) do
     # achievement-gated and not yet earned (display-only, v1)
@@ -35,10 +38,17 @@ class Customisation::ShopBoard < ApplicationService
   end
 
   def call
-    result(success: true, categories: categories, wallet: @user.challenge_points.to_i)
+    result(success: true, categories: categories, wallet: @user.challenge_points.to_i, mode: mode_status)
   end
 
   private
+
+  def mode_status
+    record = Customisation.light_mode.first
+    ModeStatus.new(dark: Theme::Selection.for(@user).dark,
+                   owned: record.present? && @user.owns?(record),
+                   customisation: record, cost: record&.cost.to_i)
+  end
 
   def categories
     [skins_category] + Cosmetic::Catalog.types.map { |type| cosmetic_category(type) }

@@ -49,4 +49,25 @@ RSpec.describe Customisation::ShopBoard, :default_creates do
   it 'carries the avatar glyph + token for previews' do
     expect(avatar_item('gem')).to have_attributes(glyph: 'gem', token: 'var(--n2)')
   end
+
+  describe 'the light/dark mode status' do
+    it 'reports dark and not-owned for a fresh student locked to dark' do
+      expect(board.mode).to have_attributes(dark: true, owned: false, cost: 100)
+      expect(board.mode.customisation).to be_a(Customisation)
+    end
+
+    it 'marks light mode as owned once the perk is unlocked' do
+      create(:customisation_unlock, customisation: Customisation.light_mode.first, user: student)
+      expect(board.mode.owned).to be(true)
+    end
+
+    it 'reflects the user\'s current mode' do
+      student.update!(dark_mode: false)
+      expect(board.mode.dark).to be(false)
+    end
+
+    it 'keeps the light-mode perk out of the equip-slot categories' do
+      expect(board.categories.map(&:type)).not_to include('light_mode')
+    end
+  end
 end

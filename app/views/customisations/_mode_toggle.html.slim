@@ -1,0 +1,25 @@
+/ _mode_toggle.html.slim — light/dark appearance switch in the shop header (Plan 01, Phase 4).
+/ `@mode` is a Customisation::ShopBoard::ModeStatus. Dark is always available; Light is a buy
+/ button until the light-mode perk is owned, then it becomes a switch.
+.tjs-mode-toggle
+  .tjs-mode-toggle__label
+    = glyph(:sun, size: 15, color: 'var(--gold)')
+    span Appearance
+  .tjs-mode-seg
+    = form_with url: toggle_mode_customisations_path, method: :post do |f|
+      = f.hidden_field :dark, value: 'true'
+      button.tjs-mode-seg__btn class=('is-active' if @mode.dark) type='submit'
+        = glyph(:moon, size: 15)
+        ' Dark
+    - if @mode.owned
+      = form_with url: toggle_mode_customisations_path, method: :post do |f|
+        = f.hidden_field :dark, value: 'false'
+        button.tjs-mode-seg__btn class=('is-active' unless @mode.dark) type='submit'
+          = glyph(:sun, size: 15)
+          ' Light
+    - elsif @mode.customisation
+      = form_with url: buy_customisation_path(@mode.customisation), method: :post do |f|
+        button.tjs-mode-seg__btn.tjs-mode-seg__btn--buy type='submit' disabled=(@wallet < @mode.cost)
+          = glyph(:sun, size: 15)
+          ' Light
+          span.tjs-mode-seg__price = "★ #{@mode.cost}"

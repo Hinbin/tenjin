@@ -73,6 +73,7 @@ Rails.application.routes.draw do
   resources :customisations, only: [] do
     collection do
       get 'show_available'
+      post 'toggle_mode'
     end
     member do
       post 'buy'

@@ -22,6 +22,9 @@
       .tjs-shop__balance
         = render 'shared/skin/stat', icon: :star, value: @wallet, label: 'to spend', color: 'var(--gold)'
 
+    / ── Appearance (light/dark) switch ───────────────────────────────────
+    = render 'mode_toggle'
+
     / ── Category sections (one equip slot each) ──────────────────────────
     - @shop_categories.each do |cat|
       section.tjs-shop__cat data-cat=cat.type

@@ -27,12 +27,21 @@ class Customisation::BuyCustomisation < ApplicationService
       unlock.save!
     end
 
-    # Buy → auto-equip (matches the prototype). Equipping clears the slot's prior occupant.
-    Customisation::EquipCustomisation.call(@user, @customisation)
+    # Buy → auto-activate (matches the prototype). For equip slots this clears the slot's prior
+    # occupant; the light-mode perk has no slot, so activating it just switches the user to light.
+    activate
     result(success: true, user: @user, errors: nil)
   end
 
   protected
+
+  def activate
+    if @customisation.light_mode?
+      Customisation::SetMode.call(@user, false)
+    else
+      Customisation::EquipCustomisation.call(@user, @customisation)
+    end
+  end
 
   def deduct_challenge_points
     @user.challenge_points -= @customisation.cost
