@@ -21,6 +21,9 @@ application.register("form", FormController)
 import HomeworkController from "controllers/homework_controller"
 application.register("homework", HomeworkController)
 
+import LessonFilterController from "controllers/lesson_filter_controller"
+application.register("lesson-filter", LessonFilterController)
+
 import LiveLeaderboardController from "controllers/live_leaderboard_controller"
 application.register("live-leaderboard", LiveLeaderboardController)
 

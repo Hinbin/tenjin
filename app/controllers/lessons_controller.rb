@@ -79,6 +79,7 @@ class LessonsController < ApplicationController
   def set_permitted_lessons_and_subjects
     @lessons = author_scoped_lessons
     @lessons_by_subject = @lessons.group_by { |l| l.topic.subject_id }
+    @topics = @lessons.map(&:topic).uniq.sort_by(&:name)
   end
 
   def author_scoped_lessons

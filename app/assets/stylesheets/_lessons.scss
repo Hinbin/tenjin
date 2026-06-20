@@ -4,11 +4,13 @@
   gap: var(--tj-space-3);
   margin-bottom: var(--tj-space-3);
 
-  > .tj-card {
+  > .tj-card,
+  > .tjs-card {
     flex: 0 1 280px;
   }
 }
 
+// Legacy card (teacher/non-skin surfaces)
 .tj-card {
   border: 1px solid #dee2e6;
   border-radius: var(--tj-radius);
@@ -17,14 +19,25 @@
   margin-bottom: var(--tj-space-3);
 }
 
+// Skin-aware lesson card — clips the thumbnail to the card radius
+.tjs-card.tj-lesson-card {
+  overflow: hidden;
+}
+
 .tj-card-body {
   padding: var(--tj-space-3);
 }
 
+// Topic eyebrow reset inside card-body (quiz sidebar has margin-top: 8px; not needed here)
+.tj-card-body .tj-lesson-eyebrow {
+  margin-top: 0;
+  margin-bottom: var(--tj-space-1);
+}
+
 .tj-card-footer {
   padding: var(--tj-space-2) var(--tj-space-3);
-  border-top: 1px solid #dee2e6;
-  background: #f8f9fa;
+  border-top: 1px solid var(--line, #dee2e6);
+  background: color-mix(in srgb, var(--surface, #f8f9fa) 60%, transparent);
 }
 
 // 16:9 responsive embed (replaces .embed-responsive.embed-responsive-16by9)
@@ -40,4 +53,16 @@
     height: 100%;
     border: 0;
   }
+}
+
+// Search + topic filter bar
+.tjs-lesson-filter {
+  display: flex;
+  gap: var(--tj-space-2);
+  margin-bottom: var(--tj-space-4);
+
+  > * { flex: 1; }
+
+  // Topic select fixed-width on wider screens
+  select { flex: 0 1 220px; }
 }

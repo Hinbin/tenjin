@@ -4,8 +4,8 @@
 module StudentNavHelper
   NAV_ITEMS = [
     { id: :home,   icon: :home,   en: 'Home',  jp: '家',  path_method: :dashboard_path }.freeze,
-    { id: :tasks,  icon: :list,   en: 'Tasks', jp: '宿題', path_method: :homeworks_path }.freeze,
-    { id: :quests, icon: :target, en: 'Quests', jp: '挑戦', path_method: :dashboard_path, anchor: 'challenges' }.freeze,
+    { id: :lessons, icon: :list,   en: 'Lessons', jp: '授業', path_method: :lessons_path }.freeze,
+    { id: :quests,  icon: :target, en: 'Quests',  jp: '挑戦', path_method: :dashboard_path, anchor: 'challenges' }.freeze,
     { id: :ranks,  icon: :trophy, en: 'Ranks', jp: '順位', path_method: :leaderboard_index_path }.freeze,
     { id: :shop,   icon: :tag,    en: 'Shop',  jp: '店',  path_method: :show_available_customisations_path }.freeze
   ].freeze
@@ -16,7 +16,7 @@ module StudentNavHelper
   end
 
   CONTROLLER_TO_NAV = {
-    'dashboard' => :home, 'homeworks' => :tasks,
+    'dashboard' => :home, 'lessons' => :lessons,
     'leaderboard' => :ranks, 'customisations' => :shop
   }.freeze
 

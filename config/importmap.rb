@@ -25,6 +25,7 @@ pin "controllers/classroom_controller",         to: "controllers/classroom_contr
 pin "controllers/dashboard_controller",         to: "controllers/dashboard_controller.js"
 pin "controllers/form_controller",              to: "controllers/form_controller.js"
 pin "controllers/homework_controller",          to: "controllers/homework_controller.js"
+pin "controllers/lesson_filter_controller",     to: "controllers/lesson_filter_controller.js"
 pin "controllers/live_leaderboard_controller",  to: "controllers/live_leaderboard_controller.js"
 pin "controllers/modal_controller",             to: "controllers/modal_controller.js"
 pin "controllers/navbar_controller",            to: "controllers/navbar_controller.js"

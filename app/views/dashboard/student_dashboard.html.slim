@@ -37,7 +37,7 @@
 
     / ── 2. PRACTISE — challenges (outstanding first) then topics ─────────
     section.tjs-dashboard__section data-section='practise'
-      = render 'shared/skin/section_head', en: 'Practice', jp: '練習'
+      = render 'shared/skin/section_head', en: 'Quests', jp: '挑戦'
       / Challenge cards — #challenge-table scopes the spec selector
       #challenge-table
         - @challenges.sort_by { |c| challenge_complete?(c) ? 1 : 0 }.each do |c|
