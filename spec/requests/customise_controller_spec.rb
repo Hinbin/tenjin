@@ -39,7 +39,9 @@ RSpec.describe 'submitting a customisation', type: :request do
   end
 
   context 'when toggling the appearance mode' do
-    let!(:light_mode) { create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 100, image: nil) }
+    let!(:light_mode) do
+      create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 100, image: nil)
+    end
 
     it 'renders the shop with the appearance toggle' do
       get show_available_customisations_path

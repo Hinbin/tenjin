@@ -2,7 +2,6 @@
 / `item` is a Customisation::ShopBoard::Item carrying the skin's tagline + nested palettes. The
 / preview pane is scoped to the skin's OWN resolved tokens (font/colour/shape) via an inline style
 / + data-skin, so each card previews in-character even though the page is in a different skin.
-- afford = @wallet >= item.cost
 - jp = Theme::SkinCatalog.meta(item.value)[:jp]
 .tjs-skin-card class=("is-equipped" if item.equipped) data-skin=item.value
   / ── In-character preview ────────────────────────────────────────────────
@@ -19,32 +18,21 @@
         = glyph(:star, size: 12, color: 'var(--on-accent, #241608)')
         ' Reward
 
-  / ── Name, tagline + skin action ────────────────────────────────────────
+  / ── Name + tagline (skin is selected by picking one of its palettes below) ──
   .tjs-skin-card__body
     .tjs-skin-card__heading
       .tjs-skin-card__name = item.name
       .tjs-skin-card__jp = jp
-    p.tjs-skin-card__tagline = item.tagline
-    .tjs-skin-card__action
       - if item.equipped
-        span.tjs-shop-item__equipped
-          = glyph(:check, size: 14, color: 'var(--n2)')
+        span.tjs-skin-card__equipped
+          = glyph(:check, size: 13, color: 'var(--n2)')
           ' Equipped
-      - elsif item.owned
-        = form_with url: equip_customisation_path(item.customisation), method: :post do |f|
-          = f.submit 'Equip skin', class: 'tjs-btn tjs-btn--ghost tjs-skin-card__btn equip-btn'
-      - elsif item.locked?
-        .tjs-shop-item__locked
-          = glyph(:trophy, size: 13, color: 'var(--gold)')
-          span.tjs-shop-item__req = item.req
-      - else
-        = form_with url: buy_customisation_path(item.customisation), method: :post do |f|
-          = f.submit "★ #{item.cost}", class: 'tjs-btn tjs-skin-card__btn buy-btn', disabled: !afford
+    p.tjs-skin-card__tagline = item.tagline
 
-  / ── This skin's palettes ───────────────────────────────────────────────
+  / ── This skin's palettes — picking one equips the palette AND switches to this skin ──
   - if item.palettes.present?
     .tjs-skin-card__palettes
-      .tjs-skin-card__palettes-label Palettes
+      .tjs-skin-card__palettes-label Palette — pick one to use this skin
       .tjs-palette-chips
         - item.palettes.each do |pal|
           = render 'palette_chip', pal: pal

@@ -77,7 +77,9 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
   end
 
   context 'when buying the light-mode perk' do
-    let(:light_mode) { create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 4, image: nil) }
+    let(:light_mode) do
+      create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 4, image: nil)
+    end
 
     it 'unlocks it and switches the user straight into light mode' do
       described_class.new(student, light_mode).call
