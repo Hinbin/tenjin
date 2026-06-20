@@ -18,7 +18,7 @@
     header.tjs-shop__wallet
       .tjs-shop__wallet-text
         .tjs-display.tjs-shop__title Reward Shop
-        p.tjs-shop__sub Spend points on looks — never on a scoring edge.
+        p.tjs-shop__sub Cosmetic only — points change how you look, never how you score.
       .tjs-shop__balance
         = render 'shared/skin/stat', icon: :star, value: @wallet, label: 'to spend', color: 'var(--gold)'
 
@@ -27,20 +27,12 @@
       section.tjs-shop__cat data-cat=cat.type
         = render 'shared/skin/section_head', en: cat.en, jp: cat.jp
         p.tjs-shop__blurb = cat.blurb
-        .tjs-shop__grid class="tjs-shop__grid--#{cat.type}"
-          - cat.items.each do |item|
-            = render 'shop_item', item: item, type: cat.type
-
-/ ── Legacy admin styles + leaderboard icons (kept buyable; live on leaderboard) ──
-section.page-section.tj-text-center.available-styles
-  .tjk-container
-    h1.page-section-header.text-uppercase Available Styles
-    ==render_small_separator
-    p style='margin: var(--tj-space-1) 0' Different styles available every week!
-    =render partial: "customisations", locals: {customisations: @available_styles, bought_customisations: @bought_customisations}
-
-section.page-section.tj-text-center.purchased-styles
-  .tjk-container
-    h1.page-section-header.text-uppercase Purchased Styles
-    ==render_small_separator
-    =render partial: "customisations", locals: {customisations: @purchased_styles, bought_customisations: @bought_customisations}
+        - if cat.type == 'skin'
+          / Skins get full-width "selling" cards, each with its own palettes grouped underneath.
+          .tjs-shop__skins
+            - cat.items.each do |item|
+              = render 'skin_card', item: item
+        - else
+          .tjs-shop__grid class="tjs-shop__grid--#{cat.type}"
+            - cat.items.each do |item|
+              = render 'shop_item', item: item, type: cat.type

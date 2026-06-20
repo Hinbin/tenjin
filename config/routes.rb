@@ -70,7 +70,7 @@ Rails.application.routes.draw do
   resources :flagged_questions, only:[:create]
   resources :school_groups
   resources :lessons
-  resources :customisations do
+  resources :customisations, only: [] do
     collection do
       get 'show_available'
     end

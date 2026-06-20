@@ -103,12 +103,15 @@
 .tjs-streak-aura--aura,
 .tjs-streak-aura--rainbow { filter: drop-shadow(0 0 6px var(--n1)); }
 
+// The aura wraps the (wide) streak meter live, so a 50% radius collapsed into a stretched oval.
+// Trace the meter pill with the skin's medium radius instead — reads as a deliberate glow frame
+// here and around the square shop preview.
 .tjs-streak-aura--aura::before,
 .tjs-streak-aura--rainbow::before {
   content: '';
   position: absolute;
   inset: -4px;
-  border-radius: 50%;
+  border-radius: var(--r-md);
   border: 2px solid var(--n1);
   opacity: 0.5;
 }

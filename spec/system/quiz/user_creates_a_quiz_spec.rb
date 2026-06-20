@@ -105,8 +105,6 @@ RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
 
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }
-    let(:customisation) { create(:dashboard_customisation, value: 'orange') }
-    let(:active_customisation) { create(:active_customisation, user: student, customisation:) }
 
     before do
       setup_subject_database
@@ -123,12 +121,6 @@ RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
     it 'creates a quiz on the correct topic' do
       navigate_to_quiz
       expect(page).to have_current_path(%r{quizzes/[0-9]*})
-    end
-
-    it 'has a separator of the correct colour' do
-      active_customisation
-      visit(new_quiz_path(subject: subject.name))
-      expect(page).to have_css("hr[style*='#{active_customisation.customisation.value}'")
     end
   end
 end

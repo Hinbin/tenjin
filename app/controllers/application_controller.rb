@@ -28,15 +28,6 @@ class ApplicationController < ActionController::Base
     redirect_to(request.referer || root_path)
   end
 
-  def find_dashboard_style
-    style = ActiveCustomisation.joins(:customisation)
-                               .find_by(user: current_user,
-                                        customisations: { customisation_type: 'dashboard_style' })
-    return style.customisation if style.present?
-
-    Customisation.find_by(customisation_type: 'dashboard_style', value: 'red')
-  end
-
   def pundit_user
     admin_signed_in? ? current_admin : current_user
   end

@@ -123,11 +123,11 @@
   font-size: 12px;
 }
 
-.buy-btn.tjs-shop-item__btn {
+.tjs-shop .buy-btn {
   background: var(--gold);
   color: var(--on-accent, #241608);
 }
-.tjs-shop-item__btn[disabled] {
+.tjs-shop .tjs-btn[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
   filter: grayscale(0.4);
@@ -161,18 +161,6 @@
 .tjs-shop-item__req { text-wrap: pretty; }
 
 // ── Slot-specific previews ─────────────────────────────────────────────────
-.tjs-skin-swatch {
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  border-radius: var(--r-sm);
-  border: var(--bd) solid var(--line);
-  background: var(--surface);
-}
-
 .tjs-palette-swatch {
   display: inline-flex;
   gap: 5px;
@@ -189,3 +177,185 @@
   align-items: center;
   gap: 6px;
 }
+
+// ── Skins: full-width "selling" cards ───────────────────────────────────────
+.tjs-shop__skins {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+
+  @media (min-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+}
+
+.tjs-skin-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: var(--bd) solid var(--line);
+  overflow: hidden;
+}
+
+.tjs-skin-card.is-equipped {
+  border-color: color-mix(in srgb, var(--n1) 60%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--n1) 24%, transparent);
+}
+
+// Preview pane — scoped to the skin's OWN tokens (inline style sets --bg1/--surface/--f-display…),
+// so it renders in-character even though the rest of the page is in a different skin.
+.tjs-skin-card__preview {
+  padding: 16px;
+  background: var(--bg1);
+  border-bottom: var(--bd) solid var(--line);
+}
+
+.tjs-skin-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 13px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: var(--bd) solid var(--line);
+}
+
+.tjs-skin-preview__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tjs-skin-preview__title {
+  font-family: var(--f-display);
+  font-size: 16px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.tjs-skin-preview__jp {
+  font-family: var(--f-body);
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.tjs-skin-preview__line {
+  height: 7px;
+  border-radius: 99px;
+  background: var(--line);
+}
+.tjs-skin-preview__line--short { width: 58%; }
+
+.tjs-skin-preview__pill {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: var(--btn-r);
+  background: var(--n1);
+  color: var(--on-accent, #241608);
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+// Card body uses the live page tokens (the active skin), not the preview's.
+.tjs-skin-card__body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.tjs-skin-card__heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.tjs-skin-card__name {
+  font-family: var(--f-display);
+  font-size: 16px;
+  color: var(--ink);
+}
+.tjs-skin-card__jp {
+  font-family: var(--f-body);
+  font-size: 11px;
+  color: var(--dim);
+}
+.tjs-skin-card__tagline {
+  margin: 0;
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--dim);
+  text-wrap: pretty;
+}
+.tjs-skin-card__action { margin-top: 3px; }
+.tjs-skin-card__action form { margin: 0; }
+.tjs-skin-card__btn {
+  width: 100%;
+  padding: 9px 0;
+  font-size: 12.5px;
+}
+
+// This skin's palettes, grouped under it.
+.tjs-skin-card__palettes { padding: 0 16px 16px; }
+.tjs-skin-card__palettes-label {
+  font-family: var(--f-body);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+
+.tjs-palette-chips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.tjs-palette-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 6px;
+  border-radius: var(--r-sm);
+  border: var(--bd) solid var(--line);
+  background: color-mix(in srgb, var(--ink) 4%, var(--surface));
+  text-align: center;
+}
+.tjs-palette-chip.is-equipped {
+  border-color: color-mix(in srgb, var(--n2) 60%, transparent);
+}
+.tjs-palette-chip__name {
+  max-width: 100%;
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tjs-palette-chip__foot {
+  margin-top: auto;
+  width: 100%;
+}
+.tjs-palette-chip__foot form { margin: 0; }
+.tjs-palette-chip__btn {
+  width: 100%;
+  padding: 5px 0;
+  font-size: 10.5px;
+}
+.tjs-palette-chip__equipped {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--f-body);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--n2);
+}
+.tjs-palette-chip__locked { display: inline-flex; opacity: 0.8; }

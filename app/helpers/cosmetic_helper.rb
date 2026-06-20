@@ -30,12 +30,6 @@ module CosmeticHelper
   def equipped_answer_effect(user) = user&.equipped_value(:answer_effect).presence || 'default'
 
   # ── shop preview data (read from the catalogs, not the DB) ────────────────
-  # A skin's own display font + base-palette accent, so its tile previews in-character even though
-  # the page is rendered in a different skin.
-  def skin_preview_font(skin) = Theme::SkinCatalog.meta(skin)[:fonts][:display]
-
-  def skin_accent(skin) = Theme::SkinCatalog.palette(skin, 0)[:dark][:n1]
-
   # The four signature colours of a palette ("skin:index") for a swatch preview.
   def palette_swatch(value)
     skin, index = value.to_s.split(':')

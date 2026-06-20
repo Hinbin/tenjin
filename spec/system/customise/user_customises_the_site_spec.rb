@@ -5,14 +5,14 @@ require 'rails_helper'
 RSpec.describe 'User customises the site', :default_creates, :js, type: :system do
   before do
     setup_subject_database
+    Customisation::SeedCosmetics.call(backfill: false)
     sign_in student
   end
 
-  context 'when visiting the customisation page from the navbar' do
-    it 'visits from the customise link' do
+  context 'when visiting the reward shop from the navbar' do
+    it 'visits from the shop link' do
       visit(dashboard_path)
-      click_button 'Shop'
-      find('a', text: 'Styles').click
+      find('a', text: 'Shop').click
       expect(page).to have_current_path(show_available_customisations_path)
     end
 
@@ -21,135 +21,44 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
       find('a.tj-navbar__points').click
       expect(page).to have_current_path(show_available_customisations_path)
     end
-
-    it 'visits from the number of points' do
-      visit(dashboard_path)
-      find_by_id('challenge-points').click
-      expect(page).to have_current_path(show_available_customisations_path)
-    end
   end
 
-  context 'when looking at available dashboard styles' do
-    let(:dashboard_customisation) { create(:dashboard_customisation, cost: 6) }
-    let(:dashboard_customisation_expensive) { create(:dashboard_customisation, cost: 20) }
-    let(:second_customisation) { create(:dashboard_customisation, cost: 2) }
-    let(:student) { create(:user, school:, challenge_points: 10) }
+  context 'when looking at the reward shop' do
+    let(:student) { create(:user, school:, challenge_points: 500) }
 
-    before do
-      dashboard_customisation
+    before { visit(show_available_customisations_path) }
+
+    it 'shows the skins section with a skin card' do
+      within('section[data-cat="skin"]') do
+        expect(page).to have_css('.tjs-skin-card[data-skin="arcade"]')
+        expect(page).to have_css('.tjs-skin-card__tagline')
+      end
+    end
+
+    it 'groups a skin\'s palettes under it' do
+      within('.tjs-skin-card[data-skin="arcade"]') do
+        expect(page).to have_css('.tjs-palette-chip', minimum: 2)
+      end
+    end
+
+    it 'lets me buy a paid cosmetic and deducts the points' do
+      gem = Customisation.avatar.find_by(value: 'gem')
+      find("form[action='#{buy_customisation_path(gem)}'] input.buy-btn").click
+      expect(page).to have_css('.tjs-flash', text: 'Congratulations!')
+      expect(page).to have_css('#challenge-points', exact_text: student.challenge_points - gem.cost)
+    end
+
+    it 'auto-equips a bought cosmetic so it shows as equipped' do
+      gem = Customisation.avatar.find_by(value: 'gem')
+      find("form[action='#{buy_customisation_path(gem)}'] input.buy-btn").click
+      expect(page).to have_css(".tjs-shop-item[data-value='gem'].is-equipped")
+    end
+
+    it 'warns when I cannot afford an item' do
+      student.update!(challenge_points: 0)
       visit(show_available_customisations_path)
-    end
-
-    it 'shows available dashboard customisations' do
-      expect(page).to have_text(dashboard_customisation.name.upcase)
-    end
-
-    it 'hides unpurchasable dashboard customisations' do
-      dashboard_customisation_unavailable = create(:dashboard_customisation, cost: 20, purchasable: false)
-      visit(show_available_customisations_path)
-      expect(page).to have_no_text(dashboard_customisation_unavailable.name.upcase)
-    end
-
-    it 'allows you to buy a dashbord style' do
-      find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
-      expect(page).to have_css("hr[style*=#{dashboard_customisation.value}]")
-    end
-
-    it 'deducts the required amount of challenge points' do
-      find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
-      expect(page).to have_css('#challenge-points',
-                               exact_text: student.challenge_points - dashboard_customisation.cost)
-    end
-
-    it 'gives a notice if you do not have the required number of points' do
-      dashboard_customisation_expensive
-      visit(show_available_customisations_path)
-      find("form[action='#{buy_customisation_path(dashboard_customisation_expensive)}'] input.buy-btn").click
-      expect(page).to have_css('.tj-alert-info', text: 'You do not have enough points')
-    end
-
-    it 'shows the cost of the customisation' do
-      expect(page).to have_css('#cost', text: dashboard_customisation.cost)
-    end
-
-    context 'when looking at purchased customisation' do
-      let(:dashboard_customisation) { create(:dashboard_customisation, cost: 6, purchasable: false) }
-      let(:unlocked_customisation) do
-        create(:customisation_unlock, user: student, customisation: dashboard_customisation)
-      end
-
-      before do
-        unlocked_customisation
-        visit(show_available_customisations_path)
-      end
-
-      it 'always shows customisations I have already purchased' do
-        expect(page).to have_text(dashboard_customisation.name.upcase)
-      end
-
-      it 'shows purchased customisations in a separate section' do
-        within('section.purchased-styles') do
-          expect(page).to have_text(dashboard_customisation.name.upcase)
-        end
-      end
-
-      it 'says switch instead of buy for a bought customisation' do
-        visit(show_available_customisations_path)
-        expect(page).to have_css("input[value='Switch']")
-      end
-    end
-
-    context 'when repurchasing a customisation already unlocked' do
-      before do
-        find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
-        second_customisation
-        visit(show_available_customisations_path)
-        find("form[action='#{buy_customisation_path(second_customisation)}'] input.buy-btn").click
-        find('.tj-alert-info', text: 'Congratulations!')
-      end
-
-      it 'allows you to buy a previously bought customisation at no cost' do
-        visit(show_available_customisations_path)
-        find("form[action='#{buy_customisation_path(dashboard_customisation)}'] input.buy-btn").click
-        find('.tj-alert-info', text: 'Congratulations!')
-        expect(page).to have_css('#challenge-points',
-                                 exact_text: student.challenge_points - dashboard_customisation.cost)
-      end
-    end
-  end
-
-  context 'when purchasing a leaderboard icon' do
-    let(:icon_customisation) do
-      create(:customisation, customisation_type:
-      'leaderboard_icon', value: 'black,star', cost: 10)
-    end
-
-    before do
-      icon_customisation
-      student.update_attribute(:challenge_points, 1000)
-      visit(show_available_customisations_path)
-    end
-
-    it 'shows what icons are available to purchase' do
-      expect(page).to have_text(icon_customisation.name)
-    end
-
-    it 'hides unpurchasable icons' do
-      dashboard_customisation_unavailable = create(:customisation,
-                                                   customisation_type: 'leaderboard_icon', cost: 20, purchasable: false)
-      visit(show_available_customisations_path)
-      expect(page).to have_no_text(dashboard_customisation_unavailable.name.upcase)
-    end
-
-    it 'allows you to buy an icon' do
-      expect(page).to have_css("form[action='#{buy_customisation_path(icon_customisation)}'] input.buy-btn")
-    end
-
-    it 'shows the icon on the leaderboard' do
-      create(:topic_score, user: student, topic:)
-      find("form[action='#{buy_customisation_path(icon_customisation)}'] input.buy-btn").click
-      visit(leaderboard_path(subject.name))
-      expect(page).to have_css("td i.fa-star[style*='color: black']")
+      crown = Customisation.avatar.find_by(value: 'crown')
+      expect(page).to have_css("form[action='#{buy_customisation_path(crown)}'] input.buy-btn[disabled]")
     end
   end
 end

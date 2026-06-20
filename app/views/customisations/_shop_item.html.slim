@@ -4,13 +4,6 @@
 .tjs-shop-item class=("is-equipped" if item.equipped) class=("is-locked" if item.locked?) data-slot=type data-value=item.value
   .tjs-shop-item__preview
     - case type
-    - when 'skin'
-      .tjs-skin-swatch style="font-family:#{skin_preview_font(item.value)};color:#{skin_accent(item.value)};"
-        | あ
-    - when 'palette'
-      .tjs-palette-swatch
-        - palette_swatch(item.value).each do |hex|
-          i.tjs-palette-swatch__dot style="background:#{hex};"
     - when 'avatar'
       = render 'shared/skin/avatar', glyph_name: item.glyph, color: item.token, size: 44
     - when 'nameplate'

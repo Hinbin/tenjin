@@ -7,7 +7,6 @@ class LeaderboardController < ApplicationController
   def index
     @subjects = policy_scope(Subject)
     @subjects = current_user.subjects.uniq
-    @dashboard_style = find_dashboard_style
     render 'subject_select'
   end
 

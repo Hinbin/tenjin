@@ -456,8 +456,8 @@ export default class extends Controller {
     const deltaHtml = entry.lastChanged ? '<span class="tj-lb-delta tj-lb-delta--up" aria-hidden="true">▲</span>' : ''
 
     // Phase 4: decorate the current user's own row with their equipped cosmetics (avatar emblem
-    // prepended to the icon cell; nameplate + name-effect wrap the name). Other rows are untouched.
-    const avatarCell = (isCurrentUser && this.user.avatar_svg ? this.user.avatar_svg : '') + this.renderIcon(entry.icon)
+    // in the avatar cell; nameplate + name-effect wrap the name). Other rows are untouched.
+    const avatarCell = isCurrentUser && this.user.avatar_svg ? this.user.avatar_svg : ''
     const nameCell = isCurrentUser && this.user.name_effect_class
       ? `<span class="tjs-plate ${this.user.nameplate_class}" style="--tjs-plate-accent:${this.user.plate_accent}"><span class="tjs-name ${this.user.name_effect_class}">${this.escape(entry.name)}</span></span>`
       : this.escape(entry.name)
@@ -481,13 +481,6 @@ export default class extends Controller {
 
     const classroomNames = entry.classroom_names && entry.classroom_names.length > 0 ? entry.classroom_names.join(', ') : ''
     return `<td class="tj-lb-context-col" id="${entry.id}classrooms-">${this.escape(classroomNames)}</td>`
-  }
-
-  renderIcon (icon) {
-    if (!icon) return ''
-
-    const iconArray = icon.split(',')
-    return `<i class="fas fa-${this.escapeAttribute(iconArray[1])}" style="color: ${this.escapeAttribute(iconArray[0])}"></i>`
   }
 
   renderAwards (awards) {

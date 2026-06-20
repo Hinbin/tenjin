@@ -5,7 +5,6 @@ class QuizzesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_quiz, only: %i[show update]
   before_action :set_question, only: %i[show update]
-  before_action :set_dashboard_style, only: %i[new]
   before_action :set_subject, only: %i[new]
   before_action :set_create_params, only: %i[create]
 
@@ -111,10 +110,6 @@ class QuizzesController < ApplicationController
     @topic = quiz_params[:topic_id]
     @subject = Subject.find(quiz_params[:subject])
     @lesson = quiz_params[:lesson_id] if quiz_params[:lesson_id].present?
-  end
-
-  def set_dashboard_style
-    @dashboard_style = find_dashboard_style
   end
 
   def answer_params

@@ -17,7 +17,6 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
 
   context 'when returning student data' do
     let(:call) { described_class.new(student, id: subject.name).call.first } # Issue with subject() Using let instead.
-    let(:leaderboard_icon) { create(:customisation, customisation_type: 'leaderboard_icon') }
 
     it 'includes the school name' do
       expect(call.school_name).to eq(school.name)
@@ -25,24 +24,6 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
 
     it 'includes the first name and last initial of the student' do
       expect(call.name).to eq("#{student.forename} #{student.surname.first}")
-    end
-
-    it 'includes a leaderboard icon if it is active for the user' do
-      create(:active_customisation, user: student, customisation: leaderboard_icon)
-      expect(call.icon).to eq(leaderboard_icon.value)
-    end
-
-    it 'includes a leaderboard icon if it is active for others' do
-      create(:active_customisation, user: second_student, customisation: leaderboard_icon)
-      create(:topic_score, topic: topic, user: second_student)
-      expect(described_class.new(student, id: subject.name).call
-                            .find { |user| user['id'] == second_student.id }.icon).to eq(leaderboard_icon.value)
-    end
-
-    it 'does not include a leaderboard icon for those that do not have one' do
-      create(:topic_score, topic: topic, user: second_student)
-      expect(described_class.new(student, id: subject.name).call
-                            .find { |user| user['id'] == second_student.id }.icon).to eq(nil)
     end
   end
 

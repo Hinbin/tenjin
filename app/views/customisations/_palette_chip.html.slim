@@ -1,0 +1,22 @@
+/ _palette_chip.html.slim — one palette swatch + action inside a skin card (Phase 4 follow-up).
+/ `pal` is a Customisation::ShopBoard::Item for a palette ("skin:index").
+- afford = @wallet >= pal.cost
+.tjs-palette-chip class=("is-equipped" if pal.equipped) class=("is-locked" if pal.locked?) data-value=pal.value
+  .tjs-palette-swatch
+    - palette_swatch(pal.value).each do |hex|
+      i.tjs-palette-swatch__dot style="background:#{hex};"
+  .tjs-palette-chip__name = pal.name
+  .tjs-palette-chip__foot
+    - if pal.equipped
+      span.tjs-palette-chip__equipped
+        = glyph(:check, size: 12, color: 'var(--n2)')
+        ' On
+    - elsif pal.owned
+      = form_with url: equip_customisation_path(pal.customisation), method: :post do |f|
+        = f.submit 'Equip', class: 'tjs-btn tjs-btn--ghost tjs-palette-chip__btn equip-btn'
+    - elsif pal.locked?
+      span.tjs-palette-chip__locked
+        = glyph(:trophy, size: 11, color: 'var(--gold)')
+    - else
+      = form_with url: buy_customisation_path(pal.customisation), method: :post do |f|
+        = f.submit "★ #{pal.cost}", class: 'tjs-btn tjs-palette-chip__btn buy-btn', disabled: !afford

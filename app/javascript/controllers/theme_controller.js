@@ -1,13 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
-// theme_controller — applies and live-switches the reskinnable theme (Plan 01, Phase 0).
+// theme_controller — live-switches the reskinnable theme for in-page preview (Plan 01).
 //
-// Attached to <body> on every page. The server renders the correct theme inline (no flash); this
-// controller's two jobs are:
-//   1. connect(): apply a client-side override saved in localStorage (a choice the student made
-//      before Phase 4 persists it server-side). Catalog-free — it replays a saved style string.
-//   2. select(): live-switch on surfaces that pass a `catalog` value (styleguide / settings).
-//      Looks up the resolved CSS vars for {skin, palette, mode} and applies + persists them.
+// Attached to <body> on every page. The server renders the correct theme inline from the user's
+// equipped cosmetics (Theme::Selection) — that is the single source of truth, so this controller
+// does NOT persist or replay anything across loads. Its only job is live preview on surfaces that
+// pass a `catalog` value (the dev styleguide): select() swaps the inline CSS vars in place, and
+// reset() restores the server-rendered theme captured at connect().
 //
 // Catalog shape (from ThemeHelper#theme_catalog_json):
 //   { arcade: { "0": { dark: { "--bg0": "#…", … }, light: {…} }, "1": {…} }, kawaii: {…} }
@@ -15,12 +14,11 @@ export default class extends Controller {
   static values = { catalog: Object }
 
   connect() {
-    const style = localStorage.getItem("tjs:style")
-    if (!style) return
-    this.element.setAttribute("style", style)
-    this.#applyAttr("skin")
-    this.#applyAttr("palette")
-    this.#applyAttr("mode")
+    // Snapshot the server-rendered (equipped) theme so reset() can restore it.
+    this.serverStyle = this.element.getAttribute("style") || ""
+    this.serverSkin = this.element.dataset.skin
+    this.serverPalette = this.element.dataset.palette
+    this.serverMode = this.element.dataset.mode
   }
 
   // Wire controls with: data-action="theme#select"
@@ -41,20 +39,13 @@ export default class extends Controller {
     this.element.dataset.skin = next.skin
     this.element.dataset.palette = next.palette
     this.element.dataset.mode = next.mode
-
-    localStorage.setItem("tjs:style", styleStr)
-    localStorage.setItem("tjs:skin", next.skin)
-    localStorage.setItem("tjs:palette", next.palette)
-    localStorage.setItem("tjs:mode", next.mode)
   }
 
-  // Clears the local override (revert to the server-rendered / equipped theme on next load).
+  // Revert the live preview back to the server-rendered / equipped theme.
   reset() {
-    ["style", "skin", "palette", "mode"].forEach((k) => localStorage.removeItem(`tjs:${k}`))
-  }
-
-  #applyAttr(key) {
-    const v = localStorage.getItem(`tjs:${key}`)
-    if (v) this.element.dataset[key] = v
+    this.element.setAttribute("style", this.serverStyle)
+    this.element.dataset.skin = this.serverSkin
+    this.element.dataset.palette = this.serverPalette
+    this.element.dataset.mode = this.serverMode
   }
 }

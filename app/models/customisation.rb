@@ -4,11 +4,10 @@ class Customisation < ApplicationRecord
   validates :cost, presence: true
   validates :name, presence: true
   validates :value, presence: true
-  validates :image, presence: true, if: :is_dashboard_style
-  # Append new equip slots; do NOT renumber the existing 0/1/2 (Phase 4, phase4-shop-data-model.md §1).
+  # The legacy slots 0/1/2 (dashboard_style/leaderboard_icon/subject_image) were retired with the
+  # Phase 4 uplift; their integers are left unused so the cosmetic slots keep their numbering.
   # 3/4 are the theme (skin/palette); 5–9 are the cosmetic slots ported from the prototype SHOP_CATS.
   enum :customisation_type, {
-    dashboard_style: 0, leaderboard_icon: 1, subject_image: 2,
     skin: 3, palette: 4,
     avatar: 5, nameplate: 6, name_effect: 7,
     answer_effect: 8, streak_aura: 9
@@ -25,10 +24,6 @@ class Customisation < ApplicationRecord
   before_save :make_unpurchasable_if_retired
 
   scope :cosmetic, -> { where(customisation_type: COSMETIC_SLOTS) }
-
-  def is_dashboard_style
-    customisation_type == 'dashboard_style'
-  end
 
   # Free items (decision #2: the skins and each skin's base palette + the cost-0 starter cosmetics)
   # are owned by everyone — no CustomisationUnlock row is created for them. A gated item (req

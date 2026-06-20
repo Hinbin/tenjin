@@ -2,10 +2,13 @@
 
 # Customisation::ShopBoard — the Reward Shop's read model (Plan 01, Phase 4).
 #
-# Groups every equip-slot customisation (skins + palettes from Theme::SkinCatalog, and the five
-# cosmetic slots from Cosmetic::Catalog) into ordered categories, each item tagged with the
-# viewing user's owned/equipped/locked state. The view renders this verbatim — no DB logic in the
-# template. Ownership is preloaded (one unlock query + one equipped query) to avoid N+1s.
+# Groups every equip-slot customisation into ordered categories, each item tagged with the viewing
+# user's owned/equipped/locked state. The view renders this verbatim — no DB logic in the template.
+# Ownership is preloaded (one unlock query + one equipped query) to avoid N+1s.
+#
+# The Skins category is special: each skin item carries its own palettes (a recolour belongs to a
+# skin) and a tagline, so the view can "sell" the skin and group its palettes under it. The five
+# cosmetic slots (avatar, nameplate, … from Cosmetic::Catalog) stay flat.
 #
 #   board = Customisation::ShopBoard.call(current_user)
 #   board.categories  # => [Category(type:, en:, jp:, glyph:, blurb:, items:[Item,…]), …]
@@ -13,18 +16,18 @@
 class Customisation::ShopBoard < ApplicationService
   Category = Struct.new(:type, :en, :jp, :glyph, :blurb, :items, keyword_init: true)
   Item = Struct.new(:customisation, :name, :value, :cost, :glyph, :token,
-                    :owned, :equipped, :gated, :req, keyword_init: true) do
+                    :owned, :equipped, :gated, :req, :tagline, :palettes, keyword_init: true) do
     # achievement-gated and not yet earned (display-only, v1)
     def locked? = gated && !owned
     # purchasable with points
     def buyable? = !owned && !gated
   end
 
-  # Theme slots are not in Cosmetic::Catalog (Theme::SkinCatalog owns them); supply their chrome.
-  THEME_META = {
-    'skin' => { en: 'Skins', jp: 'スキン', glyph: 'globe', blurb: 'The whole look — fonts, shapes & feel.' },
-    'palette' => { en: 'Palettes', jp: '色', glyph: 'gem', blurb: 'Recolour your chosen skin.' }
-  }.freeze
+  SKIN_META = { en: 'Skins', jp: 'スキン', glyph: 'globe',
+                blurb: 'The whole look — fonts, shapes & feel. Each skin brings its own palettes.' }.freeze
+
+  # The theme slots (not in Cosmetic::Catalog) whose Customisation records must be preloaded.
+  THEME_TYPES = %w[skin palette].freeze
 
   def initialize(user)
     super()
@@ -38,28 +41,42 @@ class Customisation::ShopBoard < ApplicationService
   private
 
   def categories
-    THEME_META.each_key.map { |type| theme_category(type) } +
-      Cosmetic::Catalog.types.map { |type| cosmetic_category(type) }
+    [skins_category] + Cosmetic::Catalog.types.map { |type| cosmetic_category(type) }
   end
 
-  def theme_category(type)
-    meta = THEME_META.fetch(type)
-    values = type == 'skin' ? skin_values : palette_values
-    build(type, meta, values.map { |value| { value: value } })
+  # ── Skins (with their palettes nested) ──────────────────────────────────────
+  def skins_category
+    items = Theme::SkinCatalog.skin_ids.filter_map { |skin| build_skin_item(skin) }
+    Category.new(type: 'skin', en: SKIN_META[:en], jp: SKIN_META[:jp], glyph: SKIN_META[:glyph],
+                 blurb: SKIN_META[:blurb], items: items)
   end
 
+  def build_skin_item(skin)
+    record = lookup('skin')[skin]
+    return unless record
+
+    Item.new(**item_attrs('skin', { value: skin }, record),
+             tagline: Theme::SkinCatalog.meta(skin)[:tagline],
+             palettes: palette_items(skin))
+  end
+
+  def palette_items(skin)
+    Theme::SkinCatalog.palettes(skin).each_index.filter_map do |index|
+      record = lookup('palette')["#{skin}:#{index}"]
+      record && Item.new(**item_attrs('palette', { value: "#{skin}:#{index}" }, record))
+    end
+  end
+
+  # ── Cosmetic slots (flat) ───────────────────────────────────────────────────
   def cosmetic_category(type)
     category = Cosmetic::Catalog.category(type)
-    build(type, category, Cosmetic::Catalog.items(type))
+    items = Cosmetic::Catalog.items(type).filter_map { |spec| build_item(type, spec) }
+    Category.new(type: type, en: category[:en], jp: category[:jp], glyph: category[:glyph],
+                 blurb: category[:blurb], items: items)
   end
 
-  def build(type, meta, item_specs)
-    items = item_specs.filter_map { |spec| build_item(type, spec) }
-    Category.new(type: type, en: meta[:en], jp: meta[:jp], glyph: meta[:glyph], blurb: meta[:blurb], items: items)
-  end
-
-  # spec carries at least :value (theme slots) and optionally :glyph/:tok (avatars). The persisted
-  # Customisation is the source of truth for name/cost/req; skip any value not yet seeded.
+  # spec carries at least :value and optionally :glyph/:tok (avatars). The persisted Customisation
+  # is the source of truth for name/cost/req; skip any value not yet seeded.
   def build_item(type, spec)
     record = lookup(type)[spec[:value]]
     record && Item.new(**item_attrs(type, spec, record))
@@ -76,22 +93,12 @@ class Customisation::ShopBoard < ApplicationService
     record.free? || unlocked_ids.include?(record.id)
   end
 
-  def skin_values
-    Theme::SkinCatalog.skin_ids
-  end
-
-  def palette_values
-    Theme::SkinCatalog.skin_ids.flat_map do |skin|
-      Theme::SkinCatalog.palettes(skin).each_index.map { |index| "#{skin}:#{index}" }
-    end
-  end
-
   def lookup(type)
     records_by_type[type] ||= {}
   end
 
   def records_by_type
-    @records_by_type ||= Customisation.where(customisation_type: THEME_META.keys + Cosmetic::Catalog.types)
+    @records_by_type ||= Customisation.where(customisation_type: THEME_TYPES + Cosmetic::Catalog.types)
                                       .group_by(&:customisation_type)
                                       .transform_values { |records| records.index_by(&:value) }
   end

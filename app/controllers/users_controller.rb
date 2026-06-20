@@ -18,7 +18,6 @@ class UsersController < ApplicationController
   end
 
   def show
-    @dashboard_style = find_dashboard_style
     authorize @user
     @homeworks = policy_scope(Homework)
     @homework_progress = HomeworkProgress.includes(:homework, homework: [{ topic: :subject }])

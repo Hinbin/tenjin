@@ -6,8 +6,6 @@
   = render 'shared/skin/backdrop'
   .tjs-quiz__inner.tjs-topic-pick
     = render 'shared/skin/section_head', en: 'Select Topic', jp: '単元'
-    / Legacy dashboard-style accent separator (equipped dashboard_style cosmetic); retired in Phase 4.
-    ==render_small_separator
     .tjs-card.tjs-topic-pick__card
       .tjs-topic-pick__subject
         = render 'shared/skin/avatar', glyph_name: 'book', color: subject_neon(@subject), size: 44

@@ -9,11 +9,7 @@ nav#navbar-main.tj-navbar data-controller="navbar"
   .tj-navbar__collapse data-navbar-target="menu"
     - if current_user.student?
       a.tj-navbar__link href=leaderboard_index_path Leaderboard
-      .tj-navbar__dropdown
-        button.tj-navbar__link.tj-navbar__dropdown-toggle type="button" data-action="click->navbar#toggleDropdown" Shop
-        .tj-navbar__dropdown-menu
-          a.tj-navbar__dropdown-item href=show_available_customisations_path(anchor: 'dashboard-styles') Styles
-          a.tj-navbar__dropdown-item href=show_available_customisations_path(anchor: 'icons') Leaderboard Icons
+      a.tj-navbar__link href=show_available_customisations_path Shop
       a.tj-navbar__link href=lessons_path Lessons
     - if current_user.employee?
       a.tj-navbar__link href=leaderboard_index_path Leaderboard

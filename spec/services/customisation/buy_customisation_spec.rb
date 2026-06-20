@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Customisation::BuyCustomisation, :default_creates do
-  let(:customisation) { create(:dashboard_customisation, cost: 5) }
-  let(:old_customisation) { create(:dashboard_customisation, cost: 2) }
+  let(:customisation) { create(:customisation, cost: 5) }
+  let(:old_customisation) { create(:customisation, cost: 2) }
   let(:old_customisation_unlock) do
     create(:customisation_unlock, customisation: old_customisation, user: student)
   end
@@ -14,7 +14,7 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
     create(:customisation_unlock, customisation: old_customisation, user: student)
   end
 
-  context 'when buying a new dashboard style' do
+  context 'when buying a new customisation' do
     it 'creates the correct customisation unlock' do
       described_class.new(student, customisation).call
       expect(CustomisationUnlock.where(customisation: customisation).count).to eq(1)
@@ -33,25 +33,6 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
     it 'deducts the correct amount of challenge points' do
       described_class.new(student, customisation).call
       expect(student.challenge_points).to eq(5)
-    end
-  end
-
-  context 'when buying a leaderboard icon' do
-    let(:customisation) { create(:customisation, cost: 5, customisation_type: 'leaderboard_icon') }
-
-    it 'sets the new icon to being active' do
-      described_class.new(student, customisation).call
-      expect(ActiveCustomisation.where(customisation: customisation).count).to eq(1)
-    end
-
-    it 'sets the old icon to being inactive' do
-      described_class.new(student, customisation).call
-      expect(ActiveCustomisation.where(customisation: old_customisation).count).to eq(0)
-    end
-
-    it 'creates the correct customisation unlock' do
-      described_class.new(student, customisation).call
-      expect(CustomisationUnlock.where(customisation: customisation).count).to eq(1)
     end
   end
 

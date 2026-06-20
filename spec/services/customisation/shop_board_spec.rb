@@ -16,10 +16,17 @@ RSpec.describe Customisation::ShopBoard, :default_creates do
     expect(board.wallet).to eq(250)
   end
 
-  it 'groups all seven equip slots in order' do
+  it 'groups the equip slots in order, with palettes nested under skins' do
     expect(board.categories.map(&:type)).to eq(
-      %w[skin palette avatar nameplate name_effect answer_effect streak_aura]
+      %w[skin avatar nameplate name_effect answer_effect streak_aura]
     )
+  end
+
+  it 'nests each skin\'s palettes and tagline on the skin item' do
+    arcade = board.categories.find { |c| c.type == 'skin' }.items.find { |i| i.value == 'arcade' }
+    expect(arcade.tagline).to be_present
+    expect(arcade.palettes.map(&:value)).to include('arcade:0', 'arcade:1')
+    expect(arcade.palettes).to all(have_attributes(customisation: an_instance_of(Customisation)))
   end
 
   it 'marks free items as owned and buyable paid items as not owned' do

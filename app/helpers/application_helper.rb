@@ -15,25 +15,8 @@ module ApplicationHelper
     image_tag(path.exist? ? filename : 'default-subject.jpg', **)
   end
 
-  def render_small_separator(style = nil)
-    return "<hr class='small mb-5 primary' style='border-color: #{style.value}'>" unless style.nil?
-
-    if @dashboard_style.nil?
-      "<hr class='small mb-5 primary' style='border-color: red'>"
-    else
-      "<hr class='small mb-5 primary' style='border-color: #{@dashboard_style.value}'>"
-    end
-  end
-
-  def render_dashboard_style(style)
-    return '' if style.nil?
-
-    if style.image.attached?
-      url = rails_storage_proxy_url(style.image)
-      "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(#{url}) no-repeat;"
-    else
-      "background:linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), #{style.value};"
-    end
+  def render_small_separator
+    "<hr class='small mb-5 primary' style='border-color: red'>"
   end
 
   def get_user_classes(student)
