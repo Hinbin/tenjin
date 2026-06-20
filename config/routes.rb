@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   end
 
   get 'quizzes/new/:subject', to: 'quizzes#new'
+  resource :settings, only: %i[show update]
   get 'dashboard/', to: 'dashboard#show'
 
   # Dev-only skin styleguide (Plan 01, Phase 0). Blocked in production by the controller.
