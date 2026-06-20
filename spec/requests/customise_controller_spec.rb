@@ -18,6 +18,25 @@ RSpec.describe 'submitting a customisation', type: :request do
 
     it { is_expected.to redirect_to(show_available_customisations_path) }
   end
+
+  context 'when equipping an owned cosmetic' do
+    let(:avatar) { create(:customisation, customisation_type: 'avatar', value: 'torii', cost: 0, image: nil) }
+
+    it 'equips it and redirects back to the shop' do
+      post equip_customisation_path(avatar)
+      expect(response).to redirect_to(show_available_customisations_path)
+      expect(student.equipped_value(:avatar)).to eq('torii')
+    end
+  end
+
+  context 'when equipping an item I do not own' do
+    let(:avatar) { create(:customisation, customisation_type: 'avatar', value: 'gem', cost: 300, image: nil) }
+
+    it 'does not equip it' do
+      post equip_customisation_path(avatar)
+      expect(student.equipped_value(:avatar)).to be_nil
+    end
+  end
 end
 
 RSpec.describe 'Admin manages customisations', :default_creates, type: :request do
