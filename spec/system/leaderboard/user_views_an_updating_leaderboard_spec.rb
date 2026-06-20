@@ -98,7 +98,7 @@ RSpec.describe 'User views an updating leaderboard', :default_creates, :js, type
     it 'updates if score is from the same school group' do
       click_button('Select School')
       click_button('All')
-      find(:css, '#leaderboardTable')
+      find_by_id('leaderboardTable')
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group.topic,
                                                  topic_score_same_school_group.user).call
       expect(page).to have_css('tr.score-changed')
