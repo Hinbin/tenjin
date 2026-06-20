@@ -1,0 +1,16 @@
+/ _player_name.html.slim — skin-aware player name with an equipped nameplate + name effect
+/ (Plan 01, Phase 4). Cosmetic-only — pure presentation, never affects scoring.
+/
+/ Locals:
+/   name:    String  — the name to render (required)
+/   plate:   String  — nameplate value ('none'|'bar'|'pixel'|'sticker'|'outline'|'ribbon')
+/   name_fx: String  — name-effect value ('none'|'gold'|'gradient'|'glow'|'shimmer')
+/   size:    Integer — font-size in px (default 19)
+/   accent:  String  — CSS colour token for the plate frame (default 'var(--n1)')
+- plate   ||= 'none'
+- name_fx ||= 'none'
+- size    ||= 19
+- accent  ||= 'var(--n1)'
+span class="tjs-plate #{nameplate_class(plate)}" style="--tjs-plate-accent:#{accent};"
+  span class="tjs-name #{name_effect_class(name_fx)}" style="font-size:#{size}px;"
+    = name

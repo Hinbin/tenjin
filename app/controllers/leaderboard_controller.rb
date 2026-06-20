@@ -78,6 +78,29 @@ class LeaderboardController < ApplicationController
                    role: current_user.role,
                    school: current_user.school.name,
                    classrooms: current_user.enrollments.joins(:classroom).pluck('classrooms.name') }
+                 .merge(equipped_cosmetics)
+  end
+
+  # Equipped identity cosmetics for the current user's own leaderboard row (Plan 01, Phase 4). The
+  # avatar emblem is server-rendered to an inline SVG string; the name is only wrapped in
+  # nameplate/name-effect spans when a non-default cosmetic is equipped (so a plain row's text
+  # layout is unchanged). Cosmetic-only — never affects scoring or ranking.
+  def equipped_cosmetics
+    { avatar_svg: equipped_avatar_svg }.merge(equipped_name_classes)
+  end
+
+  def equipped_avatar_svg
+    helpers.glyph(helpers.equipped_avatar_glyph(current_user), size: 20,
+                                                               color: helpers.equipped_avatar_color(current_user))
+  end
+
+  def equipped_name_classes
+    plate = current_user.equipped_value(:nameplate)
+    effect = current_user.equipped_value(:name_effect)
+    decorated = [plate, effect].any? { |value| value.present? && value != 'none' }
+    { nameplate_class: decorated ? helpers.nameplate_class(plate) : '',
+      name_effect_class: decorated ? helpers.name_effect_class(effect) : '',
+      plate_accent: helpers.equipped_avatar_color(current_user) }
   end
 
   def leaderboard_params

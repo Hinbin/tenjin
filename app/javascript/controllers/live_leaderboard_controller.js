@@ -455,11 +455,18 @@ export default class extends Controller {
 
     const deltaHtml = entry.lastChanged ? '<span class="tj-lb-delta tj-lb-delta--up" aria-hidden="true">▲</span>' : ''
 
+    // Phase 4: decorate the current user's own row with their equipped cosmetics (avatar emblem
+    // prepended to the icon cell; nameplate + name-effect wrap the name). Other rows are untouched.
+    const avatarCell = (isCurrentUser && this.user.avatar_svg ? this.user.avatar_svg : '') + this.renderIcon(entry.icon)
+    const nameCell = isCurrentUser && this.user.name_effect_class
+      ? `<span class="tjs-plate ${this.user.nameplate_class}" style="--tjs-plate-accent:${this.user.plate_accent}"><span class="tjs-name ${this.user.name_effect_class}">${this.escape(entry.name)}</span></span>`
+      : this.escape(entry.name)
+
     return `
       <tr id="row-${entry.id}" class="${classNames.join(' ')}"${phase4Row}>
         <td id="pos-${entry.id}" class="tj-lb-rank ${medalClass}">${entry.position}</td>
-        <td id="icon-${entry.id}" class="tj-lb-avatar-cell"${phase4Avatar}>${this.renderIcon(entry.icon)}</td>
-        <td id="name-${entry.id}" class="tj-lb-name-cell"${phase4Nameplate}>${this.escape(entry.name)}</td>
+        <td id="icon-${entry.id}" class="tj-lb-avatar-cell"${phase4Avatar}>${avatarCell}</td>
+        <td id="name-${entry.id}" class="tj-lb-name-cell"${phase4Nameplate}>${nameCell}</td>
         <td id="awards-${entry.id}" class="tj-lb-awards">${this.renderAwards(entry.awards)}</td>
         ${this.renderContextualRow(entry)}
         <td id="score-${entry.id}" class="tj-lb-score">${this.escape(String(entry.score))}${deltaHtml}</td>

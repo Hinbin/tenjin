@@ -1,0 +1,43 @@
+/ _shop_item.html.slim — one Reward Shop tile (Plan 01, Phase 4). `item` is a
+/ Customisation::ShopBoard::Item; `type` is the slot/customisation_type.
+- afford = @wallet >= item.cost
+.tjs-shop-item class=("is-equipped" if item.equipped) class=("is-locked" if item.locked?) data-slot=type data-value=item.value
+  .tjs-shop-item__preview
+    - case type
+    - when 'skin'
+      .tjs-skin-swatch style="font-family:#{skin_preview_font(item.value)};color:#{skin_accent(item.value)};"
+        | あ
+    - when 'palette'
+      .tjs-palette-swatch
+        - palette_swatch(item.value).each do |hex|
+          i.tjs-palette-swatch__dot style="background:#{hex};"
+    - when 'avatar'
+      = render 'shared/skin/avatar', glyph_name: item.glyph, color: item.token, size: 44
+    - when 'nameplate'
+      = render 'shared/skin/player_name', name: 'Mia', plate: item.value, name_fx: 'none', size: 15
+    - when 'name_effect'
+      = render 'shared/skin/player_name', name: 'Mia', plate: 'none', name_fx: item.value, size: 19
+    - when 'streak_aura'
+      .tjs-streak-aura class=streak_aura_class(item.value)
+        = glyph(:flame, size: 26, color: 'var(--n1)')
+    - when 'answer_effect'
+      .tjs-answer-preview data-effect=item.value
+        = glyph(:star, size: 15, color: 'var(--n2)')
+        = glyph(:sparkle, size: 18, color: 'var(--gold)')
+        = glyph(:star, size: 15, color: 'var(--n1)')
+  .tjs-shop-item__name = item.name
+  .tjs-shop-item__foot
+    - if item.equipped
+      span.tjs-shop-item__equipped
+        = glyph(:check, size: 14, color: 'var(--n2)')
+        ' Equipped
+    - elsif item.owned
+      = form_with url: equip_customisation_path(item.customisation), method: :post do |f|
+        = f.submit 'Equip', class: 'tjs-btn tjs-btn--ghost tjs-shop-item__btn equip-btn'
+    - elsif item.locked?
+      .tjs-shop-item__locked
+        = glyph(:trophy, size: 13, color: 'var(--gold)')
+        span.tjs-shop-item__req = item.req
+    - else
+      = form_with url: buy_customisation_path(item.customisation), method: :post do |f|
+        = f.submit "★ #{item.cost}", class: 'tjs-btn tjs-shop-item__btn buy-btn', disabled: !afford

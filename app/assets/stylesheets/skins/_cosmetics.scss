@@ -1,0 +1,122 @@
+// skins/_cosmetics.scss — equipped cosmetic treatments (Plan 01, Phase 4).
+//
+// Nameplate frames, name-effect text styling and streak auras, used both in the Reward Shop
+// previews and live on the dashboard header / leaderboard own-row / quiz HUD. Skin-aware via the
+// token layer; cosmetic-only (pure presentation, never affects scoring). Motion is gated behind
+// prefers-reduced-motion with a visible base state (the prototype's repeated foot-gun).
+
+// ── Nameplate: a frame behind the name (--tjs-plate-accent set inline) ──────
+.tjs-plate {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.tjs-plate--bar {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.tjs-plate--bar::after {
+  content: '';
+  height: 4px;
+  width: 100%;
+  border-radius: var(--r-sm);
+  background: linear-gradient(90deg, var(--tjs-plate-accent), color-mix(in srgb, var(--tjs-plate-accent) 8%, transparent));
+}
+
+.tjs-plate--outline {
+  padding: 4px 12px;
+  border-radius: var(--r-sm);
+  border: var(--bd) solid var(--tjs-plate-accent);
+  background: color-mix(in srgb, var(--tjs-plate-accent) 8%, transparent);
+}
+
+.tjs-plate--sticker {
+  padding: 4px 12px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--tjs-plate-accent) 20%, var(--surface));
+  border: 2.5px solid var(--tjs-plate-accent);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--tjs-plate-accent) 55%, #000);
+}
+
+.tjs-plate--pixel {
+  padding: 4px 12px;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--tjs-plate-accent) 16%, var(--surface));
+  border: 2.5px solid var(--edge);
+  box-shadow: 3px 3px 0 var(--edge);
+}
+
+.tjs-plate--ribbon {
+  padding: 4px 12px;
+  border-radius: var(--r-sm);
+  background: linear-gradient(92deg, var(--gold), color-mix(in srgb, var(--gold) 52%, #8a5a00));
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--gold) 34%, transparent);
+}
+.tjs-plate--ribbon .tjs-name { color: #241608; -webkit-text-fill-color: #241608; }
+
+// ── Name text + effects ────────────────────────────────────────────────────
+.tjs-name {
+  font-family: var(--f-display);
+  font-weight: 700;
+  line-height: 1.12;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.tjs-name-fx--gold { color: var(--gold); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18); }
+.tjs-name-fx--glow { color: var(--n2); text-shadow: 0 0 10px color-mix(in srgb, var(--n2) 72%, transparent); }
+
+.tjs-name-fx--gradient {
+  background-image: linear-gradient(92deg, var(--n1), var(--n3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.tjs-name-fx--shimmer {
+  background-image: linear-gradient(92deg, var(--n1) 0%, var(--gold) 22%, var(--n2) 48%, var(--n3) 74%, var(--n1) 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tjs-name-fx--shimmer { animation: tjs-shimmer 2.6s linear infinite; }
+}
+
+// ── Streak aura: the streak meter, supercharged ────────────────────────────
+.tjs-streak-aura {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tjs-streak-aura--blue  { filter: drop-shadow(0 0 6px var(--n2)); }
+.tjs-streak-aura--frost { filter: drop-shadow(0 0 6px var(--n3)); }
+.tjs-streak-aura--volt  { filter: drop-shadow(0 0 6px var(--gold)); }
+.tjs-streak-aura--aura,
+.tjs-streak-aura--rainbow { filter: drop-shadow(0 0 6px var(--n1)); }
+
+.tjs-streak-aura--aura::before,
+.tjs-streak-aura--rainbow::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--n1);
+  opacity: 0.5;
+}
+
+@keyframes tjs-hue { to { filter: hue-rotate(360deg); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .tjs-streak-aura--aura::before,
+  .tjs-streak-aura--rainbow::before { animation: tjs-aura 1.3s ease-out infinite; }
+  .tjs-streak-aura--rainbow { animation: tjs-hue 3s linear infinite; }
+}

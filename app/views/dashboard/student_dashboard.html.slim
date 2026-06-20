@@ -15,14 +15,14 @@
 
   .tjs-dashboard__inner
 
-    / ── Player header ────────────────────────────────────────────────────
+    / ── Player header (equipped avatar + nameplate + name effect — Phase 4) ──
     header.tjs-dashboard__header
-      = render 'shared/skin/avatar', glyph_name: 'torii', color: 'var(--n1)', size: 48
+      = render 'shared/skin/avatar', glyph_name: equipped_avatar_glyph(current_user), color: equipped_avatar_color(current_user), size: 48
       .tjs-dashboard__player-text
         div.tjs-dashboard__greeting style="font-family:var(--f-body);font-size:11px;color:var(--dim);"
           | おかえり · Welcome back
-        .tjs-display.tjs-dashboard__name
-          = "#{current_user.forename} #{current_user.surname}".strip
+        .tjs-dashboard__name
+          = render 'shared/skin/player_name', name: "#{current_user.forename} #{current_user.surname}".strip, plate: equipped_nameplate(current_user), name_fx: equipped_name_effect(current_user), size: 22
       .tjs-dashboard__stats
         = render 'shared/skin/stat', icon: :star, value: current_user.challenge_points.to_i, label: 'pts', color: 'var(--gold)'
 

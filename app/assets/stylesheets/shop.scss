@@ -1,0 +1,191 @@
+// shop.scss — skin-aware Reward Shop (Plan 01, Phase 4).
+//
+// Builds on Phase 0 primitives (.tjs-card / .tjs-btn / .tjs-section-head / .tjs-stat) + the
+// cosmetic treatments in skins/_cosmetics.scss. Reskinnable with zero per-skin rules — everything
+// reads the token layer. Layout mirrors sk-shop.jsx (wallet header → category grids).
+
+.tjs-shop {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.tjs-shop__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+
+  @media (min-width: 768px) {
+    padding: 24px 24px 64px;
+    max-width: 1000px;
+  }
+}
+
+// ── Wallet header ──────────────────────────────────────────────────────────
+.tjs-shop__wallet {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 18px 22px;
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--gold) 10%, var(--surface));
+  border: var(--bd) solid color-mix(in srgb, var(--gold) 40%, var(--line));
+}
+
+.tjs-shop__title {
+  font-size: 22px;
+}
+
+.tjs-shop__sub {
+  margin: 4px 0 0;
+  font-family: var(--f-body);
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.tjs-shop__balance { flex-shrink: 0; }
+
+// ── Category section ───────────────────────────────────────────────────────
+.tjs-shop__cat { scroll-margin-top: 16px; }
+
+.tjs-shop__blurb {
+  margin: 2px 2px 12px;
+  font-family: var(--f-body);
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.tjs-shop__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 11px;
+
+  @media (min-width: 560px) { grid-template-columns: repeat(3, 1fr); }
+}
+
+.tjs-shop__grid--avatar {
+  grid-template-columns: repeat(3, 1fr);
+  @media (min-width: 560px) { grid-template-columns: repeat(4, 1fr); }
+}
+
+// ── Item tile ──────────────────────────────────────────────────────────────
+.tjs-shop-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 12px;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  border: var(--bd) solid var(--line);
+  box-sizing: border-box;
+}
+
+.tjs-shop-item.is-equipped {
+  border-color: color-mix(in srgb, var(--n1) 60%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--n1) 28%, transparent);
+}
+
+.tjs-shop-item.is-locked { opacity: 0.92; }
+
+.tjs-shop-item__preview {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.tjs-shop-item__name {
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tjs-shop-item__foot { margin-top: auto; }
+
+.tjs-shop-item__foot form { margin: 0; }
+
+.tjs-shop-item__btn {
+  width: 100%;
+  padding: 8px 0;
+  font-size: 12px;
+}
+
+.buy-btn.tjs-shop-item__btn {
+  background: var(--gold);
+  color: var(--on-accent, #241608);
+}
+.tjs-shop-item__btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+
+.tjs-shop-item__equipped {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--n2);
+}
+
+.tjs-shop-item__locked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  font-family: var(--f-body);
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: var(--dim);
+}
+
+.tjs-shop-item__req { text-wrap: pretty; }
+
+// ── Slot-specific previews ─────────────────────────────────────────────────
+.tjs-skin-swatch {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border-radius: var(--r-sm);
+  border: var(--bd) solid var(--line);
+  background: var(--surface);
+}
+
+.tjs-palette-swatch {
+  display: inline-flex;
+  gap: 5px;
+}
+.tjs-palette-swatch__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+}
+
+.tjs-answer-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
