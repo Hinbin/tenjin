@@ -76,6 +76,25 @@ RSpec.describe Customisation::BuyCustomisation, :default_creates do
     end
   end
 
+  context 'when buying a free cosmetic (cost 0, decision #2)' do
+    let(:free_avatar) { create(:customisation, customisation_type: 'avatar', value: 'torii', cost: 0, image: nil) }
+
+    it 'equips it without charging or creating an unlock row' do
+      expect { described_class.new(student, free_avatar).call }.not_to change(student, :challenge_points)
+      expect(student.equipped_value(:avatar)).to eq('torii')
+      expect(CustomisationUnlock.where(customisation: free_avatar)).to be_empty
+    end
+  end
+
+  context 'when buying a paid cosmetic' do
+    let(:avatar) { create(:customisation, customisation_type: 'avatar', value: 'gem', cost: 4, image: nil) }
+
+    it 'auto-equips it after the unlock' do
+      described_class.new(student, avatar).call
+      expect(student.equipped_value(:avatar)).to eq('gem')
+    end
+  end
+
   context 'when buying something I have already bought' do
     before do
       create(:customisation_unlock, customisation: customisation, user: student)

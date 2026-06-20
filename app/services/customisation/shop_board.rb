@@ -101,8 +101,9 @@ class Customisation::ShopBoard < ApplicationService
   end
 
   def equipped_values
-    @equipped_values ||= ActiveCustomisation.where(user: @user).joins(:customisation)
-                                            .pluck('customisations.customisation_type', 'customisations.value')
-                                            .to_h { |type, value| [Customisation.customisation_types.key(type), value] }
+    @equipped_values ||= ActiveCustomisation.where(user: @user).includes(:customisation)
+                                            .to_h do |active|
+      [active.customisation.customisation_type, active.customisation.value]
+    end
   end
 end
