@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_20_000100) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_21_000100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -548,6 +548,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_000100) do
     t.inet "last_sign_in_ip"
     t.date "last_streak_day"
     t.integer "level", default: 1, null: false
+    t.boolean "motion_pref", default: true, null: false
     t.string "oauth_email"
     t.string "oauth_provider"
     t.string "oauth_uid"
