@@ -3,9 +3,10 @@
 / preview pane is scoped to the skin's OWN resolved tokens (font/colour/shape) via an inline style
 / + data-skin, so each card previews in-character even though the page is in a different skin.
 - jp = Theme::SkinCatalog.meta(item.value)[:jp]
+- dark = @mode.dark
 .tjs-skin-card class=("is-equipped" if item.equipped) data-skin=item.value
-  / ── In-character preview ────────────────────────────────────────────────
-  .tjs-skin-card__preview data-skin=item.value data-mode='dark' style=Theme::Resolver.style_string(skin: item.value, palette: 0, dark: true)
+  / ── In-character preview (mirrors the page's current light/dark mode) ──────
+  .tjs-skin-card__preview data-skin=item.value data-mode=(dark ? 'dark' : 'light') style=Theme::Resolver.style_string(skin: item.value, palette: 0, dark: dark)
     .tjs-skin-preview
       .tjs-skin-preview__head
         = render 'shared/skin/avatar', glyph_name: 'torii', color: 'var(--n1)', size: 30
