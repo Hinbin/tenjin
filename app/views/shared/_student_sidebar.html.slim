@@ -1,0 +1,25 @@
+/ _student_sidebar.html.slim — student app-shell desktop sidebar (Plan 01, Phase 5).
+/ 232 px wide, right border, logo top · vertical nav · player card pinned to bottom.
+/ Active item derived from controller_name via StudentNavHelper#student_nav_active?.
+aside.tjs-sidebar aria-label="Main navigation"
+  .tjs-sidebar__logo
+    = link_to dashboard_path do
+      = render 'shared/skin/logo', size: 19
+
+  nav.tjs-sidebar__nav aria-label="Student navigation"
+    - student_nav_items.each do |item|
+      = link_to student_nav_path(item),
+          class: "tjs-sidebar__nav-item #{student_nav_active?(item[:id]) ? 'is-active' : ''}",
+          aria: { current: (student_nav_active?(item[:id]) ? 'page' : nil) } do
+        = glyph(item[:icon], size: 20, color: 'currentColor')
+        span.tjs-sidebar__nav-label = item[:en]
+        span.tjs-sidebar__nav-jp = item[:jp]
+
+  .tjs-sidebar__player
+    = link_to settings_path, id: 'current_user', class: 'tjs-sidebar__player-link', aria: { label: 'Player settings' } do
+      = render 'shared/skin/avatar', glyph_name: equipped_avatar_glyph(current_user), color: equipped_avatar_color(current_user), size: 38
+      .tjs-sidebar__player-info
+        = render 'shared/skin/player_name', name: "#{current_user.forename} #{current_user.surname}".strip, plate: equipped_nameplate(current_user), name_fx: equipped_name_effect(current_user), size: 13, accent: 'var(--n1)'
+        .tjs-sidebar__xp
+          = glyph(:star, size: 13, color: 'var(--gold)')
+          span = current_user.xp.to_i

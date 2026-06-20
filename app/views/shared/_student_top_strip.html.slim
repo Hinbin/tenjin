@@ -1,0 +1,27 @@
+/ _student_top_strip.html.slim — contextual top strip for the student shell main column
+/ (Plan 01, Phase 5). Not rendered during a quiz (controller hides it via student_in_quiz?).
+/
+/ Left:  section title (the current nav item's English name, pixel-accented).
+/ Right: wallet on the shop page; streak + pts link on all other pages.
+/
+/ #challenge-points is preserved for specs that check the wallet balance.
+/ a.tj-navbar__points is preserved for specs that click the points star to navigate to the shop.
+.tjs-top-strip
+  .tjs-top-strip__left
+    span.tjs-top-strip__title = student_section_title
+    span.tjs-top-strip__jp aria-hidden="true"
+      - jp = student_nav_items.find { |n| n[:id] == student_nav_active_item }&.dig(:jp) || '天神'
+      = jp
+
+  .tjs-top-strip__right
+    - if controller_name == 'customisations'
+      / On the shop page: wallet display with challenge-points counter
+      .tjs-top-strip__wallet
+        = glyph(:star, size: 15, color: 'var(--gold)')
+        span#challenge-points = current_user.challenge_points.to_i
+    - else
+      / On all other student pages: streak chip + points link to shop
+      = render 'shared/skin/stat', icon: :flame, value: current_user.streak_days.to_i, label: 'streak', color: 'var(--n1)'
+      = link_to show_available_customisations_path, class: 'tj-navbar__points tjs-top-strip__pts-link' do
+        = glyph(:star, size: 15, color: 'var(--gold)')
+        span#challenge-points = current_user.challenge_points.to_i

@@ -1,0 +1,415 @@
+// shell.scss — student app-shell: sidebar (desktop) + bottom tab bar (mobile) +
+// contextual top strip (Plan 01, Phase 5).
+//
+// Structure:
+//   .tjs-shell                    — full-viewport flex container (row)
+//     aside.tjs-sidebar           — 232 px, desktop only
+//     .tjs-shell__body            — flex-col, takes remaining width
+//       .tjs-top-strip            — contextual header (hidden in quiz)
+//       main.tjs-shell__content   — scrollable page content
+//     nav.tjs-bottom-nav          — mobile only, hidden in quiz
+//
+// Token values come from skins/_tokens.scss so all measurements use skin vars.
+
+// ── Shell frame ──────────────────────────────────────────────────────────────
+
+.tjs-shell {
+  display: flex;
+  min-height: 100dvh;
+  position: relative;
+}
+
+// ── Sidebar (desktop) ────────────────────────────────────────────────────────
+
+.tjs-sidebar {
+  width: 232px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 14px 18px;
+  border-right: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg1, #170c26) 55%, transparent);
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow-y: auto;
+
+  @media (max-width: 767px) { display: none; }
+}
+
+.tjs-sidebar__logo {
+  padding-left: 4px;
+  margin-bottom: 22px;
+
+  a { text-decoration: none; }
+}
+
+// ── Sidebar nav ──────────────────────────────────────────────────────────────
+
+.tjs-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tjs-sidebar__nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 13px;
+  border-radius: var(--r-sm, 11px);
+  text-decoration: none;
+  color: var(--dim, #9d90b8);
+  font-family: var(--f-body, 'Zen Kaku Gothic New', system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border: 1px solid transparent;
+  transition: background .18s, color .18s, border-color .18s;
+
+  &:hover {
+    color: var(--ink, #f3ecff);
+    background: color-mix(in srgb, var(--n1) 8%, transparent);
+  }
+
+  &.is-active {
+    color: var(--ink, #f3ecff);
+    background: color-mix(in srgb, var(--n1) 14%, transparent);
+    border-color: color-mix(in srgb, var(--n1) 45%, transparent);
+  }
+
+  // Japanese accent — pixel font, right-aligned
+  .tjs-sidebar__nav-jp {
+    margin-left: auto;
+    font-family: var(--f-pixel, 'DotGothic16', monospace);
+    font-size: 11px;
+    color: var(--dim);
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  .tjs-sidebar__nav-label {
+    flex: 1;
+  }
+}
+
+// Per-skin active treatment
+body[data-skin="arcade"] .tjs-sidebar__nav-item.is-active {
+  box-shadow: 0 0 12px color-mix(in srgb, var(--n1) 28%, transparent);
+  border-color: var(--edge, #000);
+  border-radius: 0;
+}
+
+body[data-skin="famicom"] .tjs-sidebar__nav-item {
+  border-radius: 0;
+
+  &.is-active {
+    border-left: 3px solid var(--n1);
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    padding-left: 10px;
+  }
+}
+
+body[data-skin="kawaii"] .tjs-sidebar__nav-item.is-active {
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--n1) 40%, transparent);
+}
+
+// ── Sidebar player card ───────────────────────────────────────────────────────
+
+.tjs-sidebar__player {
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.tjs-sidebar__player-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px;
+  text-decoration: none;
+  border-radius: var(--r-sm, 11px);
+  background: var(--surface, rgba(28, 18, 46, 0.72));
+  border: var(--bd, 1px) solid var(--line, rgba(255, 255, 255, 0.10));
+  transition: background .18s;
+
+  &:hover { background: color-mix(in srgb, var(--surface) 80%, var(--n1) 8%); }
+}
+
+.tjs-sidebar__player-info {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tjs-sidebar__xp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--f-pixel, 'DotGothic16', monospace);
+  font-size: 11px;
+  color: var(--gold, #ffd23f);
+  margin-top: 4px;
+}
+
+// ── Shell body ────────────────────────────────────────────────────────────────
+
+.tjs-shell__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.tjs-shell__content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 80px; // clearance for mobile bottom nav
+
+  @media (min-width: 768px) { padding-bottom: 0; }
+}
+
+// ── Contextual top strip ──────────────────────────────────────────────────────
+
+.tjs-top-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--line, rgba(255, 255, 255, 0.10));
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+
+  @media (max-width: 767px) { padding: 14px 16px; }
+}
+
+.tjs-top-strip__left {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.tjs-top-strip__title {
+  font-family: var(--f-display, 'Zen Dots', system-ui, sans-serif);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink, #f3ecff);
+  letter-spacing: 0.5px;
+}
+
+// Japanese accent — always-on subtle pixel-font superscript
+.tjs-top-strip__jp {
+  font-family: var(--f-pixel, 'DotGothic16', monospace);
+  font-size: 10px;
+  color: var(--n1, #ff2d95);
+  opacity: 0.65;
+  letter-spacing: 2px;
+}
+
+.tjs-top-strip__right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tjs-top-strip__wallet {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  background: var(--surface, rgba(28, 18, 46, 0.72));
+  border: var(--bd, 1px) solid var(--line);
+  border-radius: 999px;
+  font-family: var(--f-pixel, 'DotGothic16', monospace);
+  font-size: 13px;
+  color: var(--gold, #ffd23f);
+}
+
+body[data-skin="famicom"] .tjs-top-strip__wallet { border-radius: 0; }
+body[data-skin="arcade"]  .tjs-top-strip__wallet { border-radius: 0; }
+
+// ── Mobile bottom tab bar ─────────────────────────────────────────────────────
+
+.tjs-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  padding: 8px 14px max(20px, env(safe-area-inset-bottom));
+  background: linear-gradient(transparent, var(--bg0, #0a0712) 38%);
+  display: none; // shown only on mobile
+
+  @media (max-width: 767px) { display: block; }
+}
+
+.tjs-bottom-nav__inner {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: var(--surface, rgba(28, 18, 46, 0.72));
+  border: var(--bd, 1px) solid var(--line);
+  border-radius: var(--r-md, 16px);
+  padding: 8px 6px;
+}
+
+.tjs-bottom-nav__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 0;
+  text-decoration: none;
+  color: var(--dim, #9d90b8);
+  transition: color .18s;
+
+  &.is-active { color: var(--n1, #ff2d95); }
+
+  &:hover { color: var(--ink, #f3ecff); }
+}
+
+.tjs-bottom-nav__label {
+  font-family: var(--f-body, 'Zen Kaku Gothic New', system-ui, sans-serif);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+// Per-skin bottom-nav pill shape
+body[data-skin="arcade"]  .tjs-bottom-nav .tjs-bottom-nav__inner { border-radius: 0; }
+body[data-skin="famicom"] .tjs-bottom-nav .tjs-bottom-nav__inner { border-radius: 0; }
+
+// Arcade: glow on active icon
+body[data-skin="arcade"] .tjs-bottom-nav__item.is-active .tjs-icon {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--n1) 70%, transparent));
+}
+
+// Famicom: pixel-style active underline
+body[data-skin="famicom"] .tjs-bottom-nav__item.is-active::after {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  background: var(--n1);
+  margin: 0 auto;
+}
+
+
+// ── Settings surface ──────────────────────────────────────────────────────────
+
+.tjs-settings {
+  position: relative;
+  min-height: 100%;
+}
+
+.tjs-settings__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+.tjs-settings__header {
+  margin-bottom: 32px;
+}
+
+.tjs-settings__title {
+  font-size: 26px;
+  color: var(--ink);
+  letter-spacing: 0.5px;
+}
+
+.tjs-settings__sub {
+  font-family: var(--f-pixel, 'DotGothic16', monospace);
+  font-size: 11px;
+  color: var(--n1);
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+
+.tjs-settings__section {
+  margin-bottom: 36px;
+}
+
+.tjs-settings-skin {
+  margin-bottom: 20px;
+}
+
+.tjs-settings-skin__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tjs-settings-skin__name {
+  font-family: var(--f-display, 'Zen Dots', system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.tjs-settings-skin__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--n2, #27e6e6);
+}
+
+.tjs-settings-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tjs-settings-label {
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.tjs-settings-hint {
+  margin-top: 2px;
+}
+
+.tjs-settings-locked {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--dim);
+}
+
+// Challenge-points link in top-strip (preserves .tj-navbar__points selector for specs)
+.tjs-top-strip__pts-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
+  background: var(--surface, rgba(28, 18, 46, 0.72));
+  border: var(--bd, 1px) solid var(--line);
+  border-radius: 999px;
+  font-family: var(--f-pixel, 'DotGothic16', monospace);
+  font-size: 12px;
+  color: var(--gold, #ffd23f);
+  text-decoration: none;
+  transition: background .15s;
+
+  &:hover { background: color-mix(in srgb, var(--surface) 80%, var(--gold) 10%); color: var(--gold); }
+
+  span#challenge-points { color: var(--gold); }
+}
+
+body[data-skin="famicom"] .tjs-top-strip__pts-link { border-radius: 0; }
+body[data-skin="arcade"]  .tjs-top-strip__pts-link { border-radius: 0; }

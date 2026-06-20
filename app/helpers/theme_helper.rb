@@ -44,6 +44,14 @@ module ThemeHelper
     end
   end
 
+  # data-motion attribute value for <body>: "true" when motion is on (default), "false" when off.
+  # Reads the user's stored motion_pref; falls back to true (motion on) for guests.
+  def motion_pref_data
+    return 'true' unless current_user.respond_to?(:motion_pref)
+
+    current_user.motion_pref ? 'true' : 'false'
+  end
+
   # Full resolved catalog for client-side live switching (styleguide / settings only — do NOT put
   # this on the global body; it's ~32 var-maps). Shape:
   #   { "arcade" => { "0" => { "dark" => {vars}, "light" => {vars} }, … }, … }

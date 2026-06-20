@@ -46,16 +46,26 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .tjs-pop { animation: tjs-pop .35s cubic-bezier(.2, 1.4, .4, 1) both; }
-  .tjs-slideup { animation: tjs-slideup .42s cubic-bezier(.2, .8, .2, 1) both; }
-  .tjs-grid { animation: tjs-grid 1.6s linear infinite; }
+// Server-stored motion preference: [data-motion="false"] suppresses all tjs animations.
+// Mirrors @media (prefers-reduced-motion: reduce) but is under user control in Settings.
+[data-motion="false"] {
+  .tjs-pop, .tjs-slideup, .tjs-tile { animation: none !important; transition: none !important; }
+  .tjs-grid { animation: none !important; }
+  .tjs-petal { animation: none !important; }
+}
 
-  // Six petals with staggered positions, durations, and delays
-  .tjs-petal:nth-child(1) { left:  8%; animation: tjs-petal 9s  2.0s linear infinite; }
-  .tjs-petal:nth-child(2) { left: 22%; animation: tjs-petal 11s 0.5s linear infinite; }
-  .tjs-petal:nth-child(3) { left: 41%; animation: tjs-petal 8s  4.0s linear infinite; }
-  .tjs-petal:nth-child(4) { left: 57%; animation: tjs-petal 12s 1.2s linear infinite; }
-  .tjs-petal:nth-child(5) { left: 74%; animation: tjs-petal 10s 3.5s linear infinite; }
-  .tjs-petal:nth-child(6) { left: 88%; animation: tjs-petal 9s  0.8s linear infinite; }
+@media (prefers-reduced-motion: no-preference) {
+  body:not([data-motion="false"]) {
+    .tjs-pop { animation: tjs-pop .35s cubic-bezier(.2, 1.4, .4, 1) both; }
+    .tjs-slideup { animation: tjs-slideup .42s cubic-bezier(.2, .8, .2, 1) both; }
+    .tjs-grid { animation: tjs-grid 1.6s linear infinite; }
+
+    // Six petals with staggered positions, durations, and delays
+    .tjs-petal:nth-child(1) { left:  8%; animation: tjs-petal 9s  2.0s linear infinite; }
+    .tjs-petal:nth-child(2) { left: 22%; animation: tjs-petal 11s 0.5s linear infinite; }
+    .tjs-petal:nth-child(3) { left: 41%; animation: tjs-petal 8s  4.0s linear infinite; }
+    .tjs-petal:nth-child(4) { left: 57%; animation: tjs-petal 12s 1.2s linear infinite; }
+    .tjs-petal:nth-child(5) { left: 74%; animation: tjs-petal 10s 3.5s linear infinite; }
+    .tjs-petal:nth-child(6) { left: 88%; animation: tjs-petal 9s  0.8s linear infinite; }
+  }
 }

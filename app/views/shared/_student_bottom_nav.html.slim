@@ -1,0 +1,11 @@
+/ _student_bottom_nav.html.slim — student app-shell mobile bottom tab bar (Plan 01, Phase 5).
+/ Shown on mobile when NOT in a quiz; mirrors the sidebar nav items.
+/ Hidden on desktop via CSS (shell.scss @media).
+nav.tjs-bottom-nav aria-label="Mobile navigation"
+  .tjs-bottom-nav__inner
+    - student_nav_items.each do |item|
+      = link_to student_nav_path(item),
+          class: "tjs-bottom-nav__item #{student_nav_active?(item[:id]) ? 'is-active' : ''}",
+          aria: { current: (student_nav_active?(item[:id]) ? 'page' : nil) } do
+        = glyph(item[:icon], size: 22, color: 'currentColor')
+        span.tjs-bottom-nav__label = item[:en]

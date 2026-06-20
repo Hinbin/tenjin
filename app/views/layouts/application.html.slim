@@ -10,7 +10,7 @@ html
     meta name="psj" action=action_name controller=controller_name
     = csrf_meta_tags
     = csp_meta_tag
-    = render 'layouts/google_analytics' if Rails.env.production?          
+    = render 'layouts/google_analytics' if Rails.env.production?
     link rel="preconnect" href="https://fonts.googleapis.com" /
     link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" /
     link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Yusei+Magic&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&family=Zen+Old+Mincho:wght@400;500;600;700;900&family=Shippori+Mincho:wght@400;500;600;700&display=swap" /
@@ -25,11 +25,26 @@ html
     meta name="theme-color" content="#333333"
     = content_for(:page_meta)
 
-  body data-action=action_name data-controller=theme_controllers data-skin=theme_selection.skin data-palette=theme_selection.palette data-mode=theme_mode style=theme_inline_style data-theme-catalog-value=(content_for(:theme_catalog).presence || "{}")
-    = render('shared/user_navigation') if current_user.present?  
-    = render('shared/admin_navigation') if current_admin.present?
-    = render('shared/logged_out_navigation') if current_user.nil? && current_admin.nil?
-    turbo-frame id=flash
-      = render('shared/notice_notification') if flash[:notice].present? && (current_user.present? || current_admin.present?)
-    = yield
+  body data-action=action_name data-controller=theme_controllers data-skin=theme_selection.skin data-palette=theme_selection.palette data-mode=theme_mode data-motion=motion_pref_data style=theme_inline_style data-theme-catalog-value=(content_for(:theme_catalog).presence || "{}")
+    - if current_user&.student?
+      / ── Student app shell: sidebar (desktop) + bottom nav (mobile) ──────────
+      .tjs-shell
+        = render 'shared/student_sidebar'
+        .tjs-shell__body
+          - unless student_in_quiz?
+            = render 'shared/student_top_strip'
+          main.tjs-shell__content
+            turbo-frame id=flash
+              = render('shared/notice_notification') if flash[:notice].present?
+            = yield
+        - unless student_in_quiz?
+          = render 'shared/student_bottom_nav'
+    - else
+      / ── Teacher / admin / guest shell: existing navbar ──────────────────────
+      = render('shared/user_navigation') if current_user.present?
+      = render('shared/admin_navigation') if current_admin.present?
+      = render('shared/logged_out_navigation') if current_user.nil? && current_admin.nil?
+      turbo-frame id=flash
+        = render('shared/notice_notification') if flash[:notice].present? && (current_user.present? || current_admin.present?)
+      = yield
     = render('shared/alert_modal')

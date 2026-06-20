@@ -1,0 +1,96 @@
+- content_for :title
+  title Settings
+
+/ Pass full theme catalog so theme_controller can drive live preview.
+- content_for :theme_catalog
+  = theme_catalog_json
+
+.tjs-settings
+  .tjs-backdrop
+    .tjs-backdrop__blob.tjs-backdrop__blob--1
+    .tjs-backdrop__blob.tjs-backdrop__blob--2
+    .tjs-backdrop__dots
+    .tjs-backdrop__dither
+    .tjs-backdrop__scanlines
+    .tjs-backdrop__grid
+      .tjs-backdrop__grid-inner
+    .tjs-backdrop-petals
+
+  .tjs-settings__inner
+
+    header.tjs-settings__header
+      .tjs-display.tjs-settings__title Settings
+      p.tjs-settings__sub 設定 · Appearance & accessibility
+
+    / ── SKINS & PALETTES ─────────────────────────────────────────────────────
+    - if @skins_category
+      section.tjs-settings__section
+        = render 'shared/skin/section_head', en: 'Skin & Palette', jp: 'スキン'
+
+        - @skins_category.items.each do |item|
+          .tjs-settings-skin
+            .tjs-settings-skin__head
+              .tjs-settings-skin__name = item.name
+              - if item.equipped
+                span.tjs-settings-skin__badge
+                  = glyph(:check, size: 12, color: 'var(--n2)')
+                  ' Equipped
+
+            - if item.palettes.present?
+              .tjs-palette-chips
+                - item.palettes.each do |pal|
+                  .tjs-palette-chip class=("is-equipped" if pal.equipped) data-value=pal.value
+                    .tjs-palette-swatch
+                      - palette_swatch(pal.value).each do |hex|
+                        i.tjs-palette-swatch__dot style="background:#{hex};"
+                    .tjs-palette-chip__name = pal.name
+                    .tjs-palette-chip__foot
+                      - if pal.equipped
+                        span.tjs-palette-chip__equipped
+                          = glyph(:check, size: 12, color: 'var(--n2)')
+                          ' On
+                      - elsif pal.owned
+                        = form_with url: equip_customisation_path(pal.customisation), method: :post do |f|
+                          = f.submit 'Equip', class: 'tjs-btn tjs-btn--ghost tjs-palette-chip__btn'
+                      - else
+                        span.tjs-palette-chip__locked style="font-size:10px;color:var(--dim);"
+                          ' Buy from Shop
+
+    / ── APPEARANCE: LIGHT / DARK MODE ─────────────────────────────────────
+    section.tjs-settings__section
+      = render 'shared/skin/section_head', en: 'Mode', jp: 'モード'
+
+      .tjs-settings-row
+        span.tjs-settings-label
+          | Dark mode
+          small.tjs-settings-hint style="display:block;color:var(--dim);font-size:11px;" = @mode.dark ? 'Currently on' : 'Currently off'
+        - if @mode.dark
+          - if @mode.owned
+            = form_with url: toggle_mode_customisations_path, method: :post do |f|
+              = f.hidden_field :dark, value: false
+              = f.submit 'Switch to Light', class: 'tjs-btn tjs-btn--ghost'
+          - else
+            .tjs-settings-locked
+              = glyph(:moon, size: 14, color: 'var(--dim)')
+              span style="font-size:12px;color:var(--dim);" Light mode is locked — buy the perk from the Shop (#{@mode.cost} pts)
+        - else
+          = form_with url: toggle_mode_customisations_path, method: :post do |f|
+            = f.hidden_field :dark, value: true
+            = f.submit 'Switch to Dark', class: 'tjs-btn tjs-btn--ghost'
+
+    / ── ACCESSIBILITY: MOTION ────────────────────────────────────────────────
+    section.tjs-settings__section
+      = render 'shared/skin/section_head', en: 'Motion', jp: 'モーション'
+
+      .tjs-settings-row
+        .tjs-settings-label
+          | Animations
+          small.tjs-settings-hint style="display:block;color:var(--dim);font-size:11px;"
+            | Controls entrance animations and skin effects. Respects your device's reduce-motion setting automatically.
+        = form_with url: settings_path, method: :patch do |f|
+          - if current_user.motion_pref
+            = f.hidden_field :motion_pref, value: false
+            = f.submit 'Turn off', class: 'tjs-btn tjs-btn--ghost'
+          - else
+            = f.hidden_field :motion_pref, value: true
+            = f.submit 'Turn on', class: 'tjs-btn tjs-btn--ghost'
