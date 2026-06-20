@@ -30,10 +30,11 @@ class Customisation < ApplicationRecord
     customisation_type == 'dashboard_style'
   end
 
-  # Free items (decision #2: the 4+ skins and each skin's base palette) are owned by everyone — no
-  # CustomisationUnlock row is created for them. cost==0 ⇒ always owned (see EquipCustomisation).
+  # Free items (decision #2: the skins and each skin's base palette + the cost-0 starter cosmetics)
+  # are owned by everyone — no CustomisationUnlock row is created for them. A gated item (req
+  # present) is NOT free even at cost 0; it is locked until its achievement is met (decision #4).
   def free?
-    cost.to_i.zero?
+    req.blank? && cost.to_i.zero?
   end
 
   # Achievement-gated items are seeded with a non-nil req but stay buyable in v1 (decision #4); the

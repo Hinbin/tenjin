@@ -55,6 +55,10 @@ end
   end
 end
 
+# Phase 4 reward-shop catalog: skins, palettes and the five cosmetic slots. Idempotent
+# (find_or_initialize by type + value) and safe to re-run on every deploy.
+load Rails.root.join('db/seeds/cosmetics.rb')
+
 # Load the full set of fake accounts, questions and lessons in development, or on
 # an explicitly opted-in non-production deploy (SEED_TEST_USERS=true). The real
 # production blueprint never sets that flag, so this can never run on the live site.

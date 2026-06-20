@@ -27,12 +27,19 @@ module Theme
 
     # ── storage reads (Phase 4 wires these to real data) ──────────────────────
 
-    # PHASE 4: return user's equipped `skin` ActiveCustomisation value, falling back to default.
-    #   user.equipped_value(:skin) || SkinCatalog::DEFAULT_SKIN
-    def self.resolve_skin(_user) = SkinCatalog::DEFAULT_SKIN
+    # The user's equipped `skin` ActiveCustomisation value (e.g. "arcade"), else the default.
+    def self.resolve_skin(user)
+      skin = user.equipped_value(:skin)
+      SkinCatalog.skin?(skin) ? skin : SkinCatalog::DEFAULT_SKIN
+    end
 
-    # PHASE 4: return user's equipped `palette` index for the chosen skin, falling back to 0.
-    def self.resolve_palette(_user) = SkinCatalog::DEFAULT_PALETTE
+    # The equipped `palette` index for the chosen skin. The value is encoded "<skin>:<index>"; a
+    # palette belonging to a different skin than the resolved one is ignored (falls back to base 0).
+    def self.resolve_palette(user)
+      skin = resolve_skin(user)
+      pal_skin, index = user.equipped_value(:palette).to_s.split(':')
+      pal_skin == skin ? index.to_i : SkinCatalog::DEFAULT_PALETTE
+    end
 
     # `users.dark_mode` lands in Phase 0's migration; until then, default. Safe either way.
     def self.resolve_dark(user)
