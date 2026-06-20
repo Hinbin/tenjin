@@ -1,54 +1,14 @@
 # frozen_string_literal: true
 
 class CustomisationsController < ApplicationController
-  before_action :authenticate_user!, only: %i[show_available buy]
-  before_action :authenticate_admin!, only: %i[index show update new destroy]
-  before_action :set_customisation, only: %i[edit update delete]
-
-  def index
-    authorize current_admin, policy_class: CustomisationPolicy
-    @customisations = policy_scope(Customisation).where(retired: false)
-    @retired_customisations = policy_scope(Customisation).where(retired: true)
-  end
-
-  def new
-    @customisation = Customisation.new(purchasable: false, retired: false)
-    authorize @customisation
-    render :edit
-  end
-
-  def edit
-    authorize @customisation
-  end
-
-  def create
-    @customisation = Customisation.new(customisation_params)
-    authorize @customisation
-
-    if @customisation.save
-      redirect_to customisations_path, notice: "Created new customisation #{@customisation.name}"
-    else
-      render :edit, status: :unprocessable_content
-    end
-  end
-
-  def update
-    authorize @customisation
-    @customisation.update(customisation_params)
-    @customisation.save
-    redirect_to customisations_path
-  end
+  before_action :authenticate_user!, only: %i[show_available buy equip toggle_mode]
 
   def show_available
     authorize current_user, :show? # make it so that it checks if the school is permitted?
-    @subjects = current_user.subjects
-    @dashboard_style = find_dashboard_style
-    @bought_customisations = CustomisationUnlock.where(user: current_user).pluck(:customisation_id)
-    @purchased_styles = Customisation.where(id: @bought_customisations).with_attached_image
-    @available_styles = Customisation.where(purchasable: true)
-                                     .where.not(id: @bought_customisations)
-                                     .with_attached_image
-                                     .order('RANDOM()')
+    board = Customisation::ShopBoard.call(current_user)
+    @shop_categories = board.categories
+    @wallet = board.wallet
+    @mode = board.mode
   end
 
   def buy
@@ -59,11 +19,22 @@ class CustomisationsController < ApplicationController
     redirect_to show_available_customisations_path
   end
 
-  private
-
-  def set_customisation
-    @customisation = Customisation.find(params.expect(:id))
+  def equip
+    authorize current_user, :show?
+    @customisation = Customisation.find_by(id: buy_params)
+    result = Customisation::EquipCustomisation.call(current_user, @customisation)
+    equip_notice(result)
+    redirect_to show_available_customisations_path
   end
+
+  def toggle_mode
+    authorize current_user, :show?
+    result = Customisation::SetMode.call(current_user, ActiveModel::Type::Boolean.new.cast(params[:dark]))
+    flash[:notice] = result.errors unless result.success?
+    redirect_to show_available_customisations_path
+  end
+
+  private
 
   def buy_customisation
     Customisation::BuyCustomisation.call(current_user, @customisation)
@@ -74,17 +45,11 @@ class CustomisationsController < ApplicationController
     flash[:notice] = "Congratulations!  You have bought #{@customisation.name}" if result.success?
   end
 
+  def equip_notice(result)
+    flash[:notice] = result.success? ? "Equipped #{@customisation.name}" : result.errors
+  end
+
   def buy_params
     params.require(:id)
-  end
-
-  def purchase_failed(exception)
-    flash[:notice] = exception.message
-    redirect_to dashboard_path
-  end
-
-  def customisation_params
-    params.expect(customisation: %i[name value purchasable sticky image customisation_type cost
-                                    retired])
   end
 end

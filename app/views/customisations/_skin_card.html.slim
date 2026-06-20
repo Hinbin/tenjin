@@ -1,0 +1,39 @@
+/ _skin_card.html.slim — one "selling" Reward Shop card for a skin (Plan 01, Phase 4 follow-up).
+/ `item` is a Customisation::ShopBoard::Item carrying the skin's tagline + nested palettes. The
+/ preview pane is scoped to the skin's OWN resolved tokens (font/colour/shape) via an inline style
+/ + data-skin, so each card previews in-character even though the page is in a different skin.
+- jp = Theme::SkinCatalog.meta(item.value)[:jp]
+- dark = @mode.dark
+.tjs-skin-card class=("is-equipped" if item.equipped) data-skin=item.value
+  / ── In-character preview (mirrors the page's current light/dark mode) ──────
+  .tjs-skin-card__preview data-skin=item.value data-mode=(dark ? 'dark' : 'light') style=Theme::Resolver.style_string(skin: item.value, palette: 0, dark: dark)
+    .tjs-skin-preview
+      .tjs-skin-preview__head
+        = render 'shared/skin/avatar', glyph_name: 'torii', color: 'var(--n1)', size: 30
+        .tjs-skin-preview__titles
+          .tjs-skin-preview__title = item.name
+          .tjs-skin-preview__jp = jp
+      .tjs-skin-preview__line
+      .tjs-skin-preview__line.tjs-skin-preview__line--short
+      .tjs-skin-preview__pill
+        = glyph(:star, size: 12, color: 'var(--on-accent, #241608)')
+        ' Reward
+
+  / ── Name + tagline (skin is selected by picking one of its palettes below) ──
+  .tjs-skin-card__body
+    .tjs-skin-card__heading
+      .tjs-skin-card__name = item.name
+      .tjs-skin-card__jp = jp
+      - if item.equipped
+        span.tjs-skin-card__equipped
+          = glyph(:check, size: 13, color: 'var(--n2)')
+          ' Equipped
+    p.tjs-skin-card__tagline = item.tagline
+
+  / ── This skin's palettes — picking one equips the palette AND switches to this skin ──
+  - if item.palettes.present?
+    .tjs-skin-card__palettes
+      .tjs-skin-card__palettes-label Palette — pick one to use this skin
+      .tjs-palette-chips
+        - item.palettes.each do |pal|
+          = render 'palette_chip', pal: pal

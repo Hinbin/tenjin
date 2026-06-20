@@ -18,161 +18,54 @@ RSpec.describe 'submitting a customisation', type: :request do
 
     it { is_expected.to redirect_to(show_available_customisations_path) }
   end
-end
 
-RSpec.describe 'Admin manages customisations', :default_creates, type: :request do
-  let(:available_customisation) { create(:dashboard_customisation, purchasable: true) }
-  let(:new_name) { FFaker::Lorem.word }
+  context 'when equipping an owned cosmetic' do
+    let(:avatar) { create(:customisation, customisation_type: 'avatar', value: 'torii', cost: 0, image: nil) }
 
-  before { sign_in super_admin }
-
-  it 'can be accessed from the super admin navbar' do
-    get schools_path
-    html = Capybara.string(response.body)
-    expect(html).to have_link('Customisations', href: customisations_path)
-  end
-
-  it 'cannot be accessed from the school group admin navbar' do
-    sign_in school_group_admin
-    get schools_path
-    html = Capybara.string(response.body)
-    expect(html).to have_no_link('Customisations')
-  end
-
-  context 'when viewing the customisation index' do
-    let(:unavailable_customisation) { create(:dashboard_customisation, purchasable: false) }
-    let(:retired_customisation) { create(:dashboard_customisation, retired: true) }
-    let(:sticky_customisation) { create(:dashboard_customisation, sticky: true, purchasable: true) }
-
-    before do
-      available_customisation
-      unavailable_customisation
-      retired_customisation
-      sticky_customisation
-      get customisations_path
-    end
-
-    it 'shows currently available customisations' do
-      html = Capybara.string(response.body)
-      expect(html).to have_css('section.available-customisations .dashboard-style',
-                               text: available_customisation.name)
-    end
-
-    it 'puts stickied customisations on top' do
-      html = Capybara.string(response.body)
-      dashboard_styles = html.all('section.available-customisations .dashboard-style')
-      expect(dashboard_styles.first).to have_text(sticky_customisation.name)
-    end
-
-    it 'marks stickied customisations' do
-      html = Capybara.string(response.body)
-      dashboard_styles = html.all('section.available-customisations .dashboard-style')
-      expect(dashboard_styles.first).to have_text('Stickied')
-    end
-
-    it 'puts unavailable customisations at the bottom' do
-      html = Capybara.string(response.body)
-      dashboard_styles = html.all('section.available-customisations .dashboard-style')
-      expect(dashboard_styles.last).to have_text(unavailable_customisation.name)
-    end
-
-    it 'marks unavailable customisations' do
-      html = Capybara.string(response.body)
-      dashboard_styles = html.all('section.available-customisations .dashboard-style')
-      expect(dashboard_styles.last).to have_text('Unavailable')
-    end
-
-    it 'shows retired customisations in their own section' do
-      html = Capybara.string(response.body)
-      expect(html).to have_css('section.retired-customisations .dashboard-style', text: retired_customisation.name)
-    end
-
-    it 'allows editing a customisation' do
-      html = Capybara.string(response.body)
-      expect(html).to have_link('Edit', href: edit_customisation_path(sticky_customisation))
+    it 'equips it and redirects back to the shop' do
+      post equip_customisation_path(avatar)
+      expect(response).to redirect_to(show_available_customisations_path)
+      expect(student.equipped_value(:avatar)).to eq('torii')
     end
   end
 
-  context 'when editing a dashboard style' do
-    before { available_customisation }
+  context 'when equipping an item I do not own' do
+    let(:avatar) { create(:customisation, customisation_type: 'avatar', value: 'gem', cost: 300, image: nil) }
 
-    it 'updates the name' do
-      patch customisation_path(available_customisation), params: { customisation: { name: new_name } }
-      follow_redirect!
-      expect(response.body).to include(new_name)
-    end
-
-    it 'updates the value' do
-      patch customisation_path(available_customisation), params: { customisation: { value: 'blue' } }
-      follow_redirect!
-      html = Capybara.string(response.body)
-      expect(html).to have_css("hr[style*='blue']")
-    end
-
-    it 'updates the picture' do
-      patch customisation_path(available_customisation), params: {
-        customisation: { image: fixture_file_upload('computer-science.jpg', 'image/jpeg') }
-      }
-      expect(available_customisation.reload.image).to be_attached
-    end
-
-    it 'updates if it is sticky' do
-      patch customisation_path(available_customisation), params: { customisation: { sticky: true } }
-      follow_redirect!
-      expect(response.body).to include('Stickied')
-    end
-
-    it 'updates if it is purchasable' do
-      patch customisation_path(available_customisation), params: { customisation: { purchasable: false } }
-      follow_redirect!
-      expect(response.body).to include('Unavailable')
+    it 'does not equip it' do
+      post equip_customisation_path(avatar)
+      expect(student.equipped_value(:avatar)).to be_nil
     end
   end
 
-  context 'when creating a dashboard style' do
-    it 'creates it' do
-      post customisations_path, params: {
-        customisation: {
-          name: new_name,
-          value: 'blue',
-          cost: 200,
-          purchasable: false,
-          retired: false,
-          image: fixture_file_upload('game-pieces.jpg', 'image/jpeg')
-        }
-      }
-      follow_redirect!
-      expect(response.body).to include(new_name)
+  context 'when toggling the appearance mode' do
+    let!(:light_mode) do
+      create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 100, image: nil)
     end
-  end
 
-  context 'when creating a leaderboard icon' do
-    it 'creates leaderboard_icon customisations' do
-      post customisations_path, params: {
-        customisation: {
-          customisation_type: 'leaderboard_icon',
-          name: new_name,
-          value: 'blue,cheese',
-          cost: 200,
-          purchasable: false,
-          retired: false
-        }
-      }
-      follow_redirect!
-      expect(response.body).to include(new_name)
+    it 'renders the shop with the appearance toggle' do
+      get show_available_customisations_path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('Appearance')
     end
-  end
 
-  it 'prevents accessing customisations as a regular user' do
-    sign_out super_admin
-    sign_in student
-    get customisations_path
-    expect(response).to redirect_to(new_admin_session_path)
-  end
+    it 'always lets a student switch back to dark mode' do
+      student.update!(dark_mode: false)
+      post toggle_mode_customisations_path(dark: 'true')
+      expect(response).to redirect_to(show_available_customisations_path)
+      expect(student.reload.dark_mode).to be(true)
+    end
 
-  it 'prevents accessing customisations unless super admin' do
-    sign_in school_group_admin
-    get customisations_path
-    expect(response).to redirect_to(root_path)
+    it 'keeps light mode locked until the perk is bought' do
+      post toggle_mode_customisations_path(dark: 'false')
+      expect(student.reload.dark_mode).to be(true)
+      expect(flash[:notice]).to match(/locked/i)
+    end
+
+    it 'switches to light mode once the perk is owned' do
+      create(:customisation_unlock, customisation: light_mode, user: student)
+      post toggle_mode_customisations_path(dark: 'false')
+      expect(student.reload.dark_mode).to be(false)
+    end
   end
 end

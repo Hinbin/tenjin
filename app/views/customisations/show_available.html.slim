@@ -1,14 +1,41 @@
--content_for :title
-  title=('Customisations')
-section.page-section.tj-text-center.available-styles
-  .tjk-container
-    h1.page-section-header.text-uppercase Available Styles
-    ==render_small_separator
-    p style='margin: var(--tj-space-1) 0' Different styles available every week!
-    =render partial: "customisations", locals: {customisations: @available_styles, bought_customisations: @bought_customisations}
+- content_for :title
+  title Reward Shop
 
-section.page-section.tj-text-center.purchased-styles
-  .tjk-container
-    h1.page-section-header.text-uppercase Purchased Styles
-    ==render_small_separator
-    =render partial: "customisations", locals: {customisations: @purchased_styles, bought_customisations: @bought_customisations}
+.tjs-shop
+  / Backdrop FX (skin-specific; hidden per skin via _structure.scss)
+  .tjs-backdrop
+    .tjs-backdrop__blob.tjs-backdrop__blob--1
+    .tjs-backdrop__blob.tjs-backdrop__blob--2
+    .tjs-backdrop__dots
+    .tjs-backdrop__dither
+    .tjs-backdrop__scanlines
+    .tjs-backdrop__grid
+      .tjs-backdrop__grid-inner
+    .tjs-backdrop-petals
+
+  .tjs-shop__inner
+    / ── Wallet header ────────────────────────────────────────────────────
+    header.tjs-shop__wallet
+      .tjs-shop__wallet-text
+        .tjs-display.tjs-shop__title Reward Shop
+        p.tjs-shop__sub Cosmetic only — points change how you look, never how you score.
+      .tjs-shop__balance
+        = render 'shared/skin/stat', icon: :star, value: @wallet, label: 'to spend', color: 'var(--gold)'
+
+    / ── Appearance (light/dark) switch ───────────────────────────────────
+    = render 'mode_toggle'
+
+    / ── Category sections (one equip slot each) ──────────────────────────
+    - @shop_categories.each do |cat|
+      section.tjs-shop__cat data-cat=cat.type
+        = render 'shared/skin/section_head', en: cat.en, jp: cat.jp
+        p.tjs-shop__blurb = cat.blurb
+        - if cat.type == 'skin'
+          / Skins get full-width "selling" cards, each with its own palettes grouped underneath.
+          .tjs-shop__skins
+            - cat.items.each do |item|
+              = render 'skin_card', item: item
+        - else
+          .tjs-shop__grid class="tjs-shop__grid--#{cat.type}"
+            - cat.items.each do |item|
+              = render 'shop_item', item: item, type: cat.type

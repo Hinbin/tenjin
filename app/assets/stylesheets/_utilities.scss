@@ -64,6 +64,34 @@
 }
 .tj-alert-close:hover { opacity: 0.75; }
 
+// Themed flash notice — reads the active skin's token layer (set on <body> by theme_inline_style)
+// so the toast matches the current skin. Flex row keeps the × centred against the text.
+.tjs-flash {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tj-space-2);
+  background: var(--surface);
+  border: var(--bd, 1px) solid var(--line);
+  border-left: 3px solid var(--n2);
+  border-radius: var(--r-sm, var(--tj-radius));
+  color: var(--ink);
+  font-family: var(--f-body);
+}
+
+.tjs-flash__text {
+  margin: 0;
+  flex: 1;
+}
+
+.tjs-flash__close {
+  float: none;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--dim);
+}
+
 // ── Accessibility ──────────────────────────────────────────────────────────
 
 // Screen-reader-only (replaces Bootstrap .sr-only)

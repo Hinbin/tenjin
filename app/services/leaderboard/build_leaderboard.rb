@@ -39,14 +39,6 @@ class Leaderboard::BuildLeaderboard < ApplicationService
     AllTimeTopicScore.arel_table
   end
 
-  def active_customisations
-    ActiveCustomisation.arel_table
-  end
-
-  def customisations
-    Customisation.arel_table
-  end
-
   def enrollments
     Enrollment.arel_table
   end
@@ -77,23 +69,15 @@ class Leaderboard::BuildLeaderboard < ApplicationService
                            name,
                            schools[:name].as('school_name'),
                            topic_table[:score].sum.as('score'),
-                           leaderboard_icon_subquery[:value].as('icon'),
                            classrooms_subquery[:name].as('classroom_names'),
                            awards_subquery[:awards].as('awards'))
     users_and_schools
     @query = @query.join(topic_table).on(users[:id].eq(topic_table[:user_id]))
     @query = @query.join(topics).on(topics[:id].eq(topic_table[:topic_id]))
-    join_leaderboard_icons
     @school_group ? by_school_group : by_school
     @topic.present? ? by_topic : by_subject
     join_classrooms
     join_awards
-  end
-
-  def join_leaderboard_icons
-    @query = @query.join(leaderboard_icon_subquery, Arel::Nodes::OuterJoin)
-                   .on(leaderboard_icon_subquery[:user_id].eq(users[:id]))
-    @query.group('n1.value')
   end
 
   def join_classrooms
@@ -128,13 +112,6 @@ class Leaderboard::BuildLeaderboard < ApplicationService
 
   def by_subject
     @query = @query.where(topics[:subject_id].eq(@subject.id))
-  end
-
-  def leaderboard_icon_subquery
-    active_customisations.project(active_customisations[:user_id], customisations[:value])
-                         .join(customisations).on(active_customisations[:customisation_id].eq(customisations[:id]))
-                         .where(customisations[:customisation_type].eq('leaderboard_icon'))
-                         .as('n1')
   end
 
   def classrooms_subquery

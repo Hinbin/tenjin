@@ -34,6 +34,7 @@ textarea {
 @import 'actiontext';
 @import 'trix-base';
 @import 'leaderboard';
+@import 'shop';
 @import 'shepherd';
 
 // Reskinnable theme engine (Plan 01, Phase 0). Token + structure + motion layers.
@@ -41,6 +42,7 @@ textarea {
 @import 'skins/tokens';
 @import 'skins/structure';
 @import 'skins/motion';
+@import 'skins/cosmetics';
 
 // Font Awesome 5 — webfont delivery (no JS/SVG injection)
 $fa-font-path: ".";

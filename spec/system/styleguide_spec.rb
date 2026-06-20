@@ -47,13 +47,12 @@ RSpec.describe 'Skin Styleguide', :js, type: :system do
   end
 
   describe 'reset' do
-    it 'clears localStorage overrides on reset' do
+    it 'reverts the live preview to the server-rendered theme' do
       click_button 'Kawaii'
       expect(find('body')['data-skin']).to eq('kawaii')
       click_button 'Reset'
-      # After reset the page still shows kawaii until reload; localStorage is cleared
-      page.refresh
-      # Server-rendered default is arcade (no user logged in)
+      # Reset restores the server-rendered theme in place (no reload needed).
+      # Server-rendered default is arcade (no user logged in).
       expect(find('body')['data-skin']).to eq('arcade')
     end
   end

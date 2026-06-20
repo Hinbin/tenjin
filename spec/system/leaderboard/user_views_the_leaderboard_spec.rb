@@ -101,40 +101,6 @@ RSpec.describe 'User views the leaderboard', :default_creates, :js, type: :syste
     page.driver.browser.manage.window.resize_to(size.width, size.height)
   end
 
-  context 'when viewing leaderboard icons' do
-    let(:blue_star) do
-      create(:customisation, customisation_type: 'leaderboard_icon',
-                             value: 'blue,star', name: 'Blue Star')
-    end
-
-    let(:pink_star) do
-      create(:customisation, customisation_type: 'leaderboard_icon',
-                             value: 'pink,star', name: 'Pink Star')
-    end
-
-    before do
-      create(:active_customisation, user: student, customisation: blue_star)
-      one_to_ten
-    end
-
-    it 'shows the leaderboard icon for a person' do
-      visit(leaderboard_path(subject.name))
-      expect(page).to have_css("td i.fa-star[style*='color: blue']")
-    end
-
-    it 'shows a blank space if there is no leaderboard icon' do
-      visit(leaderboard_path(subject.name))
-      expect(page).to have_css('td')
-    end
-
-    it 'shows different colours of leaderboard icons' do
-      ActiveCustomisation.destroy_all
-      create(:active_customisation, user: student, customisation: pink_star)
-      visit(leaderboard_path(subject.name))
-      expect(page).to have_css("td i.fa-star[style*='color: pink']")
-    end
-  end
-
   context 'when viewing a subjects overall score' do
     let(:second_topic_score) { create(:topic_score, user: student, topic: create(:topic, subject: Subject.first)) }
     let(:second_subject_score) { create(:topic_score, user: student, topic: create(:topic)) }

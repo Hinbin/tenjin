@@ -1,5 +1,5 @@
-.tj-alert-info role='alert' data-controller='alert' style='padding: 0.25rem var(--tj-space-3); margin: 0'
-  p style='margin: 0.25rem 0' id='flash-notice' = flash[:notice]
-  button.tj-alert-close type='button' data-action='click->alert#dismiss' aria-label='Close'
+.tj-alert-info.tjs-flash role='alert' data-controller='alert'
+  p.tjs-flash__text id='flash-notice' = flash[:notice]
+  button.tj-alert-close.tjs-flash__close type='button' data-action='click->alert#dismiss' aria-label='Close'
     span aria-hidden='true'
       | &times;

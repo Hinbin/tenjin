@@ -32,6 +32,7 @@ module Theme::SkinCatalog
   META = {
     'arcade' => {
       label: 'Arcade', jp: 'アーケード',
+      tagline: 'Neon glass and glowing edges — late-night Tokyo arcade energy.',
       fonts: { display: "'Zen Dots', system-ui, sans-serif", body: "'Zen Kaku Gothic New', system-ui, sans-serif", pixel: "'DotGothic16', monospace" },
       fill: 'glass', shadow: 'glow', bd: 1, r_lg: 22, r_md: 16, r_sm: 11, btn_r: 14,
       upper: true, d_space: '0.5px', glow_icons: true, blur: 8, d_weight: 400, body_weight: 400, head_size: 17,
@@ -39,6 +40,7 @@ module Theme::SkinCatalog
     },
     'kawaii' => {
       label: 'Kawaii', jp: 'かわいい',
+      tagline: 'Soft, rounded and pastel — bubbly type and sticker-pop shapes.',
       fonts: { display: "'Mochiy Pop One', system-ui, sans-serif", body: "'Zen Maru Gothic', system-ui, sans-serif", pixel: "'Yusei Magic', system-ui, sans-serif" },
       fill: 'solid', shadow: 'soft', bd: 2.5, r_lg: 30, r_md: 24, r_sm: 18, btn_r: 999,
       upper: false, d_space: '0px', glow_icons: false, blur: 0, sticker: true, d_weight: 400, body_weight: 500, head_size: 16,
@@ -46,6 +48,7 @@ module Theme::SkinCatalog
     },
     'minimal' => {
       label: 'Minimal', jp: 'ミニマル',
+      tagline: 'Clean lines and calm spacing — understated and modern.',
       fonts: { display: "'Space Grotesk', system-ui, sans-serif", body: "'Plus Jakarta Sans', system-ui, sans-serif", pixel: "'Space Grotesk', system-ui, sans-serif" },
       fill: 'solid', shadow: 'soft', bd: 1, r_lg: 18, r_md: 14, r_sm: 10, btn_r: 11,
       upper: false, d_space: '-0.01em', glow_icons: false, blur: 0, flat_shadow: true, d_weight: 600, body_weight: 500, head_size: 18,
@@ -53,6 +56,7 @@ module Theme::SkinCatalog
     },
     'famicom' => {
       label: 'Famicom', jp: 'ファミコン',
+      tagline: '8-bit pixels and hard-edged shadows — retro console throwback.',
       fonts: { display: "'Press Start 2P', system-ui, monospace", body: "'DotGothic16', monospace", pixel: "'Press Start 2P', monospace" },
       fill: 'solid', shadow: 'hard', bd: 3, r_lg: 0, r_md: 0, r_sm: 0, btn_r: 0,
       upper: true, d_space: '0px', glow_icons: false, blur: 0, pixel: true, sw: 2.4, d_weight: 400, body_weight: 400, head_size: 13,
@@ -62,6 +66,7 @@ module Theme::SkinCatalog
     # Soft mincho serif, hairline borders, paper surfaces, drifting petals.
     'zen' => {
       label: 'Zen', jp: '禅',
+      tagline: 'Serif calm on paper with drifting petals — quiet and refined.',
       fonts: { display: "'Zen Old Mincho', 'Shippori Mincho', serif", body: "'Zen Kaku Gothic New', system-ui, sans-serif", pixel: "'Shippori Mincho', serif" },
       fill: 'solid', shadow: 'soft', bd: 1, r_lg: 20, r_md: 15, r_sm: 11, btn_r: 999,
       upper: false, d_space: '0.04em', glow_icons: false, blur: 0, zen: true, serif: true,

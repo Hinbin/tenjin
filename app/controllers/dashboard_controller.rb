@@ -19,7 +19,6 @@ class DashboardController < ApplicationController
   private
 
   def render_student_dashboard
-    @dashboard_style = find_dashboard_style
     student_homework_progress
     student_challenges
     student_topics

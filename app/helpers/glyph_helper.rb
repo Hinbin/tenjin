@@ -41,7 +41,9 @@ module GlyphHelper
     heart: '<path d="M12 20S4 15 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 6-8 11-8 11z"/>',
     sakura: '<path d="M12 12m-1.4 0a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0"/><path d="M12 5.5c2.4 0 3.9 2 3.1 4.4M16.8 8.6c1.4 2 .8 4.4-1.6 5.5M14.5 16.8c-1 2.2-3.7 2.8-5.4 1M7.2 13.8c-2.4-1.1-3-3.5-1.6-5.5M9 9.9C8.2 7.5 9.7 5.5 12 5.5"/>',
     crown: '<path d="M4 8l3.5 3L12 5l4.5 6L20 8l-1.5 11h-13z"/><path d="M5.5 19h13"/>',
-    gem: '<path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3 7 9l5 12 5-12-2-6"/>'
+    gem: '<path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3 7 9l5 12 5-12-2-6"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'
   }.freeze
 
   def glyph(name, size: 24, color: 'currentColor', stroke_width: 1.8, css_class: nil)
