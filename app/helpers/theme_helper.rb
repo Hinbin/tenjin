@@ -52,7 +52,7 @@ module ThemeHelper
     theme_selection.scene_fx
   end
 
-  # The equipped Ambient Motion id for the active skin ('none' when nothing/foreign-skin equipped).
+  # The equipped Atmosphere id for the active skin ('none' when nothing/foreign-skin equipped).
   def current_motion
     theme_selection.motion
   end

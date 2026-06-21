@@ -123,5 +123,12 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
       patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'anything' } }
       expect(session[:preview_customisation_id]).to be_nil
     end
+
+    it 'keeps the cooldown engaged after consuming, blocking an immediate re-try' do
+      patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'anything' } }
+      post preview_customisation_path(skin)
+      expect(session[:preview_customisation_id]).to be_nil
+      expect(flash[:notice]).to match(/try another look/i)
+    end
   end
 end

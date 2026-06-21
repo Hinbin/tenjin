@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// motion_controller — the purchasable, skin-locked Ambient Motion layer (Plan 01).
+// motion_controller — the purchasable, skin-locked Atmosphere layer (Plan 01).
 //
 // Ported from MotionLayer in design/tenjin-design-system/project/flow/skins/sk-cosmetics.jsx.
 // Attached to .tjs-motion in shared/skin/_backdrop. The server resolves the equipped motion id +

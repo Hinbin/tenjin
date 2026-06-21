@@ -37,7 +37,7 @@ RSpec.describe Customisation::ShopBoard, :default_creates do
     end
   end
 
-  describe 'the skin-locked ambient motion category' do
+  describe 'the skin-locked atmosphere category' do
     let(:active_skin) { Theme::Selection.for(student).skin }
     let(:motions) { board.categories.find { |c| c.type == 'motion' } }
 

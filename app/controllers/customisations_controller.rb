@@ -58,7 +58,10 @@ class CustomisationsController < ApplicationController
   private
 
   def apply_preview(customisation)
-    start_trial unless trial_active?
+    # Stamp the cooldown whenever we're off it — i.e. this is a fresh trial rather than a switch
+    # within one already running. Keying off availability (not the session) means a stale session
+    # preview can't slip a new trial past the cooldown.
+    start_trial if current_user.cosmetic_trial_available?
     session[:preview_customisation_id] = customisation.id
     flash[:notice] = "Previewing #{customisation.name} — buy it to keep it, or stop the preview."
     redirect_back_or_to(show_available_customisations_path)

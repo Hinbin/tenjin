@@ -28,7 +28,7 @@
 .tjs-tile { transition: transform .13s ease, box-shadow .2s ease, border-color .15s; }
 .tjs-tile:active { transform: scale(0.975); }
 
-// Ambient Motion particle layer — sits above the Scene motif, below content.
+// Atmosphere particle layer — sits above the Scene motif, below content.
 .tjs-motion {
   position: absolute;
   inset: 0;
@@ -91,7 +91,7 @@
   pointer-events: none;
 }
 
-// ── Ambient Motion layer keyframes (purchasable, per-skin; driven by motion_controller.js) ──
+// ── Atmosphere layer keyframes (purchasable, per-skin; driven by motion_controller.js) ──
 // Ported from skins.css (sk-*) in the prototype. The controller only injects particles when motion
 // is enabled and the OS isn't in reduced-motion, so these can live at the top level safely.
 @keyframes tjs-m-petal {

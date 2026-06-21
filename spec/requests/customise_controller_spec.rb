@@ -38,7 +38,7 @@ RSpec.describe 'submitting a customisation', type: :request do
     end
   end
 
-  context 'when a Scene, Ambient Motion and Scene FX are equipped' do
+  context 'when a Scene, Atmosphere and Scene FX are equipped' do
     before do
       Customisation::SeedCosmetics.call(backfill: false)
       [['skin', 'zen'], ['scene', 'zen:tree'], ['motion', 'zen:petals'], ['scene_fx', 'glow']].each do |type, val|
@@ -48,12 +48,12 @@ RSpec.describe 'submitting a customisation', type: :request do
       end
     end
 
-    it 'renders the Scene, Ambient Motion and Scene FX layers in the shop backdrop' do
+    it 'renders the Scene, Atmosphere and Scene FX layers in the shop backdrop' do
       get show_available_customisations_path
 
       expect(response.body).to include('tjs-scene')                 # scene motif layer
       expect(response.body).to include('data-scene-fx="glow"')      # scene FX on the scene
-      expect(response.body).to include('data-controller="motion"')  # ambient motion layer
+      expect(response.body).to include('data-controller="motion"')  # atmosphere layer
       expect(response.body).to include('data-motion-id-value="petals"')
     end
   end
