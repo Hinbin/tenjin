@@ -20,3 +20,6 @@
     - else
       = form_with url: buy_customisation_path(pal.customisation), method: :post do |f|
         = f.submit "★ #{pal.cost}", class: 'tjs-btn tjs-palette-chip__btn buy-btn', disabled: !afford
+  / Try-before-you-buy: preview this colour scheme live before buying it.
+  - if pal.buyable? || pal.previewing
+    = render 'shared/try_control', item: pal, btn_class: 'tjs-palette-chip__try-btn'

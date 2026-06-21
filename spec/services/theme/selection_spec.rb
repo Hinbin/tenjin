@@ -86,4 +86,55 @@ RSpec.describe Theme::Selection, :default_creates do
       expect(described_class.for(student).scene_fx).to eq('none')
     end
   end
+
+  describe '.for with a preview (try-before-you-buy)' do
+    def cust(type, value)
+      create(:customisation, customisation_type: type, value: value, cost: 0, image: nil)
+    end
+
+    it 'layers a previewed skin over the equipped selection' do
+      selection = described_class.for(student, preview: cust('skin', 'kawaii'))
+      expect(selection.skin).to eq('kawaii')
+      expect(selection.palette).to eq(Theme::SkinCatalog::DEFAULT_PALETTE)
+    end
+
+    it 'layers a previewed colour scheme (palette), switching to its skin' do
+      selection = described_class.for(student, preview: cust('palette', 'kawaii:2'))
+      expect(selection).to have_attributes(skin: 'kawaii', palette: 2)
+    end
+
+    it 'resets the other skin-locked slots when previewing a foreign skin' do
+      equip('skin', 'zen')
+      equip('scene', 'zen:tree')
+      selection = described_class.for(student, preview: cust('skin', 'kawaii'))
+      expect(selection).to have_attributes(skin: 'kawaii', scene: 'none', motion: 'none')
+    end
+
+    it 'switches the skin to match a previewed scene' do
+      selection = described_class.for(student, preview: cust('scene', 'zen:tree'))
+      expect(selection).to have_attributes(skin: 'zen', scene: 'tree', motion: 'none')
+    end
+
+    it 'keeps the equipped palette when previewing a scene on the same skin' do
+      equip('skin', 'zen')
+      equip('palette', 'zen:2')
+      selection = described_class.for(student, preview: cust('scene', 'zen:tree'))
+      expect(selection).to have_attributes(skin: 'zen', palette: 2, scene: 'tree')
+    end
+
+    it 'switches the skin to match a previewed motion' do
+      selection = described_class.for(student, preview: cust('motion', 'zen:petals'))
+      expect(selection).to have_attributes(skin: 'zen', motion: 'petals', scene: 'none')
+    end
+
+    it 'preserves dark mode while previewing' do
+      student.update!(dark_mode: false)
+      expect(described_class.for(student, preview: cust('skin', 'kawaii')).dark).to be(false)
+    end
+
+    it 'ignores a non-previewable customisation type' do
+      selection = described_class.for(student, preview: cust('avatar', 'gem'))
+      expect(selection.skin).to eq(Theme::SkinCatalog::DEFAULT_SKIN)
+    end
+  end
 end

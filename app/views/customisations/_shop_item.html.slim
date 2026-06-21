@@ -55,3 +55,8 @@
     - else
       = form_with url: buy_customisation_path(item.customisation), method: :post do |f|
         = f.submit "★ #{item.cost}", class: 'tjs-btn tjs-shop-item__btn buy-btn', disabled: !afford
+  / Try-before-you-buy: skin-locked Scenes/Motions can be previewed live before buying. Only offered
+  / for buyable items — owned ones can simply be equipped, gated ones aren't for sale yet.
+  - if item.customisation.previewable? && (item.buyable? || item.previewing)
+    .tjs-shop-item__try
+      = render 'shared/try_control', item: item, btn_class: 'tjs-shop-item__try-btn'

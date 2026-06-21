@@ -58,6 +58,74 @@ RSpec.describe 'submitting a customisation', type: :request do
     end
   end
 
+  context 'when trying a skin before buying (preview)' do
+    let(:kawaii) { create(:customisation, customisation_type: 'skin', value: 'kawaii', cost: 0, image: nil) }
+
+    it 'stores the preview and renders the previewed skin live' do
+      post preview_customisation_path(kawaii)
+      expect(session[:preview_customisation_id]).to eq(kawaii.id)
+
+      get show_available_customisations_path
+      expect(response.body).to include('data-skin="kawaii"')
+    end
+
+    it 'spends no points and creates no unlock/active rows' do
+      post preview_customisation_path(kawaii)
+      expect(student.reload.challenge_points).to eq(100)
+      expect(CustomisationUnlock.count).to eq(0)
+      expect(ActiveCustomisation.where(user: student).count).to eq(0)
+    end
+
+    it 'refuses to preview a non-previewable item' do
+      avatar = create(:customisation, customisation_type: 'avatar', value: 'gem', cost: 300, image: nil)
+      post preview_customisation_path(avatar)
+      expect(session[:preview_customisation_id]).to be_nil
+    end
+
+    it 'clears the preview on stop' do
+      post preview_customisation_path(kawaii)
+      delete stop_preview_customisations_path
+      expect(session[:preview_customisation_id]).to be_nil
+    end
+
+    it 'clears the preview once the item is bought' do
+      post preview_customisation_path(kawaii)
+      post buy_customisation_path(kawaii)
+      expect(session[:preview_customisation_id]).to be_nil
+    end
+
+    it 'stamps the trial start so the cooldown can run' do
+      expect { post preview_customisation_path(kawaii) }
+        .to change { student.reload.cosmetic_trial_at }.from(nil)
+    end
+
+    it 'previews a colour scheme (palette) too' do
+      palette = create(:customisation, customisation_type: 'palette', value: 'kawaii:1', cost: 300, image: nil)
+      post preview_customisation_path(palette)
+      expect(session[:preview_customisation_id]).to eq(palette.id)
+    end
+  end
+
+  context 'when the trial cooldown is in effect' do
+    let(:kawaii) { create(:customisation, customisation_type: 'skin', value: 'kawaii', cost: 0, image: nil) }
+    let(:zen) { create(:customisation, customisation_type: 'skin', value: 'zen', cost: 0, image: nil) }
+
+    it 'blocks starting a new trial until the cooldown lifts' do
+      student.update!(cosmetic_trial_at: 1.minute.ago)
+      post preview_customisation_path(kawaii)
+      expect(session[:preview_customisation_id]).to be_nil
+      expect(flash[:notice]).to match(/try another look/i)
+    end
+
+    it 'still lets a student switch looks within an already-active trial' do
+      post preview_customisation_path(kawaii)          # starts the trial
+      stamped_at = student.reload.cosmetic_trial_at
+      post preview_customisation_path(zen)             # switch — allowed, no new stamp
+      expect(session[:preview_customisation_id]).to eq(zen.id)
+      expect(student.reload.cosmetic_trial_at).to eq(stamped_at)
+    end
+  end
+
   context 'when toggling the appearance mode' do
     let!(:light_mode) do
       create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 100, image: nil)

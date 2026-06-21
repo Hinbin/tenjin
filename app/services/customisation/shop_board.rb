@@ -19,7 +19,7 @@ class Customisation::ShopBoard < ApplicationService
   # light-mode perk yet, and the perk record (so the view can render a buy button while locked).
   ModeStatus = Struct.new(:dark, :owned, :customisation, :cost, keyword_init: true)
   Item = Struct.new(:customisation, :name, :value, :cost, :glyph, :token,
-                    :owned, :equipped, :gated, :req, :tagline, :palettes, keyword_init: true) do
+                    :owned, :equipped, :gated, :req, :tagline, :palettes, :previewing, keyword_init: true) do
     # achievement-gated and not yet earned (display-only, v1)
     def locked? = gated && !owned
     # purchasable with points
@@ -34,9 +34,13 @@ class Customisation::ShopBoard < ApplicationService
   # active skin.
   THEME_TYPES = %w[skin palette scene motion].freeze
 
-  def initialize(user)
+  # `preview` (optional) is a customisation the user is trying live (try-before-you-buy). It drives
+  # the resolved `selection` — so previewing a skin swaps the Scenes/Motions categories to that
+  # skin's items — and flags the matching Item as `previewing`.
+  def initialize(user, preview: nil)
     super()
     @user = user
+    @preview = preview
   end
 
   def call
@@ -57,7 +61,7 @@ class Customisation::ShopBoard < ApplicationService
   end
 
   def selection
-    @selection ||= Theme::Selection.for(@user)
+    @selection ||= Theme::Selection.for(@user, preview: @preview)
   end
 
   # ── Skin-locked slots (Scenes, Motions) — only the active skin's items are offered ──
@@ -130,7 +134,7 @@ class Customisation::ShopBoard < ApplicationService
     { customisation: record, name: record.name, value: record.value, cost: record.cost.to_i,
       glyph: spec[:glyph], token: spec[:tok] && "var(--#{spec[:tok]})",
       owned: owned?(record), equipped: equipped_values[type] == record.value,
-      gated: record.gated?, req: record.req }
+      gated: record.gated?, req: record.req, previewing: @preview&.id == record.id }
   end
 
   def owned?(record)

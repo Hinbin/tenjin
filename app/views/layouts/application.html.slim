@@ -36,6 +36,8 @@ html
           main.tjs-shell__content
             turbo-frame id=flash
               = render('shared/notice_notification') if flash[:notice].present?
+            - if current_preview_customisation
+              = render 'shared/preview_banner', customisation: current_preview_customisation
             = yield
         - unless student_in_quiz?
           = render 'shared/student_bottom_nav'

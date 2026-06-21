@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_21_000200) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_21_000300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -536,6 +536,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_000200) do
 
   create_table "users", force: :cascade do |t|
     t.integer "challenge_points"
+    t.datetime "cosmetic_trial_at"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "current_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"

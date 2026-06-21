@@ -1,0 +1,18 @@
+/ _preview_banner.html.slim — try-before-you-buy banner (shown globally while a preview is active).
+/ `customisation` is the item being tried live. Commit (buy/use) or stop the preview.
+- afford = customisation.cost.to_i.zero? || current_user.challenge_points.to_i >= customisation.cost.to_i
+.tjs-preview-banner role="status"
+  .tjs-preview-banner__text
+    = glyph(:sparkle, size: 16, color: 'var(--gold)')
+    span.tjs-preview-banner__label
+      ' Previewing
+      strong = customisation.name
+    span.tjs-preview-banner__hint This is a try-out — it isn't saved until you keep it.
+  .tjs-preview-banner__actions
+    = form_with url: buy_customisation_path(customisation), method: :post do |f|
+      - if customisation.cost.to_i.zero?
+        = f.submit 'Keep it', class: 'tjs-btn tjs-preview-banner__btn'
+      - else
+        = f.submit "★ #{customisation.cost} · Buy it", class: 'tjs-btn tjs-preview-banner__btn', disabled: !afford
+    = form_with url: stop_preview_customisations_path, method: :delete do |f|
+      = f.submit 'Stop preview', class: 'tjs-btn tjs-btn--ghost tjs-preview-banner__btn'

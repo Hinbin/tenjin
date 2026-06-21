@@ -74,10 +74,12 @@ Rails.application.routes.draw do
     collection do
       get 'show_available'
       post 'toggle_mode'
+      delete 'preview', action: :stop_preview, as: :stop_preview
     end
     member do
       post 'buy'
       post 'equip'
+      post 'preview'
     end
   end
 

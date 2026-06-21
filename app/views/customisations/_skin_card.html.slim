@@ -30,6 +30,15 @@
           ' Equipped
     p.tjs-skin-card__tagline = item.tagline
 
+    / ── Try-before-you-buy: preview this skin live across the app ──────────────
+    - unless item.equipped
+      .tjs-skin-card__try
+        - if item.previewing
+          span.tjs-skin-card__trying
+            = glyph(:sparkle, size: 13, color: 'var(--gold)')
+            ' Previewing
+        = render 'shared/try_control', item: item, btn_class: 'tjs-skin-card__try-btn'
+
   / ── This skin's palettes — picking one equips the palette AND switches to this skin ──
   - if item.palettes.present?
     .tjs-skin-card__palettes

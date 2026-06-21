@@ -16,10 +16,13 @@ module Theme
           dark: SkinCatalog::DEFAULT_DARK, scene: 'none', motion: 'none', scene_fx: 'none')
     end
 
-    def self.for(user)
+    # `preview` (optional) is a Customisation::PREVIEWABLE_TYPES record the user is trying live but
+    # does not own — its value is layered onto the resolved Selection without touching storage
+    # (try-before-you-buy). nil → the plain equipped selection.
+    def self.for(user, preview: nil)
       return default if user.nil?
 
-      new(
+      selection = new(
         skin: resolve_skin(user),
         palette: resolve_palette(user),
         dark: resolve_dark(user),
@@ -27,9 +30,58 @@ module Theme
         motion: resolve_motion(user),
         scene_fx: resolve_scene_fx(user)
       )
+      preview ? selection.with_preview(preview) : selection
+    end
+
+    # Layer a previewed Customisation onto this Selection, returning a NEW Selection (this one is
+    # untouched). Only the previewed dimension changes; `dark` and the global `scene_fx` carry over.
+    # The skin-locked slots (scene/motion) encode "<skin>:<id>"; previewing one switches the skin to
+    # match so its structural look renders, and — when that differs from the current skin — clears
+    # the other skin-locked slots the user can't own there (palette → base 0, scene/motion → none).
+    def with_preview(customisation)
+      case customisation.customisation_type
+      when 'skin'    then preview_skin(customisation.value)
+      when 'palette' then preview_palette(customisation.value)
+      when 'scene'   then preview_locked(:scene, customisation.value)
+      when 'motion'  then preview_locked(:motion, customisation.value)
+      else self
+      end
+    end
+
+    private
+
+    def preview_skin(skin)
+      return self if skin == self.skin
+
+      dup_with(skin: skin, palette: SkinCatalog::DEFAULT_PALETTE, scene: 'none', motion: 'none')
+    end
+
+    # A palette belongs to a skin (value "<skin>:<index>"), so previewing one also switches to that
+    # skin — mirroring EquipCustomisation. Switching skins clears the skin-locked scene/motion slots.
+    def preview_palette(value)
+      preview_skin_id, index = value.to_s.split(':')
+      overrides = { skin: preview_skin_id, palette: index.to_i }
+      overrides = overrides.merge(scene: 'none', motion: 'none') if preview_skin_id != skin
+      dup_with(**overrides)
+    end
+
+    # type is :scene or :motion; value is "<skin>:<id>". Apply the previewed slot, clear the *other*
+    # skin-locked slot, and reset the palette to base only when switching to a different skin.
+    def preview_locked(type, value)
+      preview_skin_id, id = value.to_s.split(':')
+      other = type == :scene ? :motion : :scene
+      overrides = { skin: preview_skin_id, type => id, other => 'none' }
+      overrides[:palette] = SkinCatalog::DEFAULT_PALETTE if preview_skin_id != skin
+      dup_with(**overrides)
+    end
+
+    def dup_with(**overrides)
+      self.class.new(to_h.merge(overrides))
     end
 
     # ── storage reads (Phase 4 wires these to real data) ──────────────────────
+    # (class methods below; `def self.` is unaffected by the `private` above — the storage reads are
+    # made private via `private_class_method` at the end of the block.)
 
     # The user's equipped `skin` ActiveCustomisation value (e.g. "arcade"), else the default.
     def self.resolve_skin(user)
