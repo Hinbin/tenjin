@@ -1,0 +1,6 @@
+/ Authoring UI for the structured question types. question_builder_controller renders the editor
+/ client-side from the hidden config field and re-serialises on every edit, so a normal submit
+/ carries question[config] as JSON (parsed onto the jsonb column by QuestionsController#parsed_config).
+.tjs-builder data-controller='question-builder' data-question-builder-type-value=@question.question_type
+  = f.hidden_field :config, value: @question.config.to_json, data: { 'question-builder-target': 'config' }
+  .tjs-builder__editor data-question-builder-target='editor' data-action='input->question-builder#serialize change->question-builder#serialize'

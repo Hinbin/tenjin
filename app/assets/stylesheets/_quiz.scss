@@ -559,3 +559,97 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   18% { opacity: 1; transform: translateY(0) scale(1); }
   100% { opacity: 0; transform: translateY(-26px) scale(1); }
 }
+
+// ── Drag-and-drop (cloze) question ──────────────────────────────────────────
+.tjs-cloze {
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 2.2;
+  color: var(--ink);
+  margin-bottom: var(--tj-space-3);
+}
+
+.tjs-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  min-height: 34px;
+  padding: 2px 8px;
+  margin: 0 4px;
+  vertical-align: middle;
+  border: 2px dashed color-mix(in srgb, var(--n1) 45%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--n1) 6%, transparent);
+
+  &.correct-answer { border-color: var(--n2); background: color-mix(in srgb, var(--n2) 14%, var(--surface)); }
+  &.incorrect-answer { border-color: var(--n1); background: color-mix(in srgb, var(--n1) 14%, var(--surface)); }
+}
+
+.tjs-item-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: var(--tj-space-3);
+  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  border-radius: 10px;
+}
+
+.tjs-tile {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--n1) 35%, transparent);
+  border-radius: 8px;
+}
+
+.tjs-draggable { cursor: grab; touch-action: none; }
+.tjs-dragging { opacity: 0.5; }
+
+// ── Matrix (tick-box grid) question ─────────────────────────────────────────
+.tjs-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--f-body);
+  font-size: 14px;
+  color: var(--ink);
+
+  th, td {
+    padding: 8px 10px;
+    border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+    text-align: center;
+  }
+
+  th[scope="row"], tbody th { text-align: left; font-weight: 600; }
+  input[type="checkbox"] { width: 18px; height: 18px; }
+}
+
+.tjs-matrix__cell {
+  &.correct-answer { background: color-mix(in srgb, var(--n2) 14%, var(--surface)); }
+  &.incorrect-answer { background: color-mix(in srgb, var(--n1) 14%, var(--surface)); }
+  &--key { outline: 2px solid var(--n2); outline-offset: -2px; }
+}
+
+// ── Structured question authoring builder ───────────────────────────────────
+.tjs-builder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tj-space-2);
+  margin-bottom: var(--tj-space-3);
+
+  &__items { display: flex; flex-direction: column; gap: 8px; }
+
+  &__row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__slot { max-width: 220px; }
+}

@@ -129,8 +129,25 @@ class QuestionsController < ApplicationController
   end
 
   def check_answers
+    apply_structured_config
     setup_boolean_question if @question.boolean?
     @question.answers.each { |a| a.correct = true } if @question.short_answer? || @question.question_type.nil?
+  end
+
+  # The structured-question builder posts its content as a JSON string in question[config]; parse it
+  # onto the jsonb column (a String would be stored as a JSON scalar, not the structure we want).
+  def apply_structured_config
+    config = parsed_config
+    @question.config = config unless config.nil?
+  end
+
+  def parsed_config
+    raw = params.dig(:question, :config)
+    return nil if raw.blank?
+
+    raw.is_a?(String) ? JSON.parse(raw) : raw.to_unsafe_h
+  rescue JSON::ParserError
+    nil
   end
 
   def build_answers

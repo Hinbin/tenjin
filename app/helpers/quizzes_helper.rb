@@ -14,13 +14,31 @@ module QuizzesHelper
   }.freeze
 
   def render_question
-    return render('short_answer') if @question.question_type == 'short_answer'
-
-    render('multiple_choice')
+    case @question.question_type
+    when 'short_answer' then render('short_answer')
+    when 'drag_drop' then render('drag_drop')
+    when 'matrix' then render('matrix')
+    else render('multiple_choice')
+    end
   end
 
   def subject_neon(subject)
     SUBJECT_NEON.fetch(subject&.name, 'var(--n1)')
+  end
+
+  # Split a cloze string into an ordered list of [:text, str] / [:slot, slot_id] segments so the
+  # drag_drop partial can interleave literal text with drop zones.
+  def cloze_segments(text)
+    segments = []
+    last = 0
+    text.to_s.scan(StructuredQuestion::SLOT_PATTERN) do |slot_id|
+      match = Regexp.last_match
+      segments << [:text, text[last...match.begin(0)]] if match.begin(0) > last
+      segments << [:slot, slot_id.first]
+      last = match.end(0)
+    end
+    segments << [:text, text[last..]] if last < text.to_s.length
+    segments
   end
 
   # Results-screen grade band from an accuracy percentage. Mirrors the prototype's S/A/B/C ranks

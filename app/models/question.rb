@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Question < ApplicationRecord
+  include StructuredQuestion
+
   has_many :answers, dependent: :destroy
   has_many :asked_questions, dependent: :destroy
   has_many :flagged_questions, dependent: :destroy
@@ -13,7 +15,7 @@ class Question < ApplicationRecord
 
   has_rich_text :question_text
 
-  enum :question_type, { short_answer: 0, boolean: 1, multiple: 2 }
+  enum :question_type, { short_answer: 0, boolean: 1, multiple: 2, drag_drop: 3, matrix: 4 }
 
   before_update :check_boolean
   before_update :check_short_answer
@@ -44,6 +46,7 @@ class Question < ApplicationRecord
   end
 
   def at_least_one_correct_answer
+    return unless answer_based?
     return if answers.each.pluck(:correct).include? true
 
     errors.add(:base, 'Question must have at least one correct answer.')
@@ -54,6 +57,7 @@ class Question < ApplicationRecord
              question_type:,
              answers: answers.as_json(only: %i[text correct]) }
     json[:lesson] = lesson.title if lesson
+    json[:config] = config if structured?
     json
   end
 

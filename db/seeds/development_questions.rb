@@ -200,6 +200,48 @@ def number_required_for(challenge_type)
   end
 end
 
+# A drag-and-drop (cloze) and a tick-box matrix question so the richer types can be exercised
+# locally. Idempotent: skips if either type already exists.
+def seed_structured_questions
+  topic = Topic.joins(:subject).order(:id).first
+  return if topic.blank?
+
+  seed_drag_drop_question(topic) unless Question.drag_drop.exists?
+  seed_matrix_question(topic) unless Question.matrix.exists?
+  Rails.logger.info('Seeded structured questions.')
+end
+
+def seed_drag_drop_question(topic)
+  Question.create!(
+    topic:, question_type: 'drag_drop',
+    question_text: 'Drag each component into the correct blank.',
+    config: {
+      'text' => 'The CPU contains the {{1}} unit and the {{2}} unit.',
+      'items' => [{ 'id' => 'i1', 'text' => 'control' },
+                  { 'id' => 'i2', 'text' => 'arithmetic logic' },
+                  { 'id' => 'i3', 'text' => 'storage (distractor)' }],
+      'answer' => { '1' => 'i1', '2' => 'i2' }
+    }
+  )
+end
+
+def seed_matrix_question(topic)
+  Question.create!(
+    topic:, question_type: 'matrix',
+    question_text: 'Tick the correct classification for each language.',
+    config: {
+      'rows' => [{ 'id' => 'r1', 'label' => 'Python' },
+                 { 'id' => 'r2', 'label' => 'HTML' },
+                 { 'id' => 'r3', 'label' => 'C++' }],
+      'columns' => [{ 'id' => 'c1', 'label' => 'Interpreted' },
+                    { 'id' => 'c2', 'label' => 'Compiled' },
+                    { 'id' => 'c3', 'label' => 'Markup' }],
+      'correct' => { 'r1' => ['c1'], 'r2' => ['c3'], 'r3' => ['c2'] }
+    }
+  )
+end
+
+seed_structured_questions
 seed_question_statistics
 seed_challenges
 

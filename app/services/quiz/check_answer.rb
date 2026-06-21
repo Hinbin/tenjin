@@ -16,6 +16,9 @@ class Quiz::CheckAnswer < ApplicationService
     @quiz.save
     {
       answer: Answer.where(question: @question, correct: true),
+      questionType: @question.question_type,
+      solution: structured_solution,
+      score: @asked_question.score,
       streak: @quiz.streak,
       answeredCorrect: @quiz.answered_correct,
       multiplier: Multiplier.where('score <= ?', @quiz.streak).order(id: :desc).pick(:multiplier)
@@ -29,10 +32,28 @@ class Quiz::CheckAnswer < ApplicationService
   end
 
   def check_answer_correct
-    if @question.short_answer?
-      check_short_answer
-    else
-      check_multiple_choice
+    case @question.question_type
+    when 'short_answer' then check_short_answer
+    when 'drag_drop', 'matrix' then check_structured_answer
+    else check_multiple_choice
+    end
+  end
+
+  # Partial-credit types: store the fractional score + raw response; a perfect score counts as
+  # correct for streak/leaderboard, anything less resets the streak like a wrong answer.
+  def check_structured_answer
+    response = @answer_given[:structured].to_h
+    score = @question.score_response(response)
+
+    score >= 1.0 ? process_correct_answer : process_incorrect_answer
+    @asked_question.update(score: score, response: response)
+  end
+
+  # The correct mapping for the reveal: drag_drop -> slot=>item; matrix -> row=>[cols].
+  def structured_solution
+    case @question.question_type
+    when 'drag_drop' then @question.config['answer']
+    when 'matrix' then @question.config['correct']
     end
   end
 

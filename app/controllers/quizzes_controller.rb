@@ -120,7 +120,7 @@ class QuizzesController < ApplicationController
   end
 
   def answer_params
-    params.expect(answer: %i[id short_answer])
+    params.expect(answer: [:id, :short_answer, { structured: {} }])
   end
 
   def quiz_params

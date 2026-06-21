@@ -33,14 +33,17 @@
           {},
           id: 'select-topic',
           class: 'tjk-input reload-page')
-  table.table#table-answers
-    thead
-      th Answer Text
-      th = "Correct?" unless @question.short_answer?
-      th
-    tbody.fields
-      =f.fields_for :answers, @question.answers do |a|
-        =render 'answer', f: a
-  -unless @question.question_type == 'boolean'
-    =link_to_add_row('Add Answer', f, :answers, class: 'tj-btn-primary tj-btn--full')
+  - if @question.structured?
+    = render 'structured_builder', f: f
+  - else
+    table.table#table-answers
+      thead
+        th Answer Text
+        th = "Correct?" unless @question.short_answer?
+        th
+      tbody.fields
+        =f.fields_for :answers, @question.answers do |a|
+          =render 'answer', f: a
+    -unless @question.question_type == 'boolean'
+      =link_to_add_row('Add Answer', f, :answers, class: 'tj-btn-primary tj-btn--full')
   =f.submit("Save Question", class: 'tj-btn-primary tj-btn--full')
