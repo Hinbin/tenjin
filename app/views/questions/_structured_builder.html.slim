@@ -4,3 +4,19 @@
 .tjs-builder data-controller='question-builder' data-question-builder-type-value=@question.question_type
   = f.hidden_field :config, value: @question.config.to_json, data: { 'question-builder-target': 'config' }
   .tjs-builder__editor data-question-builder-target='editor' data-action='input->question-builder#serialize change->question-builder#serialize'
+  - if @question.drag_drop?
+    .tjs-builder__help
+      h3.tjs-builder__help-title How to build a drag-and-drop question
+      ol
+        li In the cloze text, mark each blank with {{1}}, {{2}}, {{3}} and so on — these become the drop zones students fill in.
+        li Add one item per draggable tile. The item's text is what the student sees on the tile.
+        li
+          | For an item that answers a blank, put that blank's number in the
+          strong  Blank #
+          | field (e.g. 1 for the first blank).
+        li
+          | Leave the
+          strong  Blank #
+          | field empty to make an item a distractor — a wrong option that isn't the answer to any blank.
+        li Every blank must have exactly one item assigned to it before the question can be saved.
+      p.tjs-builder__help-note Example: “The CPU has a {{1}} unit and a {{2}} unit.” with items “control” (Blank 1), “arithmetic logic” (Blank 2) and “storage” (no blank — a distractor).

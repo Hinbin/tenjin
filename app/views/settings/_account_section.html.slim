@@ -20,3 +20,9 @@ section.tjs-settings__section
           unlink_oauth_account_user_path(current_user),
           class: 'tjs-btn tjs-btn--ghost',
           data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' }
+
+  .tjs-settings-row
+    span.tjs-settings-label
+      | Sign out
+      small.tjs-settings-hint style="display:block;color:var(--dim);font-size:11px;" End your session on this device
+    = button_to 'Sign out', destroy_user_session_path, method: :delete, class: 'tjs-btn tjs-btn--ghost', data: { turbo: false }

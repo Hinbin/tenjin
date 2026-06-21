@@ -652,4 +652,21 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   }
 
   &__slot { max-width: 220px; }
+
+  &__help {
+    margin-top: var(--tj-space-2);
+    padding: 12px 16px;
+    font-family: var(--f-body);
+    font-size: 13px;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--n1) 6%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--n1) 25%, transparent);
+    border-radius: 10px;
+
+    ol { margin: 0 0 8px; padding-left: 20px; }
+    li { margin-bottom: 4px; }
+  }
+
+  &__help-title { margin: 0 0 8px; font-size: 14px; font-weight: 700; }
+  &__help-note { margin: 0; font-style: italic; opacity: 0.85; }
 }

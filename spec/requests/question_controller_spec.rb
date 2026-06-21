@@ -26,4 +26,21 @@ RSpec.describe 'using question editing', type: :request do
       expect(response).to have_http_status(:success)
     end
   end
+
+  context 'when authoring a drag-and-drop question' do
+    let(:topic) { create(:topic, subject: subject) }
+    let(:question) do
+      create(:question, topic: topic, question_type: 'drag_drop',
+                        config: { 'text' => 'A {{1}}.', 'items' => [{ 'id' => 'i1', 'text' => 'one' }],
+                                  'answer' => { '1' => 'i1' } })
+    end
+
+    before { sign_in author }
+
+    it 'shows the drag-and-drop authoring instructions and builder' do
+      get question_path(question)
+      expect(response.body).to include('How to build a drag-and-drop question')
+        .and include('data-question-builder-type-value="drag_drop"')
+    end
+  end
 end

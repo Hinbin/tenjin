@@ -36,8 +36,64 @@
   }
 }
 
-.trix-button-row { 
-  display: flex; 
-  flex-wrap: wrap !important; 
-  justify-content: space-between; 
-} 
+.trix-button-row {
+  display: flex;
+  flex-wrap: wrap !important;
+  justify-content: space-between;
+}
+
+// ── Editor & toolbar surface ──────────────────────────────────────────────
+// trix.css ships no background/colour of its own, so the editor inherits the
+// dark surface it sits on (transparent bg) while keeping dark --tj-ink text —
+// i.e. dark-on-dark and unreadable. Give it the same light field treatment as
+// .tjk-input.
+
+trix-editor {
+  display: block;
+  width: 100%;
+  min-height: 8rem;
+  font-family: var(--tj-body);
+  font-size: var(--tj-size-body);
+  font-weight: var(--tj-w-light);
+  padding: 0.375rem 0.75rem;
+  color: var(--tj-ink);
+  background-color: var(--tj-white);
+  border: 1px solid #ced4da;
+  border-radius: var(--tj-radius);
+  line-height: var(--tj-lh-body);
+
+  &:focus {
+    border-color: var(--tj-black);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
+  }
+}
+
+trix-toolbar {
+  background-color: var(--tj-white);
+  border: 1px solid #ced4da;
+  border-bottom: 0;
+  border-radius: var(--tj-radius) var(--tj-radius) 0 0;
+  padding: 0.25rem 0.5rem;
+
+  // Trix renders toolbar icons via CSS-masked ::before pseudo-elements that
+  // need an explicit fill colour to be visible on the light surface.
+  .trix-button {
+    color: var(--tj-ink);
+    background: transparent;
+
+    &::before {
+      opacity: 0.75;
+    }
+
+    &.trix-active {
+      background: var(--tj-light);
+    }
+  }
+}
+
+// Editor sits flush under the toolbar.
+trix-toolbar + trix-editor {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
