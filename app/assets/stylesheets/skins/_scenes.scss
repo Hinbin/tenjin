@@ -6,7 +6,11 @@
 // animations (Phase 4) hang off this element via [data-scene-fx].
 
 .tjs-scene {
-  position: absolute;
+  // Pinned to the viewport (not the page) so the motif sits in the browser's
+  // bottom-right corner regardless of how tall/scrollable the page content is.
+  // (The backdrop is position:absolute and stretches to full document height, so
+  // an absolute scene would park itself off-screen at the bottom of long pages.)
+  position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
