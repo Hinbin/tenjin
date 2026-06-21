@@ -67,6 +67,7 @@ Layout/LineLength:
     - 'app/services/theme/skin_catalog.rb'
     - 'app/services/theme/resolver.rb'
     - 'app/helpers/glyph_helper.rb'
+    - 'app/helpers/scene_art_helper.rb'
 
 Capybara/RSpec/NegationMatcherAfterVisit:
   Enabled: false
@@ -80,6 +81,7 @@ Metrics/AbcSize:
     - 'app/models/classroom.rb'
     - 'app/services/challenge/update_challenge_progress.rb'
     - 'app/services/theme/resolver.rb'
+    - 'app/helpers/scene_art_helper.rb'
 
 Metrics/CyclomaticComplexity:
   Exclude:
@@ -89,10 +91,12 @@ Metrics/ClassLength:
   Exclude:
     - 'app/controllers/questions_controller.rb'
     - 'app/services/quiz/create_quiz.rb'
+    - 'app/services/customisation/shop_board.rb'
 
 Metrics/ModuleLength:
   Exclude:
     - 'app/services/theme/skin_catalog.rb'
+    - 'app/helpers/scene_art_helper.rb'
 
 RSpec/ExampleLength:
   Enabled: false
@@ -130,6 +134,7 @@ Rails/ActionControllerFlashBeforeRender:
 Rails/OutputSafety:
   Exclude:
     - 'app/helpers/glyph_helper.rb'
+    - 'app/helpers/scene_art_helper.rb'
 
 Rails/ActiveRecordAliases:
   Enabled: false

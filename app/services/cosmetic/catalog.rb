@@ -77,6 +77,20 @@ module Cosmetic::Catalog
         { value: 'aura',    name: 'Energy Aura', cost: 450 },
         { value: 'rainbow', name: 'Prism',       cost: 0, req: 'Hit a ×5 multiplier' }
       ]
+    },
+    # Scene FX brings the equipped Scene to life (global slot; applies to whatever Scene is on).
+    'scene_fx' => {
+      en: 'Scene FX', jp: '演出', glyph: 'sparkle',
+      blurb: 'Bring your equipped Scene to life — glow, flicker & more. Needs a Scene equipped.',
+      items: [
+        { value: 'none',    name: 'None',      cost: 0 },
+        { value: 'glow',    name: 'Neon Glow', cost: 200 },
+        { value: 'flicker', name: 'Flicker',   cost: 250 },
+        { value: 'pulse',   name: 'Pulse',     cost: 250 },
+        { value: 'drift',   name: 'Drift',     cost: 300 },
+        { value: 'zoom',    name: 'Slow Zoom', cost: 300 },
+        { value: 'glitch',  name: 'Glitch',    cost: 0, req: 'Answer 200 questions' }
+      ]
     }
   }.freeze
 

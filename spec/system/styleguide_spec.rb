@@ -14,9 +14,9 @@ RSpec.describe 'Skin Styleguide', :js, type: :system do
   end
 
   describe 'skin switching' do
-    %w[arcade kawaii minimal famicom zen].each do |skin|
+    Theme::SkinCatalog::META.each do |skin, meta|
       it "switches to #{skin} skin and updates body[data-skin]" do
-        click_button skin.capitalize
+        click_button meta[:label]
         body = find('body')
         expect(body['data-skin']).to eq(skin)
       end

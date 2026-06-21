@@ -30,7 +30,9 @@ class Customisation::ShopBoard < ApplicationService
                 blurb: 'The whole look — fonts, shapes & feel. Each skin brings its own palettes.' }.freeze
 
   # The theme slots (not in Cosmetic::Catalog) whose Customisation records must be preloaded.
-  THEME_TYPES = %w[skin palette].freeze
+  # `scene` + `motion` are skin-locked (composite value "<skin>:<id>"), surfaced only for the
+  # active skin.
+  THEME_TYPES = %w[skin palette scene motion].freeze
 
   def initialize(user)
     super()
@@ -51,7 +53,39 @@ class Customisation::ShopBoard < ApplicationService
   end
 
   def categories
-    [skins_category] + Cosmetic::Catalog.types.map { |type| cosmetic_category(type) }
+    [skins_category, scenes_category, motions_category] + Cosmetic::Catalog.types.map { |type| cosmetic_category(type) }
+  end
+
+  def selection
+    @selection ||= Theme::Selection.for(@user)
+  end
+
+  # ── Skin-locked slots (Scenes, Motions) — only the active skin's items are offered ──
+  # Both model like palette: composite value "<skin>:<id>", with the free 'none' default reading
+  # equipped whenever the resolved selection is 'none'.
+  def scenes_category
+    locked_category('scene', Cosmetic::SceneCatalog::CATEGORY,
+                    Cosmetic::SceneCatalog.scenes_for(selection.skin), selection.scene)
+  end
+
+  def motions_category
+    locked_category('motion', Cosmetic::MotionCatalog::CATEGORY,
+                    Cosmetic::MotionCatalog.motions_for(selection.skin), selection.motion)
+  end
+
+  def locked_category(type, meta, specs, equipped_id)
+    items = specs.filter_map { |spec| build_locked_item(type, spec, equipped_id) }
+    Category.new(type: type, en: meta[:en], jp: meta[:jp], glyph: meta[:glyph], blurb: meta[:blurb], items: items)
+  end
+
+  def build_locked_item(type, spec, equipped_id)
+    value = "#{selection.skin}:#{spec[:value]}"
+    record = lookup(type)[value]
+    return unless record
+
+    attrs = item_attrs(type, { value: value, tok: spec[:tok] }, record)
+    attrs[:equipped] = (spec[:value] == equipped_id) # tracks the *resolved* slot, so 'none' reads equipped
+    Item.new(**attrs)
   end
 
   # ── Skins (with their palettes nested) ──────────────────────────────────────

@@ -10,9 +10,10 @@ module Theme
   #
   #   sel = Theme::Selection.for(current_user)
   #   Theme::Resolver.style_string(skin: sel.skin, palette: sel.palette, dark: sel.dark)
-  Selection = Struct.new(:skin, :palette, :dark, keyword_init: true) do
+  Selection = Struct.new(:skin, :palette, :dark, :scene, :motion, :scene_fx, keyword_init: true) do
     def self.default
-      new(skin: SkinCatalog::DEFAULT_SKIN, palette: SkinCatalog::DEFAULT_PALETTE, dark: SkinCatalog::DEFAULT_DARK)
+      new(skin: SkinCatalog::DEFAULT_SKIN, palette: SkinCatalog::DEFAULT_PALETTE,
+          dark: SkinCatalog::DEFAULT_DARK, scene: 'none', motion: 'none', scene_fx: 'none')
     end
 
     def self.for(user)
@@ -21,7 +22,10 @@ module Theme
       new(
         skin: resolve_skin(user),
         palette: resolve_palette(user),
-        dark: resolve_dark(user)
+        dark: resolve_dark(user),
+        scene: resolve_scene(user),
+        motion: resolve_motion(user),
+        scene_fx: resolve_scene_fx(user)
       )
     end
 
@@ -48,6 +52,28 @@ module Theme
       SkinCatalog::DEFAULT_DARK
     end
 
-    private_class_method :resolve_skin, :resolve_palette, :resolve_dark
+    # The equipped `scene` id for the chosen skin. The value is "<skin>:<id>"; a scene belonging to
+    # a different skin than the resolved one is ignored (falls back to 'none'). Returns the id only.
+    def self.resolve_scene(user)
+      skin = resolve_skin(user)
+      scene_skin, id = user.equipped_value(:scene).to_s.split(':')
+      scene_skin == skin && Cosmetic::SceneCatalog.scene(skin, id) ? id : 'none'
+    end
+
+    # The equipped `motion` id for the chosen skin (value "<skin>:<id>"); foreign-skin → 'none'.
+    def self.resolve_motion(user)
+      skin = resolve_skin(user)
+      motion_skin, id = user.equipped_value(:motion).to_s.split(':')
+      motion_skin == skin && Cosmetic::MotionCatalog.motion(skin, id) ? id : 'none'
+    end
+
+    # The equipped global Scene FX id ('glow'/'flicker'/…); a flat slot, so no skin filtering.
+    def self.resolve_scene_fx(user)
+      fx = user.equipped_value(:scene_fx)
+      Cosmetic::Catalog.item('scene_fx', fx) ? fx : 'none'
+    end
+
+    private_class_method :resolve_skin, :resolve_palette, :resolve_dark,
+                         :resolve_scene, :resolve_motion, :resolve_scene_fx
   end
 end

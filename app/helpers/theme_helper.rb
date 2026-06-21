@@ -35,11 +35,44 @@ module ThemeHelper
     theme_selection.skin
   end
 
-  # Logo mark glyph: kawaii → heart, famicom → star, others → torii.
+  # The equipped Scene id for the active skin ('none' when nothing/foreign-skin equipped).
+  def current_scene
+    theme_selection.scene
+  end
+
+  # The CSS token that tints the active scene's motif (e.g. 'var(--n1)'); nil when no scene.
+  def current_scene_token
+    return nil if current_scene.blank? || current_scene == 'none'
+
+    "var(--#{Cosmetic::SceneCatalog.token(current_skin, current_scene)})"
+  end
+
+  # The equipped global Scene FX id ('glow'/'flicker'/… or 'none'). Animates the equipped Scene.
+  def current_scene_fx
+    theme_selection.scene_fx
+  end
+
+  # The equipped Ambient Motion id for the active skin ('none' when nothing/foreign-skin equipped).
+  def current_motion
+    theme_selection.motion
+  end
+
+  # The CSS token that tints the active motion's particles (e.g. 'var(--n1)'); nil when no motion.
+  def current_motion_token
+    return nil if current_motion.blank? || current_motion == 'none'
+
+    "var(--#{Cosmetic::MotionCatalog.token(current_skin, current_motion)})"
+  end
+
+  # Logo mark glyph: kawaii → heart, famicom → star, pitch → ball, manga → bolt,
+  # street → crown, others (arcade/zen) → torii.
   def current_skin_logo_glyph
     case current_skin
     when 'kawaii'  then :heart
     when 'famicom' then :star
+    when 'pitch'   then :ball
+    when 'manga'   then :bolt
+    when 'street'  then :crown
     else                :torii
     end
   end

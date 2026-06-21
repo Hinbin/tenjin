@@ -5,6 +5,15 @@
 / a page reload. MOTION-SAFE: base state is invisible; animation layered on only under
 / @media (prefers-reduced-motion: no-preference) — content is never hidden by this.
 .tjs-backdrop aria-hidden="true"
+  / equipped skin-locked Scene motif (SVG art now; tinted PNG mask when assets are added)
+  - if current_scene.present? && current_scene != 'none'
+    - scene_markup = scene_layer(current_skin, current_scene, current_scene_token)
+    - if scene_markup
+      .tjs-scene style="color:#{current_scene_token};" data-scene-fx=current_scene_fx
+        .tjs-scene__art = scene_markup
+  / equipped skin-locked Ambient Motion layer (particles injected by motion_controller.js)
+  - if current_motion.present? && current_motion != 'none'
+    .tjs-motion data-controller="motion" data-motion-id-value=current_motion data-motion-token-value=current_motion_token data-motion-enabled-value=motion_pref_data
   .tjs-backdrop__blob.tjs-backdrop__blob--1
   .tjs-backdrop__blob.tjs-backdrop__blob--2
   .tjs-backdrop__dots
@@ -12,6 +21,15 @@
   .tjs-backdrop__scanlines
   .tjs-backdrop__grid
     .tjs-backdrop__grid-inner.tjs-grid
+  .tjs-backdrop__turf
+  .tjs-backdrop__halftone
+  .tjs-backdrop__concrete
+  / chalk pitch markings — halfway line + centre circle (Matchday skin)
+  svg.tjs-backdrop__pitch viewbox="0 0 400 780" preserveAspectRatio="xMidYMin slice"
+    g fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2"
+      line x1="-20" y1="148" x2="420" y2="148"
+      circle cx="200" cy="148" r="76"
+      circle cx="200" cy="148" r="3.5" fill="rgba(255,255,255,0.85)" stroke="none"
   .tjs-backdrop-petals
     - 6.times do
       span.tjs-petal

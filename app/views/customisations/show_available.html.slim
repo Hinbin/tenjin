@@ -2,16 +2,8 @@
   title Reward Shop
 
 .tjs-shop
-  / Backdrop FX (skin-specific; hidden per skin via _structure.scss)
-  .tjs-backdrop
-    .tjs-backdrop__blob.tjs-backdrop__blob--1
-    .tjs-backdrop__blob.tjs-backdrop__blob--2
-    .tjs-backdrop__dots
-    .tjs-backdrop__dither
-    .tjs-backdrop__scanlines
-    .tjs-backdrop__grid
-      .tjs-backdrop__grid-inner
-    .tjs-backdrop-petals
+  / Backdrop FX (skin-specific; includes equipped Scene + Ambient Motion layers)
+  = render 'shared/skin/backdrop'
 
   .tjs-shop__inner
     / ── Wallet header ────────────────────────────────────────────────────

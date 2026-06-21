@@ -28,6 +28,51 @@
 .tjs-tile { transition: transform .13s ease, box-shadow .2s ease, border-color .15s; }
 .tjs-tile:active { transform: scale(0.975); }
 
+// Ambient Motion particle layer — sits above the Scene motif, below content.
+.tjs-motion {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+// Shop catalogue thumbnail — a small static cluster of tinted dots (the live layer animates in
+// the backdrop, not here). Bobs gently when motion is allowed.
+.tjs-motion-preview {
+  position: relative;
+  width: 56px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+  }
+}
+
+.tjs-motion-preview--none {
+  color: var(--dim);
+  font-size: 20px;
+  font-family: var(--f-body);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body:not([data-motion="false"]) {
+    .tjs-motion-preview__dot { animation: tjs-bob 1.6s ease-in-out infinite; }
+    .tjs-motion-preview__dot:nth-child(2) { animation-delay: .22s; }
+    .tjs-motion-preview__dot:nth-child(3) { animation-delay: .44s; }
+  }
+}
+
+@keyframes tjs-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
 // Entrance helpers — base state is already visible; motion only when allowed.
 .tjs-slideup,
 .tjs-pop { opacity: 1; transform: none; }
@@ -44,6 +89,48 @@
   background: var(--n1);
   opacity: 0;
   pointer-events: none;
+}
+
+// ── Ambient Motion layer keyframes (purchasable, per-skin; driven by motion_controller.js) ──
+// Ported from skins.css (sk-*) in the prototype. The controller only injects particles when motion
+// is enabled and the OS isn't in reduced-motion, so these can live at the top level safely.
+@keyframes tjs-m-petal {
+  0%   { transform: translateY(-24px) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(900px) translateX(var(--px, 24px)) rotate(340deg); opacity: 0; }
+}
+@keyframes tjs-rise {
+  0%   { transform: translateY(0) translateX(0) scale(.7); opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translateY(-560px) translateX(var(--rx, 0px)) scale(1.1); opacity: 0; }
+}
+@keyframes tjs-fall {
+  0%   { transform: translateY(-12px) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(820px) translateX(var(--px, 0px)); opacity: .9; }
+}
+@keyframes tjs-warpstar {
+  0%   { transform: translate(0, 0) scale(.2); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translate(var(--tx, 0), var(--ty, 0)) scale(1.4); opacity: 0; }
+}
+@keyframes tjs-coderain {
+  0%   { transform: translateY(0); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(900px); opacity: 0; }
+}
+@keyframes tjs-driftx { from { transform: translateX(0); } to { transform: translateX(140vw); } }
+@keyframes tjs-twinkle {
+  0%, 100% { opacity: 0; transform: scale(.4); }
+  8%   { opacity: 1; transform: scale(1.1); }
+  22%  { opacity: 0; transform: scale(.6); }
+}
+@keyframes tjs-tickerfall {
+  0%   { transform: translateY(-16px) rotate(0); opacity: 0; }
+  12%  { opacity: 1; }
+  100% { transform: translateY(880px) rotate(680deg); opacity: 0; }
 }
 
 // Server-stored motion preference: [data-motion="false"] suppresses all tjs animations.

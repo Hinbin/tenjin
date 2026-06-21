@@ -38,6 +38,26 @@ RSpec.describe 'submitting a customisation', type: :request do
     end
   end
 
+  context 'when a Scene, Ambient Motion and Scene FX are equipped' do
+    before do
+      Customisation::SeedCosmetics.call(backfill: false)
+      [['skin', 'zen'], ['scene', 'zen:tree'], ['motion', 'zen:petals'], ['scene_fx', 'glow']].each do |type, val|
+        record = Customisation.find_by(customisation_type: type, value: val)
+        create(:customisation_unlock, user: student, customisation: record) unless record.free?
+        Customisation::EquipCustomisation.call(student, record)
+      end
+    end
+
+    it 'renders the Scene, Ambient Motion and Scene FX layers in the shop backdrop' do
+      get show_available_customisations_path
+
+      expect(response.body).to include('tjs-scene')                 # scene motif layer
+      expect(response.body).to include('data-scene-fx="glow"')      # scene FX on the scene
+      expect(response.body).to include('data-controller="motion"')  # ambient motion layer
+      expect(response.body).to include('data-motion-id-value="petals"')
+    end
+  end
+
   context 'when toggling the appearance mode' do
     let!(:light_mode) do
       create(:customisation, customisation_type: 'light_mode', value: 'light_mode', cost: 100, image: nil)

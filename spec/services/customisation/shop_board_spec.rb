@@ -18,8 +18,38 @@ RSpec.describe Customisation::ShopBoard, :default_creates do
 
   it 'groups the equip slots in order, with palettes nested under skins' do
     expect(board.categories.map(&:type)).to eq(
-      %w[skin avatar nameplate name_effect answer_effect streak_aura]
+      %w[skin scene motion avatar nameplate name_effect answer_effect streak_aura scene_fx]
     )
+  end
+
+  describe 'the skin-locked scene category' do
+    let(:active_skin) { Theme::Selection.for(student).skin }
+    let(:scenes) { board.categories.find { |c| c.type == 'scene' } }
+
+    it 'offers only the active skin\'s scenes' do
+      expected = Cosmetic::SceneCatalog.scenes_for(active_skin).map { |s| "#{active_skin}:#{s[:value]}" }
+      expect(scenes.items.map(&:value)).to eq(expected)
+    end
+
+    it 'marks the free none default as equipped when no scene is chosen' do
+      none = scenes.items.find { |i| i.value.end_with?(':none') }
+      expect(none).to have_attributes(owned: true, equipped: true)
+    end
+  end
+
+  describe 'the skin-locked ambient motion category' do
+    let(:active_skin) { Theme::Selection.for(student).skin }
+    let(:motions) { board.categories.find { |c| c.type == 'motion' } }
+
+    it 'offers only the active skin\'s motions' do
+      expected = Cosmetic::MotionCatalog.motions_for(active_skin).map { |m| "#{active_skin}:#{m[:value]}" }
+      expect(motions.items.map(&:value)).to eq(expected)
+    end
+
+    it 'marks the free none default as equipped when no motion is chosen' do
+      none = motions.items.find { |i| i.value.end_with?(':none') }
+      expect(none).to have_attributes(owned: true, equipped: true)
+    end
   end
 
   it 'nests each skin\'s palettes and tagline on the skin item' do

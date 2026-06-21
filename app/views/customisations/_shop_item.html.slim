@@ -18,6 +18,27 @@
         = glyph(:star, size: 15, color: 'var(--n2)')
         = glyph(:sparkle, size: 18, color: 'var(--gold)')
         = glyph(:star, size: 15, color: 'var(--n1)')
+    - when 'scene'
+      - scene_id = item.value.split(':').last
+      - if scene_id == 'none'
+        .tjs-scene-preview.tjs-scene-preview--none —
+      - else
+        .tjs-scene-preview style="color:#{item.token};"
+          = scene_layer(current_skin, scene_id, item.token) || glyph(:sparkle, size: 26, color: item.token)
+    - when 'motion'
+      - motion_id = item.value.split(':').last
+      - if motion_id == 'none'
+        .tjs-motion-preview.tjs-motion-preview--none —
+      - else
+        .tjs-motion-preview style="color:#{item.token};" data-motion=motion_id
+          - 3.times do
+            span.tjs-motion-preview__dot
+    - when 'scene_fx'
+      - if item.value == 'none'
+        .tjs-scenefx-preview.tjs-scenefx-preview--none —
+      - else
+        .tjs-scenefx-preview data-scene-fx=item.value
+          .tjs-scenefx-preview__disc
   .tjs-shop-item__name = item.name
   .tjs-shop-item__foot
     - if item.equipped

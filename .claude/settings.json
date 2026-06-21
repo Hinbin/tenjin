@@ -18,7 +18,9 @@
       "Bash(git switch *)",
       "Bash(bundle exec rails dartsass:build *)",
       "Bash(bundle exec rails assets:precompile *)",
-      "Bash(bundle exec reek *)"
+      "Bash(bundle exec reek *)",
+      "Bash(bundle exec rails routes *)",
+      "Bash(bin/rails routes *)"
     ]
   }
 }

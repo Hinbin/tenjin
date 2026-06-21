@@ -2,16 +2,8 @@
   title Dashboard
 
 .tjs-dashboard
-  / Backdrop FX (Phase 0 — skin-specific; hidden via _structure.scss per skin)
-  .tjs-backdrop
-    .tjs-backdrop__blob.tjs-backdrop__blob--1
-    .tjs-backdrop__blob.tjs-backdrop__blob--2
-    .tjs-backdrop__dots
-    .tjs-backdrop__dither
-    .tjs-backdrop__scanlines
-    .tjs-backdrop__grid
-      .tjs-backdrop__grid-inner
-    .tjs-backdrop-petals
+  / Backdrop FX (skin-specific; includes equipped Scene + Ambient Motion layers)
+  = render 'shared/skin/backdrop'
 
   .tjs-dashboard__inner
 

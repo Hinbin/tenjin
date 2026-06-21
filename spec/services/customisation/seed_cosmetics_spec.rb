@@ -19,6 +19,20 @@ RSpec.describe Customisation::SeedCosmetics, :default_creates do
     end
   end
 
+  it 'seeds every skin-locked scene with a composite "<skin>:<id>" value' do
+    seed
+    scene_total = Cosmetic::SceneCatalog.skins.sum { |s| Cosmetic::SceneCatalog.scenes_for(s).size }
+    expect(Customisation.scene.count).to eq(scene_total)
+    expect(Customisation.scene.find_by(value: 'zen:tree')).to have_attributes(name: 'Blossom Tree', cost: 300)
+  end
+
+  it 'seeds every skin-locked ambient motion with a composite "<skin>:<id>" value' do
+    seed
+    motion_total = Cosmetic::MotionCatalog.skins.sum { |s| Cosmetic::MotionCatalog.motions_for(s).size }
+    expect(Customisation.motion.count).to eq(motion_total)
+    expect(Customisation.motion.find_by(value: 'zen:petals')).to have_attributes(name: 'Cherry Blossom', cost: 300)
+  end
+
   it 'makes skins and base palettes free and not directly purchasable (decision #2)' do
     seed
     expect(Customisation.skin.pluck(:cost, :purchasable).uniq).to eq([[0, false]])

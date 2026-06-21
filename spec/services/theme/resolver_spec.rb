@@ -39,7 +39,7 @@ RSpec.describe Theme::Resolver do
     end
 
     it 'clamps out-of-range palette indices instead of erroring' do
-      expect { described_class.css_vars(skin: 'minimal', palette: 99, dark: false) }.not_to raise_error
+      expect { described_class.css_vars(skin: 'pitch', palette: 99, dark: false) }.not_to raise_error
     end
   end
 

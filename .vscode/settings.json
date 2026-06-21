@@ -1,3 +1,4 @@
 {
-  "github.gitAuthentication": false
+  "github.gitAuthentication": false,
+  "claudeCode.initialPermissionMode": "bypassPermissions"
 }

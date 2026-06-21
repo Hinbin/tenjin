@@ -1,0 +1,159 @@
+// skins/_scenes.scss — the equipped Scene backdrop motif (skin-locked cosmetic).
+// Ported from SceneLayer in design/tenjin-design-system/project/flow/skins/sk-cosmetics.jsx.
+//
+// .tjs-scene is rendered by shared/skin/_backdrop only when a non-'none' scene is equipped; its
+// colour (set inline to the scene token) tints both the inline SVG art and the PNG mask. Scene FX
+// animations (Phase 4) hang off this element via [data-scene-fx].
+
+.tjs-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.tjs-scene__art {
+  position: absolute;
+  right: 4%;
+  bottom: 4%;
+  width: 62%;
+  height: 54%;
+  color: inherit;
+  // base motif opacity; Scene FX (flicker/pulse) animate relative to this.
+  --scn-op: 0.16;
+  opacity: var(--scn-op);
+
+  svg { width: 100%; height: 100%; overflow: visible; }
+}
+
+body[data-mode="light"] .tjs-scene__art { --scn-op: 0.13; }
+
+// Pixel skins render the motif crisp (no smoothing).
+body[data-skin="famicom"] .tjs-scene__art { image-rendering: pixelated; }
+
+// Arcade's signature neon glow on the motif (its glow_icons trait); other skins stay flat.
+body[data-skin="arcade"] .tjs-scene__art { filter: drop-shadow(0 0 9px currentColor); }
+
+// ── Shop catalogue preview thumbnail ──────────────────────────────────────
+.tjs-scene-preview {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg, > div { width: 100%; height: 100%; overflow: visible; }
+}
+
+.tjs-scene-preview--none {
+  color: var(--dim);
+  font-size: 20px;
+  font-family: var(--f-body);
+}
+
+body[data-skin="arcade"] .tjs-scene-preview { filter: drop-shadow(0 0 6px currentColor); }
+body[data-skin="famicom"] .tjs-scene-preview { image-rendering: pixelated; }
+
+// ── Scene FX (global slot) — bring the equipped Scene to life ──────────────
+// Ported from sceneFxStyle()/sk-scn-* in sk-cosmetics.jsx + skins.css. Static glow applies even
+// when motion is off; the animated effects only run under prefers-reduced-motion + motion_pref.
+// `--g` is the glow/depth intensity (Theme::Resolver, default 0.6). Selector specificity beats the
+// per-skin arcade base glow so these override it cleanly.
+.tjs-scene[data-scene-fx="glow"] .tjs-scene__art {
+  filter: drop-shadow(0 0 calc((9px * var(--g, 0.6)) + 3px) currentColor);
+}
+
+.tjs-scene[data-scene-fx="flicker"] .tjs-scene__art {
+  filter: drop-shadow(0 0 calc((14px * var(--g, 0.6)) + 3px) currentColor);
+}
+
+.tjs-scene[data-scene-fx="pulse"] .tjs-scene__art,
+.tjs-scene[data-scene-fx="drift"] .tjs-scene__art,
+.tjs-scene[data-scene-fx="zoom"] .tjs-scene__art {
+  transform-origin: right bottom;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body:not([data-motion="false"]) {
+    .tjs-scene[data-scene-fx="flicker"] .tjs-scene__art { animation: tjs-scn-flicker 5s linear infinite; }
+    .tjs-scene[data-scene-fx="pulse"]   .tjs-scene__art { animation: tjs-scn-pulse 3.8s ease-in-out infinite; }
+    .tjs-scene[data-scene-fx="drift"]   .tjs-scene__art { animation: tjs-scn-drift 5.6s ease-in-out infinite; }
+    .tjs-scene[data-scene-fx="zoom"]    .tjs-scene__art { animation: tjs-scn-zoom 9s ease-in-out infinite; }
+    .tjs-scene[data-scene-fx="glitch"]  .tjs-scene__art { animation: tjs-scn-glitch 3.4s linear infinite; }
+  }
+}
+
+@keyframes tjs-scn-flicker {
+  0%, 40%, 100% { opacity: var(--scn-op, .15); }
+  41%   { opacity: calc(var(--scn-op, .15) * .28); }
+  42.5% { opacity: var(--scn-op, .15); }
+  57%   { opacity: var(--scn-op, .15); }
+  58%   { opacity: calc(var(--scn-op, .15) * .55); }
+  59.5% { opacity: var(--scn-op, .15); }
+  77%   { opacity: var(--scn-op, .15); }
+  78%   { opacity: calc(var(--scn-op, .15) * .22); }
+  79.5% { opacity: var(--scn-op, .15); }
+  81%   { opacity: calc(var(--scn-op, .15) * .7); }
+  82.5% { opacity: var(--scn-op, .15); }
+}
+@keyframes tjs-scn-pulse {
+  0%, 100% { opacity: var(--scn-op, .15); transform: scale(1); }
+  50%      { opacity: calc(var(--scn-op, .15) * 1.55); transform: scale(1.045); }
+}
+@keyframes tjs-scn-drift {
+  0%, 100% { transform: translateY(0) rotate(-.4deg); }
+  50%      { transform: translateY(-3.4%) rotate(.5deg); }
+}
+@keyframes tjs-scn-zoom {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.13); }
+}
+@keyframes tjs-scn-glitch {
+  0%, 17%, 22%, 45%, 50%, 71%, 76%, 100% { transform: translate(0, 0); }
+  18% { transform: translate(-2.6%, 0); }
+  20% { transform: translate(2.2%, 0); }
+  46% { transform: translate(2.8%, .5%); }
+  48% { transform: translate(-1.8%, -.5%); }
+  72% { transform: translate(1.9%, 0); }
+  74% { transform: translate(-2.4%, 0); }
+}
+
+// ── Scene FX shop thumbnail — a stand-in disc with the effect applied ──────
+.tjs-scenefx-preview {
+  width: 54px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.tjs-scenefx-preview__disc {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--n1);
+  --scn-op: 1;
+  opacity: 1;
+  transform-origin: center;
+}
+
+.tjs-scenefx-preview--none {
+  color: var(--dim);
+  font-size: 20px;
+  font-family: var(--f-body);
+}
+
+.tjs-scenefx-preview[data-scene-fx="glow"] .tjs-scenefx-preview__disc { width: 22px; height: 22px; filter: drop-shadow(0 0 8px var(--n1)); }
+.tjs-scenefx-preview[data-scene-fx="flicker"] .tjs-scenefx-preview__disc { filter: drop-shadow(0 0 10px var(--n1)); }
+
+@media (prefers-reduced-motion: no-preference) {
+  body:not([data-motion="false"]) {
+    .tjs-scenefx-preview[data-scene-fx="flicker"] .tjs-scenefx-preview__disc { animation: tjs-scn-flicker 5s linear infinite; }
+    .tjs-scenefx-preview[data-scene-fx="pulse"]   .tjs-scenefx-preview__disc { animation: tjs-scn-pulse 3.8s ease-in-out infinite; }
+    .tjs-scenefx-preview[data-scene-fx="drift"]   .tjs-scenefx-preview__disc { animation: tjs-scn-drift 5.6s ease-in-out infinite; }
+    .tjs-scenefx-preview[data-scene-fx="zoom"]    .tjs-scenefx-preview__disc { animation: tjs-scn-zoom 9s ease-in-out infinite; }
+    .tjs-scenefx-preview[data-scene-fx="glitch"]  .tjs-scenefx-preview__disc { animation: tjs-scn-glitch 3.4s linear infinite; }
+  }
+}

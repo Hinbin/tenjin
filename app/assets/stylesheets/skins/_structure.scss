@@ -30,6 +30,10 @@
 .tjs-backdrop__dither,
 .tjs-backdrop__scanlines,
 .tjs-backdrop__grid,
+.tjs-backdrop__turf,
+.tjs-backdrop__pitch,
+.tjs-backdrop__halftone,
+.tjs-backdrop__concrete,
 .tjs-backdrop-petals { display: none; }
 
 // Glow blobs: arcade + kawaii
@@ -146,6 +150,72 @@ body[data-skin="zen"] .tjs-backdrop-petals {
   overflow: hidden;
 }
 
+// Mowed turf stripes: pitch only
+body[data-skin="pitch"] .tjs-backdrop__turf {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--grid) 65%, transparent) 0 46px,
+    transparent 46px 92px
+  );
+}
+
+body[data-skin="pitch"][data-mode="dark"]  .tjs-backdrop__turf { opacity: 0.60; }
+body[data-skin="pitch"][data-mode="light"] .tjs-backdrop__turf { opacity: 0.70; }
+
+// Chalk pitch markings (halfway line + centre circle): pitch only
+body[data-skin="pitch"] .tjs-backdrop__pitch {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+body[data-skin="pitch"][data-mode="dark"]  .tjs-backdrop__pitch { opacity: 0.45; }
+body[data-skin="pitch"][data-mode="light"] .tjs-backdrop__pitch { opacity: 0.60; }
+
+// Halftone / benday-dot wash (top-right): manga only
+body[data-skin="manga"] .tjs-backdrop__halftone {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 72%, transparent) 1.4px, transparent 1.9px);
+  background-size: 10px 10px;
+  -webkit-mask-image: radial-gradient(125% 95% at 100% 0%, #000, transparent 60%);
+  mask-image: radial-gradient(125% 95% at 100% 0%, #000, transparent 60%);
+}
+
+body[data-skin="manga"][data-mode="dark"]  .tjs-backdrop__halftone { opacity: 0.12; }
+body[data-skin="manga"][data-mode="light"] .tjs-backdrop__halftone { opacity: 0.16; }
+
+// Sprayed diagonal concrete grain: street only
+body[data-skin="street"] .tjs-backdrop__concrete {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    48deg,
+    color-mix(in srgb, var(--grid) 60%, transparent) 0 2px,
+    transparent 2px 8px
+  );
+  -webkit-mask-image: linear-gradient(118deg, #000, transparent 44%);
+  mask-image: linear-gradient(118deg, #000, transparent 44%);
+}
+
+body[data-skin="street"][data-mode="dark"]  .tjs-backdrop__concrete { opacity: 0.50; }
+body[data-skin="street"][data-mode="light"] .tjs-backdrop__concrete { opacity: 0.42; }
+
 // ── Per-skin avatar treatment ─────────────────────────────────────────────
 body[data-skin="arcade"] .tjs-avatar {
   border-radius: 50%;
@@ -235,23 +305,66 @@ body[data-skin="kawaii"] {
   .tjs-bar { border-radius: 999px; }
 }
 
-// ════════ MINIMAL — hairline + low flat shadow ════════
-body[data-skin="minimal"] {
-  background: var(--bg0);
+// ════════ MATCHDAY (pitch) — chalk-line cards on floodlit turf ════════
+body[data-skin="pitch"] {
+  background: linear-gradient(180deg, var(--bg1), var(--bg0) 78%);
 
-  .tjs-display { font-weight: 600; }
+  .tjs-display { text-transform: uppercase; letter-spacing: 0.4px; }
 
   .tjs-card {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.32);
+    border: var(--bd) solid var(--line);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   }
 
   &[data-mode="light"] .tjs-card {
-    box-shadow: 0 1px 2px rgba(20, 24, 40, 0.06), 0 4px 12px rgba(20, 24, 40, 0.06);
+    box-shadow: 0 1px 2px rgba(20, 24, 40, 0.05), 0 6px 16px rgba(20, 24, 40, 0.05);
   }
 
+  .tjs-btn { text-transform: uppercase; letter-spacing: 1px; }
   .tjs-btn--primary { box-shadow: none; }
   .tjs-bar__fill { box-shadow: none; }
-  .tjs-bar { border-radius: 3px; }
+}
+
+// ════════ MANGA — inked panels + hard offset + halftone ════════
+body[data-skin="manga"] {
+  background: var(--bg0);
+
+  .tjs-display { text-transform: uppercase; }
+
+  .tjs-card {
+    border: var(--bd) solid var(--edge);
+    box-shadow: calc(var(--bd) + 1px) calc(var(--bd) + 1px) 0 var(--edge);
+  }
+
+  .tjs-btn {
+    text-transform: uppercase;
+    border: var(--bd) solid var(--edge);
+    box-shadow: calc(var(--bd) + 1px) calc(var(--bd) + 1px) 0 var(--edge);
+  }
+
+  .tjs-avatar { box-shadow: 2px 2px 0 var(--edge); }
+  .tjs-bar__fill { box-shadow: none; }
+}
+
+// ════════ STREET — sticker outlines + hard offset + concrete grain ════════
+body[data-skin="street"] {
+  background: linear-gradient(170deg, var(--bg1), var(--bg0) 80%);
+
+  .tjs-display { text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .tjs-card {
+    border: var(--bd) solid var(--edge);
+    box-shadow: calc(var(--bd) + 1px) calc(var(--bd) + 1px) 0 var(--edge);
+  }
+
+  .tjs-btn {
+    text-transform: uppercase;
+    border: var(--bd) solid var(--edge);
+    box-shadow: calc(var(--bd) + 1px) calc(var(--bd) + 1px) 0 var(--edge);
+  }
+
+  .tjs-avatar { box-shadow: 2px 2px 0 var(--edge); }
+  .tjs-bar__fill { box-shadow: none; }
 }
 
 // ════════ ZEN — paper surfaces + drifting petals ════════

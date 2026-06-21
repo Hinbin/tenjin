@@ -1,0 +1,22 @@
+/ _account_section.html.slim — Google account linking control for the settings page.
+/ Surfaced at the top of Settings when not yet linked, otherwise pinned to the bottom.
+section.tjs-settings__section
+  = render 'shared/skin/section_head', en: 'Account', jp: 'アカウント'
+
+  .tjs-settings-row
+    span.tjs-settings-label
+      | Google account
+      - if current_user.oauth_uid.blank?
+        small.tjs-settings-hint style="display:block;color:var(--dim);font-size:11px;" Not linked — link to sign in with Google
+      - else
+        small.tjs-settings-hint style="display:block;color:var(--dim);font-size:11px;" = "Linked as #{current_user.oauth_email}"
+    - if current_user.oauth_uid.blank?
+      = button_to user_google_oauth2_omniauth_authorize_path,
+          data: { turbo: false },
+          id: 'loginGoogle' do
+        = image_tag('btn_google_signin_dark_normal_web.png')
+    - else
+      = link_to 'Unlink',
+          unlink_oauth_account_user_path(current_user),
+          class: 'tjs-btn tjs-btn--ghost',
+          data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' }

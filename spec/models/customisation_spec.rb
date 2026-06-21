@@ -15,7 +15,8 @@ RSpec.describe Customisation, type: :model do
     it 'keeps the cosmetic slots at their original values (legacy 0/1/2 retired)' do
       expect(described_class.customisation_types).to eq(
         'skin' => 3, 'palette' => 4, 'avatar' => 5, 'nameplate' => 6,
-        'name_effect' => 7, 'answer_effect' => 8, 'streak_aura' => 9, 'light_mode' => 10
+        'name_effect' => 7, 'answer_effect' => 8, 'streak_aura' => 9, 'light_mode' => 10,
+        'scene_fx' => 11, 'scene' => 12, 'motion' => 13
       )
     end
 

@@ -27,6 +27,8 @@ class Customisation::SeedCosmetics < ApplicationService
     seed_skins
     seed_palettes
     seed_cosmetics
+    seed_scenes
+    seed_motions
     seed_light_mode
     backfill_default_equips if @backfill
     result(success: true)
@@ -54,6 +56,24 @@ class Customisation::SeedCosmetics < ApplicationService
 
   def seed_cosmetics
     Cosmetic::Catalog.types.each { |type| seed_cosmetics_for(type) }
+  end
+
+  # Skin-locked Scenes: one `scene` row per skin/scene, value composite "<skin>:<id>" (like palette).
+  def seed_scenes
+    Cosmetic::SceneCatalog.skins.each do |skin|
+      Cosmetic::SceneCatalog.scenes_for(skin).each do |item|
+        upsert('scene', "#{skin}:#{item[:value]}", name: item[:name], cost: item[:cost].to_i, req: item[:req])
+      end
+    end
+  end
+
+  # Skin-locked Ambient Motions: one `motion` row per skin/motion, value composite "<skin>:<id>".
+  def seed_motions
+    Cosmetic::MotionCatalog.skins.each do |skin|
+      Cosmetic::MotionCatalog.motions_for(skin).each do |item|
+        upsert('motion', "#{skin}:#{item[:value]}", name: item[:name], cost: item[:cost].to_i, req: item[:req])
+      end
+    end
   end
 
   # The light-mode perk: a single non-slot Customisation. Students start locked to dark mode and buy

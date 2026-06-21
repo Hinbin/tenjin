@@ -42,6 +42,7 @@ textarea {
 // Driven by body[data-skin]/[data-palette]/[data-mode] + inline vars from Theme::Resolver.
 @import 'skins/tokens';
 @import 'skins/structure';
+@import 'skins/scenes';
 @import 'skins/motion';
 @import 'skins/cosmetics';
 
@@ -57,7 +58,7 @@ $fa-font-path: ".";
 
 // Skin fonts (Plan 01, Phase 0) — one face per skin (display/body/pixel). Decision #5: CDN to
 // start, matching Raleway/Roboto above; revisit self-hosting for production/CSP.
-@import url('https://fonts.googleapis.com/css2?family=Zen+Dots&family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;500;700&family=Yusei+Magic&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zen+Dots&family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Yusei+Magic&family=Press+Start+2P&family=Zen+Old+Mincho:wght@400;500;600;700;900&family=Shippori+Mincho:wght@400;500;600;700&family=Anton&family=Archivo:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Reggae+One&family=Bungee&family=Permanent+Marker&display=swap');
 
 a {
   color: #212529;

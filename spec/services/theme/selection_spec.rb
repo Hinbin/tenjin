@@ -43,5 +43,47 @@ RSpec.describe Theme::Selection, :default_creates do
       student.update!(dark_mode: false)
       expect(described_class.for(student).dark).to be(false)
     end
+
+    it 'defaults the scene to none when nothing is equipped' do
+      expect(described_class.for(student).scene).to eq('none')
+    end
+
+    it 'resolves the equipped scene for the active skin' do
+      equip('skin', 'zen')
+      equip('scene', 'zen:tree')
+      expect(described_class.for(student).scene).to eq('tree')
+    end
+
+    it 'ignores a scene belonging to a different skin than the equipped one' do
+      equip('skin', 'zen')
+      equip('scene', 'arcade:sun') # stale scene from another skin
+      expect(described_class.for(student).scene).to eq('none')
+    end
+
+    it 'defaults the motion to none when nothing is equipped' do
+      expect(described_class.for(student).motion).to eq('none')
+    end
+
+    it 'resolves the equipped motion for the active skin' do
+      equip('skin', 'zen')
+      equip('motion', 'zen:petals')
+      expect(described_class.for(student).motion).to eq('petals')
+    end
+
+    it 'ignores a motion belonging to a different skin than the equipped one' do
+      equip('skin', 'zen')
+      equip('motion', 'arcade:rain') # stale motion from another skin
+      expect(described_class.for(student).motion).to eq('none')
+    end
+
+    it 'resolves the global scene_fx slot (flat, no skin filtering)' do
+      equip('scene_fx', 'glow')
+      expect(described_class.for(student).scene_fx).to eq('glow')
+    end
+
+    it 'falls back to none for an unknown scene_fx value' do
+      equip('scene_fx', 'not-an-fx')
+      expect(described_class.for(student).scene_fx).to eq('none')
+    end
   end
 end

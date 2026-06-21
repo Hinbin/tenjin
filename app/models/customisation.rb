@@ -8,15 +8,18 @@ class Customisation < ApplicationRecord
   # Phase 4 uplift; their integers are left unused so the cosmetic slots keep their numbering.
   # 3/4 are the theme (skin/palette); 5–9 are the cosmetic slots ported from the prototype SHOP_CATS.
   # 10 (light_mode) is a one-off perk, not an equip slot: owning it unlocks the light/dark toggle.
+  # 11 (scene_fx) is a flat global slot; 12 (scene) and 13 (motion) are skin-locked slots whose
+  # value is composite "<skin>:<id>" — resolved against the active skin like `palette`.
   enum :customisation_type, {
     skin: 3, palette: 4,
     avatar: 5, nameplate: 6, name_effect: 7,
     answer_effect: 8, streak_aura: 9,
-    light_mode: 10
+    light_mode: 10,
+    scene_fx: 11, scene: 12, motion: 13
   }
 
   # The Phase 4 equip-slot cosmetics (one active per type) — distinct from the legacy admin styles.
-  COSMETIC_SLOTS = %w[skin palette avatar nameplate name_effect answer_effect streak_aura].freeze
+  COSMETIC_SLOTS = %w[skin palette avatar nameplate name_effect answer_effect streak_aura scene_fx].freeze
 
   has_many :customisation_unlocks
   has_many :active_customisations

@@ -46,14 +46,6 @@ module Theme::SkinCatalog
       upper: false, d_space: '0px', glow_icons: false, blur: 0, sticker: true, d_weight: 400, body_weight: 500, head_size: 16,
       fx: { scanlines: false, grid: false, blobs: true, dots: true, dither: false }
     },
-    'minimal' => {
-      label: 'Minimal', jp: 'ミニマル',
-      tagline: 'Clean lines and calm spacing — understated and modern.',
-      fonts: { display: "'Space Grotesk', system-ui, sans-serif", body: "'Plus Jakarta Sans', system-ui, sans-serif", pixel: "'Space Grotesk', system-ui, sans-serif" },
-      fill: 'solid', shadow: 'soft', bd: 1, r_lg: 18, r_md: 14, r_sm: 10, btn_r: 11,
-      upper: false, d_space: '-0.01em', glow_icons: false, blur: 0, flat_shadow: true, d_weight: 600, body_weight: 500, head_size: 18,
-      fx: { scanlines: false, grid: false, blobs: false, dots: false, dither: false }
-    },
     'famicom' => {
       label: 'Famicom', jp: 'ファミコン',
       tagline: '8-bit pixels and hard-edged shadows — retro console throwback.',
@@ -72,6 +64,39 @@ module Theme::SkinCatalog
       upper: false, d_space: '0.04em', glow_icons: false, blur: 0, zen: true, serif: true,
       d_weight: 500, body_weight: 400, head_size: 19,
       fx: { scanlines: false, grid: false, blobs: false, dots: false, dither: false, petals: true }
+    },
+    # ── Matchday ── Premier-League pitch · floodlit turf · broadcast graphics
+    # Condensed poster type (Anton), chalk-line cards, mowed-grass backdrop + centre circle.
+    'pitch' => {
+      label: 'Matchday', jp: '球技',
+      tagline: 'Floodlit turf and broadcast graphics — condensed matchday energy.',
+      fonts: { display: "'Anton', system-ui, sans-serif", body: "'Archivo', system-ui, sans-serif", pixel: "'Oswald', system-ui, sans-serif" },
+      fill: 'solid', shadow: 'soft', bd: 1.5, r_lg: 12, r_md: 8, r_sm: 5, btn_r: 6,
+      upper: true, d_space: '0.4px', glow_icons: false, blur: 0, ball_mark: true, broadcast: true,
+      d_weight: 400, body_weight: 500, head_size: 18,
+      fx: { scanlines: false, grid: false, blobs: false, dots: false, dither: false, turf: true, pitch: true }
+    },
+    # ── Manga ── black-and-white ink · screentone · bold panels · speed lines
+    # Heavy brush display type, thick ink borders with an offset, halftone dot wash.
+    'manga' => {
+      label: 'Manga', jp: '漫画',
+      tagline: 'Inked panels and halftone screentone — bold black-and-white drama.',
+      fonts: { display: "'Reggae One', system-ui, sans-serif", body: "'Zen Kaku Gothic New', system-ui, sans-serif", pixel: "'Yusei Magic', system-ui, sans-serif" },
+      fill: 'solid', shadow: 'hard', bd: 2.5, r_lg: 6, r_md: 4, r_sm: 3, btn_r: 4,
+      upper: true, d_space: '0px', glow_icons: false, blur: 0, sw: 2.2, manga: true,
+      d_weight: 400, body_weight: 500, head_size: 19,
+      fx: { scanlines: false, grid: false, blobs: false, dots: false, dither: false, halftone: true }
+    },
+    # ── Street ── concrete grey · hi-vis spray paint · sticker-bomb energy
+    # Bungee signage type, marker accents, thick black sticker outlines with an offset.
+    'street' => {
+      label: 'Street', jp: 'グラフィティ',
+      tagline: 'Concrete grain and hi-vis spray paint — sticker-bomb street energy.',
+      fonts: { display: "'Bungee', system-ui, sans-serif", body: "'Archivo', system-ui, sans-serif", pixel: "'Permanent Marker', cursive" },
+      fill: 'solid', shadow: 'hard', bd: 2.5, r_lg: 14, r_md: 10, r_sm: 7, btn_r: 9,
+      upper: true, d_space: '0.5px', glow_icons: false, blur: 0, sw: 2.6, street: true,
+      d_weight: 400, body_weight: 600, head_size: 18,
+      fx: { scanlines: false, grid: false, blobs: false, dots: false, dither: false, concrete: true }
     }
   }.freeze
 
@@ -105,20 +130,6 @@ module Theme::SkinCatalog
         dark: { bg0: '#1d1633', bg1: '#2c2150', grid: '#473a78', surface: '#322652', line: 'rgba(190,176,255,0.22)', ink: '#efeaff', dim: '#b4a8d6', n1: '#b69bff', n2: '#8fd9ff', n3: '#ffb3d8', gold: '#ffe07a', edge: '#120d22' },
         light: { bg0: '#f5f1ff', bg1: '#ece3ff', grid: '#d8c8f7', surface: '#ffffff', line: '#ddd0f7', ink: '#574a78', dim: '#a99ec4', n1: '#a98bf0', n2: '#5cc1f7', n3: '#ff8fc4', gold: '#ffbb3d', edge: '#ddd0f7' } }
     ],
-    'minimal' => [
-      { id: 'indigo', label: 'Indigo', jp: '藍',
-        dark: { bg0: '#0e1016', bg1: '#13161f', grid: '#222838', surface: '#171a23', line: 'rgba(255,255,255,0.09)', ink: '#f1f3f8', dim: '#8b91a3', n1: '#7c83ff', n2: '#38bdf8', n3: '#a78bfa', gold: '#f0b454' },
-        light: { bg0: '#f7f8fb', bg1: '#eef1f6', grid: '#dfe4ed', surface: '#ffffff', line: '#e7eaf1', ink: '#171a22', dim: '#6b7180', n1: '#4f46e5', n2: '#0284c7', n3: '#7c3aed', gold: '#b9791a' } },
-      { id: 'emerald', label: 'Emerald', jp: '翠',
-        dark: { bg0: '#0b1110', bg1: '#0f1816', grid: '#1d2c28', surface: '#121c1a', line: 'rgba(255,255,255,0.09)', ink: '#eef5f2', dim: '#869a93', n1: '#34d399', n2: '#22b8cf', n3: '#5eead4', gold: '#ecc561' },
-        light: { bg0: '#f5faf8', bg1: '#eaf4f0', grid: '#d6e8e1', surface: '#ffffff', line: '#e0ece7', ink: '#13211c', dim: '#5f7a70', n1: '#059669', n2: '#0e8aa8', n3: '#0d9488', gold: '#a47d18' } },
-      { id: 'cobalt', label: 'Cobalt', jp: '紺',
-        dark: { bg0: '#0c1018', bg1: '#101521', grid: '#1f2740', surface: '#141a26', line: 'rgba(255,255,255,0.09)', ink: '#eef2f8', dim: '#838eaa', n1: '#4d8dff', n2: '#2dd4bf', n3: '#818cf8', gold: '#e6b85c' },
-        light: { bg0: '#f6f8fc', bg1: '#eaf0f8', grid: '#d9e3f0', surface: '#ffffff', line: '#e3eaf3', ink: '#141a26', dim: '#677085', n1: '#2563eb', n2: '#0d9488', n3: '#5457e6', gold: '#b07d18' } },
-      { id: 'clay', label: 'Clay', jp: '土',
-        dark: { bg0: '#15110e', bg1: '#1c1611', grid: '#332a20', surface: '#201a14', line: 'rgba(255,255,255,0.09)', ink: '#f5efe8', dim: '#a39586', n1: '#f08a4b', n2: '#3db8b0', n3: '#e0a36a', gold: '#e6c061' },
-        light: { bg0: '#faf7f3', bg1: '#f2ece4', grid: '#e6dccf', surface: '#ffffff', line: '#ece4d9', ink: '#241c14', dim: '#847766', n1: '#e0651a', n2: '#0e8a82', n3: '#b06a2a', gold: '#a8821c' } }
-    ],
     'famicom' => [
       { id: 'famicomRed', label: 'Famicom', jp: '赤',
         dark: { bg0: '#161013', bg1: '#211519', grid: '#3a2530', surface: '#241a1e', line: '#3f2e34', ink: '#fdeede', dim: '#b59a8e', n1: '#e8413c', n2: '#3aa0e0', n3: '#f4b63a', gold: '#f4d23a', edge: '#0a0608' },
@@ -146,6 +157,48 @@ module Theme::SkinCatalog
       { id: 'tasogare', label: 'Temple Dusk', jp: '黄昏',
         dark: { bg0: '#141220', bg1: '#1c1830', grid: '#322b4e', surface: '#1f1b30', line: 'rgba(240,236,248,0.09)', ink: '#f0ecf8', dim: '#a89cc0', n1: '#b8a0e0', n2: '#f0b0a6', n3: '#8eaee0', gold: '#e6c690' },
         light: { bg0: '#f6f3fb', bg1: '#ece5f5', grid: '#dcd2ee', surface: '#ffffff', line: '#e6def2', ink: '#322a44', dim: '#867c9a', n1: '#8a6cbe', n2: '#cf8276', n3: '#5a7eba', gold: '#a98a4a' } }
+    ],
+    'pitch' => [
+      { id: 'touchline', label: 'Touchline', jp: '芝',
+        dark: { bg0: '#08200f', bg1: '#0c2a15', grid: '#114021', surface: '#0e2916', line: 'rgba(255,255,255,0.14)', ink: '#f1fbef', dim: '#8aab94', n1: '#c2f24d', n2: '#4db8ff', n3: '#ff6f91', gold: '#ffd23f' },
+        light: { bg0: '#e9f6e1', bg1: '#dcefcf', grid: '#c4e4b2', surface: '#ffffff', line: '#d2e7c8', ink: '#12301a', dim: '#5d7f66', n1: '#3f9e1f', n2: '#0a86c4', n3: '#d6396a', gold: '#bb8800' } },
+      { id: 'redArmy', label: 'Red Army', jp: '赤',
+        dark: { bg0: '#0a200f', bg1: '#0d2a14', grid: '#114021', surface: '#0f2916', line: 'rgba(255,255,255,0.14)', ink: '#fbf0ef', dim: '#a89a94', n1: '#ff5252', n2: '#f2f2f2', n3: '#4db8ff', gold: '#ffd23f' },
+        light: { bg0: '#e9f6e1', bg1: '#dcefcf', grid: '#c4e4b2', surface: '#ffffff', line: '#d2e7c8', ink: '#12301a', dim: '#5d7f66', n1: '#d62828', n2: '#3f7d52', n3: '#0a86c4', gold: '#bb8800' } },
+      { id: 'skyBlue', label: 'Sky Blue', jp: '空',
+        dark: { bg0: '#08200f', bg1: '#0c2a15', grid: '#114021', surface: '#0e2916', line: 'rgba(255,255,255,0.14)', ink: '#eef6fb', dim: '#8aaab2', n1: '#54c4ff', n2: '#eaf2ff', n3: '#b6f24a', gold: '#ffd23f' },
+        light: { bg0: '#e9f6e1', bg1: '#dcefcf', grid: '#c4e4b2', surface: '#ffffff', line: '#d2e7c8', ink: '#12301a', dim: '#5d7f66', n1: '#0a86c4', n2: '#3f7d52', n3: '#3f9e1f', gold: '#bb8800' } },
+      { id: 'trophyGold', label: 'Trophy', jp: '金',
+        dark: { bg0: '#0a1c0f', bg1: '#0d2613', grid: '#123a1d', surface: '#102a16', line: 'rgba(255,255,255,0.14)', ink: '#fbf6e8', dim: '#a89f86', n1: '#ffd23f', n2: '#b6f24a', n3: '#4db8ff', gold: '#ffe27a' },
+        light: { bg0: '#e9f6e1', bg1: '#dcefcf', grid: '#c4e4b2', surface: '#ffffff', line: '#d2e7c8', ink: '#12301a', dim: '#5d7f66', n1: '#a8801a', n2: '#3f9e1f', n3: '#0a86c4', gold: '#a8801a' } }
+    ],
+    'manga' => [
+      { id: 'shonen', label: 'Shōnen', jp: '赤',
+        dark: { bg0: '#131313', bg1: '#1b1b1b', grid: '#2f2f2f', surface: '#1e1e1e', line: 'rgba(255,255,255,0.16)', ink: '#f5f3ec', dim: '#9b988f', n1: '#ff2e2e', n2: '#f5f3ec', n3: '#c0bdb4', gold: '#ffce3a', edge: '#000000' },
+        light: { bg0: '#f7f5ef', bg1: '#efece3', grid: '#d7d3c9', surface: '#ffffff', line: '#1a1713', ink: '#16130e', dim: '#746c61', n1: '#e21b1b', n2: '#16130e', n3: '#5d564d', gold: '#c08a00', edge: '#16130e' } },
+      { id: 'aozora', label: 'Aozora', jp: '青',
+        dark: { bg0: '#131313', bg1: '#1b1b1b', grid: '#2f2f2f', surface: '#1e1e1e', line: 'rgba(255,255,255,0.16)', ink: '#f5f3ec', dim: '#9b988f', n1: '#2f9bff', n2: '#f5f3ec', n3: '#bdc8d2', gold: '#ffce3a', edge: '#000000' },
+        light: { bg0: '#f7f5ef', bg1: '#efece3', grid: '#d7d3c9', surface: '#ffffff', line: '#1a1713', ink: '#16130e', dim: '#746c61', n1: '#1a73d8', n2: '#16130e', n3: '#566270', gold: '#b07d18', edge: '#16130e' } },
+      { id: 'murasaki', label: 'Murasaki', jp: '紫',
+        dark: { bg0: '#131313', bg1: '#1b1b1b', grid: '#2f2f2f', surface: '#1e1e1e', line: 'rgba(255,255,255,0.16)', ink: '#f5f3ec', dim: '#9b988f', n1: '#b06bff', n2: '#f5f3ec', n3: '#c4bdd2', gold: '#ffce3a', edge: '#000000' },
+        light: { bg0: '#f7f5ef', bg1: '#efece3', grid: '#d7d3c9', surface: '#ffffff', line: '#1a1713', ink: '#16130e', dim: '#746c61', n1: '#7d3ad0', n2: '#16130e', n3: '#5f5670', gold: '#b07d18', edge: '#16130e' } },
+      { id: 'sumie', label: 'Sumi-e', jp: '墨',
+        dark: { bg0: '#131313', bg1: '#1b1b1b', grid: '#2f2f2f', surface: '#1e1e1e', line: 'rgba(255,255,255,0.16)', ink: '#f5f3ec', dim: '#9b988f', n1: '#f5f3ec', n2: '#bdbab2', n3: '#8d8a82', gold: '#cfcabf', edge: '#000000' },
+        light: { bg0: '#f7f5ef', bg1: '#efece3', grid: '#d7d3c9', surface: '#ffffff', line: '#1a1713', ink: '#16130e', dim: '#746c61', n1: '#16130e', n2: '#3a352e', n3: '#6d665b', gold: '#8a8276', edge: '#16130e' } }
+    ],
+    'street' => [
+      { id: 'hivis', label: 'Hi-Vis', jp: '蛍光',
+        dark: { bg0: '#1a1a1c', bg1: '#222225', grid: '#33333a', surface: '#212124', line: 'rgba(255,255,255,0.12)', ink: '#f1f1ee', dim: '#9a9a94', n1: '#caff33', n2: '#ff5ea8', n3: '#39d0ff', gold: '#ffc63a', edge: '#000000' },
+        light: { bg0: '#e9e8e4', bg1: '#dedcd6', grid: '#c7c4bc', surface: '#f6f5f1', line: '#1c1c1a', ink: '#1a1a18', dim: '#6c6a63', n1: '#7fae00', n2: '#e0307f', n3: '#0a93c4', gold: '#b87f18', edge: '#1a1a18' } },
+      { id: 'hazard', label: 'Hazard', jp: '危険',
+        dark: { bg0: '#1a1a1c', bg1: '#222225', grid: '#33333a', surface: '#212124', line: 'rgba(255,255,255,0.12)', ink: '#f1f1ee', dim: '#9a9a94', n1: '#ff7a18', n2: '#ffd23a', n3: '#f1f1ee', gold: '#ffc63a', edge: '#000000' },
+        light: { bg0: '#e9e8e4', bg1: '#dedcd6', grid: '#c7c4bc', surface: '#f6f5f1', line: '#1c1c1a', ink: '#1a1a18', dim: '#6c6a63', n1: '#e0631a', n2: '#c79200', n3: '#1a1a18', gold: '#b87f18', edge: '#1a1a18' } },
+      { id: 'bubblegum', label: 'Bubblegum', jp: '桃',
+        dark: { bg0: '#1a1a1c', bg1: '#222225', grid: '#33333a', surface: '#212124', line: 'rgba(255,255,255,0.12)', ink: '#f1f1ee', dim: '#9a9a94', n1: '#ff5ea8', n2: '#39e0d0', n3: '#caff33', gold: '#ffc63a', edge: '#000000' },
+        light: { bg0: '#e9e8e4', bg1: '#dedcd6', grid: '#c7c4bc', surface: '#f6f5f1', line: '#1c1c1a', ink: '#1a1a18', dim: '#6c6a63', n1: '#e0307f', n2: '#0a9e90', n3: '#7fae00', gold: '#b87f18', edge: '#1a1a18' } },
+      { id: 'blackbook', label: 'Blackbook', jp: '黒',
+        dark: { bg0: '#101012', bg1: '#161618', grid: '#2a2a30', surface: '#19191c', line: 'rgba(255,255,255,0.12)', ink: '#f1f1ee', dim: '#8a8a92', n1: '#3a7bff', n2: '#f1f1ee', n3: '#8a8a92', gold: '#ffc63a', edge: '#000000' },
+        light: { bg0: '#e4e3df', bg1: '#d7d6d0', grid: '#bdbab2', surface: '#f3f2ee', line: '#19191a', ink: '#161618', dim: '#5a5a60', n1: '#2155d8', n2: '#161618', n3: '#5a5a60', gold: '#b87f18', edge: '#161618' } }
     ]
   }.freeze
 

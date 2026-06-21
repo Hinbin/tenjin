@@ -3,7 +3,7 @@
 # StudentNavHelper — utilities for the student app shell nav (Plan 01, Phase 5).
 module StudentNavHelper
   NAV_ITEMS = [
-    { id: :home,   icon: :home,   en: 'Home',  jp: '家',  path_method: :dashboard_path }.freeze,
+    { id: :home, icon: :home, en: 'Home', jp: '家', path_method: :dashboard_path }.freeze,
     { id: :lessons, icon: :list,   en: 'Lessons', jp: '授業', path_method: :lessons_path }.freeze,
     { id: :quests,  icon: :target, en: 'Quests',  jp: '挑戦', path_method: :dashboard_path, anchor: 'challenges' }.freeze,
     { id: :ranks,  icon: :trophy, en: 'Ranks', jp: '順位', path_method: :leaderboard_index_path }.freeze,

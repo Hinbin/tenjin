@@ -22,6 +22,10 @@
       .tjs-display.tjs-settings__title Settings
       p.tjs-settings__sub 設定 · Appearance & accessibility
 
+    / Unlinked accounts see the Google link prompt first; linked accounts get it at the bottom.
+    - if current_user.oauth_uid.blank?
+      = render 'account_section'
+
     / ── SKINS & PALETTES ─────────────────────────────────────────────────────
     - if @skins_category
       section.tjs-settings__section
@@ -94,3 +98,7 @@
           - else
             = f.hidden_field :motion_pref, value: true
             = f.submit 'Turn on', class: 'tjs-btn tjs-btn--ghost'
+
+    / ── ACCOUNT: GOOGLE LINKING (pinned to bottom once linked) ────────────────
+    - if current_user.oauth_uid.present?
+      = render 'account_section'

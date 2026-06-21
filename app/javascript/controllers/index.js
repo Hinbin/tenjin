@@ -30,6 +30,9 @@ application.register("live-leaderboard", LiveLeaderboardController)
 import ModalController from "controllers/modal_controller"
 application.register("modal", ModalController)
 
+import MotionController from "controllers/motion_controller"
+application.register("motion", MotionController)
+
 import NavbarController from "controllers/navbar_controller"
 application.register("navbar", NavbarController)
 

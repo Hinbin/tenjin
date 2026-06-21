@@ -43,7 +43,8 @@ module GlyphHelper
     crown: '<path d="M4 8l3.5 3L12 5l4.5 6L20 8l-1.5 11h-13z"/><path d="M5.5 19h13"/>',
     gem: '<path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3 7 9l5 12 5-12-2-6"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
-    moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'
+    moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+    ball: '<circle cx="12" cy="12" r="8.6"/><path d="M12 7.1l3.2 2.4-1.2 3.8h-4l-1.2-3.8z"/><path d="M12 7.1V3.6M15.2 9.5l3-1.1M14 13.3l2.2 2.9M10 13.3l-2.2 2.9M8.8 9.5l-3-1.1"/>'
   }.freeze
 
   def glyph(name, size: 24, color: 'currentColor', stroke_width: 1.8, css_class: nil)
