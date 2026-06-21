@@ -108,4 +108,27 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
       end
     end
   end
+
+  describe 'answering a question while a cosmetic trial is active' do
+    let(:sa_question) { create(:question, topic: topic, question_type: 'short_answer') }
+    let(:quiz) { create(:new_quiz, user: student, question_order: [sa_question.id]) }
+    let(:skin) { create(:customisation, customisation_type: 'skin', value: 'kawaii', cost: 0, image: nil) }
+
+    before do
+      create(:asked_question, quiz: quiz, question: sa_question)
+      post preview_customisation_path(skin) # start a try-before-you-buy trial
+    end
+
+    it 'consumes the trial so the previewed look is dropped' do
+      patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'anything' } }
+      expect(session[:preview_customisation_id]).to be_nil
+    end
+
+    it 'keeps the cooldown engaged after consuming, blocking an immediate re-try' do
+      patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'anything' } }
+      post preview_customisation_path(skin)
+      expect(session[:preview_customisation_id]).to be_nil
+      expect(flash[:notice]).to match(/try another look/i)
+    end
+  end
 end

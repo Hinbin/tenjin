@@ -62,10 +62,17 @@ class QuizzesController < ApplicationController
                     status: :unprocessable_content)
     end
 
+    consume_cosmetic_trial
     render(json: Quiz::CheckAnswer.call(quiz: @quiz, question: @question, answer_given: answer_params))
   end
 
   private
+
+  # Try-before-you-buy: answering a question ends any active cosmetic trial so a previewed look can't
+  # be used while actually earning points. The cooldown still runs from when the trial started.
+  def consume_cosmetic_trial
+    session.delete(:preview_customisation_id)
+  end
 
   # A finished quiz renders the skin-aware results screen. Progression (streak/XP/level) is
   # recorded here, idempotently, so refreshing the results page is safe.

@@ -26,7 +26,7 @@ RSpec.describe Customisation::SeedCosmetics, :default_creates do
     expect(Customisation.scene.find_by(value: 'zen:tree')).to have_attributes(name: 'Blossom Tree', cost: 300)
   end
 
-  it 'seeds every skin-locked ambient motion with a composite "<skin>:<id>" value' do
+  it 'seeds every skin-locked atmosphere with a composite "<skin>:<id>" value' do
     seed
     motion_total = Cosmetic::MotionCatalog.skins.sum { |s| Cosmetic::MotionCatalog.motions_for(s).size }
     expect(Customisation.motion.count).to eq(motion_total)

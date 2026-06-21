@@ -11,7 +11,7 @@
     - if scene_markup
       .tjs-scene style="color:#{current_scene_token};" data-scene-fx=current_scene_fx
         .tjs-scene__art = scene_markup
-  / equipped skin-locked Ambient Motion layer (particles injected by motion_controller.js)
+  / equipped skin-locked Atmosphere layer (particles injected by motion_controller.js)
   - if current_motion.present? && current_motion != 'none'
     .tjs-motion data-controller="motion" data-motion-id-value=current_motion data-motion-token-value=current_motion_token data-motion-enabled-value=motion_pref_data
   .tjs-backdrop__blob.tjs-backdrop__blob--1

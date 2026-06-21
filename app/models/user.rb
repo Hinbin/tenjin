@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   include Equippable
+  include CosmeticTrial
 
   rolify
   # Include default devise modules. Others available are:

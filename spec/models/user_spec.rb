@@ -4,6 +4,28 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe User, type: :model do
+  describe 'cosmetic trial cooldown' do
+    let(:student) { create(:student) }
+
+    it 'is available when never trialled' do
+      expect(student.cosmetic_trial_available?).to be(true)
+      expect(student.cosmetic_trial_available_at).to be_nil
+    end
+
+    it 'is unavailable during the cooldown window' do
+      started_at = 5.minutes.ago
+      student.update!(cosmetic_trial_at: started_at)
+      expect(student.cosmetic_trial_available?).to be(false)
+      expect(student.cosmetic_trial_available_at)
+        .to be_within(1.second).of(started_at + described_class::COSMETIC_TRIAL_COOLDOWN)
+    end
+
+    it 'becomes available again once the cooldown has elapsed' do
+      student.update!(cosmetic_trial_at: described_class::COSMETIC_TRIAL_COOLDOWN.ago - 1.minute)
+      expect(student.cosmetic_trial_available?).to be(true)
+    end
+  end
+
   describe '#from_wonde' do
     include_context 'with api_data'
 

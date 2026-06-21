@@ -21,6 +21,11 @@ class Customisation < ApplicationRecord
   # The Phase 4 equip-slot cosmetics (one active per type) — distinct from the legacy admin styles.
   COSMETIC_SLOTS = %w[skin palette avatar nameplate name_effect answer_effect streak_aura scene_fx].freeze
 
+  # Try-before-you-buy: the "look" slots a student can preview live across the app without owning
+  # them (session-scoped override in Theme::Selection). Flat cosmetics are excluded — they only ever
+  # show as in-card thumbnails.
+  PREVIEWABLE_TYPES = %w[skin palette scene motion].freeze
+
   has_many :customisation_unlocks
   has_many :active_customisations
 
@@ -41,6 +46,11 @@ class Customisation < ApplicationRecord
   # shop treats them as locked/"coming soon" display-only until req → real signals is wired later.
   def gated?
     req.present?
+  end
+
+  # Can this item be tried live before buying? Only the skin-locked look slots (decision above).
+  def previewable?
+    PREVIEWABLE_TYPES.include?(customisation_type)
   end
 
   def make_unpurchasable_if_retired

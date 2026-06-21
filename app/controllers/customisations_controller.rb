@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class CustomisationsController < ApplicationController
-  before_action :authenticate_user!, only: %i[show_available buy equip toggle_mode]
+  before_action :authenticate_user!, only: %i[show_available buy equip toggle_mode preview stop_preview]
 
   def show_available
     authorize current_user, :show? # make it so that it checks if the school is permitted?
-    board = Customisation::ShopBoard.call(current_user)
+    board = Customisation::ShopBoard.call(current_user, preview: current_preview_customisation)
     @shop_categories = board.categories
     @wallet = board.wallet
     @mode = board.mode
@@ -15,6 +15,7 @@ class CustomisationsController < ApplicationController
     authorize current_user, :show?
     @customisation = Customisation.find_by(id: buy_params)
     result = buy_customisation
+    clear_preview if result.success?
     flash_notice(result)
     redirect_to show_available_customisations_path
   end
@@ -23,8 +24,28 @@ class CustomisationsController < ApplicationController
     authorize current_user, :show?
     @customisation = Customisation.find_by(id: buy_params)
     result = Customisation::EquipCustomisation.call(current_user, @customisation)
+    clear_preview if result.success?
     equip_notice(result)
     redirect_to show_available_customisations_path
+  end
+
+  # Try-before-you-buy: store the chosen item in the session so Theme::Selection renders it live
+  # across the app. Only previewable look-slots are accepted. Starting a *new* trial is rate-limited
+  # (User::COSMETIC_TRIAL_COOLDOWN); switching the item within an already-active trial is free.
+  def preview
+    authorize current_user, :show?
+    customisation = Customisation.find_by(id: buy_params)
+    return reject_preview unless customisation&.previewable?
+    return reject_cooldown unless trial_active? || current_user.cosmetic_trial_available?
+
+    apply_preview(customisation)
+  end
+
+  # End the live preview and fall back to the user's real equipped theme.
+  def stop_preview
+    authorize current_user, :show?
+    clear_preview
+    redirect_back_or_to(show_available_customisations_path)
   end
 
   def toggle_mode
@@ -35,6 +56,38 @@ class CustomisationsController < ApplicationController
   end
 
   private
+
+  def apply_preview(customisation)
+    # Stamp the cooldown whenever we're off it — i.e. this is a fresh trial rather than a switch
+    # within one already running. Keying off availability (not the session) means a stale session
+    # preview can't slip a new trial past the cooldown.
+    start_trial if current_user.cosmetic_trial_available?
+    session[:preview_customisation_id] = customisation.id
+    flash[:notice] = "Previewing #{customisation.name} — buy it to keep it, or stop the preview."
+    redirect_back_or_to(show_available_customisations_path)
+  end
+
+  def trial_active?
+    session[:preview_customisation_id].present?
+  end
+
+  def start_trial
+    current_user.update!(cosmetic_trial_at: Time.current)
+  end
+
+  def reject_preview
+    flash[:notice] = "That item can't be previewed."
+    redirect_back_or_to(show_available_customisations_path)
+  end
+
+  def reject_cooldown
+    flash[:notice] = "You've used your free try-out — you can try another look in #{cosmetic_trial_retry_in}."
+    redirect_back_or_to(show_available_customisations_path)
+  end
+
+  def clear_preview
+    session.delete(:preview_customisation_id)
+  end
 
   def buy_customisation
     Customisation::BuyCustomisation.call(current_user, @customisation)

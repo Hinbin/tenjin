@@ -67,7 +67,7 @@ class Customisation::SeedCosmetics < ApplicationService
     end
   end
 
-  # Skin-locked Ambient Motions: one `motion` row per skin/motion, value composite "<skin>:<id>".
+  # Skin-locked Atmospheres: one `motion` row per skin/motion, value composite "<skin>:<id>".
   def seed_motions
     Cosmetic::MotionCatalog.skins.each do |skin|
       Cosmetic::MotionCatalog.motions_for(skin).each do |item|

@@ -431,3 +431,85 @@
   color: var(--n2);
 }
 .tjs-palette-chip__locked { display: inline-flex; opacity: 0.8; }
+
+/* ── Try-before-you-buy ──────────────────────────────────────────────────── */
+/* Shared "Try it / Stop" control (shared/_try_control) used in every previewable card. */
+.tjs-try-btn { padding: 6px 0; font-size: 11px; }
+.tjs-shop-item__try-btn,
+.tjs-skin-card__try-btn,
+.tjs-palette-chip__try-btn { width: 100%; }
+.tjs-palette-chip__try-btn { padding: 5px 0; font-size: 10.5px; }
+.tjs-try-cooldown {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--f-body);
+  font-size: 10.5px;
+  color: var(--n2);
+}
+
+/* Per-item "Try it" affordance under Scenes/Motions tiles + colour-scheme chips. */
+.tjs-shop-item__try { margin-top: 6px; }
+.tjs-shop-item__try form { margin: 0; }
+.tjs-palette-chip__foot .tjs-try-cooldown { margin-top: 4px; }
+
+/* Skin card "Try it" row sits under the tagline. */
+.tjs-skin-card__try {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.tjs-skin-card__try form { margin: 0; flex: 1; }
+.tjs-skin-card__trying {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Global banner shown across the app while a preview is active. */
+.tjs-preview-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border: var(--bd, 1px) solid var(--gold);
+  border-radius: var(--r-md, 14px);
+  background: color-mix(in srgb, var(--gold) 12%, var(--surface, transparent));
+}
+.tjs-preview-banner__text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+.tjs-preview-banner__label {
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--n1);
+}
+.tjs-preview-banner__label strong { margin-left: 4px; }
+.tjs-preview-banner__hint {
+  font-family: var(--f-body);
+  font-size: 11.5px;
+  color: var(--n2);
+}
+.tjs-preview-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tjs-preview-banner__actions form { margin: 0; }
+.tjs-preview-banner__btn {
+  padding: 7px 14px;
+  font-size: 12px;
+}

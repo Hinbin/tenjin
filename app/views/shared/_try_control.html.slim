@@ -1,0 +1,12 @@
+/ _try_control.html.slim — the Try-it / Stop / cooldown affordance for a previewable shop item.
+/ Locals: `item` (a Customisation::ShopBoard::Item) and `btn_class` (extra button class).
+- if item.previewing
+  = form_with url: stop_preview_customisations_path, method: :delete do |f|
+    = f.submit 'Stop preview', class: "tjs-btn tjs-btn--ghost tjs-try-btn #{btn_class}"
+- elsif cosmetic_trial_open?
+  = form_with url: preview_customisation_path(item.customisation), method: :post do |f|
+    = f.submit 'Try it', class: "tjs-btn tjs-btn--ghost tjs-try-btn #{btn_class}"
+- else
+  span.tjs-try-cooldown title="You can try another look soon."
+    = glyph(:clock, size: 11, color: 'var(--n2)')
+    = " Try again in #{cosmetic_trial_retry_in}"

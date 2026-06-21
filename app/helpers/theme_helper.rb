@@ -9,7 +9,7 @@
 module ThemeHelper
   # The current user's resolved {skin, palette, dark}. Falls back to defaults when logged out.
   def theme_selection
-    @theme_selection ||= Theme::Selection.for(current_user)
+    @theme_selection ||= Theme::Selection.for(current_user, preview: current_preview_customisation)
   end
 
   def theme_mode
@@ -52,7 +52,7 @@ module ThemeHelper
     theme_selection.scene_fx
   end
 
-  # The equipped Ambient Motion id for the active skin ('none' when nothing/foreign-skin equipped).
+  # The equipped Atmosphere id for the active skin ('none' when nothing/foreign-skin equipped).
   def current_motion
     theme_selection.motion
   end

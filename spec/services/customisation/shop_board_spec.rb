@@ -37,7 +37,7 @@ RSpec.describe Customisation::ShopBoard, :default_creates do
     end
   end
 
-  describe 'the skin-locked ambient motion category' do
+  describe 'the skin-locked atmosphere category' do
     let(:active_skin) { Theme::Selection.for(student).skin }
     let(:motions) { board.categories.find { |c| c.type == 'motion' } }
 
@@ -78,6 +78,30 @@ RSpec.describe Customisation::ShopBoard, :default_creates do
 
   it 'carries the avatar glyph + token for previews' do
     expect(avatar_item('gem')).to have_attributes(glyph: 'gem', token: 'var(--n2)')
+  end
+
+  describe 'when previewing an item (try-before-you-buy)' do
+    let(:kawaii_skin) { Customisation.skin.find_by(value: 'kawaii') }
+    let(:preview_board) { described_class.call(student, preview: kawaii_skin) }
+
+    def skin_item(board, value)
+      board.categories.find { |c| c.type == 'skin' }.items.find { |i| i.value == value }
+    end
+
+    it 'flags the previewed skin item' do
+      expect(skin_item(preview_board, 'kawaii').previewing).to be(true)
+      expect(skin_item(preview_board, 'arcade').previewing).to be(false)
+    end
+
+    it 'swaps the scene category to the previewed skin\'s scenes' do
+      expected = Cosmetic::SceneCatalog.scenes_for('kawaii').map { |s| "kawaii:#{s[:value]}" }
+      scenes = preview_board.categories.find { |c| c.type == 'scene' }
+      expect(scenes.items.map(&:value)).to eq(expected)
+    end
+
+    it 'leaves everything unflagged when no preview is active' do
+      expect(skin_item(board, 'kawaii').previewing).to be(false)
+    end
   end
 
   describe 'the light/dark mode status' do

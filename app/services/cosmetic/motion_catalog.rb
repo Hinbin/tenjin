@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Cosmetic::MotionCatalog — per-skin, skin-LOCKED Ambient Motions (a drifting animated layer).
+# Cosmetic::MotionCatalog — per-skin, skin-LOCKED Atmospheres (a drifting animated layer).
 # Ported verbatim from the design prototype's SKIN_FX[skin].motions:
 #   design/tenjin-design-system/project/flow/skins/sk-cosmetics.jsx
 #
@@ -51,7 +51,7 @@ module Cosmetic::MotionCatalog
     ]
   }.freeze
 
-  CATEGORY = { en: 'Ambient Motion', jp: '動き', glyph: 'sparkle',
+  CATEGORY = { en: 'Atmosphere', jp: '動き', glyph: 'sparkle',
                blurb: 'A drifting animated layer, exclusive to this skin. Respects your motion setting.' }.freeze
 
   def skins = MOTIONS.keys
