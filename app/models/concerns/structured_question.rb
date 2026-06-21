@@ -3,9 +3,8 @@
 # StructuredQuestion — the richer, harder question types whose content lives in `questions.config`
 # rather than the flat `answers` table.
 #
-#   drag_drop: cloze text with {{n}} blanks; students drag item tiles into the blanks.
-#     config = { "text" => "… {{1}} …", "items" => [{ "id" =>, "text" => }],
-#                "answer" => { "1" => item_id, … } }
+#   drag_drop: the question_text is the cloze sentence with {{n}} blanks; students drag item tiles
+#     into the blanks. config = { "items" => [{ "id" =>, "text" => }], "answer" => { "1" => item_id, … } }
 #   matrix:    rows × columns of tick boxes; each row has one or more correct columns.
 #     config = { "rows" => [{ "id" =>, "label" => }], "columns" => [{ "id" =>, "label" => }],
 #                "correct" => { row_id => [col_id, …] } }
@@ -40,9 +39,17 @@ module StructuredQuestion
     end
   end
 
-  # Ordered list of blank identifiers parsed from the cloze text (drag_drop only).
+  # Ordered list of blank identifiers parsed from the question text (drag_drop only). The cloze
+  # sentence IS the question text — authors mark blanks inline with {{1}}, {{2}}, …
   def config_slots
-    config['text'].to_s.scan(SLOT_PATTERN).flatten
+    cloze_text.scan(SLOT_PATTERN).flatten
+  end
+
+  # The plain-text question used as the drag_drop cloze.
+  def cloze_text
+    question_text.to_plain_text.to_s
+  rescue StandardError
+    ''
   end
 
   private

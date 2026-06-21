@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe StructuredQuestion, type: :model do
+  let(:cloze_text) { 'A {{1}} and a {{2}}.' }
   let(:drag_drop_config) do
-    { 'text' => 'A {{1}} and a {{2}}.',
-      'items' => [{ 'id' => 'i1', 'text' => 'control' },
+    { 'items' => [{ 'id' => 'i1', 'text' => 'control' },
                   { 'id' => 'i2', 'text' => 'arithmetic' },
                   { 'id' => 'i3', 'text' => 'distractor' }],
       'answer' => { '1' => 'i1', '2' => 'i2' } }
@@ -18,7 +18,9 @@ RSpec.describe StructuredQuestion, type: :model do
   end
 
   describe '#score_response for drag_drop' do
-    subject(:question) { build(:question, question_type: 'drag_drop', config: drag_drop_config) }
+    subject(:question) do
+      build(:question, question_type: 'drag_drop', question_text: cloze_text, config: drag_drop_config)
+    end
 
     it 'gives full marks when every blank is correct' do
       expect(question.score_response('1' => 'i1', '2' => 'i2')).to eq(1.0)
@@ -30,6 +32,26 @@ RSpec.describe StructuredQuestion, type: :model do
 
     it 'gives zero for an empty response' do
       expect(question.score_response({})).to eq(0.0)
+    end
+
+    context 'when one item answers more than one blank' do
+      let(:cloze_text) { 'A {{1}}, a {{2}} and a {{3}}.' }
+      let(:drag_drop_config) do
+        { 'items' => [{ 'id' => 'i1', 'text' => 'shared' }, { 'id' => 'i2', 'text' => 'other' }],
+          'answer' => { '1' => 'i1', '2' => 'i2', '3' => 'i1' } }
+      end
+
+      it 'is valid' do
+        expect(question).to be_valid
+      end
+
+      it 'awards full marks when the shared item fills both of its blanks' do
+        expect(question.score_response('1' => 'i1', '2' => 'i2', '3' => 'i1')).to eq(1.0)
+      end
+
+      it 'awards partial credit when the shared item fills only one of its blanks' do
+        expect(question.score_response('1' => 'i1', '2' => 'i2', '3' => 'i2').round(2)).to eq(0.67)
+      end
     end
   end
 
@@ -51,19 +73,20 @@ RSpec.describe StructuredQuestion, type: :model do
   end
 
   describe 'validations' do
-    it 'rejects a drag_drop question with no blanks' do
-      question = build(:question, question_type: 'drag_drop', config: drag_drop_config.merge('text' => 'no blanks'))
+    it 'rejects a drag_drop question whose question text has no blanks' do
+      question = build(:question, question_type: 'drag_drop', question_text: 'no blanks here', config: drag_drop_config)
       expect(question).to be_invalid
     end
 
     it 'rejects a drag_drop answer pointing at a missing item' do
-      question = build(:question, question_type: 'drag_drop',
+      question = build(:question, question_type: 'drag_drop', question_text: cloze_text,
                                   config: drag_drop_config.merge('answer' => { '1' => 'i1', '2' => 'missing' }))
       expect(question).to be_invalid
     end
 
     it 'accepts a well-formed drag_drop question' do
-      expect(build(:question, question_type: 'drag_drop', config: drag_drop_config)).to be_valid
+      question = build(:question, question_type: 'drag_drop', question_text: cloze_text, config: drag_drop_config)
+      expect(question).to be_valid
     end
 
     it 'rejects a matrix row with no correct column' do

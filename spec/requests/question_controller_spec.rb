@@ -30,9 +30,8 @@ RSpec.describe 'using question editing', type: :request do
   context 'when authoring a drag-and-drop question' do
     let(:topic) { create(:topic, subject: subject) }
     let(:question) do
-      create(:question, topic: topic, question_type: 'drag_drop',
-                        config: { 'text' => 'A {{1}}.', 'items' => [{ 'id' => 'i1', 'text' => 'one' }],
-                                  'answer' => { '1' => 'i1' } })
+      create(:question, topic: topic, question_type: 'drag_drop', question_text: 'A {{1}}.',
+                        config: { 'items' => [{ 'id' => 'i1', 'text' => 'one' }], 'answer' => { '1' => 'i1' } })
     end
 
     before { sign_in author }

@@ -6,9 +6,8 @@
   - if @question.topic.present?
     .tjs-question__pill
       = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
-  .tjs-question__text ==@question.question_text
   .tjs-cloze
-    - cloze_segments(@question.config['text']).each do |kind, value|
+    - cloze_segments(@question.cloze_text).each do |kind, value|
       - if kind == :text
         span.tjs-cloze__text = value
       - else

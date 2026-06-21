@@ -214,9 +214,8 @@ end
 def seed_drag_drop_question(topic)
   Question.create!(
     topic:, question_type: 'drag_drop',
-    question_text: 'Drag each component into the correct blank.',
+    question_text: 'The CPU contains the {{1}} unit and the {{2}} unit.',
     config: {
-      'text' => 'The CPU contains the {{1}} unit and the {{2}} unit.',
       'items' => [{ 'id' => 'i1', 'text' => 'control' },
                   { 'id' => 'i2', 'text' => 'arithmetic logic' },
                   { 'id' => 'i3', 'text' => 'storage (distractor)' }],

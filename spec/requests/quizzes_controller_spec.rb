@@ -135,9 +135,8 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
 
   describe 'answering a drag-and-drop question' do
     let(:dd_question) do
-      create(:question, topic: topic, question_type: 'drag_drop',
-                        config: { 'text' => 'A {{1}} and a {{2}}.',
-                                  'items' => [{ 'id' => 'i1', 'text' => 'one' }, { 'id' => 'i2', 'text' => 'two' }],
+      create(:question, topic: topic, question_type: 'drag_drop', question_text: 'A {{1}} and a {{2}}.',
+                        config: { 'items' => [{ 'id' => 'i1', 'text' => 'one' }, { 'id' => 'i2', 'text' => 'two' }],
                                   'answer' => { '1' => 'i1', '2' => 'i2' } })
     end
     let(:quiz) do

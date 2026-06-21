@@ -8,15 +8,19 @@
     .tjs-builder__help
       h3.tjs-builder__help-title How to build a drag-and-drop question
       ol
-        li In the cloze text, mark each blank with {{1}}, {{2}}, {{3}} and so on — these become the drop zones students fill in.
+        li In the Question Text box above, write the sentence and mark each blank with {{1}}, {{2}}, {{3}} and so on — these become the drop zones students fill in.
         li Add one item per draggable tile. The item's text is what the student sees on the tile.
         li
           | For an item that answers a blank, put that blank's number in the
-          strong  Blank #
+          strong  Blank #(s)
           | field (e.g. 1 for the first blank).
         li
+          | An item can answer more than one blank — list the numbers separated by commas (e.g.
+          strong  1,3
+          | ). Students can reuse the same tile in each of those blanks.
+        li
           | Leave the
-          strong  Blank #
+          strong  Blank #(s)
           | field empty to make an item a distractor — a wrong option that isn't the answer to any blank.
-        li Every blank must have exactly one item assigned to it before the question can be saved.
+        li Every blank must have an item assigned to it before the question can be saved.
       p.tjs-builder__help-note Example: “The CPU has a {{1}} unit and a {{2}} unit.” with items “control” (Blank 1), “arithmetic logic” (Blank 2) and “storage” (no blank — a distractor).

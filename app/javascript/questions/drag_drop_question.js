@@ -23,26 +23,42 @@ function revealDragDrop (serverResponse) {
   })
 }
 
+let dragFromSlot = null
+
 function dragStart (event) {
   const tile = event.target.closest('.tjs-draggable')
   if (!tile) return
+  // Remember whether the drag started from a slot (a placed copy) or the tray (a reusable original).
+  dragFromSlot = tile.closest('.tjs-slot')
   event.dataTransfer.setData('text/plain', tile.dataset.itemId)
   tile.classList.add('tjs-dragging')
 }
 
 function dropOnTarget (event) {
-  const target = event.target.closest('.tjs-slot, [data-tray]')
-  if (!target) return
+  const slot = event.target.closest('#dragDrop .tjs-slot')
+  const tray = event.target.closest('#dragDrop [data-tray]')
+  if (!slot && !tray) return
   event.preventDefault()
-  const itemId = event.dataTransfer.getData('text/plain')
-  const tile = document.querySelector(`#dragDrop .tjs-tile[data-item-id="${itemId}"]`)
-  if (!tile) return
-  // A slot holds one tile: bounce any current occupant back to the tray.
-  if (target.classList.contains('tjs-slot')) {
-    const occupant = target.querySelector('.tjs-tile')
-    if (occupant) document.querySelector('#dragDrop [data-tray]')?.appendChild(occupant)
+
+  if (slot) {
+    placeInSlot(slot, event.dataTransfer.getData('text/plain'))
+  } else if (dragFromSlot) {
+    // Dropping a placed copy back on the tray just removes it — the original tile stays available.
+    dragFromSlot.querySelector('.tjs-tile')?.remove()
   }
-  target.appendChild(tile)
+  dragFromSlot = null
+}
+
+// Tray tiles are reusable originals, so an item can fill more than one blank: each drop drops a
+// CLONE into the slot. A slot holds one tile; replace any existing occupant.
+function placeInSlot (slot, itemId) {
+  const original = document.querySelector(`#dragDrop [data-tray] .tjs-tile[data-item-id="${itemId}"]`)
+  if (!original) return
+  slot.querySelector('.tjs-tile')?.remove()
+  const clone = original.cloneNode(true)
+  clone.classList.remove('tjs-dragging')
+  slot.appendChild(clone)
+  if (dragFromSlot && dragFromSlot !== slot) dragFromSlot.querySelector('.tjs-tile')?.remove()
 }
 
 document.addEventListener('dragstart', dragStart)
