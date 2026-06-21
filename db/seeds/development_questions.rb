@@ -160,6 +160,7 @@ def seed_question_statistics
     QuestionStatistic.find_or_initialize_by(question:).tap do |stat|
       stat.number_asked = rand(20..500)
       stat.number_correct = stat.number_asked - rand(0..stat.number_asked)
+      stat.score_sum = stat.number_correct.to_f
       stat.save!
     end
   end

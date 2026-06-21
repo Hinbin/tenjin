@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_21_000300) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_21_000500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -134,6 +134,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_000300) do
     t.datetime "created_at", precision: nil, null: false
     t.bigint "question_id"
     t.bigint "quiz_id"
+    t.jsonb "response"
+    t.decimal "score", precision: 5, scale: 4
     t.datetime "updated_at", precision: nil, null: false
     t.index ["question_id"], name: "index_asked_questions_on_question_id"
     t.index ["quiz_id"], name: "index_asked_questions_on_quiz_id"
@@ -288,6 +290,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_000300) do
     t.integer "number_asked"
     t.integer "number_correct"
     t.bigint "question_id", null: false
+    t.float "score_sum", default: 0.0, null: false
     t.datetime "updated_at", null: false
     t.index ["question_id"], name: "index_question_statistics_on_question_id", unique: true
   end
@@ -479,6 +482,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_000300) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "student_question_statistics", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "last_asked_at"
+    t.integer "number_asked", default: 0, null: false
+    t.integer "number_correct", default: 0, null: false
+    t.bigint "question_id", null: false
+    t.float "score_sum", default: 0.0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["question_id"], name: "index_student_question_statistics_on_question_id"
+    t.index ["user_id", "question_id"], name: "index_student_question_statistics_on_user_id_and_question_id", unique: true
+    t.index ["user_id"], name: "index_student_question_statistics_on_user_id"
+  end
+
   create_table "subjects", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.datetime "created_at", precision: nil, null: false
@@ -620,6 +637,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_000300) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "student_question_statistics", "questions"
+  add_foreign_key "student_question_statistics", "users"
   add_foreign_key "topic_scores", "topics"
   add_foreign_key "topic_scores", "users"
   add_foreign_key "topics", "subjects"

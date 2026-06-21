@@ -109,6 +109,30 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
     end
   end
 
+  describe 'scoring an answer' do
+    let(:sa_question) { create(:question, topic: topic, question_type: 'short_answer') }
+    let(:quiz) do
+      create(:new_quiz, user: student, question_order: [sa_question.id], counts_for_leaderboard: false,
+                        answered_correct: 0, streak: 0, max_streak: 0)
+    end
+    let(:asked_question) { create(:asked_question, quiz: quiz, question: sa_question) }
+
+    before do
+      sa_question.answers.first.update!(text: 'cat', correct: true)
+      asked_question
+    end
+
+    it 'stores a full score for a correct answer' do
+      patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'cat' } }
+      expect(asked_question.reload.score).to eq(1.0)
+    end
+
+    it 'stores a zero score for an incorrect answer' do
+      patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'dog' } }
+      expect(asked_question.reload.score).to eq(0.0)
+    end
+  end
+
   describe 'answering a question while a cosmetic trial is active' do
     let(:sa_question) { create(:question, topic: topic, question_type: 'short_answer') }
     let(:quiz) { create(:new_quiz, user: student, question_order: [sa_question.id]) }

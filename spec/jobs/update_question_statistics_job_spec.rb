@@ -80,6 +80,50 @@ RSpec.describe UpdateQuestionStatisticsJob, :default_creates, type: :job do
     expect { described_class.perform_now }.to change(AskedQuestion, :count).by(-1)
   end
 
+  context 'when accumulating partial-credit score' do
+    it 'seeds score_sum from a correct attempt' do
+      asked_question
+      described_class.perform_now
+      expect(question_statistic.score_sum).to eq(1.0)
+    end
+
+    it 'uses the stored partial-credit score when present' do
+      create(:asked_question, question: question, correct: true, score: 0.5, quiz: quiz, user: student)
+      described_class.perform_now
+      expect(question_statistic.score_sum).to eq(0.5)
+    end
+
+    it 'adds to an existing score_sum' do
+      existing_statistic.update!(score_sum: 2.0)
+      asked_question
+      described_class.perform_now
+      expect { existing_statistic.reload }.to change(existing_statistic, :score_sum).by(1.0)
+    end
+  end
+
+  context 'when building the per-student rollup' do
+    it 'creates a student_question_statistic' do
+      asked_question
+      expect { described_class.perform_now }.to change(StudentQuestionStatistic, :count).by(1)
+    end
+
+    it 'records the attempt for the right student and question' do
+      asked_question
+      described_class.perform_now
+      stat = StudentQuestionStatistic.find_by(user: student, question: question)
+      expect(stat).to have_attributes(number_asked: 1, number_correct: 1, score_sum: 1.0)
+    end
+
+    it 'accumulates across attempts' do
+      create(:student_question_statistic, user: student, question: question,
+                                          number_asked: 3, number_correct: 2, score_sum: 2.0)
+      asked_question
+      described_class.perform_now
+      stat = StudentQuestionStatistic.find_by(user: student, question: question)
+      expect(stat).to have_attributes(number_asked: 4, number_correct: 3, score_sum: 3.0)
+    end
+  end
+
   context 'when the quiz is still active' do
     let(:quiz) { create(:quiz, active: true) }
 
