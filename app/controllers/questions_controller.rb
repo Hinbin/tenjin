@@ -111,8 +111,8 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.expect(question: [:question_text, :question_type, :lesson_id,
-                             :topic_id, { answers_attributes: [%i[correct id text _destroy]] }])
+    params.expect(question: [:question_text, :question_type, :lesson_id, :topic_id, :explanation,
+                             { answers_attributes: [%i[correct id text _destroy]] }])
   end
 
   def set_question

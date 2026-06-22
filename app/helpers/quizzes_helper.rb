@@ -18,6 +18,8 @@ module QuizzesHelper
     when 'short_answer' then render('short_answer')
     when 'drag_drop' then render('drag_drop')
     when 'matrix' then render('matrix')
+    when 'fill_blank' then render('fill_blank')
+    when 'ordering' then render('ordering')
     else render('multiple_choice')
     end
   end

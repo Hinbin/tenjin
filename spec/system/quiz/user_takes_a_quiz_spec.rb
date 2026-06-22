@@ -84,6 +84,12 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
         find(id: incorrect_response_selector).click
         expect(page).to have_css('i.fa-times')
       end
+
+      it 'shows the author explanation after I answer' do
+        question.update!(explanation: 'Because the binary place values add up to ten.')
+        find(id: incorrect_response_selector).click
+        expect(find_by_id('answerFeedback')).to have_text('Because the binary place values add up to ten.')
+      end
     end
 
     context 'when flagging unfair questions' do
@@ -202,18 +208,19 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
       expect(page).to have_css('#shortAnswerButton.incorrect-answer')
     end
 
-    it 'gives the correct answer if I responded incorrectly' do
+    it 'keeps my answer on screen and shows the correct answer if I responded incorrectly' do
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      find('.incorrect-answer')
-      expect(find_field('shortAnswerText', disabled: true).value).to eq(correct_response)
+      find_by_id('shortAnswerButton', class: 'incorrect-answer')
+      expect(find_field('shortAnswerText', disabled: true).value).to eq(incorrect_response)
+      expect(find_by_id('answerFeedback')).to have_text(correct_response)
     end
 
-    it 'gives the correct answers if I responded incorrectly to a question that has multiple answers' do
+    it 'shows every correct answer if I responded incorrectly to a question that has multiple answers' do
       second_correct_answer
       fill_in('shortAnswerText', with: incorrect_response).native.send_keys(:return)
-      find('.incorrect-answer')
-      expect(find_field('shortAnswerText', disabled: true).value).to include(correct_response)
-        .and include(second_correct_answer.text)
+      find_by_id('shortAnswerButton', class: 'incorrect-answer')
+      expect(find_field('shortAnswerText', disabled: true).value).to eq(incorrect_response)
+      expect(find_by_id('answerFeedback')).to have_text(correct_response).and have_text(second_correct_answer.text)
     end
 
     it 'allows multiple answers for a single word question' do

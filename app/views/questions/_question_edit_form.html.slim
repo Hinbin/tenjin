@@ -14,6 +14,11 @@
       p.error = e
     - @question.errors[:base].each do |e|
       p.error = e
+  .tjk-field
+    =f.label :explanation, 'Explanation (optional)'
+    =f.text_area :explanation, class: 'tjk-input', rows: 2,
+      placeholder: 'Shown to students after they answer — explain why the correct answer is right.'
+    p.tjk-hint Helps students learn from mistakes. Displayed beneath the correct answer on the reveal.
   .tjk-field.tjk-field--horizontal
     .tjk-label.tjk-label--horizontal
       =f.label('select-lesson', 'Lesson:')

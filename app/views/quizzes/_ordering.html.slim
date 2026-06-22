@@ -1,0 +1,23 @@
+/ Ordering (sequencing) question — drag the tiles into the correct order, or use the ↑/↓ buttons.
+/ Partial-credit scored (each tile in its correct position). KEEP: #orderingList, .tjs-order-item
+/ [data-item-id][draggable], .tjs-order-up / .tjs-order-down, #orderingSubmit, #nextButton /
+/ .next-button / .tj-invisible. ordering_question.js handles drag + arrows, submits the order and
+/ reveals correct positions.
+.tjs-question id="ordering"
+  - if @question.topic.present?
+    .tjs-question__pill
+      = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
+  .tjs-question__text ==@question.question_text
+  ol.tjs-order-list#orderingList
+    - @question.config['items'].to_a.shuffle.each do |item|
+      li.tjs-order-item draggable='true' data-item-id=item['id']
+        span.tjs-order-item__handle aria-hidden='true' ⠿
+        span.tjs-order-item__text = item['text']
+        span.tjs-order-item__controls
+          button.tjs-order-up type='button' aria-label='Move up' ↑
+          button.tjs-order-down type='button' aria-label='Move down' ↓
+  / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
+  .tjs-quiz__fx data-quiz-target='answerFx' aria-hidden='true'
+  = render 'quizzes/answer_feedback'
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__submit.question-button#orderingSubmit Check Answer
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__next.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question

@@ -19,8 +19,31 @@
           strong  1,3
           | ). Students can reuse the same tile in each of those blanks.
         li
+          | A blank can also have more than one correct item — put that blank's number on each item that should be accepted, and any of them placed in the blank scores it.
+        li
           | Leave the
           strong  Blank #(s)
           | field empty to make an item a distractor — a wrong option that isn't the answer to any blank.
         li Every blank must have an item assigned to it before the question can be saved.
       p.tjs-builder__help-note Example: “The CPU has a {{1}} unit and a {{2}} unit.” with items “control” (Blank 1), “arithmetic logic” (Blank 2) and “storage” (no blank — a distractor).
+  - if @question.fill_blank?
+    .tjs-builder__help
+      h3.tjs-builder__help-title How to build a gap-fill question
+      ol
+        li In the Question Text box above, write the sentence and mark each blank with {{1}}, {{2}}, {{3}} and so on — students type the missing word into each one.
+        li Add one row per blank. Put the blank's number in the Blank # field and the word students must type in the Accepted answer(s) field.
+        li
+          | To accept more than one wording for a blank, separate the alternatives with a vertical bar (e.g.
+          strong  RAM|random access memory
+          | ). Matching ignores capitals and surrounding spaces.
+        li Every blank must have at least one accepted answer before the question can be saved.
+      p.tjs-builder__help-note Example: “A loop that runs a set number of times is a {{1}} loop.” with Blank 1 accepting “count-controlled|count controlled”.
+  - if @question.ordering?
+    .tjs-builder__help
+      h3.tjs-builder__help-title How to build an ordering question
+      ol
+        li Use the Question Text box above for the instruction (e.g. “Put the steps of a bubble sort in order.”).
+        li Add one item per step and write them in the correct order — top is first, bottom is last.
+        li Use the ↑ / ↓ buttons to reorder items. Students see the items shuffled and rebuild this sequence.
+        li You need at least two items. Each item placed in its correct position earns part of the marks.
+      p.tjs-builder__help-note Example: items “Fetch”, “Decode”, “Execute” entered in that order.

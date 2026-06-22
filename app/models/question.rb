@@ -15,7 +15,8 @@ class Question < ApplicationRecord
 
   has_rich_text :question_text
 
-  enum :question_type, { short_answer: 0, boolean: 1, multiple: 2, drag_drop: 3, matrix: 4 }
+  enum :question_type, { short_answer: 0, boolean: 1, multiple: 2, drag_drop: 3, matrix: 4,
+                         fill_blank: 5, ordering: 6 }
 
   before_update :check_boolean
   before_update :check_short_answer
@@ -56,6 +57,7 @@ class Question < ApplicationRecord
     json = { question_text: question_text.body,
              question_type:,
              answers: answers.as_json(only: %i[text correct]) }
+    json[:explanation] = explanation if explanation.present?
     json[:lesson] = lesson.title if lesson
     json[:config] = config if structured?
     json

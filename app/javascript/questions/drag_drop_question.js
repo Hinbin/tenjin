@@ -1,4 +1,4 @@
-import { submitAnswer, finishAnswer } from 'questions/questions_shared'
+import { submitAnswer, finishAnswer, revealFeedback } from 'questions/questions_shared'
 
 // Drag-and-drop (cloze) quiz question. Drag .tjs-draggable item tiles into .tjs-slot blanks, then
 // #dragDropSubmit PUTs { slot => item_id } and reveals the correct mapping. Presentation aside, all
@@ -13,13 +13,32 @@ function placedAnswer () {
   return answer
 }
 
+// item_id => tile text, read from the tray originals, so the reveal can name the correct item.
+function itemTextMap () {
+  const map = {}
+  document.querySelectorAll('#dragDrop [data-tray] .tjs-tile').forEach(tile => {
+    map[tile.dataset.itemId] = tile.textContent.trim()
+  })
+  return map
+}
+
 function revealDragDrop (serverResponse) {
   const solution = serverResponse.solution || {}
+  const text = itemTextMap()
   document.querySelectorAll('#dragDrop .tjs-slot').forEach(slot => {
     const tile = slot.querySelector('.tjs-tile')
-    const correctId = solution[slot.dataset.slot]
-    const correct = tile && tile.dataset.itemId === correctId
+    // A blank may accept several items, so the solution value can be a single id or an array of ids.
+    const correctIds = [].concat(solution[slot.dataset.slot] || [])
+    const correct = tile && correctIds.includes(tile.dataset.itemId)
     slot.classList.add(correct ? 'correct-answer' : 'incorrect-answer')
+    // Their dropped tile stays in the slot (marked wrong); name an accepted item right after it.
+    const names = correctIds.map(id => text[id]).filter(Boolean)
+    if (!correct && names.length) {
+      const tag = document.createElement('span')
+      tag.className = 'tjs-slot__correct'
+      tag.textContent = names.join(' / ')
+      slot.insertAdjacentElement('afterend', tag)
+    }
   })
 }
 
@@ -77,6 +96,7 @@ document.addEventListener('click', (event) => {
   Object.entries(answer).forEach(([slot, itemId]) => { params[`answer[structured][${slot}]`] = itemId })
   submitAnswer(params).then(result => {
     revealDragDrop(result)
+    revealFeedback(null, result.explanation)
     finishAnswer(result.score >= 1.0, result)
   })
 })

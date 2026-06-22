@@ -17,6 +17,9 @@
   --bg0: #0a0712; --bg1: #170c26; --grid: #3a1f5c; --surface: rgba(28,18,46,0.72);
   --line: rgba(255,255,255,0.10); --ink: #f3ecff; --dim: #9d90b8;
   --n1: #ff2d95; --n2: #27e6e6; --n3: #b14dff; --gold: #ffd23f;
+  // Semantic answer-reveal colours. Deliberately OUTSIDE the rotating neon palette (n1/n2/n3) so
+  // "correct" always reads green and "incorrect" always red, whatever skin/palette is equipped.
+  --correct: #2fbf71; --incorrect: #e5484d;
   --edge: #000; --track: rgba(255,255,255,0.12); --on-accent: #0a0712;
   --f-display: 'Zen Dots', system-ui, sans-serif;
   --f-body: 'Zen Kaku Gothic New', system-ui, sans-serif;

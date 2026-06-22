@@ -15,4 +15,5 @@
         span.tjs-answer__text = a.text
   / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
   .tjs-quiz__fx data-quiz-target='answerFx' aria-hidden='true'
+  = render 'quizzes/answer_feedback'
   button.tjs-btn.tjs-btn--primary.tjs-quiz__next.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question

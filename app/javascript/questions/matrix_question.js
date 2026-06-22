@@ -1,4 +1,4 @@
-import { submitAnswer, finishAnswer } from 'questions/questions_shared'
+import { submitAnswer, finishAnswer, revealFeedback } from 'questions/questions_shared'
 
 // Matrix (tick-box grid) quiz question. Collect ticked cells as { row_id => [col_id, …] },
 // PUT them, then reveal the correct cells. Partial-credit scored on the server.
@@ -33,6 +33,8 @@ document.addEventListener('click', (event) => {
   Object.entries(answer).forEach(([rowId, cols]) => { params[`answer[structured][${rowId}][]`] = cols })
   submitAnswer(params).then(result => {
     revealMatrix(result)
+    // Correct cells are keyed inline (.tjs-matrix__cell--key); add the author's explanation.
+    revealFeedback(null, result.explanation)
     finishAnswer(result.score >= 1.0, result)
   })
 })

@@ -1,8 +1,9 @@
-import updateQuizStatistics from 'questions/questions_shared'
+import updateQuizStatistics, { revealFeedback, correctAnswerNode } from 'questions/questions_shared'
 
 function processShortResponse (serverResponse, guess) {
   const results = serverResponse.answer
   let correct = false
+  let correctNode = null
   const btn = document.getElementById('shortAnswerButton')
   const input = document.getElementById('shortAnswerText')
 
@@ -23,14 +24,13 @@ function processShortResponse (serverResponse, guess) {
       btn.textContent = 'Incorrect'
       btn.insertAdjacentHTML('beforeend', '<i class="fas fa-times fa-lg" style="float:right;margin:0.25rem 0"></i>')
     }
-    if (input) {
-      input.classList.add('correct-answer')
-      input.value = results.length === 1
-        ? results[0].text
-        : results.map(r => r.text).join(' or ')
-    }
+    // Keep the student's own answer on screen (marked wrong) and show the correct one alongside it.
+    if (input) input.classList.add('incorrect-answer')
+    const text = results.length === 1 ? results[0].text : results.map(r => r.text).join(' or ')
+    correctNode = correctAnswerNode(text)
   }
 
+  revealFeedback(correctNode, serverResponse.explanation)
   updateQuizStatistics(serverResponse)
   document.dispatchEvent(new CustomEvent('quiz:answered', {
     detail: {
