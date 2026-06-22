@@ -30,7 +30,7 @@ function processShortResponse (serverResponse, guess) {
     correctNode = correctAnswerNode(text)
   }
 
-  revealFeedback(correctNode, serverResponse.explanation)
+  revealFeedback(correctNode, serverResponse.explanation, serverResponse.tooFast)
   updateQuizStatistics(serverResponse)
   document.dispatchEvent(new CustomEvent('quiz:answered', {
     detail: {

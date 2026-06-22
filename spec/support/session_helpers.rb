@@ -54,6 +54,15 @@ module SessionHelpers
     find('.trix-content')
   end
 
+  # Anti-cheat: Quiz::CheckAnswer flags any answer given within MIN_ANSWER_SECONDS of the quiz starting
+  # as "too fast", awarding no points/streak/challenge progress. System specs answer instantly, so age
+  # the server-set clock to simulate a human-paced answer. Call after the quiz has rendered and before
+  # each answer click (record_timing re-arms the clock after every answer).
+  def enable_quiz_scoring
+    find(class: 'question-button') # wait for the quiz to render (and be created)
+    Quiz.last.update_column(:time_last_answered, 10.seconds.ago)
+  end
+
   def navigate_to_lucky_dip
     visit(new_quiz_path(subject: subject.name))
     select 'Lucky Dip', from: 'quiz_topic_id'

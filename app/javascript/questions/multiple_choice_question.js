@@ -5,10 +5,10 @@ function processMultipleChoiceResponse (serverResponse, guessId) {
   let correct = false
 
   for (const result of results) {
-    const resultEl = document.getElementById('response-' + result.id)
+    const resultEl = document.getElementById('response-' + result.token)
     if (resultEl) {
       resultEl.classList.add('correct-answer')
-      if ('response-' + result.id === guessId) {
+      if ('response-' + result.token === guessId) {
         correct = true
         resultEl.insertAdjacentHTML('beforeend', '<i class="fas fa-check fa-lg" style="float:right;margin:0.25rem 0"></i>')
       }
@@ -25,7 +25,7 @@ function processMultipleChoiceResponse (serverResponse, guessId) {
 
   updateQuizStatistics(serverResponse)
   // Correct/your-pick are already marked inline; just surface the author's explanation.
-  revealFeedback(null, serverResponse.explanation)
+  revealFeedback(null, serverResponse.explanation, serverResponse.tooFast)
   dispatchAnswered(correct, serverResponse)
 
   const nextBtn = document.getElementById('nextButton')

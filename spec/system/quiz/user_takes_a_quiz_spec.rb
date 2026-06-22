@@ -9,7 +9,12 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
   context 'when answering a multiple choice question' do
     let(:question) { create(:question, topic:) }
     let(:correct_response) { Answer.where(correct: true).first }
-    let(:correct_response_selector) { "response-#{correct_response.id}" }
+
+    # Anti-cheat hides the real answers.id: button ids are now per-quiz tokens (Quiz::AnswerToken), so
+    # we locate answer buttons by their visible text instead of by id.
+    def answer_button(answer)
+      find('button.multiple-choice-button', text: answer.text)
+    end
 
     before do
       setup_subject_database
@@ -36,7 +41,7 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
     end
 
     context 'when selecting a response' do
-      let(:incorrect_response_selector) { "response-#{question.answers.where(correct: false).first.id}" }
+      let(:incorrect_response) { question.answers.where(correct: false).first }
 
       it 'only shows a lesson video if one is present' do
         expect(page).to have_no_css('.videoLink')
@@ -61,33 +66,33 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
       end
 
       it 'indicates if the answer I gave was right' do
-        find(id: correct_response_selector).click
-        expect(page).to have_css("button##{correct_response_selector}.correct-answer")
+        answer_button(correct_response).click
+        expect(page).to have_css('button.multiple-choice-button.correct-answer', text: correct_response.text)
       end
 
       it 'indicates if the answer I gave was wrong' do
-        find(id: incorrect_response_selector).click
-        expect(page).to have_css("button##{incorrect_response_selector}.incorrect-answer")
+        answer_button(incorrect_response).click
+        expect(page).to have_css('button.multiple-choice-button.incorrect-answer', text: incorrect_response.text)
       end
 
       it 'indicates the correct answer if the answer I gave was wrong' do
-        find(id: incorrect_response_selector).click
-        expect(page).to have_css("button##{correct_response_selector}.correct-answer")
+        answer_button(incorrect_response).click
+        expect(page).to have_css('button.multiple-choice-button.correct-answer', text: correct_response.text)
       end
 
       it 'uses icons to show which questions are right' do
-        find(id: correct_response_selector).click
+        answer_button(correct_response).click
         expect(page).to have_css('i.fa-check')
       end
 
       it 'uses icons to show which questions are wrong' do
-        find(id: incorrect_response_selector).click
+        answer_button(incorrect_response).click
         expect(page).to have_css('i.fa-times')
       end
 
       it 'shows the author explanation after I answer' do
         question.update!(explanation: 'Because the binary place values add up to ten.')
-        find(id: incorrect_response_selector).click
+        answer_button(incorrect_response).click
         expect(find_by_id('answerFeedback')).to have_text('Because the binary place values add up to ten.')
       end
     end
@@ -248,6 +253,9 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
     context 'when checking my multipliers' do
       before do
         create(:asked_question, question:, quiz: Quiz.first, user: student)
+        # Anti-cheat: an answer within MIN_ANSWER_SECONDS of quiz start is flagged too fast and earns
+        # no point, so simulate a human-paced answer to test the normal multiplier path (Quiz::CheckAnswer).
+        Quiz.first.update(time_last_answered: 10.seconds.ago)
       end
 
       it 'shows the current multiplier' do
@@ -275,6 +283,9 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
         create(:asked_question, question:, quiz:, user: student)
         create(:asked_question, question:, quiz:, user: student)
         quiz.streak = 3
+        # Anti-cheat: an answer within MIN_ANSWER_SECONDS of quiz start is flagged too fast and freezes
+        # the streak, so simulate a human-paced answer to test the normal streak path (Quiz::CheckAnswer).
+        quiz.time_last_answered = 10.seconds.ago
         quiz.save
       end
 

@@ -28,16 +28,26 @@ export function submitAnswer (params) {
   }).then(r => r.json())
 }
 
+// Anti-cheat: shown when the server rejected the answer's speed (tooFast) — see Quiz::CheckAnswer.
+export const TOO_FAST_MESSAGE = 'Answered too fast to count — no points awarded for this question.'
+
 // Post-answer learning panel (#answerFeedback, present in every quiz partial). `correctNode` is an
 // optional DOM node spelling out the correct answer for types that can't show it inline (short answer,
-// ordering); `explanation` is the author's optional "why" from the question. We only reveal the panel
-// when there's something to say, so a clean correct answer with no explanation stays uncluttered.
+// ordering); `explanation` is the author's optional "why" from the question; `tooFast` shows the
+// no-points speed warning. We only reveal the panel when there's something to say, so a clean correct
+// answer with no explanation stays uncluttered.
 // Built with textContent / DOM nodes — never innerHTML — so author text can't inject markup.
-export function revealFeedback (correctNode, explanation) {
+export function revealFeedback (correctNode, explanation, tooFast = false) {
   const el = document.getElementById('answerFeedback')
   if (!el) return
   el.replaceChildren()
 
+  if (tooFast) {
+    const warn = document.createElement('p')
+    warn.className = 'tjs-quiz__feedback-warning'
+    warn.textContent = TOO_FAST_MESSAGE
+    el.appendChild(warn)
+  }
   if (correctNode) el.appendChild(correctNode)
   if (explanation && String(explanation).trim()) {
     const p = document.createElement('p')

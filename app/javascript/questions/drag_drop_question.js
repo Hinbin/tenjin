@@ -119,7 +119,7 @@ document.addEventListener('click', (event) => {
   Object.entries(answer).forEach(([slot, itemId]) => { params[`answer[structured][${slot}]`] = itemId })
   submitAnswer(params).then(result => {
     revealDragDrop(result)
-    revealFeedback(null, result.explanation)
+    revealFeedback(null, result.explanation, result.tooFast)
     finishAnswer(result.score >= 1.0, result)
   })
 })

@@ -9,8 +9,10 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
   end
 
   def click_through_quiz
+    enable_quiz_scoring
     first(class: 'question-button').click
     first(class: 'next-button').click
+    enable_quiz_scoring
     first(class: 'question-button').click
     first(class: 'next-button').click
   end
@@ -55,6 +57,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
       it 'flags the challenge complete' do
         visit(dashboard_path)
         first('#challenge-table .challenge-row', minimum: 1).click
+        enable_quiz_scoring
         first(class: 'question-button').click
         first(class: 'next-button').click
         visit(dashboard_path)
@@ -71,6 +74,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
       it 'flags the challenge complete' do
         visit(dashboard_path)
         first('#challenge-table .challenge-row', minimum: 1).click
+        enable_quiz_scoring
         first(class: 'question-button').click
         first(class: 'next-button').click
         visit(dashboard_path)
@@ -100,6 +104,7 @@ RSpec.describe 'User attempts a challenge', :default_creates, :js, type: :system
       it 'flags the challenge complete' do
         visit(dashboard_path)
         first('#challenge-table .challenge-row', minimum: 1).click
+        enable_quiz_scoring
         first(class: 'question-button').click
         first(class: 'next-button').click
         visit(dashboard_path)

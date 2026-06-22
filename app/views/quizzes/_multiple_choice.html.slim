@@ -10,7 +10,7 @@
   .tjs-answers
     - answers = @question.answers.shuffle
     - answers.each_with_index do |a, i|
-      button.tjs-card.tjs-tile.tjs-answer.question-button.multiple-choice-button id="response-#{a.id}"
+      button.tjs-card.tjs-tile.tjs-answer.question-button.multiple-choice-button id="response-#{answer_token(a)}"
         span.tjs-answer__badge = ('A'.ord + i).chr
         span.tjs-answer__text = a.text
   / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer

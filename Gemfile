@@ -21,6 +21,7 @@ gem 'rails', '~> 8.1'
 
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 7.2'
+gem 'rack-attack'
 gem 'rack-cors', groups: [:production]
 gem 'rack-timeout', groups: [:production]
 

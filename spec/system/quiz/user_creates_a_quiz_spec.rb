@@ -63,6 +63,7 @@ RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
 
     it 'allows you to score points for the first attempt' do
       navigate_to_quiz
+      enable_quiz_scoring
       first(class: 'question-button').click
       find('.correct-answer')
       expect(user_topic_score).to eq(1)
@@ -71,6 +72,7 @@ RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
     it 'allows you to score points for the third attempt' do
       two_quizzes_started
       navigate_to_quiz
+      enable_quiz_scoring
       first(class: 'question-button').click
       find('.correct-answer')
       expect(user_topic_score).to eq(1)
