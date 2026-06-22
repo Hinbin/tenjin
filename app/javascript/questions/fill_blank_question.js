@@ -45,7 +45,7 @@ document.addEventListener('click', (event) => {
   Object.entries(answer).forEach(([slot, text]) => { params[`answer[structured][${slot}]`] = text })
   submitAnswer(params).then(result => {
     revealFillBlank(result)
-    revealFeedback(null, result.explanation)
+    revealFeedback(null, result.explanation, result.tooFast)
     finishAnswer(result.score >= 1.0, result)
   })
 })

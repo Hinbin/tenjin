@@ -57,4 +57,5 @@ pin "questions/fill_blank_question",        to: "questions/fill_blank_question.j
 pin "questions/ordering_question",          to: "questions/ordering_question.js"
 pin "questions/import_topic_questions",     to: "questions/import_topic_questions.js"
 pin "questions/questions_shared",           to: "questions/questions_shared.js"
+pin "questions/touch_drag",                 to: "questions/touch_drag.js"
 pin "channels/consumer",                    to: "channels/consumer.js"

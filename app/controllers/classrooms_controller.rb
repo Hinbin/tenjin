@@ -14,6 +14,7 @@ class ClassroomsController < ApplicationController
   def show
     authorize @classroom
     @students = User.joins(enrollments: :classroom).where(role: 'student', enrollments: { classroom: @classroom })
+    @fast_flag_counts = AskedQuestion.fast_flag_counts(@students.map(&:id))
     @homeworks = @classroom.homework_counts
 
     @homework_progress = HomeworkProgress.joins(:homework)

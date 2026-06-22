@@ -277,4 +277,106 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
       expect(flash[:notice]).to match(/try another look/i)
     end
   end
+
+  # Anti-cheat #1: a correct answer that arrives faster than a human could read is accepted but earns
+  # no point and is flagged. Timing is server-set (quiz.time_last_answered), so it can't be forged.
+  describe 'anti-cheat: minimum answer time' do
+    let(:sa_question) { create(:question, topic: topic, question_type: 'short_answer') }
+    let(:quiz) do
+      create(:new_quiz, user: student, question_order: [sa_question.id], counts_for_leaderboard: false,
+                        answered_correct: 0, streak: 3, max_streak: 3)
+    end
+
+    before do
+      sa_question.answers.first.update!(text: 'cat', correct: true)
+      create(:asked_question, quiz: quiz, question: sa_question, user: student)
+    end
+
+    context 'when a correct answer arrives implausibly fast' do
+      before { quiz.update!(time_last_answered: Time.current) }
+
+      it 'still scores it correct but flags it' do
+        patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'cat' } }
+        expect(AskedQuestion.last).to have_attributes(correct: true, score: 1.0, flagged_fast: true)
+      end
+
+      it 'withholds the leaderboard point' do
+        allow(Quiz::AddLeaderboardPoint).to receive(:call)
+        patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'cat' } }
+        expect(Quiz::AddLeaderboardPoint).not_to have_received(:call)
+      end
+
+      it 'freezes the combo — streak neither grows nor resets' do
+        patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'cat' } }
+        expect(quiz.reload.streak).to eq(3)
+      end
+
+      it 'warns the student in the reveal payload' do
+        patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'cat' } }
+        expect(response.parsed_body['tooFast']).to be(true)
+      end
+    end
+
+    context 'when a correct answer arrives at human speed' do
+      before { quiz.update!(time_last_answered: 5.seconds.ago) }
+
+      it 'is not flagged and does not warn' do
+        patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'cat' } }
+        expect(AskedQuestion.last.flagged_fast).to be(false)
+        expect(response.parsed_body['tooFast']).to be(false)
+      end
+
+      it 'awards the point and advances the combo' do
+        allow(Quiz::AddLeaderboardPoint).to receive(:call)
+        patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'cat' } }
+        expect(Quiz::AddLeaderboardPoint).to have_received(:call)
+        expect(quiz.reload.streak).to eq(4)
+      end
+    end
+  end
+
+  # Anti-cheat #3: multiple-choice buttons carry a per-quiz token, not the stable answers.id, so a
+  # browser extension can't build a durable "question -> correct id" dictionary and replay it.
+  describe 'anti-cheat: multiple-choice answer tokens' do
+    let(:mc_question) { create(:question, topic: topic) } # 'multiple' type; factory adds a correct answer
+    let(:wrong_answer) { create(:answer, question: mc_question, correct: false) }
+    let(:correct_answer) { mc_question.answers.find(&:correct) }
+    let(:quiz) do
+      create(:new_quiz, user: student, question_order: [mc_question.id], counts_for_leaderboard: false,
+                        answered_correct: 0, streak: 0, max_streak: 0, time_last_answered: 5.seconds.ago)
+    end
+
+    def token_for(answer)
+      Quiz::AnswerToken.for(quiz_id: quiz.id, question_id: mc_question.id, answer_id: answer.id)
+    end
+
+    before do
+      wrong_answer
+      create(:asked_question, quiz: quiz, question: mc_question, user: student)
+    end
+
+    it 'scores a correct answer submitted as its per-quiz token' do
+      patch quiz_path(id: quiz.id), params: { answer: { id: token_for(correct_answer) } }
+      expect(AskedQuestion.last).to have_attributes(correct: true, score: 1.0)
+    end
+
+    it 'does not score a submission of the raw database id — the dictionary key is useless' do
+      patch quiz_path(id: quiz.id), params: { answer: { id: correct_answer.id.to_s } }
+      expect(AskedQuestion.last.correct).to be_nil
+    end
+
+    it 'reveals correct answers as tokens, never raw ids' do
+      patch quiz_path(id: quiz.id), params: { answer: { id: token_for(wrong_answer) } }
+      revealed = response.parsed_body['answer'].first
+      expect(revealed).to eq('token' => token_for(correct_answer), 'text' => correct_answer.text)
+      expect(revealed).not_to have_key('id')
+    end
+
+    it 'rotates the token for the same answer across different quizzes' do
+      other = create(:new_quiz, user: student, question_order: [mc_question.id])
+      expect(token_for(correct_answer))
+        .not_to eq(Quiz::AnswerToken.for(quiz_id: other.id, question_id: mc_question.id,
+                                         answer_id: correct_answer.id))
+    end
+  end
 end

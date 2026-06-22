@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class Quiz::CheckAnswer < ApplicationService
+  # Anti-cheat floor: a correct answer that arrives sooner than this (seconds since the previous answer
+  # / quiz start) is accepted but earns no leaderboard points and is flagged, because no human can read
+  # and answer that fast — it's the signature of an auto-answering browser extension. Deliberately
+  # conservative so genuinely quick students keep their points. Timing is server-set, so unforgeable.
+  MIN_ANSWER_SECONDS = 1.0
+
+  # Question types rendered as something other than clickable answer buttons; everything else is a
+  # multiple-choice question (mirrors the `else` branches in check_answer_correct / render_question).
+  NON_MULTIPLE_CHOICE_TYPES = %w[short_answer drag_drop matrix fill_blank ordering].freeze
+
   def initialize(params)
     super()
     @quiz = params[:quiz]
@@ -34,15 +44,29 @@ class Quiz::CheckAnswer < ApplicationService
   # explanation, plus the running score/streak so the quiz stats and combo juice can update.
   def reveal_payload
     {
-      answer: Answer.where(question: @question, correct: true),
+      answer: correct_answers_reveal,
       questionType: @question.question_type,
       solution: structured_solution,
       explanation: @question.explanation,
       score: @asked_question.score,
       streak: @quiz.streak,
       answeredCorrect: @quiz.answered_correct,
-      multiplier: Multiplier.where('score <= ?', @quiz.streak).order(id: :desc).pick(:multiplier)
+      multiplier: Multiplier.where('score <= ?', @quiz.streak).order(id: :desc).pick(:multiplier),
+      tooFast: @too_fast.present?
     }
+  end
+
+  # For multiple choice the reveal carries per-quiz tokens, not the real answer ids (Quiz::AnswerToken),
+  # so the reveal itself can't seed a stable answer-id dictionary (#3). Other types reveal by
+  # text/solution, so their records are returned unchanged.
+  def correct_answers_reveal
+    return Quiz::AnswerToken.reveal(@question, quiz_id: @quiz.id) if multiple_choice?
+
+    Answer.where(question: @question, correct: true)
+  end
+
+  def multiple_choice?
+    NON_MULTIPLE_CHOICE_TYPES.exclude?(@question.question_type)
   end
 
   def already_answered?
@@ -91,23 +115,30 @@ class Quiz::CheckAnswer < ApplicationService
   def check_multiple_choice
     raise 'no valid answer given to multiple choice' if @answer_given[:id].blank?
 
-    answer = Answer.where(id: @answer_given[:id]).pick(:correct)
-    return unless answer.present?
+    # The submitted value is a per-quiz token (Quiz::AnswerToken), not an answer id.
+    answer = Quiz::AnswerToken.resolve(@answer_given[:id], @question, quiz_id: @quiz.id)
+    return if answer.nil?
 
-    if answer
-      process_correct_answer
-    else
-      process_incorrect_answer
-    end
+    answer.correct ? process_correct_answer : process_incorrect_answer
   end
 
   def process_correct_answer
     @quiz.answered_correct += 1
+    return flag_too_fast if @answer_seconds.present? && @answer_seconds < MIN_ANSWER_SECONDS
+
     @quiz.streak += 1
     # Best combo this run — display-only (results screen); does not affect scoring/outcomes.
     @quiz.max_streak = [@quiz.max_streak.to_i, @quiz.streak].max
     @asked_question.update(correct: true, score: 1.0)
     Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question, answer_seconds: @answer_seconds)
+  end
+
+  # Correct, but too fast to be a real read: count it toward the student's own accuracy and let the
+  # quiz advance, but award no point and freeze the combo (don't grow OR reset the streak) so the
+  # economy can't be farmed. The flag drives the teacher anomaly view (#4); tooFast warns the student.
+  def flag_too_fast
+    @too_fast = true
+    @asked_question.update(correct: true, score: 1.0, flagged_fast: true)
   end
 
   def process_incorrect_answer

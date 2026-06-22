@@ -650,7 +650,52 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   }
 
   th[scope="row"], tbody th { text-align: left; font-weight: 600; }
-  input[type="checkbox"] { width: 18px; height: 18px; }
+
+  // Larger, custom-drawn tick boxes — easier to tap on mobile and on-brand rather than the
+  // tiny default control. Stays a real <input type=checkbox>, so the JS (box.checked) is unchanged.
+  input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    vertical-align: middle;
+    background: var(--surface);
+    border: 2px solid color-mix(in srgb, var(--n1) 50%, transparent);
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-grid;
+    place-content: center;
+    transition: border-color 0.12s ease, background 0.12s ease, transform 0.08s ease;
+
+    // The tick itself, scaled in when checked.
+    &::after {
+      content: "";
+      width: 15px;
+      height: 15px;
+      background: var(--surface);
+      transform: scale(0);
+      transition: transform 0.12s ease;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0, 43% 62%);
+    }
+
+    &:hover { border-color: var(--n1); }
+    &:active { transform: scale(0.92); }
+
+    &:checked {
+      background: var(--n1);
+      border-color: var(--n1);
+    }
+    &:checked::after { transform: scale(1); }
+
+    &:focus-visible {
+      outline: 2px solid var(--n1);
+      outline-offset: 2px;
+    }
+
+    &:disabled { cursor: default; }
+  }
 }
 
 // Reveal styling keyed to the ANSWER, not to match/mismatch: a green ✓ marks every cell that needed
@@ -778,7 +823,8 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   border: 1px solid color-mix(in srgb, var(--n1) 35%, transparent);
   border-radius: 8px;
 
-  &[draggable="true"] { cursor: grab; }
+  // touch-action: none lets the touch-drag shim own the gesture instead of the page scrolling.
+  &[draggable="true"] { cursor: grab; touch-action: none; }
   // The tile being dragged stays readable but lifts and highlights to mark where it will drop.
   &.tjs-dragging {
     cursor: grabbing;
@@ -847,6 +893,13 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   margin: 4px 0 0;
   padding-left: 22px;
   li { margin-bottom: 2px; }
+}
+
+// Anti-cheat speed warning: answered too fast to score. Reads as a flag, not the answer itself.
+.tjs-quiz__feedback-warning {
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: var(--incorrect);
 }
 
 // The author's "why" sits under a divider so it reads as elaboration, not the answer itself.

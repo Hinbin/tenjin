@@ -45,7 +45,7 @@ document.addEventListener('click', (event) => {
   submitAnswer(params).then(result => {
     revealMatrix(result)
     // Required cells are marked green inline (.tjs-matrix__cell--required); add the explanation.
-    revealFeedback(null, result.explanation)
+    revealFeedback(null, result.explanation, result.tooFast)
     finishAnswer(result.score >= 1.0, result)
   })
 })

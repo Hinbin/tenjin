@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_22_020000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_22_030000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -133,11 +133,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_22_020000) do
     t.decimal "answer_seconds", precision: 8, scale: 2
     t.boolean "correct"
     t.datetime "created_at", precision: nil, null: false
+    t.boolean "flagged_fast", default: false, null: false
     t.bigint "question_id"
     t.bigint "quiz_id"
     t.jsonb "response"
     t.decimal "score", precision: 5, scale: 4
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["flagged_fast"], name: "index_asked_questions_on_flagged_fast", where: "flagged_fast"
     t.index ["question_id"], name: "index_asked_questions_on_question_id"
     t.index ["quiz_id"], name: "index_asked_questions_on_quiz_id"
   end

@@ -28,6 +28,13 @@ module QuizzesHelper
     SUBJECT_NEON.fetch(subject&.name, 'var(--n1)')
   end
 
+  # Anti-cheat: the multiple-choice button id is a per-quiz token, not the stable answers.id, so a
+  # browser extension can't store "this question -> click answer #id" and replay it. Resolved back to
+  # the answer server-side in Quiz::CheckAnswer. See Quiz::AnswerToken.
+  def answer_token(answer)
+    Quiz::AnswerToken.for(quiz_id: @quiz.id, question_id: @question.id, answer_id: answer.id)
+  end
+
   # Split a cloze string into an ordered list of [:text, str] / [:slot, slot_id] segments so the
   # drag_drop partial can interleave literal text with drop zones.
   def cloze_segments(text)

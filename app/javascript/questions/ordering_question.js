@@ -123,7 +123,7 @@ document.addEventListener('click', (event) => {
   params['answer[structured][order][]'] = currentOrder()
   submitAnswer(params).then(result => {
     revealOrdering(result)
-    revealFeedback(correctOrderNode(result), result.explanation)
+    revealFeedback(correctOrderNode(result), result.explanation, result.tooFast)
     finishAnswer(result.score >= 1.0, result)
   })
 })
