@@ -1,4 +1,4 @@
-import { submitAnswer, finishAnswer, revealFeedback } from 'questions/questions_shared'
+import { submitAnswer, finishAnswer, revealFeedback, submitOnEnter } from 'questions/questions_shared'
 
 // Gap-fill (typed cloze) quiz question. Type a word into each .tjs-blank, then #fillBlankSubmit PUTs
 // { slot => typed text } and reveals which blanks were right. Scoring is partial-credit on the server
@@ -31,6 +31,8 @@ function revealFillBlank (serverResponse) {
     }
   })
 }
+
+submitOnEnter('fillBlankSubmit')
 
 document.addEventListener('click', (event) => {
   const btn = event.target.closest('#fillBlankSubmit')

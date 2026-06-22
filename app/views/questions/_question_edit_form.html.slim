@@ -49,6 +49,5 @@
       tbody.fields
         =f.fields_for :answers, @question.answers do |a|
           =render 'answer', f: a
-    -unless @question.question_type == 'boolean'
-      =link_to_add_row('Add Answer', f, :answers, class: 'tj-btn-primary tj-btn--full')
+    =link_to_add_row('Add Answer', f, :answers, class: 'tj-btn-primary tj-btn--full')
   =f.submit("Save Question", class: 'tj-btn-primary tj-btn--full')

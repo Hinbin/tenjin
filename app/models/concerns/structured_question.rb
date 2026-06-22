@@ -22,7 +22,7 @@ module StructuredQuestion
   extend ActiveSupport::Concern
 
   STRUCTURED_TYPES = %w[drag_drop matrix fill_blank ordering].freeze
-  ANSWER_BASED_TYPES = %w[short_answer boolean multiple].freeze
+  ANSWER_BASED_TYPES = %w[short_answer multiple].freeze
   SLOT_PATTERN = /\{\{(\w+)\}\}/
 
   included do

@@ -596,6 +596,23 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   border-radius: 10px;
 }
 
+// While a tile is held, every place it can land glows; the one under the cursor lifts more strongly.
+.tjs-slot.tjs-drop-active,
+.tjs-item-tray.tjs-drop-active {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--n1) 70%, transparent);
+  background: color-mix(in srgb, var(--n1) 10%, transparent);
+  transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tjs-slot.tjs-drop-over,
+.tjs-item-tray.tjs-drop-over {
+  border-style: solid;
+  border-color: var(--n1);
+  background: color-mix(in srgb, var(--n1) 18%, var(--surface));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--n1) 30%, transparent);
+}
+
 .tjs-tile {
   display: inline-flex;
   align-items: center;
@@ -610,7 +627,13 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
 }
 
 .tjs-draggable { cursor: grab; touch-action: none; }
-.tjs-dragging { opacity: 0.5; }
+.tjs-tile.tjs-dragging {
+  opacity: 0.85;
+  cursor: grabbing;
+  transform: scale(1.04) rotate(-1.5deg);
+  border-color: var(--n1);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 30%, transparent);
+}
 
 // ── Matrix (tick-box grid) question ─────────────────────────────────────────
 .tjs-matrix {
@@ -630,10 +653,32 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   input[type="checkbox"] { width: 18px; height: 18px; }
 }
 
+// Reveal styling keyed to the ANSWER, not to match/mismatch: a green ✓ marks every cell that needed
+// a tick (the key), a red ✗ marks a tick the student added wrongly, and correctly-blank cells stay
+// neutral — so "green" always means "a tick belongs here", with no double-negative to decode.
 .tjs-matrix__cell {
-  &.correct-answer { background: color-mix(in srgb, var(--correct) 16%, var(--surface)); }
-  &.incorrect-answer { background: color-mix(in srgb, var(--incorrect) 16%, var(--surface)); }
-  &--key { outline: 2px solid var(--correct); outline-offset: -2px; }
+  // Required cell (the correct answer) — green, with a ✓ after the box.
+  &--required {
+    background: color-mix(in srgb, var(--correct) 18%, var(--surface));
+  }
+  &--required::after {
+    content: " ✓";
+    font-weight: 800;
+    color: var(--correct);
+  }
+
+  // Required but left unticked — ring it so the student sees the tick they missed.
+  &--missed { outline: 2px dashed var(--correct); outline-offset: -2px; }
+
+  // A tick the student added where the cell should be empty — red, with a ✗.
+  &--wrong {
+    background: color-mix(in srgb, var(--incorrect) 16%, var(--surface));
+  }
+  &--wrong::after {
+    content: " ✗";
+    font-weight: 800;
+    color: var(--incorrect);
+  }
 }
 
 // ── Structured question authoring builder ───────────────────────────────────
@@ -711,6 +756,12 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   flex-direction: column;
   gap: 8px;
   counter-reset: tjs-order;
+
+  // Soft frame while a tile is in flight, so it reads as an active sorting area.
+  &--dragging {
+    border-radius: 10px;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--n1) 22%, transparent);
+  }
 }
 
 .tjs-order-item {
@@ -728,7 +779,13 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   border-radius: 8px;
 
   &[draggable="true"] { cursor: grab; }
-  &.tjs-dragging { opacity: 0.5; cursor: grabbing; }
+  // The tile being dragged stays readable but lifts and highlights to mark where it will drop.
+  &.tjs-dragging {
+    cursor: grabbing;
+    border-color: var(--n1);
+    background: color-mix(in srgb, var(--n1) 14%, var(--surface));
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 28%, transparent);
+  }
 
   &::before {
     content: counter(tjs-order);

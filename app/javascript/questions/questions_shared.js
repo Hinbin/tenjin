@@ -60,6 +60,21 @@ export function correctAnswerNode (text, label = 'Correct answer') {
   return wrap
 }
 
+// Wire Enter to "Check Answer" so keyboard users can answer without reaching for the mouse. Once the
+// answer is in, the question's submit button is disabled and #nextButton takes focus — we bail on the
+// disabled (or absent) button so Enter then activates Next natively. Shift+Enter and Enter inside a
+// textarea are left alone so they can still insert a newline.
+export function submitOnEnter (submitButtonId) {
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return
+    if (event.target.tagName === 'TEXTAREA') return
+    const btn = document.getElementById(submitButtonId)
+    if (!btn || btn.hasAttribute('disabled')) return
+    event.preventDefault()
+    btn.click()
+  })
+}
+
 // Notify quiz_controller (Stimulus) so it can run the reskinned flash / shake / combo juice, then
 // reveal the Next button. Presentation only — scoring already happened on the server.
 export function finishAnswer (correct, serverResponse) {

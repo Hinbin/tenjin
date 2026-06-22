@@ -1,4 +1,4 @@
-import { submitAnswer, finishAnswer, revealFeedback } from 'questions/questions_shared'
+import { submitAnswer, finishAnswer, revealFeedback, submitOnEnter } from 'questions/questions_shared'
 
 // Ordering (sequencing) quiz question. Drag .tjs-order-item tiles to reorder them (or nudge with the
 // ↑/↓ buttons), then #orderingSubmit PUTs the current order as a list of item ids and reveals which
@@ -36,11 +36,13 @@ document.addEventListener('dragstart', (event) => {
   if (!item || item.draggable === false) return
   draggingItem = item
   item.classList.add('tjs-dragging')
+  document.getElementById('orderingList')?.classList.add('tjs-order-list--dragging')
   event.dataTransfer.effectAllowed = 'move'
 })
 
 document.addEventListener('dragend', () => {
   draggingItem?.classList.remove('tjs-dragging')
+  document.getElementById('orderingList')?.classList.remove('tjs-order-list--dragging')
   draggingItem = null
 })
 
@@ -102,6 +104,8 @@ function correctOrderNode (serverResponse) {
   wrap.append(heading, list)
   return wrap
 }
+
+submitOnEnter('orderingSubmit')
 
 document.addEventListener('click', (event) => {
   const up = event.target.closest('#ordering .tjs-order-up')

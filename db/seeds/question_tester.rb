@@ -106,7 +106,7 @@ def seed_question_tester_basics(topic)
   )
 
   Question.create!(
-    topic:, question_type: 'boolean',
+    topic:, question_type: 'multiple',
     question_text: 'True or False: a compiler translates the entire program before it runs.',
     answers_attributes: [{ text: 'True', correct: true }, { text: 'False', correct: false }]
   )

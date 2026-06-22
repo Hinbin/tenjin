@@ -23,12 +23,23 @@ RSpec.describe 'User answers a matrix question', :default_creates, :js, type: :s
     expect(page).to have_css('table.tjs-matrix').and have_text('Python').and have_text('Interpreted')
   end
 
-  it 'lets me tick cells, submit, and reveals the result with a Next button' do
+  it 'lets me tick cells, submit, and reveals the answer key in green with a Next button' do
     find("input[data-row='r1'][data-col='c1']").click
     find("input[data-row='r2'][data-col='c2']").click
     click_button 'Check Answer'
 
-    expect(page).to have_css('.tjs-matrix__cell.correct-answer')
+    # Every cell that needed a tick is marked as the (green) answer key — here both correct cells.
+    expect(page).to have_css('.tjs-matrix__cell--required', count: 2)
     expect(page).to have_css('.next-button', visible: :visible)
+  end
+
+  it 'flags a tick I added in the wrong cell and still shows the correct cell as the key' do
+    find("input[data-row='r1'][data-col='c1']").click
+    find("input[data-row='r2'][data-col='c1']").click # wrong: r2's answer is c2
+    click_button 'Check Answer'
+
+    expect(page).to have_css("td[data-cell='r2:c1'].tjs-matrix__cell--wrong")
+    # r2's correct cell (c2) is shown as the key even though I left it unticked.
+    expect(page).to have_css("td[data-cell='r2:c2'].tjs-matrix__cell--required.tjs-matrix__cell--missed")
   end
 end

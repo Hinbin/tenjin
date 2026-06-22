@@ -4,7 +4,8 @@ import Shepherd from 'shepherd.js'
 
 export default class extends Controller {
   initialize () {
-    if (document.getElementById('oAuthEmail')) {
+    if (document.getElementById('oAuthEmail') && !sessionStorage.getItem('googleLinkTourSeen')) {
+      sessionStorage.setItem('googleLinkTourSeen', '1')
       const tour = new Shepherd.Tour({ useModalOverlay: true })
 
       if (document.getElementById('current_user').offsetParent === null) {
