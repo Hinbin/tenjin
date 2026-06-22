@@ -5,6 +5,7 @@ class Question < ApplicationRecord
   has_many :asked_questions, dependent: :destroy
   has_many :flagged_questions, dependent: :destroy
   has_many :quizzes, through: :asked_questions
+  has_many :student_question_statistics, dependent: :destroy
   has_one :question_statistic, dependent: :destroy
 
   belongs_to :lesson, optional: true, counter_cache: true

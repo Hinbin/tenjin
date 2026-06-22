@@ -65,12 +65,12 @@ class Quiz::CheckAnswer < ApplicationService
     @quiz.streak += 1
     # Best combo this run — display-only (results screen); does not affect scoring/outcomes.
     @quiz.max_streak = [@quiz.max_streak.to_i, @quiz.streak].max
-    @asked_question.update_attribute(:correct, true)
+    @asked_question.update(correct: true, score: 1.0)
     Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question)
   end
 
   def process_incorrect_answer
     @quiz.streak = 0
-    @asked_question.update_attribute(:correct, false)
+    @asked_question.update(correct: false, score: 0.0)
   end
 end
