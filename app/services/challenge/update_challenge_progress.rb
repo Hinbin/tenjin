@@ -1,111 +1,60 @@
 # frozen_string_literal: true
 
+# Runs once per correct answer (from Quiz::AddLeaderboardPoint). Handles the challenge types that
+# accrue while a quiz is in progress. Completion-only types live in Challenge::UpdateCompletionProgress.
 class Challenge::UpdateChallengeProgress < ApplicationService
-  def initialize(quiz, number_to_add = 0, question_topic = nil)
+  include Challenge::ProgressTracking
+
+  PER_ANSWER_TYPES = %w[number_correct streak big_streak number_of_points cumulative_correct speed_run].freeze
+
+  def initialize(quiz, number_to_add = 0, question_topic = nil, answer_seconds = nil)
     super()
     @quiz = quiz
     @number_to_add = number_to_add
     @question_topic = question_topic
+    @answer_seconds = answer_seconds
   end
 
   def call
-    challenges.find_each do |c|
-      @result = check_challenge_progress(c)
-      # if updated we'll have a result
-      next if @result.blank?
-
-      award_challenge_points?
-    end
+    update_each_challenge(subject_challenges.where(challenge_type: PER_ANSWER_TYPES))
   end
 
   protected
 
   def check_challenge_progress(challenge)
     case challenge.challenge_type
-    when 'number_correct' then upsert_progress(@quiz.answered_correct, challenge)
-    when 'streak' then upsert_progress(@quiz.streak, challenge)
-    when 'number_of_points' then upsert_points(@number_to_add, challenge)
+    when 'number_correct' then topic_max(@quiz.answered_correct, challenge)
+    when 'streak' then topic_max(@quiz.streak, challenge)
+    when 'big_streak' then topic_max(@quiz.max_streak, challenge)
+    when 'number_of_points' then number_of_points_progress(challenge)
+    when 'cumulative_correct' then upsert_accumulate(1, challenge)
+    when 'speed_run' then upsert_accumulate(speedy_answer, challenge)
     end
   end
 
-  def award_challenge_points?
-    # Check if completed is true and awarded is false
-    return false unless @result.rows[0][1] == true && @result.rows[0][2] == false
-
-    complete_challenge(ChallengeProgress.find(@result.rows[0][0]))
-  end
-
-  def upsert_progress(progress, challenge)
+  # number_correct / streak / big_streak only count toward the challenge's own topic.
+  def topic_max(value, challenge)
     return unless @quiz.topic == challenge.topic
 
-    completed = progress >= challenge.number_required
-
-    ChallengeProgress.upsert_all([
-      { progress: progress, user_id: @quiz.user.id, challenge_id: challenge.id, completed: }
-    ],
-                                 unique_by: %w[user_id challenge_id],
-                                 on_duplicate: Arel.sql("progress =  CASE
-                                  WHEN challenge_progresses.progress > #{challenge.number_required} THEN #{progress}
-                                  else challenge_progresses.progress
-                                END,
-                                completed  = CASE
-                                    WHEN challenge_progresses.progress >= #{challenge.number_required} OR #{progress} >= #{challenge.number_required}
-                                      OR challenge_progresses.completed = true
-                                      THEN true
-                                    ELSE false
-                                 END"),
-                                 returning: %w[id completed awarded])
+    upsert_max(value, challenge)
   end
 
-  def upsert_points(points, challenge)
-    unless challenge.topic == @quiz.topic ||
-           challenge.topic == @question_topic ||
-           (challenge.daily && challenge.topic.subject == @question_topic.subject)
-      return
-    end
+  def number_of_points_progress(challenge)
+    return unless number_of_points_match?(challenge)
 
-    completed = points >= challenge.number_required
-
-    ChallengeProgress.upsert_all([
-      { progress: points, user_id: @quiz.user.id, challenge_id: challenge.id, completed: }
-    ],
-                                 unique_by: %w[user_id challenge_id],
-                                 on_duplicate: Arel.sql("progress = challenge_progresses.progress + #{points},
-                                  completed = CASE
-                                                WHEN challenge_progresses.progress >= #{challenge.number_required}
-                                                  OR (challenge_progresses.progress + #{points}) >= #{challenge.number_required}
-                                                  OR challenge_progresses.completed = true
-                                                  THEN true
-                                                ELSE false
-                                              END"),
-                                 returning: %w[id completed awarded])
+    upsert_accumulate(@number_to_add, challenge)
   end
 
-  def challenges
-    Challenge.joins(:topic)
-             .includes(topic: :subject)
-             .where(topics: { subject_id: @quiz.subject })
-             .where('end_date > ?', Time.current)
+  # A topic challenge matches its own topic (or the answered question's topic on a lucky dip);
+  # a daily challenge matches any topic in its subject.
+  def number_of_points_match?(challenge)
+    challenge.topic == @quiz.topic ||
+      challenge.topic == @question_topic ||
+      (challenge.daily && challenge.topic.subject == @question_topic&.subject)
   end
 
-  def check_number_correct(challenge)
-    return 0 unless @quiz.topic == challenge.topic
-
-    @quiz.answered_correct
-  end
-
-  def check_streak(challenge)
-    return 0 unless @quiz.topic == challenge.topic
-
-    @quiz.streak
-  end
-
-  def complete_challenge(progress)
-    progress.awarded = true
-    progress.save
-
-    progress.user.challenge_points = 0 if progress.user.challenge_points.nil?
-    progress.user.challenge_points += progress.challenge.points
-    progress.user.save
+  # 1 if this answer was given inside the speed window, otherwise 0 (no progress).
+  def speedy_answer
+    @answer_seconds.present? && @answer_seconds <= Challenge::SPEED_THRESHOLD ? 1 : 0
   end
 end

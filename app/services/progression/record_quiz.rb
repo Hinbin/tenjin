@@ -24,6 +24,10 @@ class Progression::RecordQuiz < ApplicationService
       @user.save!
     end
 
+    # streak_days is now up to date, so completion-only challenges (perfect quiz, complete N quizzes,
+    # daily devotion) can be judged exactly once for this quiz.
+    Challenge::UpdateCompletionProgress.call(@quiz)
+
     result(success: true, recorded: true)
   end
 

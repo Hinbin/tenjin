@@ -10,7 +10,10 @@ class Quiz::CheckAnswer < ApplicationService
   end
 
   def call
-    check_answer_correct unless already_answered?
+    unless already_answered?
+      record_timing
+      check_answer_correct
+    end
 
     Quiz::MoveQuizForward.call(quiz: @quiz)
     @quiz.save
@@ -18,6 +21,14 @@ class Quiz::CheckAnswer < ApplicationService
   end
 
   protected
+
+  # Seconds since the previous answer (or quiz start), stored per answer so speed_run challenges can
+  # tell which correct answers were given quickly. Advances the clock for the next question.
+  def record_timing
+    @answer_seconds = (Time.current - @quiz.time_last_answered).round(2) if @quiz.time_last_answered
+    @asked_question.update(answer_seconds: @answer_seconds)
+    @quiz.time_last_answered = Time.current
+  end
 
   # Everything the front-end needs to reveal the result: the correct answer(s), the author's optional
   # explanation, plus the running score/streak so the quiz stats and combo juice can update.
@@ -96,7 +107,7 @@ class Quiz::CheckAnswer < ApplicationService
     # Best combo this run — display-only (results screen); does not affect scoring/outcomes.
     @quiz.max_streak = [@quiz.max_streak.to_i, @quiz.streak].max
     @asked_question.update(correct: true, score: 1.0)
-    Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question)
+    Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question, answer_seconds: @answer_seconds)
   end
 
   def process_incorrect_answer

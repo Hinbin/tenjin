@@ -191,4 +191,58 @@ RSpec.describe Challenge::UpdateChallengeProgress, :default_creates do
       end
     end
   end
+
+  context 'when updating a big streak challenge' do
+    let(:challenge_big_streak) do
+      create(:challenge, topic:, challenge_type: 'big_streak', number_required: 12, end_date: 1.hour.from_now)
+    end
+    let(:quiz_big_streak) { create(:quiz, subject:, topic:, user: student, max_streak: 12) }
+
+    before { challenge_big_streak }
+
+    it 'completes when the best combo of the quiz reaches the target' do
+      described_class.new(quiz_big_streak).call
+      expect(ChallengeProgress.first.completed).to be(true)
+    end
+  end
+
+  context 'when updating a cumulative correct challenge' do
+    let(:challenge_cumulative) do
+      create(:challenge, topic:, challenge_type: 'cumulative_correct', number_required: 2, end_date: 1.hour.from_now)
+    end
+    let(:quiz) { create(:quiz, subject:, topic:, user: student) }
+
+    before { challenge_cumulative }
+
+    it 'accumulates one per correct answer and completes at the target' do
+      described_class.new(quiz).call
+      described_class.new(quiz).call
+      expect(ChallengeProgress.first).to have_attributes(progress: 2, completed: true)
+    end
+
+    it 'counts answers across any topic in the subject' do
+      other_quiz = create(:quiz, subject:, topic: create(:topic, subject:), user: student)
+      described_class.new(other_quiz).call
+      expect(ChallengeProgress.first.progress).to eq(1)
+    end
+  end
+
+  context 'when updating a speed run challenge' do
+    let(:challenge_speed) do
+      create(:challenge, topic:, challenge_type: 'speed_run', number_required: 2, end_date: 1.hour.from_now)
+    end
+    let(:quiz) { create(:quiz, subject:, topic:, user: student) }
+
+    before { challenge_speed }
+
+    it 'counts a correct answer given inside the speed window' do
+      described_class.new(quiz, 1, topic, 5).call
+      expect(ChallengeProgress.first.progress).to eq(1)
+    end
+
+    it 'ignores a correct answer given too slowly' do
+      described_class.new(quiz, 1, topic, 30).call
+      expect(ChallengeProgress.where(challenge: challenge_speed)).to be_empty
+    end
+  end
 end

@@ -6,6 +6,7 @@ class Quiz::AddLeaderboardPoint < ApplicationService
     @quiz = params[:quiz]
     @user = @quiz.user
     @question = params[:question]
+    @answer_seconds = params[:answer_seconds]
   end
 
   def call
@@ -14,7 +15,7 @@ class Quiz::AddLeaderboardPoint < ApplicationService
     multiplier = Multiplier.where('score < ?', @quiz.streak).order(score: :desc).pick(:multiplier)
     upsert_score(@question.topic.id, @user.id, multiplier)
 
-    Challenge::UpdateChallengeProgress.call(@quiz, multiplier, @question.topic)
+    Challenge::UpdateChallengeProgress.call(@quiz, multiplier, @question.topic, @answer_seconds)
     Leaderboard::BroadcastLeaderboardPoint.call(@question.topic, @user)
   end
 

@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Challenge::AddNewChallenges, :default_creates do
+  def unit_points(challenge)
+    Challenge::POINTS_PER_UNIT.fetch(challenge.challenge_type) * challenge.number_required
+  end
+
   context 'when creating a new challenge' do
     it 'adds challenges for existing subjects' do
       create_list(:topic, 5)
@@ -16,11 +20,12 @@ RSpec.describe Challenge::AddNewChallenges, :default_creates do
       expect(Challenge.first.end_date).to be_within(1.second).of(Time.now + 3.days)
     end
 
-    it 'sets the multiplier correctly' do
-      srand(1)
+    it 'applies the multiplier to the points' do
       create(:topic)
       described_class.new(multiplier: 4).call
-      expect(Challenge.first.points).to eq(40)
+      challenge = Challenge.first
+      base = challenge.perfect_quiz? ? Challenge::PERFECT_QUIZ_POINTS : unit_points(challenge)
+      expect(challenge.points).to eq(base * 4)
     end
 
     it 'sets a daily challenge correctly' do
