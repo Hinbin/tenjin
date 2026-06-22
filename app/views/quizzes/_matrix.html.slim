@@ -1,0 +1,27 @@
+/ Matrix (tick-box grid) question — tick one or more correct columns per row. Partial-credit scored.
+/ KEEP: table.tjs-matrix with input[type=checkbox][data-row][data-col], #matrixSubmit,
+/ #nextButton / .next-button / .tj-invisible. matrix_question.js collects ticks, submits and
+/ reveals correct cells via .correct-answer / .incorrect-answer.
+.tjs-question id="matrix"
+  - if @question.topic.present?
+    .tjs-question__pill
+      = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
+  .tjs-question__text ==@question.question_text
+  .tj-table-responsive
+    table.tjs-matrix
+      thead
+        tr
+          th
+          - @question.config['columns'].to_a.each do |col|
+            th = col['label']
+      tbody
+        - @question.config['rows'].to_a.each do |row|
+          tr data-row-id=row['id']
+            th scope='row' = row['label']
+            - @question.config['columns'].to_a.each do |col|
+              td.tjs-matrix__cell data-cell="#{row['id']}:#{col['id']}"
+                input type='checkbox' data-row=row['id'] data-col=col['id']
+  / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
+  .tjs-quiz__fx data-quiz-target='answerFx' aria-hidden='true'
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__submit.question-button#matrixSubmit Check Answer
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__next.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question

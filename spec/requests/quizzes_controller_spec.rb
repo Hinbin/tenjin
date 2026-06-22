@@ -133,6 +133,62 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
     end
   end
 
+  describe 'answering a drag-and-drop question' do
+    let(:dd_question) do
+      create(:question, topic: topic, question_type: 'drag_drop', question_text: 'A {{1}} and a {{2}}.',
+                        config: { 'items' => [{ 'id' => 'i1', 'text' => 'one' }, { 'id' => 'i2', 'text' => 'two' }],
+                                  'answer' => { '1' => 'i1', '2' => 'i2' } })
+    end
+    let(:quiz) do
+      create(:new_quiz, user: student, question_order: [dd_question.id], counts_for_leaderboard: false,
+                        answered_correct: 0, streak: 0, max_streak: 0)
+    end
+    let(:asked_question) { create(:asked_question, quiz: quiz, question: dd_question) }
+
+    before { asked_question }
+
+    it 'stores a full score and the response when every blank is right' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { '1' => 'i1', '2' => 'i2' } } }
+      expect(asked_question.reload).to have_attributes(score: 1.0, response: { '1' => 'i1', '2' => 'i2' })
+    end
+
+    it 'stores partial credit when one blank is wrong' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { '1' => 'i1', '2' => 'i1' } } }
+      expect(asked_question.reload.score).to eq(0.5)
+    end
+
+    it 'returns the solution for the reveal' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { '1' => 'i1', '2' => 'i2' } } }
+      expect(response.parsed_body['solution']).to eq('1' => 'i1', '2' => 'i2')
+    end
+  end
+
+  describe 'answering a matrix question' do
+    let(:matrix_question) do
+      create(:question, topic: topic, question_type: 'matrix',
+                        config: { 'rows' => [{ 'id' => 'r1', 'label' => 'A' }, { 'id' => 'r2', 'label' => 'B' }],
+                                  'columns' => [{ 'id' => 'c1', 'label' => 'X' }, { 'id' => 'c2', 'label' => 'Y' }],
+                                  'correct' => { 'r1' => ['c1'], 'r2' => ['c2'] } })
+    end
+    let(:quiz) do
+      create(:new_quiz, user: student, question_order: [matrix_question.id], counts_for_leaderboard: false,
+                        answered_correct: 0, streak: 0, max_streak: 0)
+    end
+    let(:asked_question) { create(:asked_question, quiz: quiz, question: matrix_question) }
+
+    before { asked_question }
+
+    it 'stores a full score when every row is right' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { 'r1' => ['c1'], 'r2' => ['c2'] } } }
+      expect(asked_question.reload.score).to eq(1.0)
+    end
+
+    it 'penalises over-ticking with partial credit' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { 'r1' => %w[c1 c2], 'r2' => ['c2'] } } }
+      expect(asked_question.reload.score).to eq(0.75)
+    end
+  end
+
   describe 'answering a question while a cosmetic trial is active' do
     let(:sa_question) { create(:question, topic: topic, question_type: 'short_answer') }
     let(:quiz) { create(:new_quiz, user: student, question_order: [sa_question.id]) }

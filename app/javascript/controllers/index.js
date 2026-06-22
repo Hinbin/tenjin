@@ -36,6 +36,9 @@ application.register("motion", MotionController)
 import NavbarController from "controllers/navbar_controller"
 application.register("navbar", NavbarController)
 
+import QuestionBuilderController from "controllers/question_builder_controller"
+application.register("question-builder", QuestionBuilderController)
+
 import QuizController from "controllers/quiz_controller"
 application.register("quiz", QuizController)
 

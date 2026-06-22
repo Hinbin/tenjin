@@ -1,0 +1,21 @@
+/ Drag-and-drop (cloze) question — drag item tiles into the {{n}} blanks. Partial-credit scored.
+/ KEEP: .tjs-slot[data-slot] drop zones, .tjs-tile.draggable[data-item-id] tiles, #dragDropSubmit,
+/ #nextButton / .next-button / .tj-invisible. drag_drop_question.js wires drag/drop + submit and
+/ uses .correct-answer / .incorrect-answer for the reveal.
+.tjs-question id="dragDrop"
+  - if @question.topic.present?
+    .tjs-question__pill
+      = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
+  .tjs-cloze
+    - cloze_segments(@question.cloze_text).each do |kind, value|
+      - if kind == :text
+        span.tjs-cloze__text = value
+      - else
+        span.tjs-slot data-slot=value
+  .tjs-item-tray data-tray='true'
+    - @question.config['items'].to_a.shuffle.each do |item|
+      .tjs-tile.tjs-draggable draggable='true' data-item-id=item['id'] = item['text']
+  / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
+  .tjs-quiz__fx data-quiz-target='answerFx' aria-hidden='true'
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__submit.question-button#dragDropSubmit Check Answer
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__next.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question
