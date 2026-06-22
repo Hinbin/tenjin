@@ -1,4 +1,4 @@
-import { submitAnswer, finishAnswer } from 'questions/questions_shared'
+import { submitAnswer, finishAnswer, revealFeedback, submitOnEnter } from 'questions/questions_shared'
 
 // Drag-and-drop (cloze) quiz question. Drag .tjs-draggable item tiles into .tjs-slot blanks, then
 // #dragDropSubmit PUTs { slot => item_id } and reveals the correct mapping. Presentation aside, all
@@ -13,17 +13,45 @@ function placedAnswer () {
   return answer
 }
 
+// item_id => tile text, read from the tray originals, so the reveal can name the correct item.
+function itemTextMap () {
+  const map = {}
+  document.querySelectorAll('#dragDrop [data-tray] .tjs-tile').forEach(tile => {
+    map[tile.dataset.itemId] = tile.textContent.trim()
+  })
+  return map
+}
+
 function revealDragDrop (serverResponse) {
   const solution = serverResponse.solution || {}
+  const text = itemTextMap()
   document.querySelectorAll('#dragDrop .tjs-slot').forEach(slot => {
     const tile = slot.querySelector('.tjs-tile')
-    const correctId = solution[slot.dataset.slot]
-    const correct = tile && tile.dataset.itemId === correctId
+    // A blank may accept several items, so the solution value can be a single id or an array of ids.
+    const correctIds = [].concat(solution[slot.dataset.slot] || [])
+    const correct = tile && correctIds.includes(tile.dataset.itemId)
     slot.classList.add(correct ? 'correct-answer' : 'incorrect-answer')
+    // Their dropped tile stays in the slot (marked wrong); name an accepted item right after it.
+    const names = correctIds.map(id => text[id]).filter(Boolean)
+    if (!correct && names.length) {
+      const tag = document.createElement('span')
+      tag.className = 'tjs-slot__correct'
+      tag.textContent = names.join(' / ')
+      slot.insertAdjacentElement('afterend', tag)
+    }
   })
 }
 
 let dragFromSlot = null
+
+// Every place the held tile could land: the blanks and the tray it returns to.
+function dropZones () {
+  return document.querySelectorAll('#dragDrop .tjs-slot, #dragDrop [data-tray]')
+}
+
+function clearDragState () {
+  dropZones().forEach(zone => zone.classList.remove('tjs-drop-active', 'tjs-drop-over'))
+}
 
 function dragStart (event) {
   const tile = event.target.closest('.tjs-draggable')
@@ -32,6 +60,8 @@ function dragStart (event) {
   dragFromSlot = tile.closest('.tjs-slot')
   event.dataTransfer.setData('text/plain', tile.dataset.itemId)
   tile.classList.add('tjs-dragging')
+  // Light up every valid drop target so it's obvious where the tile can go.
+  dropZones().forEach(zone => zone.classList.add('tjs-drop-active'))
 }
 
 function dropOnTarget (event) {
@@ -47,6 +77,7 @@ function dropOnTarget (event) {
     dragFromSlot.querySelector('.tjs-tile')?.remove()
   }
   dragFromSlot = null
+  clearDragState()
 }
 
 // Tray tiles are reusable originals, so an item can fill more than one blank: each drop drops a
@@ -62,9 +93,20 @@ function placeInSlot (slot, itemId) {
 }
 
 document.addEventListener('dragstart', dragStart)
-document.addEventListener('dragend', (e) => e.target.closest?.('.tjs-draggable')?.classList.remove('tjs-dragging'))
-document.addEventListener('dragover', (e) => { if (e.target.closest('#dragDrop .tjs-slot, #dragDrop [data-tray]')) e.preventDefault() })
+document.addEventListener('dragend', (e) => {
+  e.target.closest?.('.tjs-draggable')?.classList.remove('tjs-dragging')
+  clearDragState()
+})
+// Highlight only the target currently under the cursor, so the student sees where the drop will land.
+document.addEventListener('dragover', (event) => {
+  const zone = event.target.closest('#dragDrop .tjs-slot, #dragDrop [data-tray]')
+  if (!zone) return
+  event.preventDefault()
+  dropZones().forEach(z => z.classList.toggle('tjs-drop-over', z === zone))
+})
 document.addEventListener('drop', dropOnTarget)
+
+submitOnEnter('dragDropSubmit')
 
 document.addEventListener('click', (event) => {
   const btn = event.target.closest('#dragDropSubmit')
@@ -77,6 +119,7 @@ document.addEventListener('click', (event) => {
   Object.entries(answer).forEach(([slot, itemId]) => { params[`answer[structured][${slot}]`] = itemId })
   submitAnswer(params).then(result => {
     revealDragDrop(result)
+    revealFeedback(null, result.explanation)
     finishAnswer(result.score >= 1.0, result)
   })
 })

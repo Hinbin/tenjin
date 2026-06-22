@@ -17,11 +17,11 @@ FactoryBot.define do
       sequence(:lesson) { |n| "Lesson #{n}" }
     end
 
-    factory :question_import_hash_boolean do
+    factory :question_import_hash_two_option do
       answers do
         [
-          { text: 'True', correct: true },
-          { text: 'False', correct: false }
+          { text: FFaker::Lorem.sentence, correct: true },
+          { text: FFaker::Lorem.sentence, correct: false }
         ]
       end
     end

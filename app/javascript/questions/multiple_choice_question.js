@@ -1,4 +1,4 @@
-import updateQuizStatistics from 'questions/questions_shared'
+import updateQuizStatistics, { revealFeedback } from 'questions/questions_shared'
 
 function processMultipleChoiceResponse (serverResponse, guessId) {
   const results = serverResponse.answer
@@ -24,6 +24,8 @@ function processMultipleChoiceResponse (serverResponse, guessId) {
   }
 
   updateQuizStatistics(serverResponse)
+  // Correct/your-pick are already marked inline; just surface the author's explanation.
+  revealFeedback(null, serverResponse.explanation)
   dispatchAnswered(correct, serverResponse)
 
   const nextBtn = document.getElementById('nextButton')

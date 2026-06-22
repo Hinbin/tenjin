@@ -14,18 +14,25 @@ class Quiz::CheckAnswer < ApplicationService
 
     Quiz::MoveQuizForward.call(quiz: @quiz)
     @quiz.save
+    reveal_payload
+  end
+
+  protected
+
+  # Everything the front-end needs to reveal the result: the correct answer(s), the author's optional
+  # explanation, plus the running score/streak so the quiz stats and combo juice can update.
+  def reveal_payload
     {
       answer: Answer.where(question: @question, correct: true),
       questionType: @question.question_type,
       solution: structured_solution,
+      explanation: @question.explanation,
       score: @asked_question.score,
       streak: @quiz.streak,
       answeredCorrect: @quiz.answered_correct,
       multiplier: Multiplier.where('score <= ?', @quiz.streak).order(id: :desc).pick(:multiplier)
     }
   end
-
-  protected
 
   def already_answered?
     @asked_question.correct.present?
@@ -34,7 +41,7 @@ class Quiz::CheckAnswer < ApplicationService
   def check_answer_correct
     case @question.question_type
     when 'short_answer' then check_short_answer
-    when 'drag_drop', 'matrix' then check_structured_answer
+    when 'drag_drop', 'matrix', 'fill_blank', 'ordering' then check_structured_answer
     else check_multiple_choice
     end
   end
@@ -49,11 +56,13 @@ class Quiz::CheckAnswer < ApplicationService
     @asked_question.update(score: score, response: response)
   end
 
-  # The correct mapping for the reveal: drag_drop -> slot=>item; matrix -> row=>[cols].
+  # The correct mapping for the reveal: drag_drop -> slot=>item; matrix -> row=>[cols];
+  # fill_blank -> slot=>accepted text; ordering -> ordered list of item ids.
   def structured_solution
     case @question.question_type
-    when 'drag_drop' then @question.config['answer']
+    when 'drag_drop', 'fill_blank' then @question.config['answer']
     when 'matrix' then @question.config['correct']
+    when 'ordering' then @question.config['order']
     end
   end
 

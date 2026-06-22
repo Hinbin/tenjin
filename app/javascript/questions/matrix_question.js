@@ -1,4 +1,4 @@
-import { submitAnswer, finishAnswer } from 'questions/questions_shared'
+import { submitAnswer, finishAnswer, revealFeedback, submitOnEnter } from 'questions/questions_shared'
 
 // Matrix (tick-box grid) quiz question. Collect ticked cells as { row_id => [col_id, …] },
 // PUT them, then reveal the correct cells. Partial-credit scored on the server.
@@ -11,16 +11,27 @@ function tickedAnswer () {
   return answer
 }
 
+// Mark the answer key directly rather than by match/mismatch: every cell that NEEDED a tick goes
+// green with a ✓ (so the correct selection is explicit), and any tick the student added where one
+// wasn't wanted goes red with a ✗. Cells that were correctly left blank stay neutral — this avoids
+// the confusing "empty cell is green because you correctly didn't tick it" double-negative.
 function revealMatrix (serverResponse) {
   const solution = serverResponse.solution || {}
   document.querySelectorAll('#matrix .tjs-matrix__cell').forEach(cell => {
     const box = cell.querySelector('input[type=checkbox]')
     const shouldTick = (solution[box.dataset.row] || []).includes(box.dataset.col)
-    const matches = box.checked === shouldTick
-    cell.classList.add(matches ? 'correct-answer' : 'incorrect-answer')
-    if (shouldTick) cell.classList.add('tjs-matrix__cell--key')
+    if (shouldTick) {
+      cell.classList.add('tjs-matrix__cell--required')
+      // Required but left unticked — a tick the student missed.
+      if (!box.checked) cell.classList.add('tjs-matrix__cell--missed')
+    } else if (box.checked) {
+      // A tick the student added in a cell that should be empty.
+      cell.classList.add('tjs-matrix__cell--wrong')
+    }
   })
 }
+
+submitOnEnter('matrixSubmit')
 
 document.addEventListener('click', (event) => {
   const btn = event.target.closest('#matrixSubmit')
@@ -33,6 +44,8 @@ document.addEventListener('click', (event) => {
   Object.entries(answer).forEach(([rowId, cols]) => { params[`answer[structured][${rowId}][]`] = cols })
   submitAnswer(params).then(result => {
     revealMatrix(result)
+    // Required cells are marked green inline (.tjs-matrix__cell--required); add the explanation.
+    revealFeedback(null, result.explanation)
     finishAnswer(result.score >= 1.0, result)
   })
 })

@@ -5,21 +5,31 @@
 #
 #   drag_drop: the question_text is the cloze sentence with {{n}} blanks; students drag item tiles
 #     into the blanks. config = { "items" => [{ "id" =>, "text" => }], "answer" => { "1" => item_id, … } }
+#     A blank may accept more than one item — its answer is then an array of item ids ("1" => [a, b]);
+#     a single id is still accepted for back-compatibility.
 #   matrix:    rows × columns of tick boxes; each row has one or more correct columns.
 #     config = { "rows" => [{ "id" =>, "label" => }], "columns" => [{ "id" =>, "label" => }],
 #                "correct" => { row_id => [col_id, …] } }
+#   fill_blank: like drag_drop the question_text is the cloze with {{n}} blanks, but students TYPE the
+#     answer rather than dragging a tile — retrieval practice, not recognition. Each blank stores one
+#     or more accepted strings; alternatives are separated with "|" ("RAM|random access memory").
+#     config = { "answer" => { "1" => "control|control unit", "2" => "arithmetic logic" } }
+#   ordering:  students arrange shuffled item tiles into the correct sequence (a process: sort steps,
+#     fetch-decode-execute, …). config = { "items" => [{ "id" =>, "text" => }], "order" => [id, …] }
 #
 # Scoring is partial-credit (0.0..1.0) so difficulty analysis can tell a near-miss from a blank.
 module StructuredQuestion
   extend ActiveSupport::Concern
 
-  STRUCTURED_TYPES = %w[drag_drop matrix].freeze
-  ANSWER_BASED_TYPES = %w[short_answer boolean multiple].freeze
+  STRUCTURED_TYPES = %w[drag_drop matrix fill_blank ordering].freeze
+  ANSWER_BASED_TYPES = %w[short_answer multiple].freeze
   SLOT_PATTERN = /\{\{(\w+)\}\}/
 
   included do
     validate :drag_drop_config_valid
     validate :matrix_config_valid
+    validate :fill_blank_config_valid
+    validate :ordering_config_valid
   end
 
   def structured?
@@ -35,6 +45,8 @@ module StructuredQuestion
     case question_type
     when 'drag_drop' then score_drag_drop(normalize_response(response))
     when 'matrix' then score_matrix(normalize_response(response))
+    when 'fill_blank' then score_fill_blank(normalize_response(response))
+    when 'ordering' then score_ordering(normalize_response(response))
     else 0.0
     end
   end
@@ -62,10 +74,16 @@ module StructuredQuestion
   end
 
   def score_drag_drop(response)
+    score_answer_slots(response) { |given, accepted| Array(accepted).include?(given) }
+  end
+
+  # Shared by the slot-keyed types (drag_drop, fill_blank): config['answer'] maps each blank to its
+  # expected value; reward each blank whose response satisfies the block. Partial credit = mean.
+  def score_answer_slots(response)
     answer = config['answer'].to_h
     return 0.0 if answer.empty?
 
-    correct = answer.count { |slot, item_id| response[slot.to_s] == item_id }
+    correct = answer.count { |slot, expected| yield(response[slot.to_s], expected) }
     correct.to_f / answer.size
   end
 
@@ -100,7 +118,7 @@ module StructuredQuestion
 
   def drag_drop_answers_exist?
     item_ids = config['items'].to_a.filter_map { |item| item['id'] }
-    config['answer'].to_h.values.all? { |id| item_ids.include?(id) }
+    config['answer'].to_h.values.flatten.all? { |id| item_ids.include?(id) }
   end
 
   def matrix_config_valid
@@ -114,5 +132,69 @@ module StructuredQuestion
   def matrix_every_row_correct?
     rows = config['rows'].to_a
     rows.any? && rows.all? { |row| config.dig('correct', row['id']).to_a.any? }
+  end
+
+  # ---- fill_blank -----------------------------------------------------------
+  # Each blank is one typed answer; reward each blank whose typed text matches an accepted answer.
+  def score_fill_blank(response)
+    score_answer_slots(response) { |given, accepted| fill_blank_match?(given, accepted) }
+  end
+
+  # Lenient match: trimmed and case-insensitive, against any of the "|"-separated alternatives.
+  def fill_blank_match?(given, accepted)
+    given = given.to_s.strip
+    return false if given.empty?
+
+    acceptable_answers(accepted).any? { |candidate| candidate.casecmp?(given) }
+  end
+
+  def acceptable_answers(accepted)
+    list = accepted.is_a?(Array) ? accepted : accepted.to_s.split('|')
+    list.map { |candidate| candidate.to_s.strip }.reject(&:empty?)
+  end
+
+  def fill_blank_config_valid
+    return unless question_type == 'fill_blank'
+
+    errors.add(:base, 'Gap-fill needs at least one {{n}} blank') if config_slots.empty?
+    errors.add(:base, 'Every blank needs an accepted answer') unless fill_blank_all_answered?
+  end
+
+  def fill_blank_all_answered?
+    config_slots.all? { |slot| acceptable_answers(config.dig('answer', slot)).any? }
+  end
+
+  # ---- ordering -------------------------------------------------------------
+  # Adjacency scoring: reward each correct consecutive PAIR rather than absolute position, so credit
+  # reflects how much of the sequence is in the right relative order. A fully reversed list scores 0
+  # (no adjacent pair survives), and there's no "middle item stays put" artefact of position scoring.
+  # config['order'] is the key sequence; the response carries the student's sequence under 'order'.
+  def score_ordering(response)
+    order = config['order'].to_a
+    return 0.0 if order.size < 2
+
+    given = response['order'].to_a
+    correct = order.each_cons(2).count { |first, second| adjacent_in?(given, first, second) }
+    correct.to_f / (order.size - 1)
+  end
+
+  # True when `second` immediately follows `first` in the student's sequence.
+  def adjacent_in?(sequence, first, second)
+    index = sequence.index(first)
+    !index.nil? && sequence[index + 1] == second
+  end
+
+  def ordering_config_valid
+    return unless question_type == 'ordering'
+
+    errors.add(:base, 'Ordering needs at least two items') if config['items'].to_a.size < 2
+    errors.add(:base, 'Ordering needs a complete correct sequence') unless ordering_sequence_valid?
+  end
+
+  # The correct order must list every item exactly once.
+  def ordering_sequence_valid?
+    item_ids = config['items'].to_a.filter_map { |item| item['id'] }
+    order = config['order'].to_a
+    item_ids.size >= 2 && order.sort == item_ids.sort
   end
 end

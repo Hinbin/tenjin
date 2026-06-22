@@ -188,44 +188,44 @@ body[data-skin="famicom"] {
 // ── Answer reveal (scoped override of the global .correct/.incorrect-answer) ─
 .tjs-quiz {
   .correct-answer {
-    background: color-mix(in srgb, var(--n2) 13%, var(--surface)) !important;
+    background: color-mix(in srgb, var(--correct) 16%, var(--surface)) !important;
     color: var(--ink) !important;
-    border-color: var(--n2) !important;
+    border-color: var(--correct) !important;
     opacity: 1 !important;
   }
 
   .incorrect-answer {
-    background: color-mix(in srgb, var(--n1) 13%, var(--surface)) !important;
+    background: color-mix(in srgb, var(--incorrect) 16%, var(--surface)) !important;
     color: var(--ink) !important;
-    border-color: var(--n1) !important;
+    border-color: var(--incorrect) !important;
     opacity: 1 !important;
   }
 
   .tjs-answer.correct-answer .tjs-answer__badge {
-    background: var(--n2);
-    color: var(--on-accent);
-    border-color: var(--n2);
+    background: var(--correct);
+    color: #fff;
+    border-color: var(--correct);
   }
 
   .tjs-answer.incorrect-answer .tjs-answer__badge {
-    background: var(--n1);
+    background: var(--incorrect);
     color: #fff;
-    border-color: var(--n1);
+    border-color: var(--incorrect);
   }
 
-  .correct-answer > i { color: var(--n2); }
-  .incorrect-answer > i { color: var(--n1); }
+  .correct-answer > i { color: var(--correct); }
+  .incorrect-answer > i { color: var(--incorrect); }
 }
 
 // per-skin reveal accent
 body[data-skin="arcade"] .tjs-quiz {
-  .tjs-answer.correct-answer { box-shadow: 0 0 16px color-mix(in srgb, var(--n2) 45%, transparent) !important; }
-  .tjs-answer.incorrect-answer { box-shadow: 0 0 16px color-mix(in srgb, var(--n1) 45%, transparent) !important; }
+  .tjs-answer.correct-answer { box-shadow: 0 0 16px color-mix(in srgb, var(--correct) 45%, transparent) !important; }
+  .tjs-answer.incorrect-answer { box-shadow: 0 0 16px color-mix(in srgb, var(--incorrect) 45%, transparent) !important; }
 }
 
 body[data-skin="famicom"] .tjs-quiz {
-  .tjs-answer.correct-answer { box-shadow: 3px 3px 0 var(--n2) !important; }
-  .tjs-answer.incorrect-answer { box-shadow: 3px 3px 0 var(--n1) !important; }
+  .tjs-answer.correct-answer { box-shadow: 3px 3px 0 var(--correct) !important; }
+  .tjs-answer.incorrect-answer { box-shadow: 3px 3px 0 var(--incorrect) !important; }
 }
 
 // ── Footer (topic / lesson name + flag) ────────────────────────────────────
@@ -582,8 +582,8 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   border-radius: 8px;
   background: color-mix(in srgb, var(--n1) 6%, transparent);
 
-  &.correct-answer { border-color: var(--n2); background: color-mix(in srgb, var(--n2) 14%, var(--surface)); }
-  &.incorrect-answer { border-color: var(--n1); background: color-mix(in srgb, var(--n1) 14%, var(--surface)); }
+  &.correct-answer { border-color: var(--correct); background: color-mix(in srgb, var(--correct) 16%, var(--surface)); }
+  &.incorrect-answer { border-color: var(--incorrect); background: color-mix(in srgb, var(--incorrect) 16%, var(--surface)); }
 }
 
 .tjs-item-tray {
@@ -594,6 +594,23 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   margin-bottom: var(--tj-space-3);
   border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
   border-radius: 10px;
+}
+
+// While a tile is held, every place it can land glows; the one under the cursor lifts more strongly.
+.tjs-slot.tjs-drop-active,
+.tjs-item-tray.tjs-drop-active {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--n1) 70%, transparent);
+  background: color-mix(in srgb, var(--n1) 10%, transparent);
+  transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tjs-slot.tjs-drop-over,
+.tjs-item-tray.tjs-drop-over {
+  border-style: solid;
+  border-color: var(--n1);
+  background: color-mix(in srgb, var(--n1) 18%, var(--surface));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--n1) 30%, transparent);
 }
 
 .tjs-tile {
@@ -610,7 +627,13 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
 }
 
 .tjs-draggable { cursor: grab; touch-action: none; }
-.tjs-dragging { opacity: 0.5; }
+.tjs-tile.tjs-dragging {
+  opacity: 0.85;
+  cursor: grabbing;
+  transform: scale(1.04) rotate(-1.5deg);
+  border-color: var(--n1);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 30%, transparent);
+}
 
 // ── Matrix (tick-box grid) question ─────────────────────────────────────────
 .tjs-matrix {
@@ -630,10 +653,32 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   input[type="checkbox"] { width: 18px; height: 18px; }
 }
 
+// Reveal styling keyed to the ANSWER, not to match/mismatch: a green ✓ marks every cell that needed
+// a tick (the key), a red ✗ marks a tick the student added wrongly, and correctly-blank cells stay
+// neutral — so "green" always means "a tick belongs here", with no double-negative to decode.
 .tjs-matrix__cell {
-  &.correct-answer { background: color-mix(in srgb, var(--n2) 14%, var(--surface)); }
-  &.incorrect-answer { background: color-mix(in srgb, var(--n1) 14%, var(--surface)); }
-  &--key { outline: 2px solid var(--n2); outline-offset: -2px; }
+  // Required cell (the correct answer) — green, with a ✓ after the box.
+  &--required {
+    background: color-mix(in srgb, var(--correct) 18%, var(--surface));
+  }
+  &--required::after {
+    content: " ✓";
+    font-weight: 800;
+    color: var(--correct);
+  }
+
+  // Required but left unticked — ring it so the student sees the tick they missed.
+  &--missed { outline: 2px dashed var(--correct); outline-offset: -2px; }
+
+  // A tick the student added where the cell should be empty — red, with a ✗.
+  &--wrong {
+    background: color-mix(in srgb, var(--incorrect) 16%, var(--surface));
+  }
+  &--wrong::after {
+    content: " ✗";
+    font-weight: 800;
+    color: var(--incorrect);
+  }
 }
 
 // ── Structured question authoring builder ───────────────────────────────────
@@ -669,4 +714,165 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
 
   &__help-title { margin: 0 0 8px; font-size: 14px; font-weight: 700; }
   &__help-note { margin: 0; font-style: italic; opacity: 0.85; }
+
+  &__ordinal {
+    flex: 0 0 auto;
+    min-width: 22px;
+    font-family: var(--f-body);
+    font-weight: 700;
+    text-align: center;
+    color: color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+}
+
+// ── Gap-fill (typed cloze) question ─────────────────────────────────────────
+.tjs-blank {
+  display: inline-flex;
+  align-items: center;
+  min-width: 110px;
+  min-height: 34px;
+  padding: 2px 8px;
+  margin: 0 4px;
+  vertical-align: middle;
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--n1) 6%, transparent);
+  border: 2px solid color-mix(in srgb, var(--n1) 45%, transparent);
+  border-radius: 8px;
+
+  &:focus { outline: none; border-color: var(--n1); }
+  &.correct-answer { border-color: var(--correct); background: color-mix(in srgb, var(--correct) 16%, var(--surface)); }
+  &.incorrect-answer { border-color: var(--incorrect); background: color-mix(in srgb, var(--incorrect) 16%, var(--surface)); }
+}
+
+// ── Ordering (sequencing) question ──────────────────────────────────────────
+.tjs-order-list {
+  list-style: none;
+  margin: 0 0 var(--tj-space-3);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  counter-reset: tjs-order;
+
+  // Soft frame while a tile is in flight, so it reads as an active sorting area.
+  &--dragging {
+    border-radius: 10px;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--n1) 22%, transparent);
+  }
+}
+
+.tjs-order-item {
+  counter-increment: tjs-order;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--n1) 35%, transparent);
+  border-radius: 8px;
+
+  &[draggable="true"] { cursor: grab; }
+  // The tile being dragged stays readable but lifts and highlights to mark where it will drop.
+  &.tjs-dragging {
+    cursor: grabbing;
+    border-color: var(--n1);
+    background: color-mix(in srgb, var(--n1) 14%, var(--surface));
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 28%, transparent);
+  }
+
+  &::before {
+    content: counter(tjs-order);
+    flex: 0 0 auto;
+    min-width: 22px;
+    text-align: center;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+
+  &__handle {
+    flex: 0 0 auto;
+    font-size: 16px;
+    line-height: 1;
+    color: color-mix(in srgb, var(--ink) 45%, transparent);
+  }
+
+  &__text { flex: 1 1 auto; }
+
+  &__controls { display: inline-flex; gap: 4px; }
+  &__controls button {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--n1) 35%, transparent);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  &__controls button:disabled { opacity: 0.4; cursor: default; }
+
+  &.correct-answer { border-color: var(--correct); background: color-mix(in srgb, var(--correct) 16%, var(--surface)); }
+  &.incorrect-answer { border-color: var(--incorrect); background: color-mix(in srgb, var(--incorrect) 16%, var(--surface)); }
+}
+
+// ── Post-answer feedback panel (your answer vs. correct answer + explanation) ─
+// Shown after the reveal for the types that can't display the correct answer inline, and for the
+// author's optional explanation on any type. Hidden (.tj-hidden) until questions/*_question.js fills it.
+.tjs-quiz__feedback {
+  margin: var(--tj-space-3) 0 0;
+  padding: 12px 16px;
+  font-family: var(--f-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  text-align: left;
+  background: color-mix(in srgb, var(--n1) 6%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--n1) 25%, transparent);
+  border-left: 4px solid var(--correct);
+  border-radius: 10px;
+}
+
+.tjs-quiz__feedback-answer { margin: 0 0 6px; }
+.tjs-quiz__feedback-answer:last-child { margin-bottom: 0; }
+
+.tjs-quiz__feedback-label { font-weight: 700; color: var(--correct); }
+
+.tjs-quiz__feedback-order {
+  margin: 4px 0 0;
+  padding-left: 22px;
+  li { margin-bottom: 2px; }
+}
+
+// The author's "why" sits under a divider so it reads as elaboration, not the answer itself.
+.tjs-quiz__feedback-why {
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--n1) 20%, transparent);
+  font-style: italic;
+  opacity: 0.95;
+}
+
+// Inline "correct word" tag dropped next to a wrong gap-fill blank / drag-drop slot, so the student's
+// own (wrong) answer stays visible and the correct one sits right beside it.
+.tjs-blank__correct,
+.tjs-slot__correct {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 4px;
+  padding: 2px 8px;
+  vertical-align: middle;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--correct);
+  background: color-mix(in srgb, var(--correct) 14%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--correct) 45%, transparent);
+  border-radius: 8px;
+
+  &::before { content: "→ "; opacity: 0.7; }
 }

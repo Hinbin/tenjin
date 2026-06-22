@@ -97,6 +97,7 @@ Metrics/ModuleLength:
   Exclude:
     - 'app/services/theme/skin_catalog.rb'
     - 'app/helpers/scene_art_helper.rb'
+    - 'app/models/concerns/structured_question.rb'
 
 RSpec/ExampleLength:
   Enabled: false

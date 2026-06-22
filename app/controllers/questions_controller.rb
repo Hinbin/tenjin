@@ -111,26 +111,16 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.expect(question: [:question_text, :question_type, :lesson_id,
-                             :topic_id, { answers_attributes: [%i[correct id text _destroy]] }])
+    params.expect(question: [:question_text, :question_type, :lesson_id, :topic_id, :explanation,
+                             { answers_attributes: [%i[correct id text _destroy]] }])
   end
 
   def set_question
     @question = Question.find(params.expect(:id))
   end
 
-  def setup_boolean_question
-    @question.answers.build until @question.answers.length >= 2
-    @question.answers = @question.answers.slice(0..1) if @question.answers.length > 2
-    return if @question.valid?
-
-    @question.answers.second.text = 'True'
-    @question.answers.first.text = 'False'
-  end
-
   def check_answers
     apply_structured_config
-    setup_boolean_question if @question.boolean?
     @question.answers.each { |a| a.correct = true } if @question.short_answer? || @question.question_type.nil?
   end
 

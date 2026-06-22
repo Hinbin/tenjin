@@ -15,9 +15,11 @@ class Question < ApplicationRecord
 
   has_rich_text :question_text
 
-  enum :question_type, { short_answer: 0, boolean: 1, multiple: 2, drag_drop: 3, matrix: 4 }
+  # NOTE: integer 1 (formerly :boolean) is intentionally retired and left unused — boolean questions
+  # were migrated to :multiple (they were already two-answer True/False MCQs).
+  enum :question_type, { short_answer: 0, multiple: 2, drag_drop: 3, matrix: 4,
+                         fill_blank: 5, ordering: 6 }
 
-  before_update :check_boolean
   before_update :check_short_answer
 
   accepts_nested_attributes_for :answers, allow_destroy: true
@@ -26,23 +28,10 @@ class Question < ApplicationRecord
   validates_associated :answers
 
   validate :at_least_one_correct_answer
-  validate :boolean_true_or_false
   validate :lesson_is_for_topic
 
   def lesson_is_for_topic
     errors.add(:base, 'Lesson topic must match question topic') unless lesson.blank? || lesson.topic == topic
-  end
-
-  def boolean_true_or_false
-    return unless boolean?
-
-    answer_text = answers.filter_map { |i| i&.text }
-    # Check for the presence of both true and false in two answers in a case insensitive search
-    return errors.add(:base, 'Boolean question must contain two answers') unless answer_text.size == 2
-
-    return if answer_text.select { |text| %w[true false].detect { |permitted| permitted.casecmp(text).zero? } }
-
-    errors.add(:base, 'Boolean must be true or false only')
   end
 
   def at_least_one_correct_answer
@@ -56,21 +45,13 @@ class Question < ApplicationRecord
     json = { question_text: question_text.body,
              question_type:,
              answers: answers.as_json(only: %i[text correct]) }
+    json[:explanation] = explanation if explanation.present?
     json[:lesson] = lesson.title if lesson
     json[:config] = config if structured?
     json
   end
 
   private
-
-  def check_boolean
-    return unless question_type_changed? && question_type == 'boolean'
-
-    # Setup boolean question.  Only true and false allowed.
-    answers.destroy_all
-    Answer.create(question: self, correct: false, text: 'False')
-    Answer.create(question: self, correct: false, text: 'True')
-  end
 
   def check_short_answer
     return unless question_type_changed? && question_type == 'short_answer'

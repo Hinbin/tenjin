@@ -241,6 +241,7 @@ def seed_matrix_question(topic)
 end
 
 seed_structured_questions
+load Rails.root.join('db/seeds/question_tester.rb')
 seed_question_statistics
 seed_challenges
 

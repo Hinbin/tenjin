@@ -276,30 +276,6 @@ RSpec.describe 'Author edits a question', :default_creates, :js, type: :system d
       end
     end
 
-    context 'when showing a boolean question' do
-      before do
-        visit(question_path(question))
-        find_by_id('select-question-type').click
-        find('option', text: 'Boolean').click
-        find('table', id: 'table-answers')
-      end
-
-      it 'creates two answers, true and false' do
-        expect(page).to have_css('input[value="True"]').and have_css('input[value="False"]')
-      end
-
-      it 'allows you to set an answer as correct' do
-        find('input', id: answer_check_id).click
-        switch_and_create_quiz
-        find("#response-#{Answer.last.id}").click
-        expect(page).to have_css("#response-#{Answer.last.id}.correct-answer")
-      end
-
-      it 'does not allow you to remove an answer' do
-        expect(page).to have_no_link('Remove')
-      end
-    end
-
     context 'when assigning a lesson' do
       before do
         lesson

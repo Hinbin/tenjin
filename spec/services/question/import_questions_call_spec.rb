@@ -17,8 +17,8 @@ RSpec.describe Question::ImportQuestions, '#call', :default_creates do
       expect(result.success?).to eq(true)
     end
 
-    it 'imports boolean questions' do
-      result = described_class.new(JSON.generate([build(:question_import_hash_boolean)]), topic, topic_filename).call
+    it 'imports two-option multiple-choice questions' do
+      result = described_class.new(JSON.generate([build(:question_import_hash_two_option)]), topic, topic_filename).call
       expect(result.success?).to eq(true)
     end
 

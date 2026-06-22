@@ -131,6 +131,12 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
       patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'dog' } }
       expect(asked_question.reload.score).to eq(0.0)
     end
+
+    it 'returns the question explanation for the reveal' do
+      sa_question.update!(explanation: 'A cat is the classic example.')
+      patch quiz_path(id: quiz.id), params: { answer: { short_answer: 'dog' } }
+      expect(response.parsed_body['explanation']).to eq('A cat is the classic example.')
+    end
   end
 
   describe 'answering a drag-and-drop question' do
@@ -186,6 +192,57 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
     it 'penalises over-ticking with partial credit' do
       patch quiz_path(id: quiz.id), params: { answer: { structured: { 'r1' => %w[c1 c2], 'r2' => ['c2'] } } }
       expect(asked_question.reload.score).to eq(0.75)
+    end
+  end
+
+  describe 'answering a gap-fill question' do
+    let(:fb_question) do
+      create(:question, topic: topic, question_type: 'fill_blank', question_text: 'A {{1}} and a {{2}}.',
+                        config: { 'answer' => { '1' => 'control|control unit', '2' => 'logic' } })
+    end
+    let(:quiz) do
+      create(:new_quiz, user: student, question_order: [fb_question.id], counts_for_leaderboard: false,
+                        answered_correct: 0, streak: 0, max_streak: 0)
+    end
+    let(:asked_question) { create(:asked_question, quiz: quiz, question: fb_question) }
+
+    before { asked_question }
+
+    it 'stores a full score for a case-insensitive match against an accepted alternative' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { '1' => 'Control Unit', '2' => 'logic' } } }
+      expect(asked_question.reload.score).to eq(1.0)
+    end
+
+    it 'stores partial credit when one blank is wrong' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { '1' => 'control', '2' => 'nope' } } }
+      expect(asked_question.reload.score).to eq(0.5)
+    end
+  end
+
+  describe 'answering an ordering question' do
+    let(:order_question) do
+      create(:question, topic: topic, question_type: 'ordering',
+                        config: { 'items' => [{ 'id' => 'o1', 'text' => 'Fetch' },
+                                              { 'id' => 'o2', 'text' => 'Decode' },
+                                              { 'id' => 'o3', 'text' => 'Execute' }],
+                                  'order' => %w[o1 o2 o3] })
+    end
+    let(:quiz) do
+      create(:new_quiz, user: student, question_order: [order_question.id], counts_for_leaderboard: false,
+                        answered_correct: 0, streak: 0, max_streak: 0)
+    end
+    let(:asked_question) { create(:asked_question, quiz: quiz, question: order_question) }
+
+    before { asked_question }
+
+    it 'stores a full score for the correct sequence' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { order: %w[o1 o2 o3] } } }
+      expect(asked_question.reload.score).to eq(1.0)
+    end
+
+    it 'returns the ordered solution for the reveal' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { order: %w[o1 o2 o3] } } }
+      expect(response.parsed_body['solution']).to eq(%w[o1 o2 o3])
     end
   end
 

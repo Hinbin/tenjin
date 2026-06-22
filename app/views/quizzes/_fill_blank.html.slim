@@ -1,0 +1,18 @@
+/ Gap-fill (typed cloze) question — type the missing word into each {{n}} blank. Partial-credit scored.
+/ KEEP: .tjs-blank inputs[data-slot], #fillBlankSubmit, #nextButton / .next-button / .tj-invisible.
+/ fill_blank_question.js collects typed answers, submits and reveals via .correct-answer / .incorrect-answer.
+.tjs-question id="fillBlank"
+  - if @question.topic.present?
+    .tjs-question__pill
+      = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
+  .tjs-cloze
+    - cloze_segments(@question.cloze_text).each do |kind, value|
+      - if kind == :text
+        span.tjs-cloze__text = value
+      - else
+        input.tjs-blank type='text' autocomplete='off' autocapitalize='off' spellcheck='false' data-slot=value aria-label="Blank #{value}"
+  / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
+  .tjs-quiz__fx data-quiz-target='answerFx' aria-hidden='true'
+  = render 'quizzes/answer_feedback'
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__submit.question-button#fillBlankSubmit Check Answer
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__next.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question
