@@ -23,7 +23,17 @@ class DashboardController < ApplicationController
     student_topics # resolves @active_subject, which student_challenges filters by
     student_challenges
     student_last_topic
+    student_quiz_state
     render 'student_dashboard'
+  end
+
+  # Surfaces the two facts the dashboard's quiz-start guard needs (see student_dashboard.js): the
+  # user's current active quiz and when their start cooldown lifts. The cooldown is rendered as an
+  # absolute expiry (ms) so the countdown stays correct even if the dashboard sits open.
+  def student_quiz_state
+    @active_quiz = Quiz.where(user: current_user, active: true).order(created_at: :desc).first
+    cooldown = current_user.seconds_left_on_cooldown
+    @quiz_cooldown_until = (Time.current + cooldown.seconds).to_i * 1000 if cooldown.positive?
   end
 
   def student_homework_progress

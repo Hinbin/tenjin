@@ -105,6 +105,27 @@ RSpec.describe 'User creates a quiz', :default_creates, :js, type: :system do
     end
   end
 
+  context 'when starting a new quiz while one is already in progress' do
+    before do
+      setup_subject_database
+      question
+      sign_in student
+      navigate_to_quiz # creates an active quiz and starts the cooldown
+      visit(dashboard_path)
+    end
+
+    it 'warns instead of silently dropping me back into the old quiz' do
+      first('.topic-row').click
+      expect(page).to have_text('start a new quiz in')
+    end
+
+    it 'lets me resume the quiz I left' do
+      first('.topic-row').click
+      click_button('Resume quiz')
+      expect(page).to have_current_path(%r{quizzes/[0-9]+})
+    end
+  end
+
   context 'when selecting a topic' do
     let(:topic) { create(:topic, subject: Subject.first) }
 
