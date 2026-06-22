@@ -29,15 +29,18 @@
 
     / ── 2. PRACTISE — challenges (outstanding first) then topics ─────────
     section.tjs-dashboard__section data-section='practise'
-      = render 'shared/skin/section_head', en: 'Quests', jp: '挑戦'
-      / Challenge cards — #challenge-table scopes the spec selector
+      - quests_title = @active_subject ? "#{@active_subject.name} Quests" : 'Quests'
+      = render 'shared/skin/section_head', en: quests_title, jp: '挑戦'
+      / Challenge cards — #challenge-table scopes the spec selector. Cards take the active subject's
+      / neon colour; setting --n1 inline retints the active-card accent (see dashboard.scss) too.
+      - subject_neon = @active_subject ? subject_meta(@active_subject.name)[:neon] : 'var(--n1)'
       #challenge-table
         - @challenges.sort_by { |c| challenge_complete?(c) ? 1 : 0 }.each do |c|
           - done      = challenge_complete?(c)
-          - col       = done ? 'var(--dim)' : 'var(--n1)'
+          - col       = done ? 'var(--dim)' : subject_neon
           - extra_cls = done ? 'tjs-card tjs-challenge-card challenge-row' : 'tjs-card tjs-challenge-card challenge-row tjs-challenge-card--active'
           - topic_id  = c.daily? ? 'Lucky Dip' : c.topic.id
-          button class=extra_cls data-challenge=c.id data-topic=topic_id data-subject=c.topic.subject_id type='button'
+          button class=extra_cls style="--n1:#{subject_neon};" data-challenge=c.id data-topic=topic_id data-subject=c.topic.subject_id type='button'
             .tjs-challenge-card__icon style="color:#{col};"
               = glyph(:target, size: 20, color: col)
             .tjs-challenge-card__body

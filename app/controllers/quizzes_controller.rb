@@ -119,8 +119,11 @@ class QuizzesController < ApplicationController
     @lesson = quiz_params[:lesson_id] if quiz_params[:lesson_id].present?
   end
 
+  # An empty structured answer (e.g. a matrix with nothing ticked, or drag_drop with no tiles placed)
+  # is a legitimate submission that scores zero — the browser sends no `answer` param at all in that
+  # case, so permit a missing `answer` rather than 400-ing with ParameterMissing.
   def answer_params
-    params.expect(answer: [:id, :short_answer, { structured: {} }])
+    params.fetch(:answer, {}).permit(:id, :short_answer, structured: {})
   end
 
   def quiz_params

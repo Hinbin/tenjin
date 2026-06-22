@@ -20,8 +20,8 @@ class DashboardController < ApplicationController
 
   def render_student_dashboard
     student_homework_progress
+    student_topics # resolves @active_subject, which student_challenges filters by
     student_challenges
-    student_topics
     student_last_topic
     render 'student_dashboard'
   end
@@ -35,8 +35,13 @@ class DashboardController < ApplicationController
   end
 
   def student_challenges
+    @challenges = []
+    @challenge_progresses = []
+    return unless @active_subject
+
     @challenges = Challenge.includes(topic: :subject)
-                           .where(topics: { subject: @subjects })
+                           .where(topics: { subject: @active_subject })
+                           .where('end_date > ?', Time.current)
     @challenge_progresses = ChallengeProgress.where(challenge: @challenges).where(user: current_user).to_a
   end
 

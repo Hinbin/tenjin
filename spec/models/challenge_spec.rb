@@ -31,9 +31,9 @@ RSpec.describe Challenge, type: :model do
       expect(challenge_full_marks.challenge_type).to eq('number_correct')
     end
 
-    it 'allows me to specify a point multiplier' do
-      srand(1)
-      expect(described_class.create_challenge(topic.subject, multiplier: 2).points).to eq(20)
+    it 'doubles the points with a x2 multiplier' do
+      challenge = described_class.create_challenge(topic.subject, 'number_correct', multiplier: 2)
+      expect(challenge.points).to eq(20 * challenge.number_required)
     end
 
     it 'allows me to specify a duration' do
@@ -48,9 +48,14 @@ RSpec.describe Challenge, type: :model do
         .to be_within(1.second).of(Time.now + 36.hours)
     end
 
-    it 'defaults to a multiplier of x1' do
-      srand(1)
-      expect(described_class.create_challenge(topic.subject).points).to eq(10)
+    it 'scales points by number_required for a x1 multiplier' do
+      challenge = described_class.create_challenge(topic.subject, 'streak')
+      expect(challenge.points).to eq(15 * challenge.number_required)
+    end
+
+    it 'awards a flat reward for a perfect quiz challenge' do
+      challenge = described_class.create_challenge(topic.subject, 'perfect_quiz')
+      expect(challenge.points).to eq(Challenge::PERFECT_QUIZ_POINTS)
     end
 
     it 'creates a daily challenge' do
@@ -60,10 +65,15 @@ RSpec.describe Challenge, type: :model do
   end
 
   describe '#stringify' do
-    it 'turns a challenge into a string describing the challenge' do
-      srand(1)
-      expect(challenge_one.stringify).to eq("Obtain a streak of #{challenge_one.number_required} correct answers in \
-#{topic.name} for #{topic.subject.name}")
+    it 'describes a topic-bound challenge with its topic and subject' do
+      challenge = create(:challenge, topic:, challenge_type: 'streak', number_required: 5)
+      expect(challenge.stringify)
+        .to eq("Obtain a streak of 5 correct answers in #{topic.name} for #{topic.subject.name}")
+    end
+
+    it 'describes a daily_devotion challenge without a topic, since it is global' do
+      challenge = create(:challenge, topic:, challenge_type: 'daily_devotion', number_required: 3)
+      expect(challenge.stringify).to eq('Play on 3 days in a row')
     end
   end
 end

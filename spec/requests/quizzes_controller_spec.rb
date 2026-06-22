@@ -193,6 +193,15 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
       patch quiz_path(id: quiz.id), params: { answer: { structured: { 'r1' => %w[c1 c2], 'r2' => ['c2'] } } }
       expect(asked_question.reload.score).to eq(0.75)
     end
+
+    it 'scores an empty submission (nothing ticked) and still reveals the correct answer' do
+      patch quiz_path(id: quiz.id)
+      expect(response).to have_http_status(:ok)
+      # Both rows leave one cell correctly blank but miss the required tick: 1 of 2 cells right per row.
+      expect(asked_question.reload.score).to eq(0.5)
+      # The reveal payload must carry the solution so the grid can show what should have been ticked.
+      expect(response.parsed_body['solution']).to eq('r1' => ['c1'], 'r2' => ['c2'])
+    end
   end
 
   describe 'answering a gap-fill question' do
