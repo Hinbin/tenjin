@@ -1,0 +1,158 @@
+// Teacher gap-analysis surfaces (classrooms#gaps / #student_gap). Difficulty-aware, cohort-relative
+// reporting built on the Tenjin design system — no Bootstrap, no JS build step.
+
+.tj-gap {
+  padding-bottom: var(--tj-space-5);
+
+  &-header {
+    text-align: center;
+    margin: var(--tj-space-4) 0 var(--tj-space-3);
+  }
+
+  &-subtitle {
+    color: var(--tj-grey);
+    margin: var(--tj-space-1) 0 var(--tj-space-2);
+  }
+
+  &-note {
+    color: var(--tj-grey);
+    font-size: 0.9rem;
+    margin-bottom: var(--tj-space-3);
+  }
+
+  &-empty {
+    color: var(--tj-grey);
+    font-style: italic;
+  }
+
+  // Summary / engagement metric cards
+  &-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tj-space-3);
+    margin-bottom: var(--tj-space-4);
+  }
+
+  &-card {
+    flex: 1 1 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--tj-space-1);
+    padding: var(--tj-space-3);
+    background: var(--tj-light);
+    border: 1px solid #e0e0e0;
+    border-radius: var(--tj-radius-lg);
+    text-align: center;
+  }
+
+  &-card-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--tj-grey);
+  }
+
+  // Hover/focus tooltip marker beside a metric-card label. The bubble is a CSS ::after fed by the
+  // data-tooltip attribute, so it shows instantly and styled (native title is too slow/unstyled).
+  &-info {
+    position: relative;
+    cursor: help;
+    font-size: 0.8rem;
+    color: var(--tj-grey);
+
+    &::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 0.5rem);
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 15rem;
+      padding: var(--tj-space-2) var(--tj-space-3);
+      background: var(--tj-ink);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.35;
+      text-transform: none;
+      letter-spacing: normal;
+      text-align: left;
+      border-radius: var(--tj-radius);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.12s ease;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tj-grey);
+      outline-offset: 2px;
+    }
+  }
+
+  &-card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--tj-ink);
+  }
+
+  // Topic heatmap grid
+  &-heatmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: var(--tj-space-2);
+  }
+
+  &-heat-cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tj-space-1);
+    padding: var(--tj-space-3);
+    border-radius: var(--tj-radius);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  &-heat-topic { font-weight: 700; color: var(--tj-ink); }
+  &-heat-score { font-size: 1.4rem; font-weight: 700; color: var(--tj-ink); }
+  &-heat-meta  { font-size: 0.78rem; color: var(--tj-theme-meta); }
+
+  // Difficulty band chips
+  &-band {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--tj-radius-pill);
+    font-size: 0.78rem;
+    font-weight: 700;
+
+    &--easy   { background: #d4edda; color: #155724; }
+    &--medium { background: var(--tj-warning-bg); color: var(--tj-warning-fg); }
+    &--hard   { background: #f8d7da; color: #721c24; }
+  }
+
+  // Cohort standing chips
+  &-standing {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--tj-radius-pill);
+    font-size: 0.78rem;
+    font-weight: 700;
+
+    &--above   { background: #d4edda; color: #155724; }
+    &--on_par  { background: var(--tj-light); color: var(--tj-theme-meta); }
+    &--below   { background: #f8d7da; color: #721c24; }
+    &--unknown { background: var(--tj-light); color: var(--tj-grey); }
+  }
+}
+
+// Entry point button on the classroom show page
+.tj-gap-link {
+  margin-bottom: var(--tj-space-3);
+}

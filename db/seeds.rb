@@ -32,4 +32,6 @@ if Rails.env.development? || ENV['SEED_TEST_USERS'] == 'true'
   load Rails.root.join('db/seeds/development_questions.rb')
   load Rails.root.join('db/seeds/development_users.rb')
   load Rails.root.join('db/seeds/development_lessons.rb')
+  # Needs the classrooms/students from development_users, so it must load last.
+  load Rails.root.join('db/seeds/development_gap_analysis.rb')
 end

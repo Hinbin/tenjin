@@ -3,6 +3,10 @@
 .tjk-container data-controller='classroom'
   h1.tj-h1 style='text-align:center;margin-top:var(--tj-space-3)' = @classroom.name
 
+  - if policy(@classroom).gaps?
+    .tj-gap-link.tj-text-center
+      = link_to 'View Gap Analysis', gaps_classroom_path(@classroom), class: 'tj-btn-primary tj-btn--full'
+
   section.tj-section#homework
     h2.tj-section-header Homework
     hr.tj-hr-primary

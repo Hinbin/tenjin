@@ -21,7 +21,12 @@ Rails.application.routes.draw do
     end
   end
   resources :leaderboard, only:[:show, :index]
-  resources :classrooms, only: [:show, :index, :update]
+  resources :classrooms, only: [:show, :index, :update] do
+    member do
+      get 'gaps'
+      get 'gaps/student/:student_id', to: 'classrooms#student_gap', as: :student_gap
+    end
+  end
   resources :questions do
     collection do
       get 'topic' 
