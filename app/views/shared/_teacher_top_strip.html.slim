@@ -1,0 +1,13 @@
+/ _teacher_top_strip.html.slim — contextual header for the teacher shell main column
+/ (mirrors the student top strip). Left: current section title + JP accent. Right: school name.
+.tjs-top-strip
+  .tjs-top-strip__left
+    span.tjs-top-strip__title = teacher_section_title
+    span.tjs-top-strip__jp aria-hidden="true"
+      - jp = teacher_nav_items.find { |n| n[:id] == teacher_nav_active_item }&.dig(:jp) || '天神'
+      = jp
+
+  .tjs-top-strip__right
+    - if current_user.school.present?
+      span.tjs-top-strip__school style='font-family:var(--f-body);font-size:12px;color:var(--dim);'
+        = current_user.school.name

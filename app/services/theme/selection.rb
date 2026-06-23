@@ -83,10 +83,13 @@ module Theme
     # (class methods below; `def self.` is unaffected by the `private` above — the storage reads are
     # made private via `private_class_method` at the end of the block.)
 
-    # The user's equipped `skin` ActiveCustomisation value (e.g. "arcade"), else the default.
+    # The user's equipped `skin` ActiveCustomisation value (e.g. "arcade"), else the role default:
+    # students get the arcade default; teachers/admins (no equip flow yet) get the calmer zen look.
     def self.resolve_skin(user)
       skin = user.equipped_value(:skin)
-      SkinCatalog.skin?(skin) ? skin : SkinCatalog::DEFAULT_SKIN
+      return skin if SkinCatalog.skin?(skin)
+
+      user.respond_to?(:student?) && !user.student? ? SkinCatalog::DEFAULT_TEACHER_SKIN : SkinCatalog::DEFAULT_SKIN
     end
 
     # The equipped `palette` index for the chosen skin. The value is encoded "<skin>:<index>"; a

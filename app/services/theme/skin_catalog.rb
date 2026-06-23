@@ -22,7 +22,10 @@
 module Theme::SkinCatalog
   module_function
 
-  DEFAULT_SKIN    = 'arcade'
+  DEFAULT_SKIN = 'arcade'
+  # Teachers/admins haven't got an equipped-skin flow yet, so their surfaces fall back to this
+  # (calmer serif "zen" look) rather than the student default. See Theme::Selection#resolve_skin.
+  DEFAULT_TEACHER_SKIN = 'zen'
   DEFAULT_PALETTE = 0 # index into PALETTES[skin]
   DEFAULT_DARK    = true
 

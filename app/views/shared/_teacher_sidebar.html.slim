@@ -1,0 +1,26 @@
+/ _teacher_sidebar.html.slim — teacher/admin app-shell desktop sidebar (mirrors the student
+/ sidebar). Logo top · vertical nav · account card pinned to bottom with a logout button.
+aside.tjs-sidebar aria-label="Main navigation"
+  .tjs-sidebar__logo
+    = link_to dashboard_path do
+      = render 'shared/skin/logo', size: 19
+
+  nav.tjs-sidebar__nav aria-label="Teacher navigation"
+    - teacher_nav_items.each do |item|
+      = link_to item[:path],
+          class: "tjs-sidebar__nav-item #{teacher_nav_active?(item[:id]) ? 'is-active' : ''}",
+          aria: { current: (teacher_nav_active?(item[:id]) ? 'page' : nil) } do
+        = glyph(item[:icon], size: 20, color: 'currentColor')
+        span.tjs-sidebar__nav-label = item[:en]
+        span.tjs-sidebar__nav-jp = item[:jp]
+
+  .tjs-sidebar__player
+    = link_to user_path(current_user), id: 'current_user', class: 'tjs-sidebar__player-link', aria: { label: 'Your account' } do
+      = render 'shared/skin/avatar', glyph_name: current_skin_logo_glyph, color: 'var(--n1)', size: 38
+      .tjs-sidebar__player-info
+        .tjs-sidebar__name style='font-family:var(--f-display);font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'
+          => current_user.forename
+          = current_user.surname
+        .tjs-sidebar__role style='font-family:var(--f-body);font-size:11px;color:var(--dim);'
+          = current_user.has_role?(:school_admin) ? 'School admin' : 'Teacher'
+    = button_to 'Logout', destroy_user_session_path, method: :delete, class: 'tjs-btn tjs-btn--ghost tjs-sidebar__logout', form: { class: 'tjs-sidebar__logout-form' }, data: { turbo: 'false' }

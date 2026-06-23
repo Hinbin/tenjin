@@ -10,6 +10,19 @@
   max-width: 1040px;
 }
 
+// ── Teacher sidebar account card extras (reuses .tjs-sidebar__player-link from shell.scss) ──
+.tjs-sidebar__name { line-height: 1.2; }
+
+.tjs-sidebar__logout-form {
+  margin-top: 8px;
+}
+
+.tjs-sidebar__logout {
+  width: 100%;
+  font-family: var(--f-body);
+  font-size: 12px;
+}
+
 // ── Page header ─────────────────────────────────────────────────────────────────
 .tj-tsurface-header {
   text-align: center;
@@ -128,40 +141,21 @@
 
   .tj-table-responsive { overflow-x: auto; }
 
+  // Colours come from the skin-aware base .tj-table (_classroom.scss); only layout specifics here.
   .tj-table {
-    width: 100%;
-    border-collapse: collapse;
     font-family: var(--f-body);
-    color: var(--ink);
 
     th,
-    td {
-      padding: 10px 14px;
-      text-align: left;
-      border-bottom: var(--bd) solid var(--line);
-    }
+    td { padding: 10px 14px; }
 
-    thead th {
-      font-family: var(--f-display);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-size: 0.78rem;
-      color: var(--dim);
-    }
+    thead th { letter-spacing: 0.5px; font-size: 0.78rem; }
 
+    // The card already draws the outer edge, so drop the last row's divider.
     tbody tr:last-child td { border-bottom: none; }
 
     // Clickable rows: classrooms on the dashboard, homeworks on the classroom page.
     tbody tr[data-classroom],
-    tbody tr[data-action] {
-      cursor: pointer;
-      transition: background 0.15s ease;
-
-      &:hover { background: color-mix(in srgb, var(--n1) 12%, transparent); }
-    }
-
-    a { color: var(--ink); }
-    a:hover { color: var(--n1); }
+    tbody tr[data-action] { cursor: pointer; }
   }
 
   // Toolbar / search / pagination

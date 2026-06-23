@@ -13,15 +13,19 @@
 // ── Data table ────────────────────────────────────────────────────────────
 // Replaces .table.table-hover; DataTables enhancement deferred to 04e.
 
+// Skin-aware: colours come from the active skin's token layer (skins/_tokens.scss --ink/--line/
+// --dim/--n1) so tables read on the skinned (dark) body; falls back to the legacy light values for
+// any context rendered without a skin.
 .tj-table {
   width: 100%;
   border-collapse: collapse;
+  color: var(--ink, var(--tj-ink));
 
   th,
   td {
     padding: var(--tj-space-2) var(--tj-space-3);
     text-align: left;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid var(--line, #dee2e6);
   }
 
   thead th {
@@ -29,17 +33,25 @@
     font-weight: var(--tj-w-black);
     text-transform: uppercase;
     font-size: var(--tj-size-small);
-    border-bottom: 2px solid var(--tj-ink);
+    color: var(--dim, inherit);
+    border-bottom: 2px solid var(--line, var(--tj-ink));
   }
 
-  tbody tr[data-action]:hover {
-    background-color: var(--tj-red);
-    color: var(--tj-white);
-    transition: background-color var(--tj-dur-hover) var(--tj-ease);
+  // Links inherit the table ink (the global `a` rule is dark — invisible on a dark skin) and lift
+  // to the skin accent on hover.
+  a {
+    color: var(--ink, var(--tj-ink));
+    text-decoration: none;
+  }
 
-    a {
-      color: var(--tj-white);
-    }
+  a:hover {
+    color: var(--n1, var(--tj-grey));
+  }
+
+  tbody tr[data-action]:hover,
+  tbody tr[data-classroom]:hover {
+    background-color: color-mix(in srgb, var(--n1, var(--tj-red)) 14%, transparent);
+    transition: background-color var(--tj-dur-hover) var(--tj-ease);
   }
 }
 
