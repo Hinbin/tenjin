@@ -1,0 +1,121 @@
+- content_for :title
+  title = 'Gap Analysis - ' + @classroom.name
+
+.tjk-container.tj-gap
+  .tj-gap-header
+    h1.tj-h1 = @classroom.name
+    p.tj-gap-subtitle Gap analysis · difficulty-aware, compared against every Tenjin student
+    = link_to '← Back to classroom', classroom_path(@classroom), class: 'tj-link'
+
+  - if @report.student_count.zero?
+    section.tj-section
+      hr.tj-hr-primary
+      p.tj-gap-empty No enrolled students yet — there is nothing to analyse.
+  - else
+    / Screenshot-ready class summary: who's active + overall standing against the cohort.
+    section.tj-section#summary
+      h2.tj-section-header Class summary
+      hr.tj-hr-primary
+      .tj-gap-cards
+        .tj-gap-card
+          = gap_card_label('Active students', 'Enrolled students who have practised in this subject, out of everyone enrolled.')
+          span.tj-gap-card-value = "#{@report.engagement[:students_active]} / #{@report.student_count}"
+        .tj-gap-card
+          = gap_card_label('Class mastery', "This class's difficulty-weighted average score (0–100%) across every question they've attempted in this subject. Harder questions count for more, so this rewards mastering tough material.")
+          span.tj-gap-card-value = gap_percent(@report.cohort_comparison[:overall][:mastery])
+        .tj-gap-card
+          = gap_card_label('Cohort baseline', 'The difficulty-weighted average that all Tenjin students score on these same questions — the benchmark this class is measured against.')
+          span.tj-gap-card-value = gap_percent(@report.cohort_comparison[:overall][:cohort_mastery])
+        .tj-gap-card
+          = gap_card_label('Standing', 'How this class compares to the cohort baseline: above, on par, or below.')
+          span.tj-gap-card-value = standing_chip(@report.cohort_comparison[:overall][:standing])
+
+    section.tj-section#activity
+      h2.tj-section-header Student activity
+      hr.tj-hr-primary
+      p.tj-gap-note Who is actually practising. Drill into a student for their personal gap report.
+      .tj-gap-cards
+        .tj-gap-card
+          span.tj-gap-card-label Quizzes started
+          span.tj-gap-card-value = @report.engagement[:quizzes_started]
+        .tj-gap-card
+          span.tj-gap-card-label Questions answered
+          span.tj-gap-card-value = @report.engagement[:questions_answered]
+      - if @report.engagement[:per_student].any?
+        div data-controller='table' data-table-page-length-value='15'
+          table.tj-table
+            thead
+              tr
+                th Student
+                th Quizzes
+                th Questions
+                th Last active
+            tbody
+              - @report.engagement[:per_student].each do |e|
+                tr
+                  td = link_to e[:name], student_gap_classroom_path(@classroom, student_id: e[:user_id]), class: 'tj-link'
+                  td = e[:quizzes_started]
+                  td = e[:questions_answered]
+                  td = e[:last_active_at] ? l(e[:last_active_at].to_date, format: :long) : '—'
+
+    section.tj-section#heatmap
+      h2.tj-section-header Topic heatmap
+      hr.tj-hr-primary
+      p.tj-gap-note Mean class score per topic, weakest first.
+      - if @report.topic_heatmap.empty?
+        p.tj-gap-empty No topic activity recorded yet.
+      - else
+        .tj-gap-heatmap
+          - @report.topic_heatmap.each do |topic|
+            .tj-gap-heat-cell style=heat_style(topic[:mean_score])
+              span.tj-gap-heat-topic = topic[:topic_name]
+              span.tj-gap-heat-score = gap_percent(topic[:mean_score])
+              span.tj-gap-heat-meta = "#{topic[:attempts]} attempts · #{topic[:students]} students"
+
+    section.tj-section#cohort
+      h2.tj-section-header Standing vs cohort by topic
+      hr.tj-hr-primary
+      p.tj-gap-note Difficulty-weighted mastery against all Tenjin students on the same questions.
+      - if @report.cohort_comparison[:by_topic].empty?
+        p.tj-gap-empty Not enough data to compare against the cohort yet.
+      - else
+        table.tj-table
+          thead
+            tr
+              th Topic
+              th Class mastery
+              th Cohort
+              th Standing
+          tbody
+            - @report.cohort_comparison[:by_topic].each do |row|
+              tr
+                td = row[:topic_name]
+                td = gap_percent(row[:mastery])
+                td = gap_percent(row[:cohort_mastery])
+                td = standing_chip(row[:standing])
+
+    section.tj-section#hardest
+      h2.tj-section-header Hardest questions
+      hr.tj-hr-primary
+      p.tj-gap-note Ranked by cohort difficulty — low class scores here are misconceptions to reteach.
+      - if @report.hardest_questions.empty?
+        p.tj-gap-empty No question activity recorded yet.
+      - else
+        div data-controller='table' data-table-page-length-value='10'
+          table.tj-table
+            thead
+              tr
+                th Topic
+                th Type
+                th Difficulty
+                th Class score
+                th Attempts
+            tbody
+              - @report.hardest_questions.each do |q|
+                tr
+                  td = q[:topic_name]
+                  td = q[:question_type].to_s.humanize
+                  td = difficulty_band_chip(q[:band])
+                  td = gap_percent(q[:class_mean_score])
+                  td = q[:attempts]
+

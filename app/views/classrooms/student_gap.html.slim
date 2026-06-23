@@ -1,0 +1,91 @@
+- content_for :title
+  title = 'Gap Analysis - ' + @student.forename + ' ' + @student.surname
+
+.tjk-container.tj-gap
+  .tj-gap-header
+    h1.tj-h1 = "#{@student.forename} #{@student.surname}"
+    p.tj-gap-subtitle Personal gap report · #{@classroom.name}
+    = link_to '← Back to class gap analysis', gaps_classroom_path(@classroom), class: 'tj-link'
+
+  section.tj-section#standing
+    h2.tj-section-header Standing vs cohort
+    hr.tj-hr-primary
+    .tj-gap-cards
+      .tj-gap-card
+        span.tj-gap-card-label Their mastery
+        span.tj-gap-card-value = gap_percent(@report.cohort_comparison[:overall][:mastery])
+      .tj-gap-card
+        span.tj-gap-card-label Cohort baseline
+        span.tj-gap-card-value = gap_percent(@report.cohort_comparison[:overall][:cohort_mastery])
+      .tj-gap-card
+        span.tj-gap-card-label Standing
+        span.tj-gap-card-value = standing_chip(@report.cohort_comparison[:overall][:standing])
+
+  section.tj-section#topics
+    h2.tj-section-header Topic strengths &amp; gaps
+    hr.tj-hr-primary
+    - if @report.topic_breakdown.empty?
+      p.tj-gap-empty This student has not attempted any questions in this subject yet.
+    - else
+      table.tj-table
+        thead
+          tr
+            th Topic
+            th Mean score
+            th Attempts
+        tbody
+          - @report.topic_breakdown.each do |topic|
+            tr
+              td = topic[:topic_name]
+              td style=heat_style(topic[:mean_score]) = gap_percent(topic[:mean_score])
+              td = topic[:attempts]
+
+  section.tj-section#priority
+    h2.tj-section-header Priority gaps
+    hr.tj-hr-primary
+    p.tj-gap-note Questions this student got wrong that most of the cohort got right — reteach these first.
+    - if @report.priority_gaps.empty?
+      p.tj-gap-empty No priority gaps — this student is not trailing the cohort on any single question.
+    - else
+      table.tj-table
+        thead
+          tr
+            th Topic
+            th Type
+            th Difficulty
+            th Their score
+            th Cohort
+            th Gap
+        tbody
+          - @report.priority_gaps.each do |q|
+            tr
+              td = q[:topic_name]
+              td = q[:question_type].to_s.humanize
+              td = difficulty_band_chip(q[:band])
+              td = gap_percent(q[:student_score])
+              td = gap_percent(q[:cohort_score])
+              td = gap_percent(q[:gap])
+
+  section.tj-section#strengths
+    h2.tj-section-header Strengths
+    hr.tj-hr-primary
+    p.tj-gap-note Hard questions this student aced — worth recognising.
+    - if @report.strengths.empty?
+      p.tj-gap-empty No standout strengths recorded yet.
+    - else
+      table.tj-table
+        thead
+          tr
+            th Topic
+            th Type
+            th Difficulty
+            th Their score
+            th Cohort
+        tbody
+          - @report.strengths.each do |q|
+            tr
+              td = q[:topic_name]
+              td = q[:question_type].to_s.humanize
+              td = difficulty_band_chip(q[:band])
+              td = gap_percent(q[:student_score])
+              td = gap_percent(q[:cohort_score])

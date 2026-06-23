@@ -2,7 +2,7 @@
 
 class ClassroomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_classroom, only: %i[show update]
+  before_action :set_classroom, only: %i[show update gaps student_gap]
 
   def index
     authorize current_user.school, :sync?
@@ -26,6 +26,17 @@ class ClassroomsController < ApplicationController
     authorize @classroom
     @classroom.update(subject_id: update_classroom_params[:subject])
     @classroom.school.update(sync_status: 'needed')
+  end
+
+  def gaps
+    authorize @classroom, :gaps?
+    @report = Analytics::ClassGapReport.call(@classroom)
+  end
+
+  def student_gap
+    authorize @classroom, :gaps?
+    @student = @classroom.users.find(params.expect(:student_id))
+    @report = Analytics::StudentGapReport.call(@student, @classroom)
   end
 
   private
