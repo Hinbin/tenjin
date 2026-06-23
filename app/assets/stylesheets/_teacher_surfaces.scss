@@ -1,68 +1,70 @@
-// Teacher dashboard + classroom show uplift (Branch 5). Design-system only — no Bootstrap, no JS
-// build step. Builds on the tj- tokens (_tokens.scss) and reuses the gap-analysis card/heatmap
-// language from _gap_analysis.scss so the teacher surfaces read as one product.
+// Teacher dashboard + classroom show uplift (Branch 5), built on the reskinnable skin engine.
+//
+// These surfaces use the skin TOKEN layer (skins/_tokens.scss — --surface/--ink/--n1/--line/fonts/
+// radii) and the .tjs- primitives, the same foundation as the student dashboard. The default skin is
+// arcade (Theme::SkinCatalog::DEFAULT_SKIN), so they render arcade today and will reskin for free
+// once teachers can equip skins. No Bootstrap, no JS build step.
 
-// ── Page header ───────────────────────────────────────────────────────────────
-// Centred title + supporting blurb at the top of the teacher dashboard / classroom show.
+// Teacher tables need a touch more room than the student dashboard's 900px reading column.
+.tjs-dashboard--teacher .tjs-dashboard__inner {
+  max-width: 1040px;
+}
 
+// ── Page header ─────────────────────────────────────────────────────────────────
 .tj-tsurface-header {
   text-align: center;
-  margin: var(--tj-space-4) auto var(--tj-space-3);
+  margin: 4px auto 10px;
   max-width: 48rem;
 
   .tj-tsurface-title {
-    font-size: var(--tj-size-section);
-    margin-bottom: var(--tj-space-2);
-
-    @media (max-width: 767.98px) {
-      font-size: 2rem;
-    }
+    font-size: 1.6rem;
+    color: var(--ink);
+    margin-bottom: 8px;
   }
 
   .tj-tsurface-lead {
-    color: var(--tj-grey);
+    color: var(--dim);
+    font-family: var(--f-body);
+    font-size: 0.95rem;
     margin: 0 auto;
   }
 }
 
-// ── Classroom meta chips ────────────────────────────────────────────────────────
-// Subject / student-count / homework-count summary beneath a classroom title.
-
+// ── Classroom meta chips ──────────────────────────────────────────────────────────
 .tj-classroom-meta {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--tj-space-2);
-  margin-bottom: var(--tj-space-3);
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .tj-meta-chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--tj-space-1);
-  padding: 0.25rem 0.75rem;
-  background: var(--tj-light);
-  border: 1px solid #e0e0e0;
-  border-radius: var(--tj-radius-pill);
-  font-size: 0.9rem;
-  color: var(--tj-theme-meta);
+  gap: 4px;
+  padding: 4px 12px;
+  background: var(--surface);
+  border: var(--bd) solid var(--line);
+  border-radius: 999px;
+  font-family: var(--f-body);
+  font-size: 0.85rem;
+  color: var(--dim);
 
-  strong { color: var(--tj-ink); font-weight: 700; }
+  strong { color: var(--ink); font-weight: 700; }
 }
 
-// ── Feature card (gap-analysis entry point) ─────────────────────────────────────
-// A prominent banner that promotes the flagship gap-analysis surface above a plain link.
-
+// ── Feature card (gap-analysis entry point) ─────────────────────────────────────────
 .tj-feature-card {
   display: flex;
   align-items: center;
-  gap: var(--tj-space-3);
-  padding: var(--tj-space-3) var(--tj-space-4);
-  margin-bottom: var(--tj-space-4);
-  background: var(--tj-light);
-  border: 1px solid #e0e0e0;
-  border-left: 4px solid var(--tj-red);
-  border-radius: var(--tj-radius-lg);
+  gap: 16px;
+  margin-bottom: 4px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: var(--bd) solid var(--line);
+  border-left: 3px solid var(--n1);
+  border-radius: var(--r-md);
   text-align: left;
 
   @media (max-width: 575.98px) {
@@ -78,41 +80,130 @@
   justify-content: center;
   width: 3rem;
   height: 3rem;
-  border-radius: var(--tj-radius-lg);
-  background: color-mix(in srgb, var(--tj-red) 12%, transparent);
-  color: var(--tj-red);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--n1) 14%, transparent);
+  color: var(--n1);
   font-size: 1.4rem;
 }
 
-.tj-feature-card__body {
-  flex: 1;
-  min-width: 0;
-}
+.tj-feature-card__body { flex: 1; min-width: 0; }
 
 .tj-feature-card__title {
-  font-family: var(--tj-display);
-  font-weight: var(--tj-w-black);
-  font-size: 1.2rem;
-  color: var(--tj-ink);
-  margin-bottom: var(--tj-space-1);
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin-bottom: 4px;
 }
 
 .tj-feature-card__text {
-  color: var(--tj-grey);
-  font-size: 0.95rem;
+  color: var(--dim);
+  font-family: var(--f-body);
+  font-size: 0.9rem;
   margin: 0;
 }
 
-.tj-feature-card__cta {
-  flex-shrink: 0;
-}
+.tj-feature-card__cta { flex-shrink: 0; }
 
-// ── Row action cluster ──────────────────────────────────────────────────────────
-// Keeps multiple per-row buttons (Set Homework + Gap Analysis) tidy in a table cell.
-
+// ── Row action cluster ──────────────────────────────────────────────────────────────
 .tj-row-actions {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: var(--tj-space-2);
+  gap: 8px;
   justify-content: flex-end;
+}
+
+// ── Skinned data tables on the teacher arcade surface ────────────────────────────────
+// The teacher views keep their data tables (search / export / pagination / row-click JS), restyled
+// onto the skin tokens so they read on the dark arcade surface and follow any future skin.
+.tjs-dashboard--teacher {
+  .tjs-dashboard__section { text-align: left; }
+
+  // Set Homework etc. want full width; .tjs-btn is inline-flex by default.
+  .tjs-btn.tj-btn--full { display: flex; width: 100%; }
+
+  .tj-table-card {
+    padding: 4px 8px;
+    overflow: hidden;
+  }
+
+  .tj-table-responsive { overflow-x: auto; }
+
+  .tj-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--f-body);
+    color: var(--ink);
+
+    th,
+    td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: var(--bd) solid var(--line);
+    }
+
+    thead th {
+      font-family: var(--f-display);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.78rem;
+      color: var(--dim);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    // Clickable rows: classrooms on the dashboard, homeworks on the classroom page.
+    tbody tr[data-classroom],
+    tbody tr[data-action] {
+      cursor: pointer;
+      transition: background 0.15s ease;
+
+      &:hover { background: color-mix(in srgb, var(--n1) 12%, transparent); }
+    }
+
+    a { color: var(--ink); }
+    a:hover { color: var(--n1); }
+  }
+
+  // Toolbar / search / pagination
+  .tj-table-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tj-table-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .tj-table-info {
+    color: var(--dim);
+    font-family: var(--f-body);
+    font-size: 0.85rem;
+  }
+
+  .tj-check-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--dim);
+    font-family: var(--f-body);
+    font-size: 0.9rem;
+  }
+
+  .tj-table-search {
+    background: var(--surface);
+    color: var(--ink);
+    border: var(--bd) solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 6px 12px;
+    font-family: var(--f-body);
+    font-size: 0.9rem;
+
+    &::placeholder { color: var(--dim); }
+  }
 }

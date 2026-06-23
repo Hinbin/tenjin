@@ -19,7 +19,8 @@ RSpec.describe 'User visits a classroom', :default_creates, :js, type: :system d
     end
 
     it 'shows the name of the classroom' do
-      expect(page).to have_text(classroom.name)
+      # The arcade skin renders display headings uppercase, so match case-insensitively.
+      expect(page).to have_text(/#{Regexp.escape(classroom.name)}/i)
     end
 
     it 'shows the name of the students' do
