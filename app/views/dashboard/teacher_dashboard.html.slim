@@ -1,9 +1,13 @@
 -content_for :title
   title=('Dashboard')
-section.page-section.tj-text-center#myClassrooms
+.tjk-container
+  header.tj-tsurface-header
+    h1.tj-tsurface-title.text-uppercase My Classes
+    hr.tj-hr-primary
+    p.tj-tsurface-lead Pick a class to set homework, review students, or open its difficulty-aware gap analysis.
+
+section.tj-section.tj-text-center#myClassrooms
   .tjk-container
-    h1.page-section-header.text-uppercase My Classes
-    hr class=("small mb-5 primary-red")
     .tj-flex.tj-justify-center
       .tj-table-responsive
         table.tj-table#classroomTable
@@ -21,12 +25,16 @@ section.page-section.tj-text-center#myClassrooms
                 td.tj-lg-table-cell =e.classroom.description
                 td =e.subject.name if e.subject.present?
                 td.tj-lg-table-cell =e.classroom.enrollments.size
-                td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'tj-btn-dark'
+                td
+                  .tj-row-actions
+                    - if policy(e.classroom).gaps?
+                      = link_to 'Gap Analysis', gaps_classroom_path(e.classroom), class: 'tj-btn-primary'
+                    = link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'tj-btn-dark'
 - if @other_classrooms.present?
-  section.page-section.tj-text-center#otherClassrooms
+  section.tj-section.tj-text-center#otherClassrooms
     .tjk-container
-      h1.page-section-header.text-uppercase Other Classrooms
-      hr class=("small mb-5 primary-red")
+      h2.tj-section-header.text-uppercase Other Classrooms
+      hr.tj-hr-primary
       .tj-flex.tj-justify-center
         div data-controller='table' data-table-page-length-value='25'
           .tj-table-responsive

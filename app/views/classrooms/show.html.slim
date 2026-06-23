@@ -1,11 +1,29 @@
 - content_for :title
   title = 'Classroom - ' + @classroom.name
 .tjk-container data-controller='classroom'
-  h1.tj-h1 style='text-align:center;margin-top:var(--tj-space-3)' = @classroom.name
+  header.tj-tsurface-header
+    h1.tj-tsurface-title = @classroom.name
+    .tj-classroom-meta
+      - if @classroom.subject.present?
+        span.tj-meta-chip
+          | Subject:&nbsp;
+          strong = @classroom.subject.name
+      span.tj-meta-chip
+        strong = @students.size
+        |  students
+      span.tj-meta-chip
+        strong = @homeworks.size
+        |  homeworks
 
   - if policy(@classroom).gaps?
-    .tj-gap-link.tj-text-center
-      = link_to 'View Gap Analysis', gaps_classroom_path(@classroom), class: 'tj-btn-primary tj-btn--full'
+    .tj-feature-card
+      .tj-feature-card__icon
+        i.fas.fa-chart-line aria-hidden='true'
+      .tj-feature-card__body
+        .tj-feature-card__title Gap Analysis
+        p.tj-feature-card__text Difficulty-aware topic heatmap, hardest questions, and per-student standing against every Tenjin student.
+      .tj-feature-card__cta
+        = link_to 'View Gap Analysis', gaps_classroom_path(@classroom), class: 'tj-btn-primary'
 
   section.tj-section#homework
     h2.tj-section-header Homework

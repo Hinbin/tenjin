@@ -1,0 +1,118 @@
+// Teacher dashboard + classroom show uplift (Branch 5). Design-system only — no Bootstrap, no JS
+// build step. Builds on the tj- tokens (_tokens.scss) and reuses the gap-analysis card/heatmap
+// language from _gap_analysis.scss so the teacher surfaces read as one product.
+
+// ── Page header ───────────────────────────────────────────────────────────────
+// Centred title + supporting blurb at the top of the teacher dashboard / classroom show.
+
+.tj-tsurface-header {
+  text-align: center;
+  margin: var(--tj-space-4) auto var(--tj-space-3);
+  max-width: 48rem;
+
+  .tj-tsurface-title {
+    font-size: var(--tj-size-section);
+    margin-bottom: var(--tj-space-2);
+
+    @media (max-width: 767.98px) {
+      font-size: 2rem;
+    }
+  }
+
+  .tj-tsurface-lead {
+    color: var(--tj-grey);
+    margin: 0 auto;
+  }
+}
+
+// ── Classroom meta chips ────────────────────────────────────────────────────────
+// Subject / student-count / homework-count summary beneath a classroom title.
+
+.tj-classroom-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--tj-space-2);
+  margin-bottom: var(--tj-space-3);
+}
+
+.tj-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tj-space-1);
+  padding: 0.25rem 0.75rem;
+  background: var(--tj-light);
+  border: 1px solid #e0e0e0;
+  border-radius: var(--tj-radius-pill);
+  font-size: 0.9rem;
+  color: var(--tj-theme-meta);
+
+  strong { color: var(--tj-ink); font-weight: 700; }
+}
+
+// ── Feature card (gap-analysis entry point) ─────────────────────────────────────
+// A prominent banner that promotes the flagship gap-analysis surface above a plain link.
+
+.tj-feature-card {
+  display: flex;
+  align-items: center;
+  gap: var(--tj-space-3);
+  padding: var(--tj-space-3) var(--tj-space-4);
+  margin-bottom: var(--tj-space-4);
+  background: var(--tj-light);
+  border: 1px solid #e0e0e0;
+  border-left: 4px solid var(--tj-red);
+  border-radius: var(--tj-radius-lg);
+  text-align: left;
+
+  @media (max-width: 575.98px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.tj-feature-card__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--tj-radius-lg);
+  background: color-mix(in srgb, var(--tj-red) 12%, transparent);
+  color: var(--tj-red);
+  font-size: 1.4rem;
+}
+
+.tj-feature-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tj-feature-card__title {
+  font-family: var(--tj-display);
+  font-weight: var(--tj-w-black);
+  font-size: 1.2rem;
+  color: var(--tj-ink);
+  margin-bottom: var(--tj-space-1);
+}
+
+.tj-feature-card__text {
+  color: var(--tj-grey);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.tj-feature-card__cta {
+  flex-shrink: 0;
+}
+
+// ── Row action cluster ──────────────────────────────────────────────────────────
+// Keeps multiple per-row buttons (Set Homework + Gap Analysis) tidy in a table cell.
+
+.tj-row-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--tj-space-2);
+  justify-content: flex-end;
+}

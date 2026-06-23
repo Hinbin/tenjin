@@ -27,6 +27,12 @@ RSpec.describe 'Teacher visits the dashboard', :default_creates, :js, type: :sys
       expect(page).to have_current_path(classroom_path(classroom))
     end
 
+    it 'offers a gap-analysis entry point for an enrolled class' do
+      visit(dashboard_path)
+      within("tr[data-classroom='#{classroom.id}']") { click_link('Gap Analysis') }
+      expect(page).to have_current_path(gaps_classroom_path(classroom))
+    end
+
     it 'allows you to go to set homework for the classroom' do
       visit(dashboard_path)
       click_link('Set Homework')

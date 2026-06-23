@@ -26,6 +26,15 @@ RSpec.describe 'User visits a classroom', :default_creates, :js, type: :system d
       expect(page).to have_text(student.forename)
     end
 
+    it 'shows classroom meta chips in the header' do
+      expect(page).to have_css('.tj-classroom-meta')
+    end
+
+    it 'promotes a gap-analysis entry point that opens the gap report' do
+      within('.tj-feature-card') { click_link('View Gap Analysis') }
+      expect(page).to have_current_path(gaps_classroom_path(classroom))
+    end
+
     it 'allows me to create a homework' do
       click_link('Set Homework')
       expect(page).to have_current_path(new_homework_path(classroom: { classroom_id: classroom.id }))
