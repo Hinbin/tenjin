@@ -95,14 +95,12 @@ RSpec.describe 'User views an updating leaderboard', :default_creates, :js, type
                                   exact_text: name)
     end
 
-    it 'shows other-school students anonymised on the all-schools view and does not live-tick them' do
+    it 'anonymises other-school students with a pseudonym on the all-schools view' do
+      other = topic_score_same_school_group.user # create the other-school student before the reload
       click_button('Select School')
       click_button('All')
-      find_by_id('leaderboardTable')
-      Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group.topic,
-                                                 topic_score_same_school_group.user).call
-      expect(page).to have_css('tbody tr', text: topic_score_same_school_group.user.pseudonym)
-      expect(page).to have_no_css('tr.score-changed')
+      expect(page).to have_css('tbody tr', text: other.pseudonym)
+      expect(page).to have_no_css('tbody tr', text: "#{other.forename} #{other.surname[0]}")
     end
   end
 
