@@ -8,10 +8,10 @@ RSpec.describe Leaderboard::BroadcastLeaderboardPoint, :default_creates do
       student_topic_score
     end
 
-    it 'broadcasts the topic id when initialized with a topic score' do
+    it 'broadcasts to the student own school channel (not the school group)' do
       expect do
         described_class.new(student_topic_score, student).call
-      end.to have_broadcasted_to("leaderboard:#{subject.name}:#{school.school_group.name}")
+      end.to have_broadcasted_to("leaderboard:#{subject.name}:#{school.name}")
         .with(hash_including(topic: topic.id))
     end
   end

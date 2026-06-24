@@ -51,13 +51,20 @@ class Leaderboard::BuildLeaderboard < ApplicationService
     LeaderboardAward.arel_table
   end
 
+  # Privacy rule (mirrors User#leaderboard_name_for): the real name is only ever selected for rows
+  # belonging to the viewer's own school. Every other school resolves to the anonymous pseudonym in
+  # SQL, so other schools' real names never enter the result set and cannot reach the client.
   def name
     separator = Arel::Nodes.build_quoted(' ')
-
-    Arel::Nodes::NamedFunction.new(
+    real_name = Arel::Nodes::NamedFunction.new(
       'concat',
       [users[:forename], separator, Arel::Nodes::NamedFunction.new('LEFT', [users[:surname], 1])]
-    ).as('name')
+    )
+
+    own_school = Arel::Nodes::Case.new
+                                  .when(users[:school_id].eq(@user&.school_id)).then(real_name)
+                                  .else(users[:pseudonym])
+    Arel::Nodes::As.new(own_school, Arel.sql('name'))
   end
 
   def array_agg(input)

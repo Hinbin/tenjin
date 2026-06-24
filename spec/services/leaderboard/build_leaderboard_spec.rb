@@ -102,6 +102,30 @@ RSpec.describe Leaderboard::BuildLeaderboard, :default_creates do
     end
   end
 
+  context 'when a school group leaderboard includes another school' do
+    let(:school) { create(:school) }
+    let(:call) { described_class.new(student, id: subject.name, school_group: 'true').call }
+
+    before do
+      create(:topic_score, topic: topic, user: second_school_student)
+    end
+
+    it 'shows the real name for a student in the viewer own school' do
+      own = call.find { |row| row.id == student.id }
+      expect(own.name).to eq("#{student.forename} #{student.surname.first}")
+    end
+
+    it 'shows the pseudonym for a student from another school in the group' do
+      other = call.find { |row| row.id == second_school_student.id }
+      expect(other.name).to eq(second_school_student.pseudonym)
+    end
+
+    it 'never leaks the other school real name into the result set' do
+      real_name = "#{second_school_student.forename} #{second_school_student.surname.first}"
+      expect(call.map(&:name)).not_to include(real_name)
+    end
+  end
+
   context 'when building an all time leaderboard' do
     let(:call) { described_class.new(student, id: subject.name, all_time: 'true').call }
 

@@ -41,6 +41,16 @@ RSpec.describe 'User changes leaderboard options', :default_creates, :js, type: 
       expect(page).to have_css('table#leaderboardTable tbody tr', count: 2)
     end
 
+    it 'anonymises students from other schools with a pseudonym on the all-schools view' do
+      other = create(:student, school: second_school)
+      create(:topic_score, topic: topic, user: other)
+      click_button('Select School')
+      click_button('All')
+      expect(page).to have_css('table#leaderboardTable tbody tr', text: other.pseudonym)
+      expect(page).to have_no_css('table#leaderboardTable tbody tr',
+                                  text: "#{other.forename} #{other.surname[0]}")
+    end
+
     it 'allows me to toggle back to viewing the school group from my school,' do
       click_button('Select School')
       click_button('All')

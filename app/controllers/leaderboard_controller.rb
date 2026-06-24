@@ -45,6 +45,8 @@ class LeaderboardController < ApplicationController
     @name = @topic.present? ? @topic.name : @subject.name
   end
 
+  # Real names are safe here ONLY because this is scoped to current_user.school. If this is ever
+  # broadened to other schools, switch to User#leaderboard_name_for (see Leaderboard::BuildLeaderboard).
   def set_classroom_winners
     @classroom_winners = ClassroomWinner.joins(:classroom, :user)
                                         .where(classroom: @classrooms)

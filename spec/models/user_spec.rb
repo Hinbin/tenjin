@@ -48,6 +48,38 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'pseudonym' do
+    it 'assigns a stable pseudonym on creation' do
+      student = create(:student)
+      expect(student.pseudonym).to be_present
+      expect(student.pseudonym).to eq(Leaderboard::Pseudonym.generate(Zlib.crc32(student.upi)))
+    end
+
+    it 'does not overwrite an explicitly provided pseudonym' do
+      student = create(:student, pseudonym: 'Bramble Sphinx')
+      expect(student.pseudonym).to eq('Bramble Sphinx')
+    end
+  end
+
+  describe '#leaderboard_name_for' do
+    let(:school) { create(:school) }
+    let(:student) { create(:student, school:, forename: 'Jordan', surname: 'Smith') }
+
+    it 'shows the real name to a viewer from the same school' do
+      viewer = create(:teacher, school:)
+      expect(student.leaderboard_name_for(viewer)).to eq('Jordan S')
+    end
+
+    it 'shows the pseudonym to a viewer from a different school' do
+      viewer = create(:teacher, school: create(:school))
+      expect(student.leaderboard_name_for(viewer)).to eq(student.pseudonym)
+    end
+
+    it 'shows the pseudonym when there is no viewer' do
+      expect(student.leaderboard_name_for(nil)).to eq(student.pseudonym)
+    end
+  end
+
   describe '#from_wonde' do
     include_context 'with api_data'
 

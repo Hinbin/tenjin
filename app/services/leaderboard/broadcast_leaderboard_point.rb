@@ -14,14 +14,10 @@ class Leaderboard::BroadcastLeaderboardPoint < ApplicationService
 
   protected
 
+  # Broadcast only to the student's own school (see LeaderboardChannel#stream_string): the payload
+  # carries the real name, so it must never reach another school's subscribers.
   def channel_name
-    school = @user.school
-    location = if school.school_group_id.present?
-                 school.school_group.name
-               else
-                 school.name
-               end
-    "#{@topic.subject.name}:#{location}"
+    "#{@topic.subject.name}:#{@user.school.name}"
   end
 
   def json_data

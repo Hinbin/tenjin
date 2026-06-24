@@ -131,6 +131,17 @@ classrooms = subjects.each_with_object({}) do |(subject_name, topic_names), memo
   ]
 end
 
+# Three Year 11 Computer Science classes for the J277 gap-analysis demo: a higher-performing
+# (11A), a mixed (11B) and a lower-performing (11C) set. Their rosters and per-pupil rollups are
+# built by development_gap_analysis.rb (which finds them by client_id); here we only create the
+# classes and put teacher1 in charge so they surface on teacher1's gap-analysis overview.
+computer_science = upsert_subject(name: 'Computer Science')
+year_eleven_classrooms = [
+  upsert_classroom(school:, subject: computer_science, name: '11A Computer Science', code: '11A'),
+  upsert_classroom(school:, subject: computer_science, name: '11B Computer Science', code: '11B'),
+  upsert_classroom(school:, subject: computer_science, name: '11C Computer Science', code: '11C')
+]
+
 school_admin = upsert_user(
   school:,
   username: 'schooladmin',
@@ -186,6 +197,12 @@ classrooms.values.flatten.each_with_index do |classroom, index|
   enroll(user: school_admin, classroom:)
 end
 
+# teacher1 owns all three Year 11 demo classes (school_admin sees them too).
+year_eleven_classrooms.each do |classroom|
+  enroll(user: teachers[0], classroom:)
+  enroll(user: school_admin, classroom:)
+end
+
 students.each_with_index do |student, index|
   classrooms.values.flatten.each_with_index do |classroom, classroom_index|
     enroll(user: student, classroom:) if (index + classroom_index).even?
@@ -199,3 +216,4 @@ puts "Admin: n.houlton@grange.outwood.com / #{PASSWORD}"
 puts "School admin (+ lesson/question author for all subjects): schooladmin / #{PASSWORD}"
 puts "Teachers: teacher1, teacher2 / #{PASSWORD}"
 puts "Students: student1 through student24 / #{PASSWORD}"
+puts 'Year 11 CS demo classes (teacher1): 11A (higher), 11B (mixed), 11C (lower) — data via gap-analysis seed'

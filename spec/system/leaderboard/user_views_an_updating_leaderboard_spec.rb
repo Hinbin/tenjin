@@ -95,13 +95,14 @@ RSpec.describe 'User views an updating leaderboard', :default_creates, :js, type
                                   exact_text: name)
     end
 
-    it 'updates if score is from the same school group' do
+    it 'shows other-school students anonymised on the all-schools view and does not live-tick them' do
       click_button('Select School')
       click_button('All')
       find_by_id('leaderboardTable')
       Leaderboard::BroadcastLeaderboardPoint.new(topic_score_same_school_group.topic,
                                                  topic_score_same_school_group.user).call
-      expect(page).to have_css('tr.score-changed')
+      expect(page).to have_css('tbody tr', text: topic_score_same_school_group.user.pseudonym)
+      expect(page).to have_no_css('tr.score-changed')
     end
   end
 
