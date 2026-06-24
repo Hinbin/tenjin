@@ -16,8 +16,8 @@
             - else
               = h.homework.lesson.title
           .homework-row__meta
-            span style="font-family:var(--f-pixel);font-size:10px;color:var(--dim);"
-              = h.homework.due_date.strftime('%a, %e %b')
+            span style="font-family:var(--f-pixel);font-size:10px;color:var(--dim);" title=h.homework.due_date.strftime('%a, %e %b')
+              = humanized_due_date(h.homework.due_date)
             span style="font-family:var(--f-pixel);font-size:10px;color:var(--dim);margin-left:8px;"
               = number_to_percentage(h.homework.required, precision: 0)
         .homework-row__status

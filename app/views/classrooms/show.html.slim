@@ -17,6 +17,16 @@
           strong = @homeworks.length
           |  homeworks
 
+    - flagged_students = @students.select { |s| @fast_flag_counts[s.id].to_i.positive? }
+    - if flagged_students.any?
+      .tj-alert-warning role='alert'
+        i.fas.fa-exclamation-triangle aria-hidden='true'
+        |
+        strong Possible auto-answering detected.
+        |
+        = "#{flagged_students.size} #{'student'.pluralize(flagged_students.size)} #{flagged_students.size == 1 ? 'has' : 'have'} answers flagged as answered too fast to be genuine: "
+        = flagged_students.map { |s| "#{s.forename} #{s.surname}" }.to_sentence
+
     - if policy(@classroom).gaps?
       .tj-feature-card
         .tj-feature-card__icon
@@ -28,7 +38,7 @@
           = link_to 'View Gap Analysis', gaps_classroom_path(@classroom), class: 'tjs-btn tjs-btn--primary'
 
     section.tjs-dashboard__section#homework
-      .tj-feature-card
+      .tj-action-card
         .tj-feature-card__icon
           i.fas.fa-clipboard-list aria-hidden='true'
         .tj-feature-card__body
@@ -52,7 +62,7 @@
                   - else
                     td = h.topic.name
                   td = report_progress(h)
-                  td data-order=h.due_date.to_i = h.due_date.strftime('%d/%m/%y %H:%M')
+                  td data-order=h.due_date.to_i title=h.due_date.strftime('%d/%m/%y %H:%M') = humanized_due_date(h.due_date)
         .tj-table-controls
           button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
           span.tj-table-info data-table-target='info'
@@ -75,15 +85,13 @@
                 th Last Name
                 th Username
                 th.password-col.tj-hidden data-no-export='true' Reset Password
-                th title='Answers flagged as answered too fast to be genuine' Fast flags
                 th Homeworks
             tbody
               - @students.each do |s|
                 tr.student-data data-id=s.id
-                  td = s.forename
+                  td = fast_flag_indicator(s.forename, @fast_flag_counts[s.id])
                   td = s.surname
                   td = s.username
                   td.password-col.tj-hidden = link_to 'Reset Password', reset_password_user_path(id: s.id), id: dom_id(s), class: 'tjs-btn tjs-btn--ghost reset-password reset-password-student', data: { turbo_method: :patch }
-                  td.fast-flag-cell = fast_flag_cell(@fast_flag_counts[s.id])
                   td = link_to(s) do
                     == student_homeworks(s, @homework_progress)

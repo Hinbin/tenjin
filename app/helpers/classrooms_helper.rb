@@ -19,16 +19,22 @@ module ClassroomsHelper
     end
   end
 
-  # Teacher anomaly cell: number of recent answers flagged as answered-too-fast (the signature of an
-  # auto-answering browser extension). Zero stays blank so a clean class isn't littered with noise;
-  # any flags render a red count with a hover explanation. See AskedQuestion.fast_flag_counts.
-  def fast_flag_cell(count)
-    return '' if count.to_i.zero?
+  # Teacher anomaly indicator: prefixes a student's name with a red warning mark when they have recent
+  # answers flagged as answered-too-fast (the signature of an auto-answering browser extension). A clean
+  # student renders just their name so the roster isn't littered with noise. See
+  # AskedQuestion.fast_flag_counts and the class-wide banner on classrooms/show.
+  def fast_flag_indicator(name, count)
+    count = count.to_i
+    return name if count.zero?
 
-    tag.span(count,
-             class: 'fast-flag-count',
-             style: 'color:var(--incorrect);font-weight:700',
-             title: 'Answers flagged as answered too fast to be genuine — possible auto-answering')
+    flagged = "#{count} #{'answer'.pluralize(count)} flagged as answered too fast to be genuine"
+    safe_join([
+      tag.i(class: 'fas fa-exclamation-triangle fast-flag-mark',
+            style: 'color:var(--incorrect);margin-right:0.35rem',
+            aria: { hidden: true },
+            title: "#{flagged} — possible auto-answering"),
+      name
+    ])
   end
 
   def report_progress(homework)

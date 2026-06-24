@@ -20,22 +20,28 @@ RSpec.describe 'Classrooms', :default_creates, type: :request do
     expect(html).to have_css('a', text: 'Setup Classrooms')
   end
 
-  # Anti-cheat #4: the teacher anomaly column surfaces students whose recent answers were flagged as
-  # answered-too-fast (the signature of an auto-answering extension).
-  describe 'the fast-flag anomaly column' do
+  # Anti-cheat #4: the teacher anomaly surface flags students whose recent answers were flagged as
+  # answered-too-fast (the signature of an auto-answering extension) — a warning banner at the top of
+  # the page and an exclamation mark beside the flagged student's name.
+  describe 'the fast-flag anomaly surface' do
     before { create(:enrollment, school: school, classroom: classroom, user: student) }
 
-    it 'shows a student\'s recent fast-flag count' do
+    it 'warns about a flagged student with a banner and a mark beside their name' do
       quiz = create(:quiz, user: student)
       create_list(:asked_question, 2, quiz: quiz, user: student, flagged_fast: true)
 
       get classroom_path(classroom)
-      expect(Capybara.string(response.body)).to have_css('td.fast-flag-cell span.fast-flag-count', text: '2')
+      html = Capybara.string(response.body)
+      expect(html).to have_css('.tj-alert-warning', text: 'Possible auto-answering detected')
+      expect(html).to have_css('.tj-alert-warning', text: "#{student.forename} #{student.surname}")
+      expect(html).to have_css('td i.fast-flag-mark')
     end
 
-    it 'leaves the cell empty for a student with no flags' do
+    it 'shows no warning for a student with no flags' do
       get classroom_path(classroom)
-      expect(Capybara.string(response.body)).to have_no_css('td.fast-flag-cell span.fast-flag-count')
+      html = Capybara.string(response.body)
+      expect(html).to have_no_css('.tj-alert-warning')
+      expect(html).to have_no_css('td i.fast-flag-mark')
     end
   end
 end

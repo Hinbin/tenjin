@@ -33,8 +33,7 @@
 .tjs-backdrop__turf,
 .tjs-backdrop__pitch,
 .tjs-backdrop__halftone,
-.tjs-backdrop__concrete,
-.tjs-backdrop-petals { display: none; }
+.tjs-backdrop__concrete { display: none; }
 
 // Glow blobs: arcade + kawaii
 body[data-skin="arcade"],
@@ -139,15 +138,6 @@ body[data-skin="arcade"] .tjs-backdrop__grid {
   background-size: 40px 40px;
   transform: perspective(180px) rotateX(68deg);
   transform-origin: bottom;
-}
-
-// Petals: zen only
-body[data-skin="zen"] .tjs-backdrop-petals {
-  display: block;
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
 }
 
 // Mowed turf stripes: pitch only
@@ -392,12 +382,4 @@ body[data-skin="zen"] {
 
   .tjs-bar { border-radius: 999px; }
   .tjs-bar__fill { box-shadow: none; }
-
-  // petals backdrop (motion-gated in _motion.scss)
-  .tjs-backdrop-petals {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
 }

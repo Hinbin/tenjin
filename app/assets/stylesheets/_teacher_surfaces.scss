@@ -68,7 +68,8 @@
 }
 
 // ── Feature card (gap-analysis entry point) ─────────────────────────────────────────
-.tj-feature-card {
+.tj-feature-card,
+.tj-action-card {
   display: flex;
   align-items: center;
   gap: 16px;

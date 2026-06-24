@@ -71,7 +71,7 @@
 -if @author
   .tjk-container
     section.page-section.tj-text-center style='padding-top: 0.5rem' id='createLessons'
-      h1.tjs-display Create Lessons
+      h1.tjs-display CREATE LESSONS
       - @editable_subjects.each do |s|
         h3.h3 style='padding: 0.5rem 0' = s.name
         =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'tj-btn-primary tj-btn--full'
