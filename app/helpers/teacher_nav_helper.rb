@@ -12,7 +12,8 @@ module TeacherNavHelper
 
   CONTROLLER_TO_NAV = {
     'dashboard' => :classrooms, 'classrooms' => :classrooms, 'lessons' => :lessons,
-    'leaderboard' => :ranks, 'topics' => :questions, 'questions' => :questions, 'users' => :admin_users
+    'leaderboard' => :ranks, 'topics' => :questions, 'questions' => :questions, 'users' => :admin_users,
+    'settings' => :appearance
   }.freeze
 
   # The gap-analysis surfaces all live on ClassroomsController, so disambiguate by action before
@@ -41,8 +42,9 @@ module TeacherNavHelper
     [
       { id: :classrooms,   icon: :home,   en: 'Classrooms',   jp: '教室',   path: dashboard_path },
       { id: :gap_analysis, icon: :target, en: 'Gap Analysis', jp: 'ギャップ', path: gap_analysis_classrooms_path },
-      { id: :lessons,      icon: :book,   en: 'Lessons',      jp: '授業',   path: lessons_path },
-      { id: :ranks,        icon: :trophy, en: 'Leaderboard',  jp: '順位',   path: leaderboard_index_path }
+      { id: :lessons,      icon: :book,    en: 'Lessons',      jp: '授業',   path: lessons_path },
+      { id: :ranks,        icon: :trophy,  en: 'Leaderboard',  jp: '順位',   path: leaderboard_index_path },
+      { id: :appearance,   icon: :sparkle, en: 'Appearance',   jp: '装い',   path: settings_path }
     ]
   end
 

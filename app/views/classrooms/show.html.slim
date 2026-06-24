@@ -28,8 +28,14 @@
           = link_to 'View Gap Analysis', gaps_classroom_path(@classroom), class: 'tjs-btn tjs-btn--primary'
 
     section.tjs-dashboard__section#homework
-      = render 'shared/skin/section_head', en: 'Homework', jp: '宿題'
-      = link_to 'Set Homework', new_homework_path(classroom: { classroom_id: @classroom.id }), class: 'tjs-btn tjs-btn--primary tj-btn--full'
+      .tj-feature-card
+        .tj-feature-card__icon
+          i.fas.fa-clipboard-list aria-hidden='true'
+        .tj-feature-card__body
+          .tj-feature-card__title Homework
+          p.tj-feature-card__text Set and track homework for this classroom, with completion and due dates per topic.
+        .tj-feature-card__cta
+          = link_to 'Set Homework', new_homework_path(classroom: { classroom_id: @classroom.id }), class: 'tjs-btn tjs-btn--primary'
       div data-controller='table' data-table-page-length-value='5' data-table-order-value='[[2,"desc"]]'
         .tjs-card.tj-table-card
           table.tj-table#homework-table
