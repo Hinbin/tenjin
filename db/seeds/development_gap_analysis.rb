@@ -7,13 +7,13 @@
 # previous output (demo questions by sentinel external_id, plus every showcase class's rollups) and
 # rebuilds, so re-running — even after the topic set changes — never duplicates or leaves stragglers.
 #
-# Four Computer Science (OCR J277) classes share ONE demo question set so the cohort baseline is
-# comparable across them:
-#   * 7 Computer Science (development-7c)  — the original Year 7 archetype showcase, baseline tier.
+# The three Year 11 GCSE Computer Science (OCR J277) classes share ONE demo question set so the
+# cohort baseline is comparable across them:
 #   * 11B Computer Science (development-11b) — mixed tier, carries the named archetypes:
 #       Ada Lovelace (high), Charlie Brown (low), Beth Jones (mixed; fails Networks & Data).
 #   * 11A Computer Science (development-11a) — higher-performing whole class (above cohort).
 #   * 11C Computer Science (development-11c) — lower-performing whole class (below cohort).
+# (Year 7 is now KS3 Computing — a separate subject/curriculum — so it no longer joins this demo.)
 # Demo questions span all six question types and are split across each topic's two seeded lessons,
 # with a per-lesson offset, so the heatmap drills from topic down to a real per-lesson story. One
 # pupil per archetype class (Sam Carter) is enrolled but inactive so engagement shows a gap.
@@ -279,7 +279,6 @@ end
 
 def gap_showcase_classes
   [
-    { classroom: Classroom.find_by(client_id: 'development-7c'), tier: :baseline, roster: :archetype, suffix: '' },
     { classroom: Classroom.find_by(client_id: 'development-11b'), tier: :mixed, roster: :archetype, suffix: '-11b' },
     { classroom: Classroom.find_by(client_id: 'development-11a'), tier: :high, roster: :filler, suffix: '11a' },
     { classroom: Classroom.find_by(client_id: 'development-11c'), tier: :low, roster: :filler, suffix: '11c' }
@@ -299,7 +298,7 @@ end
 showcase = gap_showcase_classes
 
 if showcase.empty?
-  Rails.logger.info('Gap-analysis seed skipped: no showcase classrooms (development-7c / -11a / -11b / -11c) found.')
+  Rails.logger.info('Gap-analysis seed skipped: no showcase classrooms (development-11a / -11b / -11c) found.')
 else
   gap_reset!(showcase.map { |row| row[:classroom] })
 
@@ -315,8 +314,7 @@ else
 
   struggle_names = topics.select { |t| struggle_ids.include?(t.id) }.map(&:name).join(' & ')
   puts %(Gap-analysis showcase seeded across #{topics.size} J277 topics, all six question types, with)
-  puts '  per-lesson drill-down, for these Computer Science classes:'
-  puts '  7 Computer Science   — Year 7 archetype showcase (baseline tier)'
+  puts '  per-lesson drill-down, for these GCSE Computer Science classes:'
   puts %(  11B Computer Science — mixed tier; Ada (high), Charlie (low), Beth (fails #{struggle_names}))
   puts '  11A Computer Science — higher-performing whole class (above cohort)'
   puts '  11C Computer Science — lower-performing whole class (below cohort)'

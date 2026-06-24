@@ -105,6 +105,28 @@ def seed_challenge_progress(students)
   end
 end
 
+# OCR GCSE Computer Science (J277) specification topics, seeded in code so a deploy without
+# the question CSVs (the test server, where `db/CSV Output - *.csv` are git-ignored and never
+# ship) still shows the real GCSE curriculum instead of bare placeholders. When the CSVs are
+# present (local dev) the importer supplies the richer unit set instead — see seed below.
+J277_TOPICS = [
+  '1.1 Systems architecture',
+  '1.2 Memory, storage & data representation',
+  '1.3 Networks and protocols',
+  '1.4 Network security',
+  '1.5 Systems software',
+  '1.6 Ethical, legal & environmental impacts',
+  '2.1 Algorithms',
+  '2.2 Programming fundamentals',
+  '2.3 Producing robust programs',
+  '2.4 Boolean logic',
+  '2.5 Languages and IDEs'
+].freeze
+
+def seed_j277_topics(subject)
+  J277_TOPICS.each { |name| upsert_topic(subject:, name:) }
+end
+
 upsert_admin(email: 'n.houlton@grange.outwood.com', role: 'super')
 
 school_group = upsert_school_group(name: 'Development School Group')
@@ -115,8 +137,11 @@ school = upsert_school(
   school_group:
 )
 
+# KS3 (Years 7 & 8) sit on broad key-stage subjects; GCSE Computer Science (the three Year 11
+# J277 classes created below) is a separate subject so the two curricula never share a topic list.
 subjects = {
-  'Computer Science' => %w[Algorithms Networks Programming Data],
+  'KS3 Computing' => ['Computer Systems', 'Networks & the Internet', 'Programming Concepts',
+                      'Data Representation', 'Online Safety'],
   'Mathematics' => ['Number', 'Algebra', 'Geometry', 'Statistics'],
   'Science' => ['Biology', 'Chemistry', 'Physics', 'Working Scientifically']
 }
@@ -136,6 +161,9 @@ end
 # built by development_gap_analysis.rb (which finds them by client_id); here we only create the
 # classes and put teacher1 in charge so they surface on teacher1's gap-analysis overview.
 computer_science = upsert_subject(name: 'Computer Science')
+# When the J277 question CSVs aren't present (e.g. the test server) the importer creates no
+# Computer Science topics, so seed the specification in code; locally the CSV import wins.
+seed_j277_topics(computer_science) unless File.exist?('db/CSV Output - unit_export.csv')
 year_eleven_classrooms = [
   upsert_classroom(school:, subject: computer_science, name: '11A Computer Science', code: '11A'),
   upsert_classroom(school:, subject: computer_science, name: '11B Computer Science', code: '11B'),
@@ -152,7 +180,7 @@ school_admin = upsert_user(
   upi: 'development-school-admin'
 )
 school_admin.add_role(:school_admin)
-Subject.where(name: subjects.keys).each do |subject|
+Subject.where(name: subjects.keys + ['Computer Science']).each do |subject|
   school_admin.add_role(:lesson_author, subject)
   school_admin.add_role(:question_author, subject)
 end

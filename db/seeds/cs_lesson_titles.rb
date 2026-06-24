@@ -52,5 +52,30 @@ CS_LESSON_TITLES = {
   'Programming' => ['Programming Fundamentals and Data Types',
                     'Robust Programs and Boolean Logic'],
   'Data' => ['Number Systems: Binary, Denary and Hexadecimal',
-             'Data Representation: Characters, Images and Sound']
+             'Data Representation: Characters, Images and Sound'],
+
+  # In-code J277 topic set (db/seeds/development_users.rb J277_TOPICS), seeded when the question
+  # CSVs aren't present (e.g. the test server). Keep these keys in sync with that constant.
+  '1.1 Systems architecture' => ['The CPU and the Fetch–Decode–Execute Cycle',
+                                 'CPU Performance and Embedded Systems'],
+  '1.2 Memory, storage & data representation' => ['Primary, Secondary and Virtual Memory',
+                                                  'Units, Number Systems and Representing Data'],
+  '1.3 Networks and protocols' => ['Network Types, Topologies and Hardware',
+                                   'Protocols and the Concept of Layers'],
+  '1.4 Network security' => ['Threats to Computer Systems and Networks',
+                             'Preventing Network Vulnerabilities'],
+  '1.5 Systems software' => ['Operating Systems and Their Functions',
+                             'Utility Software'],
+  '1.6 Ethical, legal & environmental impacts' => ['Ethical, Cultural and Environmental Impacts',
+                                                   'Legislation and Software Licences'],
+  '2.1 Algorithms' => ['Computational Thinking and Designing Algorithms',
+                       'Searching and Sorting Algorithms'],
+  '2.2 Programming fundamentals' => ['Variables, Constructs and Operators',
+                                     'Data Types, Arrays and Subprograms'],
+  '2.3 Producing robust programs' => ['Defensive Design and Input Validation',
+                                      'Testing and Selecting Test Data'],
+  '2.4 Boolean logic' => ['Logic Gates: AND, OR and NOT',
+                          'Truth Tables and Logic Diagrams'],
+  '2.5 Languages and IDEs' => ['High-Level and Low-Level Languages',
+                               'Translators and the IDE']
 }.freeze
