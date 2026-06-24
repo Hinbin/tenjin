@@ -58,15 +58,15 @@ module Theme::SkinCatalog
       fx: { scanlines: true, grid: false, blobs: false, dots: false, dither: true }
     },
     # ── Zen ── serenity · cherry blossom · temple calm
-    # Soft mincho serif, hairline borders, paper surfaces, drifting petals.
+    # Soft mincho serif, hairline borders, paper surfaces.
     'zen' => {
       label: 'Zen', jp: '禅',
-      tagline: 'Serif calm on paper with drifting petals — quiet and refined.',
+      tagline: 'Serif calm on paper — quiet and refined.',
       fonts: { display: "'Zen Old Mincho', 'Shippori Mincho', serif", body: "'Zen Kaku Gothic New', system-ui, sans-serif", pixel: "'Shippori Mincho', serif" },
       fill: 'solid', shadow: 'soft', bd: 1, r_lg: 20, r_md: 15, r_sm: 11, btn_r: 999,
       upper: false, d_space: '0.04em', glow_icons: false, blur: 0, zen: true, serif: true,
       d_weight: 500, body_weight: 400, head_size: 19,
-      fx: { scanlines: false, grid: false, blobs: false, dots: false, dither: false, petals: true }
+      fx: { scanlines: false, grid: false, blobs: false, dots: false, dither: false }
     },
     # ── Matchday ── Premier-League pitch · floodlit turf · broadcast graphics
     # Condensed poster type (Anton), chalk-line cards, mowed-grass backdrop + centre circle.

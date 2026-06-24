@@ -70,20 +70,6 @@
 .tjs-slideup,
 .tjs-pop { opacity: 1; transform: none; }
 
-// Petal spans — visible (via opacity: 0 end-state) even without animation.
-// The <span> elements inside .tjs-backdrop-petals are always in the DOM; opacity
-// stays at 0 by default so they are invisible when motion is off.
-.tjs-petal {
-  position: absolute;
-  top: -16px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50% 0 50% 0;
-  background: var(--n1);
-  opacity: 0;
-  pointer-events: none;
-}
-
 // ── Atmosphere layer keyframes (purchasable, per-skin; driven by motion_controller.js) ──
 // Ported from skins.css (sk-*) in the prototype. The controller only injects particles when motion
 // is enabled and the OS isn't in reduced-motion, so these can live at the top level safely.
@@ -131,7 +117,6 @@
 [data-motion="false"] {
   .tjs-pop, .tjs-slideup, .tjs-tile { animation: none !important; transition: none !important; }
   .tjs-grid { animation: none !important; }
-  .tjs-petal { animation: none !important; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -139,13 +124,5 @@
     .tjs-pop { animation: tjs-pop .35s cubic-bezier(.2, 1.4, .4, 1) both; }
     .tjs-slideup { animation: tjs-slideup .42s cubic-bezier(.2, .8, .2, 1) both; }
     .tjs-grid { animation: tjs-grid 1.6s linear infinite; }
-
-    // Six petals with staggered positions, durations, and delays
-    .tjs-petal:nth-child(1) { left:  8%; animation: tjs-petal 9s  2.0s linear infinite; }
-    .tjs-petal:nth-child(2) { left: 22%; animation: tjs-petal 11s 0.5s linear infinite; }
-    .tjs-petal:nth-child(3) { left: 41%; animation: tjs-petal 8s  4.0s linear infinite; }
-    .tjs-petal:nth-child(4) { left: 57%; animation: tjs-petal 12s 1.2s linear infinite; }
-    .tjs-petal:nth-child(5) { left: 74%; animation: tjs-petal 10s 3.5s linear infinite; }
-    .tjs-petal:nth-child(6) { left: 88%; animation: tjs-petal 9s  0.8s linear infinite; }
   }
 }

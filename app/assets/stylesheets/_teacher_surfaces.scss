@@ -126,10 +126,6 @@
   justify-content: flex-start;
 }
 
-// The zen teacher surface keeps its paper look, but the drifting cherry-blossom petals read as too
-// playful for a teacher/admin tool — suppress them inside the teacher shell only.
-.tjs-shell .tjs-backdrop-petals { display: none; }
-
 // ── Skinned data tables on the teacher arcade surface ────────────────────────────────
 // The teacher views keep their data tables (search / export / pagination / row-click JS), restyled
 // onto the skin tokens so they read on the dark arcade surface and follow any future skin.
