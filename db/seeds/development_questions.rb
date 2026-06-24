@@ -61,6 +61,10 @@ def question_text_for_seed(row)
   %(<action-text-attachment sgid="#{image.attachable_sgid}"></action-text-attachment><p>#{row['question_text']}</p>)
 end
 
+def question_type_for_seed(row)
+  row['question_type'] == 'boolean' ? 'multiple' : row['question_type']
+end
+
 def fetch_seed_image_blob(image_url)
   @seed_image_blobs[image_url] ||= download_seed_image_blob(image_url)
 end
@@ -100,7 +104,7 @@ def upsert_seed_question(row)
   Question.find_or_initialize_by(external_id: row['id']).tap do |question|
     question.topic = topic
     question.question_text = question_text
-    question.question_type = row['question_type']
+    question.question_type = question_type_for_seed(row)
     question.save!(validate: false)
   end
 end
