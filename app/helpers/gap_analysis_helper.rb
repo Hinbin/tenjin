@@ -31,12 +31,6 @@ module GapAnalysisHelper
     tag.span(band.to_s.capitalize, class: "tj-gap-band tj-gap-band--#{band}")
   end
 
-  # Cohort standing as a coloured chip (above / on_par / below / unknown).
-  def standing_chip(standing)
-    labels = { above: 'Above average', on_par: 'On par', below: 'Below average', unknown: 'No data' }
-    tag.span(labels.fetch(standing, 'No data'), class: "tj-gap-standing tj-gap-standing--#{standing}")
-  end
-
   # The whole class-vs-cohort comparison folded into one figure: a directional arrow plus the size of
   # the gap in percentage points (e.g. ↑ 8%). Replaces the separate class-mastery / cohort-baseline /
   # standing cards — the underlying numbers live in the tooltip (standing_tooltip). `overall` is
@@ -78,19 +72,11 @@ module GapAnalysisHelper
       on_par: 'On par with the cohort baseline' }.fetch(standing, 'No data')
   end
 
-  # Heatmap cell tint: low mean score => hot (red), high => cool (green). Drives the student gap
-  # heatmaps. The background is always a light pastel, so pin a dark ink — the skin's default table
-  # colour is near-white (--ink) and would vanish against it.
-  def heat_style(score)
-    hue = (score.to_f * 120).round # 0 = red, 120 = green
-    "background:hsl(#{hue},70%,88%);color:#1a1a1a"
-  end
-
   # Diverging tint for a topic's standing against the cohort: below cohort => warm (red), above =>
   # cool (green), on par => near-neutral, no comparison (nil delta) => flat grey. `delta` is the
   # difficulty-weighted gap (own minus cohort, roughly -1..1). Magnitude drives saturation so a wide
-  # gap reads stronger than a slim one, capped at a 25-point gap. Dark ink pinned for the same reason
-  # as heat_style — the pale tints would swallow the skin's near-white default.
+  # gap reads stronger than a slim one, capped at a 25-point gap. Dark ink is pinned because the pale
+  # tints would otherwise swallow the skin's near-white default text colour.
   def standing_heat_style(delta)
     return 'background:#f1f1f1;color:#6c757d' if delta.nil?
 
@@ -101,7 +87,7 @@ module GapAnalysisHelper
 
   # The per-cell standing line in the topic gap grid: a coloured arrow + the size of the gap against
   # the cohort (e.g. "↑ 8% vs cohort"), or a plain label when the class is on par or there is not yet
-  # any cohort data to compare against. Mirrors standing_chip's vocabulary in heatmap form.
+  # any cohort data to compare against. The above/on-par/below vocabulary in heatmap form.
   def topic_standing_line(row)
     standing = row[:standing]
     return standing_line_label('No cohort data yet', :unknown) if row[:delta].nil?

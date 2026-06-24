@@ -58,6 +58,34 @@
                         = form_with url: equip_customisation_path(pal.customisation), method: :post do |f|
                           = f.submit 'Equip', class: 'tjs-btn tjs-btn--ghost tjs-palette-chip__btn'
 
+    / ── SCENES · MOTIONS · COSMETIC SLOTS ────────────────────────────────────
+    / Every other equip slot the user owns (teachers own all of them). Scenes & motions are
+    / skin-locked, so the options shown follow the equipped skin.
+    - @look_categories.each do |category|
+      - owned_items = category.items.select(&:owned)
+      - next if owned_items.empty?
+      section.tjs-settings__section
+        = render 'shared/skin/section_head', en: category.en, jp: category.jp
+
+        .tjs-palette-chips
+          - owned_items.each do |item|
+            .tjs-palette-chip class=("is-equipped" if item.equipped) data-value=item.value
+              - if item.glyph
+                .tjs-palette-swatch
+                  = glyph(item.glyph, size: 16, color: (item.token || 'var(--ink)'))
+              - elsif item.token
+                .tjs-palette-swatch
+                  i.tjs-palette-swatch__dot style="background:#{item.token};"
+              .tjs-palette-chip__name = item.name
+              .tjs-palette-chip__foot
+                - if item.equipped
+                  span.tjs-palette-chip__equipped
+                    = glyph(:check, size: 12, color: 'var(--n2)')
+                    ' On
+                - else
+                  = form_with url: equip_customisation_path(item.customisation), method: :post do |f|
+                    = f.submit 'Equip', class: 'tjs-btn tjs-btn--ghost tjs-palette-chip__btn'
+
     / ── APPEARANCE: LIGHT / DARK MODE ─────────────────────────────────────
     section.tjs-settings__section
       = render 'shared/skin/section_head', en: 'Mode', jp: 'モード'

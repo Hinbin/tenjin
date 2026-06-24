@@ -10,6 +10,10 @@ class SettingsController < ApplicationController
     authorize current_user, :show?
     board = Customisation::ShopBoard.call(current_user)
     @skins_category = board.categories.find { |c| c.type == 'skin' }
+    # The remaining equip slots (scenes, motions, avatar/nameplate/… cosmetics) so the appearance
+    # surface can manage every owned customisation, not just skins/palettes. Skins stay separate
+    # because they nest palettes and drive the skin-locked scene/motion options.
+    @look_categories = board.categories.reject { |c| c.type == 'skin' }
     @mode = board.mode
     @wallet = board.wallet
   end

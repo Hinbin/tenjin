@@ -33,6 +33,8 @@ RSpec.describe 'Teacher views gap analysis', :default_creates, :js, type: :syste
     click_link("#{student.forename} #{student.surname}")
 
     expect(page).to have_text('Personal gap report')
-    expect(page).to have_css('h2.tjs-display', text: /by lesson/i)
+    # The student surface now mirrors the class heatmap: cohort-relative standing per topic.
+    expect(page).to have_css('h2.tjs-display', text: /standing vs cohort by topic/i)
+    expect(page).to have_css('.tj-gap-heatmap')
   end
 end

@@ -7,6 +7,10 @@
 # everything else — difficulties, the global baseline, per-question metadata, difficulty-weighted
 # mastery and cohort standing — is derived here so the two reports stay consistent.
 module Analytics::GapReportSupport
+  # The cohort-relative heatmap grid (topic cells + per-lesson drill-down) both reports render, built
+  # from the primitives defined below. Lives in its own concern to keep each file focused.
+  include Analytics::GapGridSupport
+
   # Difficulty-weighted mastery within this band of the global cohort reads as "on par"; beyond it,
   # above/below. Deliberately generous so small classes are not over-labelled by noise.
   STANDING_THRESHOLD = 0.05
