@@ -2,8 +2,7 @@
   title=('Lessons')
 .tjk-container data-controller="lesson-filter"
   section.page-section.tj-text-center style='padding-top: 0.5rem' id='newLesson'
-    h1.page-section-header.text-uppercase Lessons
-    hr class=("small primary-red") style='margin-bottom: 0.5rem'
+    h1.tjs-display Lessons
     .tjs-lesson-filter
       input.tjk-input type='text' placeholder='Search lessons…' data-lesson-filter-target='search' data-action='input->lesson-filter#filter'
       select.tjk-input data-lesson-filter-target='topicSelect' data-action='change->lesson-filter#filter'
@@ -72,11 +71,10 @@
 -if @author
   .tjk-container
     section.page-section.tj-text-center style='padding-top: 0.5rem' id='createLessons'
-      h1.page-section-header.text-uppercase Create Lessons
-      hr class=("small primary-red") style='margin-bottom: 3rem'
-        - @editable_subjects.each do |s|
-          h3.h3 style='padding: 0.5rem 0' = s.name
-          =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'tj-btn-primary tj-btn--full'
+      h1.tjs-display Create Lessons
+      - @editable_subjects.each do |s|
+        h3.h3 style='padding: 0.5rem 0' = s.name
+        =link_to "Create #{s.name} Lesson", new_lesson_path(subject: s), class: 'tj-btn-primary tj-btn--full'
 
 dialog#videoModal
   .tj-dialog-content

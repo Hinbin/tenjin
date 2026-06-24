@@ -30,7 +30,7 @@
                     .tj-row-actions
                       - if policy(e.classroom).gaps?
                         = link_to 'Gap Analysis', gaps_classroom_path(e.classroom), class: 'tjs-btn tjs-btn--primary'
-                      = link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'tjs-btn tjs-btn--ghost'
+                      = link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'tjs-btn tjs-btn--secondary'
 
     - if @other_classrooms.present?
       section.tjs-dashboard__section#otherClassrooms

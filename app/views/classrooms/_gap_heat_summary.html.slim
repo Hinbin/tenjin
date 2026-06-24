@@ -1,0 +1,6 @@
+/ The visible face of a topic heatmap cell: name, difficulty-weighted class score and how the class
+/ stands against the cohort. Shared between the static cell and the accordion trigger so both read
+/ identically. Sample-size detail is deliberately omitted here — it's noise on the at-a-glance face.
+span.tj-gap-heat-topic = topic[:topic_name]
+span.tj-gap-heat-score = gap_percent(topic[:mastery])
+= topic_standing_line(topic)

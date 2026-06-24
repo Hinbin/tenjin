@@ -4,6 +4,8 @@ unless Rails.env.development? || ENV['SEED_TEST_USERS'] == 'true'
   raise "Development lesson seeds can only be loaded in development or with SEED_TEST_USERS=true, not #{Rails.env}."
 end
 
+require_relative 'cs_lesson_titles'
+
 # A small pool of real, freely available educational videos. Each topic gets one or
 # two lessons drawn from this pool so the seeded database has browsable lesson content.
 # The Lesson model extracts the video id from the full URL in a before_save callback,
@@ -19,22 +21,30 @@ SEED_LESSON_VIDEOS = [
 
 def seed_lessons_for_topic(topic, lesson_specs)
   lesson_specs.map do |spec|
-    title = "#{topic.name}: #{spec[:title]}"
-
-    Lesson.find_or_initialize_by(topic:, title:).tap do |lesson|
+    Lesson.find_or_initialize_by(topic:, title: spec[:title]).tap do |lesson|
       lesson.video_id = spec[:url]
       lesson.save!
-      Rails.logger.info("Lesson: #{title}")
+      Rails.logger.info("Lesson: #{spec[:title]}")
     end
   end
 end
 
+# Computer Science topics get spec-derived lesson titles (see cs_lesson_titles.rb);
+# all other subjects fall back to the generic pool title, prefixed with the topic name.
+def lesson_title_for(topic, video, index)
+  spec_titles = CS_LESSON_TITLES[topic.name] if topic.subject&.name == 'Computer Science'
+  spec_titles&.[](index) || "#{topic.name}: #{video[:title]}"
+end
+
 Topic.find_each.with_index do |topic, index|
   # Give each topic two lessons, rotating through the pool so neighbouring topics differ.
-  specs = [
+  videos = [
     SEED_LESSON_VIDEOS[index % SEED_LESSON_VIDEOS.length],
     SEED_LESSON_VIDEOS[(index + 1) % SEED_LESSON_VIDEOS.length]
   ]
+  specs = videos.each_with_index.map do |video, i|
+    { title: lesson_title_for(topic, video, i), url: video[:url] }
+  end
 
   lessons = seed_lessons_for_topic(topic, specs)
 

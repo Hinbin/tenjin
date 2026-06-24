@@ -10,6 +10,8 @@ module Analytics::GapReportSupport
   # Difficulty-weighted mastery within this band of the global cohort reads as "on par"; beyond it,
   # above/below. Deliberately generous so small classes are not over-labelled by noise.
   STANDING_THRESHOLD = 0.05
+  # Label for questions not yet attached to a lesson, so they still appear in lesson breakdowns.
+  NO_LESSON_LABEL = 'No lesson set'
 
   private
 
@@ -49,8 +51,24 @@ module Analytics::GapReportSupport
 
   def question_meta
     @question_meta ||= Question.where(id: question_ids)
-                               .pluck(:id, :topic_id, :question_type)
-                               .to_h { |id, topic_id, type| [id, { topic_id: topic_id, question_type: type }] }
+                               .pluck(:id, :topic_id, :lesson_id, :question_type)
+                               .to_h do |id, topic_id, lesson_id, type|
+                                 [id, { topic_id: topic_id, lesson_id: lesson_id, question_type: type }]
+                               end
+  end
+
+  # Lesson titles for every lesson the in-scope questions belong to. Questions with no lesson
+  # (lesson_id nil) bucket under a single "No lesson set" label so nothing is silently dropped.
+  def lesson_names
+    @lesson_names ||= Lesson.where(id: question_meta.values.filter_map { |meta| meta[:lesson_id] }.uniq)
+                            .pluck(:id, :title)
+                            .to_h
+  end
+
+  # Plain-text question stems for the given ids, batch-loaded with their ActionText so report rows can
+  # show the actual questions without an N+1 over rich text. Callers pass a small, capped id set.
+  def plain_question_texts(ids)
+    Question.where(id: ids).with_rich_text_question_text.to_h { |q| [q.id, q.question_text.to_plain_text] }
   end
 
   # The shared per-question payload every report row carries: where it sits and how hard it is.

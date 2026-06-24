@@ -60,6 +60,9 @@ body[data-skin] {
 
 .tjs-btn--primary { background: var(--n1); color: var(--on-accent); }
 
+// Solid secondary accent — a distinct filled button that pairs with --primary without competing.
+.tjs-btn--secondary { background: var(--n2); color: var(--on-accent); }
+
 .tjs-btn--ghost {
   background: var(--surface);
   color: var(--ink);

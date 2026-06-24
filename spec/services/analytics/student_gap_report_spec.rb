@@ -58,26 +58,26 @@ RSpec.describe Analytics::StudentGapReport do
     end
   end
 
-  describe 'priority gaps' do
-    let(:cohort_easy) { create(:question, topic: topic_a, question_type: 'multiple') }
-    let(:also_hard) { create(:short_answer_question, topic: topic_b) }
+  describe 'lesson breakdown' do
+    let(:strong_lesson) { create(:lesson, topic: topic_a, title: 'Sorting') }
+    let(:weak_lesson) { create(:lesson, topic: topic_a, title: 'Recursion') }
 
     before do
-      # Student bombs a question the cohort finds easy => top priority gap.
-      student_stat(cohort_easy, asked: 10, score: 1.0)
-      create(:question_statistic, question: cohort_easy, number_asked: 1000, number_correct: 900, score_sum: 900.0)
-      # Student also struggles, but so does the cohort => not a priority gap.
-      student_stat(also_hard, asked: 10, score: 1.0)
-      create(:question_statistic, question: also_hard, number_asked: 1000, number_correct: 150, score_sum: 150.0)
+      student_stat(create(:question, topic: topic_a, lesson: strong_lesson), asked: 10, score: 9.0) # 0.9
+      student_stat(create(:question, topic: topic_a, lesson: weak_lesson), asked: 10, score: 3.0)   # 0.3 (weakest)
     end
 
-    it 'surfaces questions the student trails the cohort on, biggest gap first' do
-      gaps = report.priority_gaps
+    it 'orders lessons weakest first with mean scores' do
+      breakdown = report.lesson_breakdown
 
-      expect(gaps.first).to include(question_id: cohort_easy.id, student_score: 0.1)
-      expect(gaps.first[:cohort_score]).to be_within(0.01).of(0.9)
-      expect(gaps.first[:gap]).to be_within(0.01).of(0.8)
-      expect(gaps.pluck(:question_id)).not_to include(also_hard.id)
+      expect(breakdown.pluck(:lesson_name)).to eq(%w[Recursion Sorting])
+      expect(breakdown.first).to include(lesson_name: 'Recursion', mean_score: 0.3, attempts: 10)
+    end
+
+    it 'buckets questions with no lesson under a fallback label' do
+      student_stat(create(:question, topic: topic_b, lesson: nil), asked: 4, score: 2.0)
+
+      expect(report.lesson_breakdown.pluck(:lesson_name)).to include('No lesson set')
     end
   end
 
@@ -107,7 +107,7 @@ RSpec.describe Analytics::StudentGapReport do
   describe 'with no data' do
     it 'returns empty sections when the student has no statistics' do
       expect(report.topic_breakdown).to eq([])
-      expect(report.priority_gaps).to eq([])
+      expect(report.lesson_breakdown).to eq([])
       expect(report.strengths).to eq([])
       expect(report.cohort_comparison[:overall][:standing]).to eq(:unknown)
     end

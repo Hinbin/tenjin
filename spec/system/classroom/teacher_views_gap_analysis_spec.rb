@@ -21,16 +21,18 @@ RSpec.describe 'Teacher views gap analysis', :default_creates, :js, type: :syste
     click_link('View Gap Analysis')
 
     expect(page).to have_text('Gap analysis')
-    expect(page).to have_css('h2.tj-section-header', text: /student activity/i)
-    expect(page).to have_css('h2.tj-section-header', text: /topic heatmap/i)
-    expect(page).to have_css('h2.tj-section-header', text: /hardest questions/i)
+    expect(page).to have_css('h2.tjs-display', text: /student activity/i)
+    expect(page).to have_css('h2.tjs-display', text: /standing vs cohort by topic/i)
+    expect(page).to have_css('h2.tjs-display', text: /hardest questions/i)
     expect(page).to have_text(topic.name)
+    # Hardest questions now lists the specific question stems, not the question type.
+    expect(page).to have_text(hard_question.question_text.to_plain_text)
     # Answered count comes from the durable rollup (number_asked: 10), not the unwritten usage column.
     expect(page).to have_css('.tj-gap-card', text: /questions answered\s*10/i)
 
     click_link("#{student.forename} #{student.surname}")
 
     expect(page).to have_text('Personal gap report')
-    expect(page).to have_css('h2.tj-section-header', text: /priority gaps/i)
+    expect(page).to have_css('h2.tjs-display', text: /by lesson/i)
   end
 end

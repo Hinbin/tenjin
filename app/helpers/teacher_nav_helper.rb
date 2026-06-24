@@ -15,7 +15,13 @@ module TeacherNavHelper
     'leaderboard' => :ranks, 'topics' => :questions, 'questions' => :questions, 'users' => :admin_users
   }.freeze
 
+  # The gap-analysis surfaces all live on ClassroomsController, so disambiguate by action before
+  # falling back to the controller map (which sends plain `classrooms` to the Classrooms tab).
+  GAP_ANALYSIS_ACTIONS = %w[gap_analysis gaps student_gap].freeze
+
   def teacher_nav_active_item
+    return :gap_analysis if controller_name == 'classrooms' && GAP_ANALYSIS_ACTIONS.include?(action_name)
+
     CONTROLLER_TO_NAV[controller_name]
   end
 
@@ -33,9 +39,10 @@ module TeacherNavHelper
 
   def base_nav_items
     [
-      { id: :classrooms, icon: :home,   en: 'Classrooms',  jp: '教室', path: dashboard_path },
-      { id: :lessons,    icon: :book,   en: 'Lessons',     jp: '授業', path: lessons_path },
-      { id: :ranks,      icon: :trophy, en: 'Leaderboard', jp: '順位', path: leaderboard_index_path }
+      { id: :classrooms,   icon: :home,   en: 'Classrooms',   jp: '教室',   path: dashboard_path },
+      { id: :gap_analysis, icon: :target, en: 'Gap Analysis', jp: 'ギャップ', path: gap_analysis_classrooms_path },
+      { id: :lessons,      icon: :book,   en: 'Lessons',      jp: '授業',   path: lessons_path },
+      { id: :ranks,        icon: :trophy, en: 'Leaderboard',  jp: '順位',   path: leaderboard_index_path }
     ]
   end
 

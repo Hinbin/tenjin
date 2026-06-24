@@ -11,9 +11,13 @@
 # hardness comes from `Analytics::QuestionDifficulty`.
 #
 #   report = Analytics::ClassGapReport.call(classroom)
-#   report.topic_heatmap           # [{ topic_id:, topic_name:, mean_score:, attempts:, students: }, ...] weakest first
+#   report.topic_gap_grid          # [{ topic_id:, topic_name:, mastery:, cohort_mastery:, delta:,
+#                                  #    standing:, attempts:, students:, lessons: [{ lesson_id:,
+#                                  #    lesson_name:, mastery:, cohort_mastery:, delta:, standing:,
+#                                  #    attempts:, questions: }, ...] }, ...] most below cohort first
 #   report.hardest_questions       # [{ question_id:, topic_id:, topic_name:, question_type:,
-#                                  #    difficulty:, band:, class_mean_score:, attempts: }, ...]
+#                                  #    question_text:, difficulty:, band:, class_mean_score:,
+#                                  #    attempts: }, ...]
 #   report.cohort_comparison       # { overall: { mastery:, cohort_mastery:, delta:, standing: },
 #                                  #   by_topic: [ <overall keys> + topic_id:, topic_name:, ... ] }
 #   report.engagement              # { students_active:, quizzes_started:, questions_answered:,
@@ -25,6 +29,10 @@ class Analytics::ClassGapReport < ApplicationService
   # The class summary card (the marketing/case-study asset) only needs the worst few questions.
   HARDEST_QUESTIONS_LIMIT = 10
 
+  # Volume fallback for a topic that has cohort-comparison rows but no attempt rows (defensive — the
+  # two are drawn from the same attempts, so this is belt-and-braces).
+  EMPTY_TOPIC_VOLUME = { attempts: 0, students: 0 }.freeze
+
   def initialize(classroom)
     super()
     @classroom = classroom
@@ -35,7 +43,7 @@ class Analytics::ClassGapReport < ApplicationService
       success: true,
       classroom: @classroom,
       student_count: student_ids.size,
-      topic_heatmap: topic_heatmap,
+      topic_gap_grid: topic_gap_grid,
       hardest_questions: hardest_questions,
       cohort_comparison: cohort_comparison,
       engagement: engagement
@@ -60,44 +68,72 @@ class Analytics::ClassGapReport < ApplicationService
   end
 
   def student_ids
-    @student_ids ||= User.where(role: 'student')
-                         .joins(:enrollments)
-                         .where(enrollments: { classroom_id: @classroom.id })
-                         .pluck(:id)
+    @student_ids ||= User.where(role: 'student').joins(:enrollments)
+                         .where(enrollments: { classroom_id: @classroom.id }).pluck(:id)
   end
 
-  # Class mean score per topic, weakest first.
-  def topic_heatmap
+  # The per-topic gap grid: difficulty-weighted class mastery against the cohort baseline on the same
+  # questions, plus the activity volume behind each figure. Most below the cohort first, so the topics
+  # where the class trails comparable students lead; topics with no cohort comparison (unknown
+  # standing) sink to the bottom. Merges the cohort comparison with attempt volume so each heatmap
+  # cell carries both the signal (mastery / cohort_mastery / delta / standing) and its sample size.
+  def topic_gap_grid
     return [] if student_ids.empty? || topic_ids.empty?
 
-    topic_heatmap_rows.map { |row| heatmap_entry(row) }.sort_by { |topic| topic[:mean_score] }
+    topic_grid_rows.sort_by { |row| [row[:delta] ? 0 : 1, row[:delta] || 0.0] }
   end
 
-  def topic_heatmap_rows
+  def topic_grid_rows
+    volume = topic_volume
+    cohort_comparison[:by_topic].map do |row|
+      row.merge(volume.fetch(row[:topic_id], EMPTY_TOPIC_VOLUME), lessons: lesson_breakdown(row[:topic_id]))
+    end
+  end
+
+  # Per-lesson drill-down behind a topic's heatmap cell: the same difficulty-weighted, cohort-relative
+  # standing as the topic grid, sliced by the lesson each question sits in (questions with no lesson
+  # bucket under NO_LESSON_LABEL). Pure in-memory regrouping of the per-question stats already loaded
+  # for the grid — no extra per-topic query — weakest (most below cohort) first.
+  def lesson_breakdown(topic_id)
+    topic_question_stats(topic_id).group_by { |qid, _| question_meta.dig(qid, :lesson_id) }
+                                  .map { |lesson_id, pairs| lesson_gap_row(lesson_id, pairs.to_h) }
+                                  .sort_by { |row| [row[:delta] ? 0 : 1, row[:delta] || 0.0] }
+  end
+
+  # This topic's slice of the per-question universe: { question_id => { score_sum:, asked: } }.
+  def topic_question_stats(topic_id)
+    report_question_stats.select { |qid, _| question_meta.dig(qid, :topic_id) == topic_id }
+  end
+
+  def lesson_gap_row(lesson_id, lesson_stats)
+    comparison(lesson_stats.keys, report_question_stats).merge(
+      lesson_id: lesson_id, lesson_name: lesson_names[lesson_id] || NO_LESSON_LABEL,
+      attempts: lesson_stats.values.sum { |stat| stat[:asked] }, questions: lesson_stats.size
+    )
+  end
+
+  # Attempt volume per topic for the grid: { topic_id => { attempts:, students: } }.
+  def topic_volume
     StudentQuestionStatistic.joins(question: :topic)
                             .where(user_id: student_ids, topics: { id: topic_ids })
-                            .group('topics.id', 'topics.name')
-                            .pluck('topics.id', 'topics.name', Arel.sql('SUM(score_sum)'),
-                                   Arel.sql('SUM(number_asked)'), Arel.sql('COUNT(DISTINCT user_id)'))
+                            .group('topics.id')
+                            .pluck('topics.id', Arel.sql('SUM(number_asked)'), Arel.sql('COUNT(DISTINCT user_id)'))
+                            .to_h { |id, asked, students| [id, { attempts: asked.to_i, students: students.to_i }] }
   end
 
-  # Row columns: [topic_id, topic_name, SUM(score_sum), SUM(number_asked), COUNT(DISTINCT user_id)].
-  def heatmap_entry(row)
-    { topic_id: row[0], topic_name: row[1], mean_score: mean(row[2], row[3]),
-      attempts: row[3].to_i, students: row[4].to_i }
-  end
-
-  # The questions the class found hardest (by cohort difficulty), with the class's own mean on each.
+  # The questions the class found hardest (by cohort difficulty), with the class's own mean and the
+  # actual question text on each (batch-loaded via plain_question_texts — the ≤10 stems, no N+1).
   def hardest_questions
-    report_question_stats.keys
-                         .sort_by { |qid| -(difficulties.dig(qid, :difficulty) || 0.0) }
-                         .first(HARDEST_QUESTIONS_LIMIT)
-                         .map { |qid| hardest_question_row(qid) }
+    ids = report_question_stats.keys.sort_by { |qid| -(difficulties.dig(qid, :difficulty) || 0.0) }
+                                    .first(HARDEST_QUESTIONS_LIMIT)
+    texts = plain_question_texts(ids)
+    ids.map { |qid| hardest_question_row(qid, texts[qid]) }
   end
 
-  def hardest_question_row(qid)
+  def hardest_question_row(qid, text)
     stat = report_question_stats[qid]
-    question_descriptor(qid).merge(class_mean_score: mean(stat[:score_sum], stat[:asked]), attempts: stat[:asked])
+    question_descriptor(qid).merge(question_text: text, attempts: stat[:asked],
+                                   class_mean_score: mean(stat[:score_sum], stat[:asked]))
   end
 
   # Who is actually practising. Quizzes-started comes from usage_statistics (written live on quiz

@@ -73,5 +73,9 @@ Rails.application.configure do
     Bullet.add_safelist(type: :unused_eager_loading, class_name: 'ActiveStorage::Attachment', association: :blob)
     Bullet.add_safelist(type: :unused_eager_loading, class_name: 'ActiveStorage::Blob', association: :variant_records)
     Bullet.add_safelist(type: :unused_eager_loading, class_name: 'ActiveStorage::Blob', association: :preview_image_attachment)
+    # has_rich_text reads the body through the `question_text` proxy method, not the
+    # rich_text_question_text association directly, so Bullet can't see the access and
+    # wrongly flags with_rich_text_question_text (gap reports) as an unused eager load.
+    Bullet.add_safelist(type: :unused_eager_loading, class_name: 'Question', association: :rich_text_question_text)
   end
 end

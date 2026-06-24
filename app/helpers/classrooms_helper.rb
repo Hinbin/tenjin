@@ -36,45 +36,6 @@ module ClassroomsHelper
     "#{homework.completed_count} / #{homework.count} - #{percent}"
   end
 
-  # --- Gap analysis presentation -------------------------------------------------------------------
-
-  # A metric-card label with a hover/focus tooltip explaining the term. The trailing ⓘ marker reveals
-  # the explanation via a CSS tooltip (data-tooltip drives the ::after bubble); keyboard-focusable and
-  # mirrored into title/aria-label so it isn't mouse-only.
-  def gap_card_label(text, explanation)
-    tag.span(class: 'tj-gap-card-label') do
-      safe_join([text, ' ',
-                 tag.span('ⓘ', class: 'tj-gap-info', tabindex: 0, role: 'note',
-                               'data-tooltip': explanation, title: explanation, 'aria-label': explanation)])
-    end
-  end
-
-  # A 0..1 score as a whole-number percentage; em dash for "no data" (nil).
-  def gap_percent(score)
-    return '—' if score.nil?
-
-    number_to_percentage(score * 100, precision: 0)
-  end
-
-  # Difficulty band as a coloured chip (easy/medium/hard from Analytics::QuestionDifficulty).
-  def difficulty_band_chip(band)
-    return '' if band.nil?
-
-    tag.span(band.to_s.capitalize, class: "tj-gap-band tj-gap-band--#{band}")
-  end
-
-  # Cohort standing as a coloured chip (above / on_par / below / unknown).
-  def standing_chip(standing)
-    labels = { above: 'Above average', on_par: 'On par', below: 'Below average', unknown: 'No data' }
-    tag.span(labels.fetch(standing, 'No data'), class: "tj-gap-standing tj-gap-standing--#{standing}")
-  end
-
-  # Heatmap cell tint: low mean score => hot (red), high => cool (green). Drives the topic heatmap.
-  def heat_style(score)
-    hue = (score.to_f * 120).round # 0 = red, 120 = green
-    "background:hsl(#{hue},70%,88%)"
-  end
-
   def sync_button
     link_to 'Sync Classrooms & Users', sync_school_path(current_user.school),
             data: { turbo_method: :patch },
