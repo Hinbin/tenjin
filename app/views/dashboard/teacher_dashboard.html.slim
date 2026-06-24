@@ -1,50 +1,58 @@
 -content_for :title
   title=('Dashboard')
-section.page-section.tj-text-center#myClassrooms
-  .tjk-container
-    h1.page-section-header.text-uppercase My Classes
-    hr class=("small mb-5 primary-red")
-    .tj-flex.tj-justify-center
-      .tj-table-responsive
-        table.tj-table#classroomTable
-          thead
-            tr
-              th Name
-              th.tj-lg-table-cell Description
-              th Subject
-              th.tj-lg-table-cell # Students
-              th
-          tbody
-            - @enrollments.each do |e|
-              tr data-classroom = e.classroom.id
-                td =e.classroom.name
-                td.tj-lg-table-cell =e.classroom.description
-                td =e.subject.name if e.subject.present?
-                td.tj-lg-table-cell =e.classroom.enrollments.size
-                td =link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'tj-btn-dark'
-- if @other_classrooms.present?
-  section.page-section.tj-text-center#otherClassrooms
-    .tjk-container
-      h1.page-section-header.text-uppercase Other Classrooms
-      hr class=("small mb-5 primary-red")
-      .tj-flex.tj-justify-center
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title = "Welcome back, #{current_user.forename}"
+      p.tj-tsurface-lead Pick a class to set homework, review students, or open its difficulty-aware gap analysis.
+
+    section.tjs-dashboard__section#myClassrooms
+      = render 'shared/skin/section_head', en: 'My Classes', jp: 'クラス'
+      .tjs-card.tj-table-card
+        .tj-table-responsive
+          table.tj-table#classroomTable
+            thead
+              tr
+                th Name
+                th.tj-lg-table-cell Description
+                th Subject
+                th.tj-lg-table-cell # Students
+                th
+            tbody
+              - @enrollments.each do |e|
+                tr data-classroom = e.classroom.id
+                  td =e.classroom.name
+                  td.tj-lg-table-cell =e.classroom.description
+                  td =e.subject.name if e.subject.present?
+                  td.tj-lg-table-cell =e.classroom.enrollments.size
+                  td
+                    .tj-row-actions
+                      - if policy(e.classroom).gaps?
+                        = link_to 'Gap Analysis', gaps_classroom_path(e.classroom), class: 'tjs-btn tjs-btn--primary'
+                      = link_to 'Set Homework', new_homework_path(classroom: {classroom_id: e.classroom.id}), class: 'tjs-btn tjs-btn--secondary'
+
+    - if @other_classrooms.present?
+      section.tjs-dashboard__section#otherClassrooms
+        = render 'shared/skin/section_head', en: 'Other Classrooms', jp: '他のクラス'
         div data-controller='table' data-table-page-length-value='25'
-          .tj-table-responsive
-            table.tj-table#otherClassroomTable
-              thead
-                tr
-                  th Name
-                  th.tj-lg-table-cell Description
-                  th Subject
-              tbody
-                - @other_classrooms.each do |c|
-                  tr data-classroom = c.id
-                    td =c.name
-                    td.tj-lg-table-cell =c.description
-                    td =c.subject.name if c.subject.present?
-          .tj-flex.tj-justify-between.tj-items-center style='margin-top: 0.5rem'
-            button.tj-btn-secondary.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
-            span data-table-target='info'
-            button.tj-btn-secondary.tj-btn--sm type='button' data-table-target='next' data-action='click->table#next' Next ›
+          .tjs-card.tj-table-card
+            .tj-table-responsive
+              table.tj-table#otherClassroomTable
+                thead
+                  tr
+                    th Name
+                    th.tj-lg-table-cell Description
+                    th Subject
+                tbody
+                  - @other_classrooms.each do |c|
+                    tr data-classroom = c.id
+                      td =c.name
+                      td.tj-lg-table-cell =c.description
+                      td =c.subject.name if c.subject.present?
+          .tj-table-controls
+            button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+            span.tj-table-info data-table-target='info'
+            button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-table-target='next' data-action='click->table#next' Next ›
 -if current_user.oauth_email.blank?
   input#oAuthEmail type='hidden'

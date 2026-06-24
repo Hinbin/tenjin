@@ -44,4 +44,25 @@ module DashboardHelper
 
     distance_of_time_in_words(Time.current, challenge.end_date)
   end
+
+  # Turns a due date into a relative, human-readable phrase, e.g.
+  # "in 6 days at 9am", "in 3 hours", "3 days ago".
+  def humanized_due_date(due)
+    return '' if due.blank?
+
+    now      = Time.current
+    distance = distance_of_time_in_words(now, due)
+
+    return "#{distance.capitalize} ago" if due.past?
+
+    phrase = "in #{distance}"
+    phrase += " at #{due_time_of_day(due)}" if due.to_date != now.to_date
+    phrase
+  end
+
+  # Compact clock label for a due time, e.g. "9am" or "3:30pm".
+  def due_time_of_day(due)
+    fmt = due.min.zero? ? '%-l%P' : '%-l:%M%P'
+    due.strftime(fmt)
+  end
 end

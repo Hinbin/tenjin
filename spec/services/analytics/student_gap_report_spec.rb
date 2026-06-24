@@ -16,27 +16,36 @@ RSpec.describe Analytics::StudentGapReport do
                                         number_asked: asked, number_correct: score.to_i, score_sum: score)
   end
 
-  describe 'topic breakdown' do
+  describe 'topic gap grid' do
     let(:strong_q) { create(:question, topic: topic_a) }
     let(:weak_q) { create(:question, topic: topic_b) }
 
     before do
-      student_stat(strong_q, asked: 10, score: 8.0) # Algorithms 0.8
-      student_stat(weak_q, asked: 10, score: 2.0)   # Networks 0.2 (weakest)
+      # Algorithms: student 0.8 vs cohort 0.2 (above). Networks: student 0.2 vs cohort 0.8 (below).
+      student_stat(strong_q, asked: 10, score: 8.0)
+      student_stat(weak_q, asked: 10, score: 2.0)
+      create(:question_statistic, question: strong_q, number_asked: 100, number_correct: 20, score_sum: 20.0)
+      create(:question_statistic, question: weak_q, number_asked: 100, number_correct: 80, score_sum: 80.0)
     end
 
-    it 'orders topics weakest first with mean scores' do
-      breakdown = report.topic_breakdown
+    it 'orders topics most below the cohort first, carrying cohort-relative standing and attempts' do
+      grid = report.topic_gap_grid
 
-      expect(breakdown.pluck(:topic_name)).to eq(%w[Networks Algorithms])
-      expect(breakdown.first).to include(topic_name: 'Networks', mean_score: 0.2, attempts: 10)
+      expect(grid.pluck(:topic_name)).to eq(%w[Networks Algorithms])
+      expect(grid.first).to include(topic_name: 'Networks', standing: :below, attempts: 10)
+      expect(grid.last).to include(topic_name: 'Algorithms', standing: :above)
+      expect(grid.first[:delta]).to be < grid.last[:delta]
+    end
+
+    it 'does not carry the class grid student-count column' do
+      expect(report.topic_gap_grid.first).not_to include(:students)
     end
 
     it 'ignores questions the student has never been asked' do
       create(:student_question_statistic, user: student, question: create(:question, topic: topic_a),
                                           number_asked: 0, number_correct: 0, score_sum: 0.0)
 
-      expect(report.topic_breakdown.sum { |t| t[:attempts] }).to eq(20)
+      expect(report.topic_gap_grid.sum { |t| t[:attempts] }).to eq(20)
     end
   end
 
@@ -58,26 +67,38 @@ RSpec.describe Analytics::StudentGapReport do
     end
   end
 
-  describe 'priority gaps' do
-    let(:cohort_easy) { create(:question, topic: topic_a, question_type: 'multiple') }
-    let(:also_hard) { create(:short_answer_question, topic: topic_b) }
+  describe 'lesson drill-down within a topic' do
+    let(:strong_lesson) { create(:lesson, topic: topic_a, title: 'Sorting') }
+    let(:weak_lesson) { create(:lesson, topic: topic_a, title: 'Recursion') }
+    let(:strong_q) { create(:question, topic: topic_a, lesson: strong_lesson) }
+    let(:weak_q) { create(:question, topic: topic_a, lesson: weak_lesson) }
 
     before do
-      # Student bombs a question the cohort finds easy => top priority gap.
-      student_stat(cohort_easy, asked: 10, score: 1.0)
-      create(:question_statistic, question: cohort_easy, number_asked: 1000, number_correct: 900, score_sum: 900.0)
-      # Student also struggles, but so does the cohort => not a priority gap.
-      student_stat(also_hard, asked: 10, score: 1.0)
-      create(:question_statistic, question: also_hard, number_asked: 1000, number_correct: 150, score_sum: 150.0)
+      # Sorting: student 0.9 vs cohort 0.5 (above). Recursion: student 0.3 vs cohort 0.5 (below).
+      student_stat(strong_q, asked: 10, score: 9.0)
+      student_stat(weak_q, asked: 10, score: 3.0)
+      create(:question_statistic, question: strong_q, number_asked: 100, number_correct: 50, score_sum: 50.0)
+      create(:question_statistic, question: weak_q, number_asked: 100, number_correct: 50, score_sum: 50.0)
     end
 
-    it 'surfaces questions the student trails the cohort on, biggest gap first' do
-      gaps = report.priority_gaps
+    def algorithms_lessons
+      report.topic_gap_grid.find { |row| row[:topic_name] == 'Algorithms' }[:lessons]
+    end
 
-      expect(gaps.first).to include(question_id: cohort_easy.id, student_score: 0.1)
-      expect(gaps.first[:cohort_score]).to be_within(0.01).of(0.9)
-      expect(gaps.first[:gap]).to be_within(0.01).of(0.8)
-      expect(gaps.pluck(:question_id)).not_to include(also_hard.id)
+    it 'breaks a topic cell down by lesson, weakest first, with cohort-relative standing' do
+      lessons = algorithms_lessons
+
+      expect(lessons.pluck(:lesson_name)).to eq(%w[Recursion Sorting])
+      expect(lessons.first).to include(lesson_name: 'Recursion', standing: :below, attempts: 10, questions: 1)
+      expect(lessons.last).to include(lesson_name: 'Sorting', standing: :above)
+      expect(lessons.first[:delta]).to be < lessons.last[:delta]
+    end
+
+    it 'buckets questions with no lesson under a labelled fallback' do
+      student_stat(create(:question, topic: topic_b, lesson: nil), asked: 4, score: 2.0)
+
+      networks = report.topic_gap_grid.find { |row| row[:topic_name] == 'Networks' }
+      expect(networks[:lessons].pluck(:lesson_name)).to include('No lesson set')
     end
   end
 
@@ -102,12 +123,15 @@ RSpec.describe Analytics::StudentGapReport do
       expect(strengths.first).to include(band: :hard)
       expect(strengths.first[:student_score]).to be >= described_class::STRENGTH_MIN_SCORE
     end
+
+    it 'carries the actual question stem so teachers see the specific questions' do
+      expect(report.strengths.first[:question_text]).to eq(hard_aced.question_text.to_plain_text)
+    end
   end
 
   describe 'with no data' do
     it 'returns empty sections when the student has no statistics' do
-      expect(report.topic_breakdown).to eq([])
-      expect(report.priority_gaps).to eq([])
+      expect(report.topic_gap_grid).to eq([])
       expect(report.strengths).to eq([])
       expect(report.cohort_comparison[:overall][:standing]).to eq(:unknown)
     end

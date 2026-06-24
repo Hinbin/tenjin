@@ -28,6 +28,18 @@ class ClassroomsController < ApplicationController
     @classroom.school.update(sync_status: 'needed')
   end
 
+  # Gap-analysis overview: every class this teacher can drill into, with a cheap engagement summary
+  # (Analytics::ClassGapSummary — not the full report) so the page stays fast.
+  def gap_analysis
+    authorize current_user, :show?, policy_class: DashboardPolicy
+    classrooms = Enrollment.includes(classroom: %i[school subject])
+                           .where(user: current_user)
+                           .map(&:classroom)
+                           .select { |c| c.subject.present? && policy(c).gaps? }
+                           .uniq
+    @class_summaries = classrooms.map { |c| [c, Analytics::ClassGapSummary.call(c)] }
+  end
+
   def gaps
     authorize @classroom, :gaps?
     @report = Analytics::ClassGapReport.call(@classroom)

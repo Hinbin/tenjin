@@ -79,7 +79,7 @@ class DashboardController < ApplicationController
   end
 
   def teacher_enrollments
-    @enrollments = Enrollment.includes(:classroom, :subject)
+    @enrollments = Enrollment.includes(:subject, classroom: :school)
                              .where(user: current_user)
     @other_classrooms = Classroom.where(school: current_user.school)
                                  .includes(:subject)

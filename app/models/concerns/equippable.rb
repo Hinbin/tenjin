@@ -27,8 +27,16 @@ module Equippable
   end
 
   # Decision #2: free items (skins, base palettes, cost-0 starters) are owned by everyone with no
-  # unlock row; everything else needs a CustomisationUnlock.
+  # unlock row; everything else needs a CustomisationUnlock. Teachers bypass the points economy
+  # entirely (see #owns_all_customisations?), so every slot is theirs for free.
   def owns?(customisation)
-    customisation.free? || customisation_unlocks.exists?(customisation: customisation)
+    owns_all_customisations? || customisation.free? || customisation_unlocks.exists?(customisation: customisation)
+  end
+
+  # Teachers don't earn challenge_points, so the shop economy doesn't apply to them — they get
+  # full access to every customisation for free. This is the single entitlement source: both
+  # #owns? and Customisation::ShopBoard read it so the Shop and Settings surfaces agree.
+  def owns_all_customisations?
+    employee?
   end
 end

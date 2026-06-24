@@ -19,11 +19,21 @@ RSpec.describe 'User visits a classroom', :default_creates, :js, type: :system d
     end
 
     it 'shows the name of the classroom' do
-      expect(page).to have_text(classroom.name)
+      # The arcade skin renders display headings uppercase, so match case-insensitively.
+      expect(page).to have_text(/#{Regexp.escape(classroom.name)}/i)
     end
 
     it 'shows the name of the students' do
       expect(page).to have_text(student.forename)
+    end
+
+    it 'shows classroom meta chips in the header' do
+      expect(page).to have_css('.tj-classroom-meta')
+    end
+
+    it 'promotes a gap-analysis entry point that opens the gap report' do
+      within('.tj-feature-card') { click_link('View Gap Analysis') }
+      expect(page).to have_current_path(gaps_classroom_path(classroom))
     end
 
     it 'allows me to create a homework' do
@@ -68,7 +78,7 @@ RSpec.describe 'User visits a classroom', :default_creates, :js, type: :system d
         create_list(:homework, 5, classroom: classroom)
         second_homework.update_attribute(:completed, true)
         visit(classroom_path(classroom))
-        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(6) i:nth-child(2).fa-check")
+        expect(page).to have_css("tr[data-id='#{student.id}'] td:nth-child(5) i:nth-child(2).fa-check")
       end
 
       it 'does not show homeworks for another classroom' do

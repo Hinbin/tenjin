@@ -26,24 +26,72 @@ RSpec.describe Analytics::ClassGapReport do
     enrol(bob)
   end
 
-  describe 'topic heatmap' do
+  describe 'topic gap grid' do
     let(:easy_q) { create(:question, topic: topic_a, question_type: 'multiple') }
     let(:hard_q) { create(:question, topic: topic_b, question_type: 'short_answer') }
 
     before do
-      # Algorithms: 12/20 => 0.6.  Networks: 4/20 => 0.2 (weakest).
+      # Algorithms: 12/20 => 0.6.  Networks: 4/20 => 0.2.
       student_stat(alice, easy_q, asked: 10, score: 8.0)
       student_stat(bob, easy_q, asked: 10, score: 4.0)
       student_stat(alice, hard_q, asked: 10, score: 3.0)
       student_stat(bob, hard_q, asked: 10, score: 1.0)
+      # Cohort baseline: class beats the cohort on Networks, trails it on Algorithms.
+      create(:question_statistic, question: easy_q, number_asked: 100, number_correct: 90, score_sum: 90.0)
+      create(:question_statistic, question: hard_q, number_asked: 100, number_correct: 5, score_sum: 5.0)
     end
 
-    it 'orders topics weakest first with class mean scores' do
-      heatmap = report.topic_heatmap
+    it 'orders topics most below the cohort first, carrying standing and attempt volume' do
+      grid = report.topic_gap_grid
 
-      expect(heatmap.pluck(:topic_name)).to eq(%w[Networks Algorithms])
-      expect(heatmap.first).to include(topic_name: 'Networks', mean_score: 0.2, attempts: 20, students: 2)
-      expect(heatmap.last).to include(topic_name: 'Algorithms', mean_score: 0.6)
+      # Algorithms trails the cohort (delta negative) and leads; Networks beats it.
+      expect(grid.pluck(:topic_name)).to eq(%w[Algorithms Networks])
+      expect(grid.first).to include(topic_name: 'Algorithms', standing: :below)
+      expect(grid.last).to include(topic_name: 'Networks', standing: :above, attempts: 20, students: 2)
+      expect(grid.first[:delta]).to be < grid.last[:delta]
+    end
+
+    it 'sinks topics with no cohort comparison to the bottom' do
+      topic_c = create(:topic, subject: subject_area, name: 'Databases')
+      lonely = create(:question, topic: topic_c, question_type: 'multiple')
+      student_stat(alice, lonely, asked: 5, score: 2.0) # no question_statistic => unknown standing
+
+      expect(report.topic_gap_grid.last).to include(topic_name: 'Databases', standing: :unknown)
+    end
+  end
+
+  describe 'lesson drill-down within a topic' do
+    let(:lesson_x) { create(:lesson, topic: topic_a, title: 'Big O') }
+    let(:lesson_y) { create(:lesson, topic: topic_a, title: 'Sorting') }
+    let(:q_x) { create(:question, topic: topic_a, lesson: lesson_x, question_type: 'multiple') }
+    let(:q_y) { create(:question, topic: topic_a, lesson: lesson_y, question_type: 'multiple') }
+    let(:q_none) { create(:question, topic: topic_a, lesson: nil, question_type: 'multiple') }
+
+    before do
+      # Big O: class 0.8 vs cohort 0.2 (well above). Sorting: class 0.2 vs cohort 0.8 (well below).
+      # q_none has no cohort baseline, so its standing is unknown and it sinks to the bottom.
+      student_stat(alice, q_x, asked: 10, score: 8.0)
+      student_stat(alice, q_y, asked: 10, score: 2.0)
+      student_stat(alice, q_none, asked: 4, score: 2.0)
+      create(:question_statistic, question: q_x, number_asked: 100, number_correct: 20, score_sum: 20.0)
+      create(:question_statistic, question: q_y, number_asked: 100, number_correct: 80, score_sum: 80.0)
+    end
+
+    def algorithms_lessons
+      report.topic_gap_grid.find { |row| row[:topic_name] == 'Algorithms' }[:lessons]
+    end
+
+    it 'breaks a topic cell down by lesson, weakest first, with cohort-relative standing' do
+      lessons = algorithms_lessons
+
+      expect(lessons.pluck(:lesson_name)).to eq(['Sorting', 'Big O', 'No lesson set'])
+      expect(lessons.first).to include(lesson_name: 'Sorting', standing: :below, attempts: 10, questions: 1)
+      expect(lessons.find { |l| l[:lesson_name] == 'Big O' }).to include(standing: :above)
+      expect(lessons.first[:delta]).to be < lessons.find { |l| l[:lesson_name] == 'Big O' }[:delta]
+    end
+
+    it 'buckets questions with no lesson under a labelled fallback and marks them unknown' do
+      expect(algorithms_lessons.last).to include(lesson_name: 'No lesson set', standing: :unknown, questions: 1)
     end
   end
 
@@ -59,11 +107,12 @@ RSpec.describe Analytics::ClassGapReport do
       create(:question_statistic, question: brutal, number_asked: 1000, number_correct: 100, score_sum: 100.0)
     end
 
-    it 'ranks by cohort difficulty, hardest first, with band, type and class mean' do
+    it 'ranks by cohort difficulty, hardest first, with band, the question text and class mean' do
       hardest = report.hardest_questions
 
       expect(hardest.first).to include(question_id: brutal.id, band: :hard,
-                                       question_type: 'short_answer', class_mean_score: 0.1)
+                                       question_text: brutal.question_text.to_plain_text,
+                                       class_mean_score: 0.1)
       expect(hardest.first[:difficulty]).to be > hardest.last[:difficulty]
       expect(hardest.last).to include(question_id: gentle.id, band: :easy)
     end
@@ -137,7 +186,7 @@ RSpec.describe Analytics::ClassGapReport do
       empty = described_class.call(create(:classroom, subject: subject_area))
 
       expect(empty.student_count).to eq(0)
-      expect(empty.topic_heatmap).to eq([])
+      expect(empty.topic_gap_grid).to eq([])
       expect(empty.hardest_questions).to eq([])
       expect(empty.cohort_comparison[:overall][:standing]).to eq(:unknown)
       expect(empty.engagement[:students_active]).to eq(0)
@@ -146,7 +195,7 @@ RSpec.describe Analytics::ClassGapReport do
     it 'handles a classroom with no subject' do
       no_subject = described_class.call(create(:classroom, subject: nil))
 
-      expect(no_subject.topic_heatmap).to eq([])
+      expect(no_subject.topic_gap_grid).to eq([])
     end
   end
 
@@ -168,7 +217,7 @@ RSpec.describe Analytics::ClassGapReport do
       counter = ->(_n, _s, _f, _i, _payload) { queries += 1 }
       ActiveSupport::Notifications.subscribed(counter, 'sql.active_record') do
         report = described_class.call(classroom)
-        report.topic_heatmap
+        report.topic_gap_grid
         report.hardest_questions
         report.cohort_comparison
         report.engagement

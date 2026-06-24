@@ -13,6 +13,16 @@ RSpec.describe 'Settings', type: :request do
       get settings_path
       expect(response).to have_http_status(:ok)
     end
+
+    it 'renders the appearance surface for teachers, who own every customisation for free' do
+      Customisation::SeedCosmetics.call(backfill: false)
+      teacher = create(:teacher, school:)
+      sign_in teacher
+
+      get settings_path
+
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe 'PATCH /settings (motion preference)' do

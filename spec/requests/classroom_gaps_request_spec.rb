@@ -5,6 +5,31 @@ require 'rails_helper'
 RSpec.describe 'Classroom gap analysis', :default_creates, type: :request do
   before { create(:enrollment, school: school, classroom: classroom, user: student) }
 
+  describe 'GET /classrooms/gap_analysis' do
+    before { create(:enrollment, school: school, classroom: classroom, user: teacher) }
+
+    it 'lists the teacher\'s classes with an engagement summary' do
+      sign_in teacher
+
+      get gap_analysis_classrooms_path
+
+      expect(response).to have_http_status(:ok)
+      body = Capybara.string(response.body)
+      expect(body).to have_text('Gap Analysis')
+      expect(body).to have_text(classroom.name)
+      expect(body).to have_link('View Gap Analysis', href: gaps_classroom_path(classroom))
+    end
+
+    it 'does not list classes the teacher cannot analyse' do
+      sign_in create(:teacher)
+
+      get gap_analysis_classrooms_path
+
+      expect(response).to have_http_status(:ok)
+      expect(Capybara.string(response.body)).to have_no_text(classroom.name)
+    end
+  end
+
   describe 'GET /classrooms/:id/gaps' do
     it 'renders the gap analysis for a teacher in the same school' do
       sign_in teacher

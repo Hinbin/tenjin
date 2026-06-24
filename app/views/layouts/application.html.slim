@@ -41,8 +41,19 @@ html
             = yield
         - unless student_in_quiz?
           = render 'shared/student_bottom_nav'
+    - elsif current_user&.employee?
+      / ── Teacher / admin app shell: sidebar (desktop) + bottom nav (mobile) ───
+      .tjs-shell
+        = render 'shared/teacher_sidebar'
+        .tjs-shell__body
+          = render 'shared/teacher_top_strip'
+          main.tjs-shell__content
+            turbo-frame id=flash
+              = render('shared/notice_notification') if flash[:notice].present?
+            = yield
+        = render 'shared/teacher_bottom_nav'
     - else
-      / ── Teacher / admin / guest shell: existing navbar ──────────────────────
+      / ── Other roles / admin / guest: existing navbar ────────────────────────
       = render('shared/user_navigation') if current_user.present?
       = render('shared/admin_navigation') if current_admin.present?
       = render('shared/logged_out_navigation') if current_user.nil? && current_admin.nil?

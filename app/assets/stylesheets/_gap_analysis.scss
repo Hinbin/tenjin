@@ -4,6 +4,12 @@
 .tj-gap {
   padding-bottom: var(--tj-space-5);
 
+  // Anchored summary cards jump to their detail section — keep a little breathing room at the top so
+  // the section heading doesn't land flush against the viewport edge after the scroll.
+  .tj-section {
+    scroll-margin-top: var(--tj-space-4);
+  }
+
   &-header {
     text-align: center;
     margin: var(--tj-space-4) 0 var(--tj-space-3);
@@ -43,6 +49,28 @@
     border: 1px solid #e0e0e0;
     border-radius: var(--tj-radius-lg);
     text-align: center;
+  }
+
+  // A summary card that doubles as an in-page jump to its detail section. Anchor scroll only — the
+  // worst an errant tap does is nudge the page, so it stays safe on touch. Reset the link chrome and
+  // add a gentle hover/focus lift to signal it's clickable.
+  &-card--link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--tj-grey);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tj-grey);
+      outline-offset: 2px;
+    }
   }
 
   &-card-label {
@@ -104,6 +132,25 @@
     color: var(--tj-ink);
   }
 
+  // Combined cohort-standing figure: arrow + gap in percentage points, replacing the separate
+  // mastery / baseline / standing cards. Colour echoes the standing chips (above green, below red).
+  &-delta {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.25rem;
+
+    &--above   { color: #155724; }
+    &--below   { color: #721c24; }
+    &--on_par  { color: var(--tj-theme-meta); }
+    &--unknown { color: var(--tj-grey); }
+  }
+
+  &-delta-arrow {
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+
   // Topic heatmap grid
   &-heatmap {
     display: grid;
@@ -122,7 +169,140 @@
 
   &-heat-topic { font-weight: 700; color: var(--tj-ink); }
   &-heat-score { font-size: 1.4rem; font-weight: 700; color: var(--tj-ink); }
-  &-heat-meta  { font-size: 0.78rem; color: var(--tj-theme-meta); }
+
+  // A heatmap cell that discloses a per-lesson breakdown. The cell tint stays on the wrapper; the
+  // button is a transparent, full-bleed trigger so the whole summary face is the click target.
+  &-heat-cell--expandable {
+    padding: 0;
+  }
+
+  &-heat-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tj-space-1);
+    width: 100%;
+    padding: var(--tj-space-3);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--tj-ink);
+      outline-offset: -2px;
+    }
+  }
+
+  // Affordance that the cell opens: a lone chevron in the corner of the cell face (the "click a topic"
+  // instruction lives in the section note, so no per-cell label is needed). A ▾ that flips to ▴ once
+  // the panel is shown, driven by the trigger's aria-expanded so it tracks the real state, JS or not.
+  &-heat-hint {
+    align-self: flex-end;
+    margin-top: calc(-1 * var(--tj-space-1));
+    font-size: 0.9rem;
+    line-height: 1;
+    color: var(--tj-theme-meta);
+
+    &::after { content: '▾'; }
+  }
+
+  &-heat-toggle[aria-expanded='true'] &-heat-hint::after,
+  [aria-expanded='true'] &-heat-hint::after {
+    content: ' ▴';
+  }
+
+  // The disclosed per-lesson list inside an expandable cell. Sits below the summary, inset slightly so
+  // the lessons read as children of the topic rather than peers in the grid.
+  &-lessons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tj-space-2);
+    margin: 0 var(--tj-space-3) var(--tj-space-3);
+    padding-top: var(--tj-space-2);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  // The panel must collapse by default. `.tj-hidden { display: none }` is a single-class utility, so
+  // the equal-specificity `&-lessons { display: flex }` above wins on source order and the panel would
+  // stay open. Re-assert the hide at higher specificity so the accordion starts closed, JS or not.
+  &-lessons.tj-hidden {
+    display: none;
+  }
+
+  // One lesson per row: the name on its own line, then a full-width bar beneath it. The cells are
+  // narrow, so giving the bar the whole width (rather than squeezing it between name and score) keeps
+  // it legible. No card chrome — the bar carries the meaning, so the row stays light.
+  &-lesson {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  &-lesson-name  { font-weight: 700; color: var(--tj-ink); font-size: 0.85rem; line-height: 1.25; }
+  &-lesson-score { font-size: 0.85rem; font-weight: 700; color: var(--tj-ink); }
+
+  // Track + percentage on one line, the bar stretching to fill the slack beside the figure.
+  &-lesson-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--tj-space-2);
+  }
+
+  // The bar track: a neutral rail the class-score fill grows along, with the cohort tick floating over
+  // it. position:relative anchors both the fill's baseline and the absolutely-placed tick.
+  &-lesson-track {
+    position: relative;
+    flex: 1;
+    height: 0.6rem;
+    border-radius: var(--tj-radius-pill);
+    background: rgba(0, 0, 0, 0.14);
+    overflow: hidden;
+  }
+
+  // The class's score, coloured by how the lesson stands against the cohort (echoes the standing
+  // palette: green ahead, red behind, neutral on par / when there's nothing to compare against).
+  &-lesson-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+
+    &--above   { background: #28a745; }
+    &--below   { background: #dc3545; }
+    &--on_par  { background: var(--tj-grey); }
+    &--unknown { background: var(--tj-grey); }
+  }
+
+  // A thin marker sitting where the cohort scores, so the fill reading short or long of it is the
+  // "vs cohort" story at a glance. Sits above the fill (overflow on the track clips it to the rail).
+  &-lesson-tick {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    width: 2px;
+    background: var(--tj-ink);
+    transform: translateX(-1px);
+  }
+
+  // Lesson row with no class activity yet: no bar to draw, just the name with a muted note beside it.
+  &-lesson--empty {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--tj-space-2);
+  }
+
+  // Per-cell standing line: directional gap against the cohort, echoing the standing-chip palette.
+  &-heat-standing {
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    &--above   { color: #155724; }
+    &--below   { color: #721c24; }
+    &--on_par  { color: var(--tj-theme-meta); }
+    &--unknown { color: var(--tj-grey); font-weight: 400; font-style: italic; }
+  }
 
   // Difficulty band chips
   &-band {

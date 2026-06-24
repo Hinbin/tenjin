@@ -780,7 +780,9 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   margin: 0 4px;
   vertical-align: middle;
   font-family: var(--f-body);
-  font-size: 14px;
+  // 16px minimum: anything smaller makes iOS Safari auto-zoom on focus and
+  // never zoom back out.
+  font-size: 16px;
   font-weight: 600;
   color: var(--ink);
   background: color-mix(in srgb, var(--n1) 6%, transparent);

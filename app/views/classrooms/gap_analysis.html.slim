@@ -1,0 +1,33 @@
+- content_for :title
+  title = 'Gap Analysis'
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Gap Analysis
+      p.tj-tsurface-lead Difficulty-aware, cohort-relative insight for each of your classes. Pick a class to drill in.
+
+    section.tjs-dashboard__section#gapClasses
+      = render 'shared/skin/section_head', en: 'My Classes', jp: 'クラス'
+      - if @class_summaries.empty?
+        .tjs-card
+          p.tj-gap-empty No classes with a subject set yet — there is nothing to analyse.
+      - else
+        .tjs-card.tj-table-card
+          .tj-table-responsive
+            table.tj-table
+              thead
+                tr
+                  th Name
+                  th Subject
+                  th Active students
+                  th
+              tbody
+                - @class_summaries.each do |classroom, summary|
+                  tr data-classroom = classroom.id
+                    td = classroom.name
+                    td = classroom.subject&.name
+                    td = "#{summary.students_active} / #{summary.student_count}"
+                    td
+                      .tj-row-actions
+                        = link_to 'View Gap Analysis', gaps_classroom_path(classroom), class: 'tjs-btn tjs-btn--primary'

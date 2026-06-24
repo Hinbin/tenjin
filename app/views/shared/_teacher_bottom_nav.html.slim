@@ -1,0 +1,10 @@
+/ _teacher_bottom_nav.html.slim — teacher/admin app-shell mobile bottom tab bar (mirrors the
+/ student bottom nav). Shown on mobile; hidden on desktop via shell.scss @media.
+nav.tjs-bottom-nav aria-label="Mobile navigation"
+  .tjs-bottom-nav__inner
+    - teacher_nav_items.each do |item|
+      = link_to item[:path],
+          class: "tjs-bottom-nav__item #{teacher_nav_active?(item[:id]) ? 'is-active' : ''}",
+          aria: { current: (teacher_nav_active?(item[:id]) ? 'page' : nil) } do
+        = glyph(item[:icon], size: 22, color: 'currentColor')
+        span.tjs-bottom-nav__label = item[:en]

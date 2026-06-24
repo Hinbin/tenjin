@@ -11,9 +11,13 @@
 # hardness comes from `Analytics::QuestionDifficulty`.
 #
 #   report = Analytics::ClassGapReport.call(classroom)
-#   report.topic_heatmap           # [{ topic_id:, topic_name:, mean_score:, attempts:, students: }, ...] weakest first
+#   report.topic_gap_grid          # [{ topic_id:, topic_name:, mastery:, cohort_mastery:, delta:,
+#                                  #    standing:, attempts:, students:, lessons: [{ lesson_id:,
+#                                  #    lesson_name:, mastery:, cohort_mastery:, delta:, standing:,
+#                                  #    attempts:, questions: }, ...] }, ...] most below cohort first
 #   report.hardest_questions       # [{ question_id:, topic_id:, topic_name:, question_type:,
-#                                  #    difficulty:, band:, class_mean_score:, attempts: }, ...]
+#                                  #    question_text:, difficulty:, band:, class_mean_score:,
+#                                  #    attempts: }, ...]
 #   report.cohort_comparison       # { overall: { mastery:, cohort_mastery:, delta:, standing: },
 #                                  #   by_topic: [ <overall keys> + topic_id:, topic_name:, ... ] }
 #   report.engagement              # { students_active:, quizzes_started:, questions_answered:,
@@ -21,6 +25,7 @@
 #                                  #                   questions_answered:, last_active_at: }, ...] }
 class Analytics::ClassGapReport < ApplicationService
   include Analytics::GapReportSupport
+  include Analytics::ClassEngagementSupport
 
   # The class summary card (the marketing/case-study asset) only needs the worst few questions.
   HARDEST_QUESTIONS_LIMIT = 10
@@ -35,7 +40,7 @@ class Analytics::ClassGapReport < ApplicationService
       success: true,
       classroom: @classroom,
       student_count: student_ids.size,
-      topic_heatmap: topic_heatmap,
+      topic_gap_grid: topic_gap_grid,
       hardest_questions: hardest_questions,
       cohort_comparison: cohort_comparison,
       engagement: engagement
@@ -60,98 +65,37 @@ class Analytics::ClassGapReport < ApplicationService
   end
 
   def student_ids
-    @student_ids ||= User.where(role: 'student')
-                         .joins(:enrollments)
-                         .where(enrollments: { classroom_id: @classroom.id })
-                         .pluck(:id)
+    @student_ids ||= User.where(role: 'student').joins(:enrollments)
+                         .where(enrollments: { classroom_id: @classroom.id }).pluck(:id)
   end
 
-  # Class mean score per topic, weakest first.
-  def topic_heatmap
-    return [] if student_ids.empty? || topic_ids.empty?
-
-    topic_heatmap_rows.map { |row| heatmap_entry(row) }.sort_by { |topic| topic[:mean_score] }
+  # The class grid carries one column the per-student grid does not: how many distinct students sit
+  # behind each topic's figure (the sample size). The difficulty-weighted, cohort-relative standing
+  # and per-lesson drill-down all come from the shared `topic_gap_grid` in Analytics::GapReportSupport.
+  def topic_grid_extra(topic_id)
+    { students: topic_student_counts.fetch(topic_id, 0) }
   end
 
-  def topic_heatmap_rows
-    StudentQuestionStatistic.joins(question: :topic)
-                            .where(user_id: student_ids, topics: { id: topic_ids })
-                            .group('topics.id', 'topics.name')
-                            .pluck('topics.id', 'topics.name', Arel.sql('SUM(score_sum)'),
-                                   Arel.sql('SUM(number_asked)'), Arel.sql('COUNT(DISTINCT user_id)'))
+  # Distinct students who have attempted each in-scope topic: { topic_id => student_count }.
+  def topic_student_counts
+    @topic_student_counts ||= StudentQuestionStatistic.joins(question: :topic)
+                                                      .where(user_id: student_ids, topics: { id: topic_ids })
+                                                      .group('topics.id')
+                                                      .distinct.count(:user_id)
   end
 
-  # Row columns: [topic_id, topic_name, SUM(score_sum), SUM(number_asked), COUNT(DISTINCT user_id)].
-  def heatmap_entry(row)
-    { topic_id: row[0], topic_name: row[1], mean_score: mean(row[2], row[3]),
-      attempts: row[3].to_i, students: row[4].to_i }
-  end
-
-  # The questions the class found hardest (by cohort difficulty), with the class's own mean on each.
+  # The questions the class found hardest (by cohort difficulty), with the class's own mean and the
+  # actual question text on each (batch-loaded via plain_question_texts — the ≤10 stems, no N+1).
   def hardest_questions
-    report_question_stats.keys
-                         .sort_by { |qid| -(difficulties.dig(qid, :difficulty) || 0.0) }
-                         .first(HARDEST_QUESTIONS_LIMIT)
-                         .map { |qid| hardest_question_row(qid) }
+    ids = report_question_stats.keys.sort_by { |qid| -(difficulties.dig(qid, :difficulty) || 0.0) }
+                                    .first(HARDEST_QUESTIONS_LIMIT)
+    texts = plain_question_texts(ids)
+    ids.map { |qid| hardest_question_row(qid, texts[qid]) }
   end
 
-  def hardest_question_row(qid)
+  def hardest_question_row(qid, text)
     stat = report_question_stats[qid]
-    question_descriptor(qid).merge(class_mean_score: mean(stat[:score_sum], stat[:asked]), attempts: stat[:asked])
-  end
-
-  # Who is actually practising. Quizzes-started comes from usage_statistics (written live on quiz
-  # start); answered-question counts come from the durable student_question_statistics rollup — the
-  # same source the rest of the report uses — because usage_statistics.questions_answered is not
-  # populated. Scoped to this subject's topics.
-  def engagement
-    rows = engagement_per_student
-    { students_active: rows.size,
-      quizzes_started: rows.sum { |entry| entry[:quizzes_started] },
-      questions_answered: rows.sum { |entry| entry[:questions_answered] },
-      per_student: rows }
-  end
-
-  def engagement_per_student
-    return [] if student_ids.empty? || topic_ids.empty?
-
-    answered = answered_by_student
-    quizzes = quizzes_by_student
-    (answered.keys | quizzes.keys).map { |uid| engagement_entry(uid, answered[uid], quizzes[uid]) }
-                                  .sort_by { |entry| -entry[:questions_answered] }
-  end
-
-  # Answered-question totals per student from the durable rollup: { user_id => { questions_answered:,
-  # last_active_at: } }.
-  def answered_by_student
-    StudentQuestionStatistic.joins(:question)
-                            .where(user_id: student_ids, questions: { topic_id: topic_ids })
-                            .group(:user_id)
-                            .pluck(:user_id, Arel.sql('SUM(number_asked)'), Arel.sql('MAX(last_asked_at)'))
-                            .to_h { |uid, asked, last| [uid, { questions_answered: asked.to_i, last_active_at: last }] }
-  end
-
-  # Quizzes-started totals per student from usage_statistics: { user_id => { quizzes_started:,
-  # last_active_at: } }.
-  def quizzes_by_student
-    UsageStatistic.where(user_id: student_ids, topic_id: topic_ids)
-                  .group(:user_id)
-                  .pluck(:user_id, Arel.sql('SUM(quizzes_started)'), Arel.sql('MAX(date)'))
-                  .to_h { |uid, started, date| [uid, { quizzes_started: started.to_i, last_active_at: date }] }
-  end
-
-  def engagement_entry(uid, answered, quizzes)
-    answered ||= {}
-    quizzes ||= {}
-    { user_id: uid, name: student_names[uid],
-      quizzes_started: quizzes[:quizzes_started].to_i,
-      questions_answered: answered[:questions_answered].to_i,
-      last_active_at: [answered[:last_active_at], quizzes[:last_active_at]].compact.max }
-  end
-
-  def student_names
-    @student_names ||= User.where(id: student_ids)
-                           .pluck(:id, :forename, :surname)
-                           .to_h { |id, forename, surname| [id, "#{forename} #{surname}"] }
+    question_descriptor(qid).merge(question_text: text, attempts: stat[:asked],
+                                   class_mean_score: mean(stat[:score_sum], stat[:asked]))
   end
 end

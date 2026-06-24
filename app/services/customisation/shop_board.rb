@@ -138,7 +138,7 @@ class Customisation::ShopBoard < ApplicationService
   end
 
   def owned?(record)
-    record.free? || unlocked_ids.include?(record.id)
+    @user.owns_all_customisations? || record.free? || unlocked_ids.include?(record.id)
   end
 
   def lookup(type)

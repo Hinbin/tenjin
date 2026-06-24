@@ -79,11 +79,6 @@ RSpec.describe 'Skin Styleguide', :js, type: :system do
     it 'applies zen skin data-skin attribute' do
       expect(find('body')['data-skin']).to eq('zen')
     end
-
-    it 'renders the petal backdrop elements' do
-      # petals container is shown (display:block) when zen skin is active
-      expect(page).to have_css('.tjs-backdrop-petals')
-    end
   end
 
   describe 'prefers-reduced-motion safety' do

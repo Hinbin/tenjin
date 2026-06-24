@@ -4,6 +4,28 @@ require 'rails_helper'
 require 'support/api_data'
 
 RSpec.describe User, type: :model do
+  describe 'customisation entitlement' do
+    let(:school) { create(:school) }
+    let(:student) { create(:student, school:) }
+    let(:teacher) { create(:teacher, school:) }
+    let(:paid_item) { create(:customisation, customisation_type: 'avatar', cost: 50) }
+
+    it 'gives teachers every customisation for free (bypassing the points economy)' do
+      expect(teacher.owns_all_customisations?).to be(true)
+      expect(teacher.owns?(paid_item)).to be(true)
+    end
+
+    it 'leaves students gated on paid items they have not unlocked' do
+      expect(student.owns_all_customisations?).to be(false)
+      expect(student.owns?(paid_item)).to be(false)
+    end
+
+    it 'still treats free items as owned for students' do
+      free_item = create(:customisation, customisation_type: 'avatar', cost: 0)
+      expect(student.owns?(free_item)).to be(true)
+    end
+  end
+
   describe 'cosmetic trial cooldown' do
     let(:student) { create(:student) }
 
