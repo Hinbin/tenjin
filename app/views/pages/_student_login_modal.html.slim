@@ -1,21 +1,26 @@
-dialog#studentLoginModal
-  .tj-dialog-content
-    .tj-dialog-header
-      button type='button' aria-label='Close' onclick='this.closest("dialog").close()' style='background:none; border:none; font-size:1.5rem; cursor:pointer; line-height:1'
-        span aria-hidden='true' &times;
-    .tj-dialog-body
-      =simple_form_for(resource, as: resource_name, data: { turbo: false }, url: session_path(resource_name)) do |f|
-        .form-inputs
-          = f.input :login,
-              required: false,
-              autofocus: true,
-              input_html: { autocomplete: "email" }
-          = f.input :password,
-              required: false,
-              input_html: { autocomplete: "current-password" }
-          = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' } if devise_mapping.rememberable?
-          = f.button :submit, "Login", class: 'tj-btn-primary tj-btn--full', id: 'loginModal'
-      div style='margin: var(--tj-space-3) 0; text-align: center'
-        =button_to image_tag('btn_google_signin_dark_normal_web.png'),
-          user_google_oauth2_omniauth_authorize_path,
-          {data: {turbo: :false}, style: 'display:flex; margin: 0 auto; background: none; border: none; cursor: pointer', id: 'loginGoogle'}
+/ Student login modal — skin-aware so it matches whatever skin the home page is
+/ rendering (arcade by default, or a returning guest's remembered skin). Mirrors
+/ the sign-in card in devise/sessions/new.html.slim; tokens inherit from body[data-skin].
+dialog#studentLoginModal.tjs-login-modal
+  .tjs-card.tjs-auth__card.tjs-login-modal__card
+    button.tjs-login-modal__close type='button' aria-label='Close' onclick='this.closest("dialog").close()'
+      span aria-hidden='true' &times;
+    = render 'shared/skin/logo', size: 22
+    h1.tjs-display.tjs-auth__title Log in
+    = simple_form_for(resource, as: resource_name, data: { turbo: false }, url: session_path(resource_name)) do |f|
+      .form-inputs
+        = f.input :login,                       \
+          required: false,                      \
+          autofocus: true,                      \
+          input_html: { autocomplete: "email", class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+        = f.input :password,                                         \
+          required: false,                                          \
+          input_html: { autocomplete: "current-password", class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+        = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' } if devise_mapping.rememberable?
+      .form-actions
+        = f.button :submit, "Log in", class: 'tjs-btn tjs-btn--primary tj-btn--full', id: 'loginModal'
+    .tjs-login-modal__divider
+      span or
+    = button_to image_tag('btn_google_signin_dark_normal_web.png', alt: 'Sign in with Google'), \
+      user_google_oauth2_omniauth_authorize_path,                                                \
+      { data: { turbo: false }, class: 'tjs-login-modal__google', id: 'loginGoogle' }

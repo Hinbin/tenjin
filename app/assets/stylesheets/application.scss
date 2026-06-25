@@ -254,8 +254,87 @@ dialog::backdrop {
   width: 800px;
 }
 
-#studentLoginModal {
-  width: 480px;
+// ── Student login modal — skin-aware ───────────────────────────────────────
+// The dialog chrome is transparent so the skinned .tjs-card carries the look;
+// tokens (--surface, --ink, --n1, …) inherit from body[data-skin], so the modal
+// always matches the home page's active skin.
+#studentLoginModal.tjs-login-modal {
+  width: min(420px, 92vw);
+  max-width: 92vw;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  overflow: visible;
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+}
+
+.tjs-login-modal__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px 28px 28px;
+  text-align: center;
+  box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.45);
+
+  .tjs-logo { justify-content: center; }
+  form { width: 100%; }
+}
+
+.tjs-login-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--dim);
+  transition: color 0.15s ease;
+
+  &:hover { color: var(--ink); }
+}
+
+// "or" divider between the password form and the Google button
+.tjs-login-modal__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  color: var(--dim);
+  font-family: var(--f-body);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+}
+
+.tjs-login-modal__google {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  img { display: block; }
 }
 
 // Dialog inner layout — replaces Bootstrap .modal-content/.modal-body/.modal-footer
