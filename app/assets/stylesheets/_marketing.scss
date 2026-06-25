@@ -201,7 +201,7 @@
   &__hero-title {
     font-size: clamp(2.1rem, 5vw, 3.5rem);
     line-height: 1.16;
-    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
   }
   // Sumi brush underline under one word
   &__brush {
@@ -212,7 +212,7 @@
   &__brush svg {
     position: absolute;
     left: 0;
-    bottom: -0.32em;
+    bottom: -0.22em;
     width: 100%;
     height: 0.34em;
     color: var(--mkt-sakura-soft);
@@ -223,7 +223,7 @@
     font-size: 1.18rem;
     color: var(--mkt-text);
     max-width: 48ch;
-    margin-bottom: 2rem;
+    padding-bottom: 2rem;
   }
   &__hero-cta {
     display: flex;
