@@ -24,7 +24,7 @@ module ThemeHelper
     'zen' => 'Breathe. Focus. Master.',
     'kawaii' => 'Play. Practice. Shine.',
     'famicom' => 'Press Start. Level Up. Win.',
-    'pitch' => 'Kick Off. Compete. Triumph.',
+    'pitch' => 'Kick Off. Score. Triumph.',
     'manga' => 'Train. Battle. Prevail.',
     'street' => 'Practice. Battle. Rise.'
   }.freeze
