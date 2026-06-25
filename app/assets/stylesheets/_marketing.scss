@@ -204,11 +204,12 @@
     margin-bottom: 1.25rem;
   }
   // Sumi brush underline under one word
-  &__brush {
+ &__brush {
     position: relative;
+    display: inline-block;
     white-space: nowrap;
     color: var(--mkt-sakura);
-  }
+    padding-bottom: 0.45em;
   &__brush svg {
     position: absolute;
     left: 0;
