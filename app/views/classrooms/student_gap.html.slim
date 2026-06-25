@@ -1,69 +1,71 @@
 - content_for :title
   title = 'Gap Analysis - ' + @student.forename + ' ' + @student.surname
 
-.tjk-container.tj-gap
-  .tj-gap-header
-    h1.tjs-display = "#{@student.forename} #{@student.surname}"
-    p.tj-gap-subtitle Personal gap report · #{@classroom.name}
-    = link_to '← Back to class gap analysis', gaps_classroom_path(@classroom), class: 'tj-link'
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner.tj-gap
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title = "#{@student.forename} #{@student.surname}"
+      p.tj-tsurface-lead Personal gap report · #{@classroom.name}
+      = link_to '← Back to class gap analysis', gaps_classroom_path(@classroom), class: 'tj-link'
 
-  / Overall standing folded into one figure, mirroring the class summary card — the underlying
-  / mastery / cohort figures live in the tooltip (standing_tooltip).
-  section.tj-section#standing
-    = render 'shared/skin/section_head', en: 'Standing vs cohort'
-    - overall = @report.cohort_comparison[:overall]
-    .tj-gap-cards
-      .tj-gap-card
-        = gap_card_label('Standing vs cohort', standing_tooltip(overall))
-        = standing_delta(overall)
+    / Overall standing folded into one figure, mirroring the class summary card — the underlying
+    / mastery / cohort figures live in the tooltip (standing_tooltip).
+    section.tj-section#standing
+      = render 'shared/skin/section_head', en: 'Standing vs cohort'
+      - overall = @report.cohort_comparison[:overall]
+      .tj-gap-cards
+        .tj-gap-card
+          = gap_card_label('Standing vs cohort', standing_tooltip(overall))
+          = standing_delta(overall)
 
-  / Same difficulty-normalised heatmap as the class surface, narrowed to this student: colour =
-  / standing vs the whole Tenjin cohort on the same questions, so a topic reads red because the
-  / student trails comparable students — not merely because it is hard. Click a topic for a by-lesson
-  / breakdown.
-  section.tj-section#heatmap
-    = render 'shared/skin/section_head', en: 'Standing vs cohort by topic'
-    p.tj-gap-note How this student compares to everyone else, topic by topic — biggest gaps first. Click a topic for a by-lesson breakdown.
-    - if @report.topic_gap_grid.empty?
-      p.tj-gap-empty This student has not attempted any questions in this subject yet.
-    - else
-      .tj-gap-heatmap
-        - @report.topic_gap_grid.each do |topic|
-          - lessons = topic[:lessons].to_a
-          / Only offer the drill-down when there is more than one lesson to show — a single bucket
-          / would just repeat the topic figure, so those cells stay plain and non-interactive.
-          - if lessons.size > 1
-            - panel_id = "gap-lessons-#{topic[:topic_id] || 'none'}"
-            .tj-gap-heat-cell.tj-gap-heat-cell--expandable style=standing_heat_style(topic[:delta]) data-controller='accordion'
-              button.tj-gap-heat-toggle type='button' aria-expanded='false' aria-controls=panel_id data-action='accordion#toggle'
+    / Same difficulty-normalised heatmap as the class surface, narrowed to this student: colour =
+    / standing vs the whole Tenjin cohort on the same questions, so a topic reads red because the
+    / student trails comparable students — not merely because it is hard. Click a topic for a by-lesson
+    / breakdown.
+    section.tj-section#heatmap
+      = render 'shared/skin/section_head', en: 'Standing vs cohort by topic'
+      p.tj-gap-note How this student compares to everyone else, topic by topic — biggest gaps first. Click a topic for a by-lesson breakdown.
+      - if @report.topic_gap_grid.empty?
+        p.tj-gap-empty This student has not attempted any questions in this subject yet.
+      - else
+        .tj-gap-heatmap
+          - @report.topic_gap_grid.each do |topic|
+            - lessons = topic[:lessons].to_a
+            / Only offer the drill-down when there is more than one lesson to show — a single bucket
+            / would just repeat the topic figure, so those cells stay plain and non-interactive.
+            - if lessons.size > 1
+              - panel_id = "gap-lessons-#{topic[:topic_id] || 'none'}"
+              .tj-gap-heat-cell.tj-gap-heat-cell--expandable style=standing_heat_style(topic[:delta]) data-controller='accordion'
+                button.tj-gap-heat-toggle type='button' aria-expanded='false' aria-controls=panel_id data-action='accordion#toggle'
+                  = render 'gap_heat_summary', topic: topic
+                  span.tj-gap-heat-hint aria-hidden='true'
+                .tj-gap-lessons.tj-hidden id=panel_id data-accordion-target='body'
+                  - lessons.each do |lesson|
+                    = lesson_gap_bar(lesson, topic[:topic_name])
+            - else
+              .tj-gap-heat-cell style=standing_heat_style(topic[:delta])
                 = render 'gap_heat_summary', topic: topic
-                span.tj-gap-heat-hint aria-hidden='true'
-              .tj-gap-lessons.tj-hidden id=panel_id data-accordion-target='body'
-                - lessons.each do |lesson|
-                  = lesson_gap_bar(lesson, topic[:topic_name])
-          - else
-            .tj-gap-heat-cell style=standing_heat_style(topic[:delta])
-              = render 'gap_heat_summary', topic: topic
 
-  section.tj-section#strengths
-    = render 'shared/skin/section_head', en: 'Strengths'
-    p.tj-gap-note Hard questions this student aced — worth recognising.
-    - if @report.strengths.empty?
-      p.tj-gap-empty No standout strengths recorded yet.
-    - else
-      table.tj-table
-        thead
-          tr
-            th Question
-            th Topic
-            th Difficulty
-            th Their score
-            th Cohort
-        tbody
-          - @report.strengths.each do |q|
+    section.tj-section#strengths
+      = render 'shared/skin/section_head', en: 'Strengths'
+      p.tj-gap-note Hard questions this student aced — worth recognising.
+      - if @report.strengths.empty?
+        p.tj-gap-empty No standout strengths recorded yet.
+      - else
+        table.tj-table
+          thead
             tr
-              td = q[:question_text].present? ? truncate(q[:question_text], length: 120) : '—'
-              td = q[:topic_name]
-              td = difficulty_band_chip(q[:band])
-              td = gap_percent(q[:student_score])
-              td = gap_percent(q[:cohort_score])
+              th Question
+              th Topic
+              th Difficulty
+              th Their score
+              th Cohort
+          tbody
+            - @report.strengths.each do |q|
+              tr
+                td = q[:question_text].present? ? truncate(q[:question_text], length: 120) : '—'
+                td = q[:topic_name]
+                td = difficulty_band_chip(q[:band])
+                td = gap_percent(q[:student_score])
+                td = gap_percent(q[:cohort_score])
