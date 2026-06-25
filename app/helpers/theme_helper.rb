@@ -22,15 +22,36 @@ module ThemeHelper
   HOME_SLOGANS = {
     'arcade' => 'Learn. Compete. Succeed.',
     'zen' => 'Breathe. Focus. Master.',
-    'kawaii' => 'Play. Practise. Shine.',
+    'kawaii' => 'Play. Practice. Shine.',
     'famicom' => 'Press Start. Level Up. Win.',
     'pitch' => 'Kick Off. Compete. Triumph.',
     'manga' => 'Train. Battle. Prevail.',
-    'street' => 'Practise. Battle. Rise.'
+    'street' => 'Practice. Battle. Rise.'
   }.freeze
 
   def home_slogan(skin = current_skin)
     HOME_SLOGANS[skin] || HOME_SLOGANS[Theme::SkinCatalog::DEFAULT_SKIN]
+  end
+
+  # Signature landing-page Atmosphere per skin. Guests own no cosmetics, so the home page would
+  # otherwise be motion-free — each skin gets one iconic, free-to-watch particle family (a real
+  # Cosmetic::MotionCatalog id). Still gated downstream by motion_pref + prefers-reduced-motion.
+  HOME_SIGNATURE_MOTION = {
+    'arcade' => 'rain',     # Code Rain
+    'kawaii' => 'hearts',   # Floating Hearts
+    'famicom' => 'snow',    # Pixel Snow
+    'zen' => 'petals',      # Cherry Blossom
+    'pitch' => 'flashes',   # Camera Flashes
+    'manga' => 'rain',      # Speed Rush
+    'street' => 'ticker'    # Sticker Bomb
+  }.freeze
+
+  # Backdrop locals animating the landing page in the active skin's signature style (unknown skin →
+  # no motion). Only the home page passes these; other callers keep their equipped selection.
+  def home_backdrop_signature(skin = current_skin)
+    motion = HOME_SIGNATURE_MOTION[skin] || 'none'
+    token = motion == 'none' ? nil : "var(--#{Cosmetic::MotionCatalog.token(skin, motion)})"
+    { motion: motion, motion_token: token }
   end
 
   def theme_mode

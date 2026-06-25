@@ -19,7 +19,7 @@
         - overall = @report.cohort_comparison[:overall]
         .tj-gap-cards
           a.tj-gap-card.tj-gap-card--link href='#activity'
-            = gap_card_label('Active students', 'Enrolled students who have practised in this subject, out of everyone enrolled.')
+            = gap_card_label('Active students', 'Enrolled students who have practiced in this subject, out of everyone enrolled.')
             span.tj-gap-card-value = "#{@report.engagement[:students_active]} / #{@report.student_count}"
           a.tj-gap-card.tj-gap-card--link href='#heatmap'
             = gap_card_label('Standing vs cohort', standing_tooltip(overall))
