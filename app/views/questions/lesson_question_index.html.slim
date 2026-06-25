@@ -1,15 +1,18 @@
--content_for :title
-  title=('Questions - ' + @lesson.title)
-.tjk-container
-  h1.h1.mt-3.tj-text-center ="Questions for #{@lesson.title}"
-  hr class=("small mb-5 primary-red")
+- content_for :title
+  title = 'Questions - ' + @lesson.title
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title = "Questions for #{@lesson.title}"
 
-  -@questions.order(:created_at).each_with_index do |q, index|
-    .tj-question-card
-      p ==q.question_text
-      -q.answers.each do |a|
-        - if a.correct?
-          p
-            strong =a.text
-        - else
-          p = a.text
+    section.tjs-dashboard__section
+      - @questions.order(:created_at).each_with_index do |q, index|
+        .tjs-card.tj-question-card
+          p == q.question_text
+          - q.answers.each do |a|
+            - if a.correct?
+              p
+                strong = a.text
+            - else
+              p = a.text

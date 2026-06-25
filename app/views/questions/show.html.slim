@@ -1,30 +1,42 @@
-.tjk-container#questionEditor
-  = render('question_edit_form')
-  = link_to 'Back to Topic Questions',
-    topic_path(@question.topic),
-    class: 'tj-btn-secondary tj-btn--full'
-  h1 Statistics
-  .tj-stats-grid
-    p
-      ' Times Asked:
-      = times_asked(@question)
-    p
-      ' Percent Correct:
-      = percentage_correct(@question)
-    p
-      ' Flags:
-      = @question.flagged_questions.size
-  = link_to 'Reset Question Flags',
-    reset_flags_question_path,
-    data: { turbo_method: 'patch'},
-    class: 'tj-btn-secondary tj-btn--full'
-  = link_to 'Delete Question',
-    question_path(@question),
-    data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' },
-    class: 'tj-btn-danger tj-btn--full'
+- content_for :title
+  title = 'Edit Question'
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Edit Question
+
+    section.tjs-dashboard__section
+      .tjs-card#questionEditor
+        = render('question_edit_form')
+      .tj-row-actions
+        = link_to 'Back to Topic Questions', topic_path(@question.topic), class: 'tjs-btn tjs-btn--ghost'
+
+    section.tjs-dashboard__section
+      = render 'shared/skin/section_head', en: 'Statistics', jp: '統計'
+      .tjs-card
+        .tj-stats-grid
+          p
+            ' Times Asked:
+            = times_asked(@question)
+          p
+            ' Percent Correct:
+            = percentage_correct(@question)
+          p
+            ' Flags:
+            = @question.flagged_questions.size
+      .tj-row-actions
+        = link_to 'Reset Question Flags',
+          reset_flags_question_path,
+          data: { turbo_method: 'patch' },
+          class: 'tjs-btn tjs-btn--secondary'
+        = link_to 'Delete Question',
+          question_path(@question),
+          data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' },
+          class: 'tjs-btn tjs-btn--danger'
 
 dialog#noCorrectAnswerModal
   .tj-dialog-content
     .tj-dialog-body Please select at least one correct answer
     .tj-dialog-footer
-      button.tj-btn-secondary type='button' onclick='this.closest("dialog").close()' Close
+      button.tjs-btn.tjs-btn--ghost type='button' onclick='this.closest("dialog").close()' Close

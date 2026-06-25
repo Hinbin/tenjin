@@ -1,6 +1,17 @@
-.tjk-container
-  = form_tag import_questions_path, multipart: true do
-    .tjk-field
-      = file_field_tag :file, id: 'select-file', class: 'tjk-input'
-      = hidden_field_tag :topic_id, @topic.id
-    = submit_tag "Import", class: 'tj-btn-primary tj-btn--full'
+- content_for :title
+  title = 'Import Questions'
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Import Questions
+      p.tj-tsurface-lead Upload a JSON export to add its questions to this topic.
+
+    section.tjs-dashboard__section
+      .tjs-card
+        = form_tag import_questions_path, multipart: true do
+          .tjk-field
+            = file_field_tag :file, id: 'select-file', class: 'tjk-input'
+            = hidden_field_tag :topic_id, @topic.id
+          .tj-row-actions
+            = submit_tag 'Import', class: 'tjs-btn tjs-btn--primary'

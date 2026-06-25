@@ -41,7 +41,7 @@
   - if @question.structured?
     = render 'structured_builder', f: f
   - else
-    table.table#table-answers
+    table.tj-table#table-answers
       thead
         th Answer Text
         th = "Correct?" unless @question.short_answer?
@@ -49,5 +49,5 @@
       tbody.fields
         =f.fields_for :answers, @question.answers do |a|
           =render 'answer', f: a
-    =link_to_add_row('Add Answer', f, :answers, class: 'tj-btn-primary tj-btn--full')
-  =f.submit("Save Question", class: 'tj-btn-primary tj-btn--full')
+    =link_to_add_row('Add Answer', f, :answers, class: 'tjs-btn tjs-btn--secondary tj-btn--full')
+  =f.submit("Save Question", class: 'tjs-btn tjs-btn--primary tj-btn--full')

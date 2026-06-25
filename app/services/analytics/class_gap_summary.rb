@@ -5,11 +5,11 @@
 # can list every class a teacher owns without running the full Analytics::ClassGapReport per class.
 #
 # "Active students" matches ClassGapReport#engagement[:students_active]: enrolled students who have
-# practised in this classroom's subject (any StudentQuestionStatistic on the subject's active topics).
+# practiced in this classroom's subject (any StudentQuestionStatistic on the subject's active topics).
 #
 #   summary = Analytics::ClassGapSummary.call(classroom)
 #   summary.student_count    # enrolled students
-#   summary.students_active  # of those, how many have practised in the subject
+#   summary.students_active  # of those, how many have practiced in the subject
 class Analytics::ClassGapSummary < ApplicationService
   def initialize(classroom)
     super()

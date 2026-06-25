@@ -4,16 +4,23 @@
 / the active skin uses. This lets live skin-switching in the styleguide work without
 / a page reload. MOTION-SAFE: base state is invisible; animation layered on only under
 / @media (prefers-reduced-motion: no-preference) — content is never hidden by this.
+/ Scene/motion default to the equipped selection; callers (e.g. the guest landing page) may pass
+/ overrides as locals — see ThemeHelper#home_backdrop_signature.
+- scene_id = local_assigns.fetch(:scene, current_scene)
+- scene_tok = local_assigns.fetch(:scene_token, current_scene_token)
+- scene_fx_id = local_assigns.fetch(:scene_fx, current_scene_fx)
+- motion_id = local_assigns.fetch(:motion, current_motion)
+- motion_tok = local_assigns.fetch(:motion_token, current_motion_token)
 .tjs-backdrop aria-hidden="true"
   / equipped skin-locked Scene motif (SVG art now; tinted PNG mask when assets are added)
-  - if current_scene.present? && current_scene != 'none'
-    - scene_markup = scene_layer(current_skin, current_scene, current_scene_token)
+  - if scene_id.present? && scene_id != 'none'
+    - scene_markup = scene_layer(current_skin, scene_id, scene_tok)
     - if scene_markup
-      .tjs-scene style="color:#{current_scene_token};" data-scene-fx=current_scene_fx
+      .tjs-scene style="color:#{scene_tok};" data-scene-fx=scene_fx_id
         .tjs-scene__art = scene_markup
   / equipped skin-locked Atmosphere layer (particles injected by motion_controller.js)
-  - if current_motion.present? && current_motion != 'none'
-    .tjs-motion data-controller="motion" data-motion-id-value=current_motion data-motion-token-value=current_motion_token data-motion-enabled-value=motion_pref_data
+  - if motion_id.present? && motion_id != 'none'
+    .tjs-motion data-controller="motion" data-motion-id-value=motion_id data-motion-token-value=motion_tok data-motion-enabled-value=motion_pref_data
   .tjs-backdrop__blob.tjs-backdrop__blob--1
   .tjs-backdrop__blob.tjs-backdrop__blob--2
   .tjs-backdrop__dots

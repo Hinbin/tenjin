@@ -1,14 +1,24 @@
-.tjk-container
-  =form_with model: @topic, data: { turbo: false } do |f|
-    .tjk-field.tjk-field--horizontal
-      label.tjk-label.tjk-label--horizontal for='topic-name' Topic Name:
-      .tjk-field__control
-        =f.text_field(:name, id: 'topic-name', class: 'tjk-input')
-    .tjk-field.tjk-field--horizontal
-      label.tjk-label.tjk-label--horizontal for="select-default-lesson" Default Lesson:
-      .tjk-field__control
-        =f.select(:default_lesson_id,
-          options_from_collection_for_select(Lesson.where(topic: @topic), :id, :title, selected: @topic.default_lesson_id),
-          {include_blank: 'No default lesson'},
-          {class: 'tjk-input', id: 'select-default-lesson'})
-    =f.submit class: 'tj-btn-primary tj-btn--full'
+- content_for :title
+  title = 'Edit Topic - ' + @topic.name.to_s
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Edit Topic
+
+    section.tjs-dashboard__section
+      .tjs-card
+        = form_with model: @topic, data: { turbo: false } do |f|
+          .tjk-field.tjk-field--horizontal
+            label.tjk-label.tjk-label--horizontal for='topic-name' Topic Name:
+            .tjk-field__control
+              = f.text_field(:name, id: 'topic-name', class: 'tjk-input')
+          .tjk-field.tjk-field--horizontal
+            label.tjk-label.tjk-label--horizontal for='select-default-lesson' Default Lesson:
+            .tjk-field__control
+              = f.select(:default_lesson_id,
+                options_from_collection_for_select(Lesson.where(topic: @topic), :id, :title, selected: @topic.default_lesson_id),
+                { include_blank: 'No default lesson' },
+                { class: 'tjk-input', id: 'select-default-lesson' })
+          .tj-row-actions
+            = f.submit class: 'tjs-btn tjs-btn--primary'

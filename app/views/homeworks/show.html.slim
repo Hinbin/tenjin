@@ -1,39 +1,42 @@
 - content_for :title
   title = 'Homework'
-section.tj-section#HomeworkTitle
-  .tjk-container
-    h1.tj-section-header Homework
-    p.tj-lead = link_to(@homework.classroom.name, @homework.classroom)
-    p.tj-lead
-      => @homework.topic.name
-      - if @homework.lesson
-        ' -
-        => @homework.lesson.title
-      ' -
-      => number_to_percentage(@homework.required, precision: 0)
-      | required
-    hr.tj-hr-primary
-    h3 = report_progress(@homework_counts)
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Homework
+      .tj-classroom-meta
+        span.tj-meta-chip = link_to(@homework.classroom.name, @homework.classroom)
+        span.tj-meta-chip = @homework.topic.name
+        - if @homework.lesson
+          span.tj-meta-chip = @homework.lesson.title
+        span.tj-meta-chip
+          strong = number_to_percentage(@homework.required, precision: 0)
+          |  required
+      p.tj-tsurface-lead = report_progress(@homework_counts)
 
-section.tj-section#StudentProgress
-  .tjk-container
-    table.tj-table
-      thead
-        tr
-          th Name
-          th Complete?
-          th Progress
-      tbody
-        - @homework_progress.each do |h|
-          tr.student-row data-user=h.user.id
-            td
-              => h.user.forename[0]
-              = h.user.surname
-            td = boolean_icon(h.completed?)
-            td
-              = h.progress.to_s
-              | %
-    = link_to 'Delete Homework',
-      homework_path(@homework),
-      data: { turbo_method: 'delete' },
-      class: 'tj-btn-danger tj-btn--full'
+    section.tjs-dashboard__section#StudentProgress
+      = render 'shared/skin/section_head', en: 'Student Progress', jp: '進捗'
+      .tjs-card.tj-table-card
+        .tj-table-responsive
+          table.tj-table
+            thead
+              tr
+                th Name
+                th Complete?
+                th Progress
+            tbody
+              - @homework_progress.each do |h|
+                tr.student-row data-user=h.user.id
+                  td
+                    => h.user.forename[0]
+                    = h.user.surname
+                  td = boolean_icon(h.completed?)
+                  td
+                    = h.progress.to_s
+                    | %
+      .tj-row-actions
+        = link_to 'Delete Homework',
+          homework_path(@homework),
+          data: { turbo_method: 'delete' },
+          class: 'tjs-btn tjs-btn--danger'

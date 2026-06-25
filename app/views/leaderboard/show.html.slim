@@ -1,14 +1,22 @@
--content_for :title
-  title=('Leaderboard - ' + @subject.name)
-.tjk-container
-  .tj-lb-layout
-    .tj-lb-sidebar.tjs-card
-      =render 'subject_select'
-    .tj-lb-main.tjs-card
-      #liveLeaderboard data={ controller: 'live-leaderboard',
-                              'live-leaderboard-url': leaderboard_path(@subject.name, format: :json),
-                              'live-leaderboard-subject': @subject.name,
-                              'live-leaderboard-school': @school.name,
-                              'live-leaderboard-school-group': @school_group&.name,
-                              'live-leaderboard-topic': @topic&.id }
-        .loader Loading...
+- content_for :title
+  title = 'Leaderboard - ' + @subject.name
+- variant = current_user&.employee? ? 'tjs-dashboard--teacher' : 'tjs-dashboard--student'
+.tjs-dashboard class=variant
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Leaderboard
+      p.tj-tsurface-lead = @subject.name
+
+    section.tjs-dashboard__section
+      .tj-lb-layout
+        .tj-lb-sidebar.tjs-card
+          = render 'subject_select'
+        .tj-lb-main.tjs-card
+          #liveLeaderboard data={ controller: 'live-leaderboard',
+                                  'live-leaderboard-url': leaderboard_path(@subject.name, format: :json),
+                                  'live-leaderboard-subject': @subject.name,
+                                  'live-leaderboard-school': @school.name,
+                                  'live-leaderboard-school-group': @school_group&.name,
+                                  'live-leaderboard-topic': @topic&.id }
+            .loader Loading...

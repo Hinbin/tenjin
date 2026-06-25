@@ -30,7 +30,7 @@
           = render 'shared/homework'
 
     / ── 2. PRACTISE — challenges (outstanding first) then topics ─────────
-    section.tjs-dashboard__section data-section='practise'
+    section.tjs-dashboard__section data-section='practice'
       - quests_title = @active_subject ? "#{@active_subject.name} Quests" : 'Quests'
       = render 'shared/skin/section_head', en: quests_title, jp: '挑戦'
       / Challenge cards — #challenge-table scopes the spec selector. Cards take the active subject's

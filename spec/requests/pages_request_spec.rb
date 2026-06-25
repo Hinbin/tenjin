@@ -10,18 +10,18 @@ RSpec.describe 'Pages', :default_creates, type: :request do
       expect(response.body).to include('Login')
     end
 
-    it 'has Tenjin content' do
+    it 'has Tenjin branding' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('#branding-text', text: 'Tenjin')
+      expect(html).to have_css('.tjs-logo', text: 'TENJIN')
     end
 
     it 'has an About link' do
       expect(response.body).to include('About')
     end
 
-    it 'has a navbar' do
+    it 'has the floating login button' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('nav.tj-navbar')
+      expect(html).to have_css('.tj-login-fab')
     end
   end
 
@@ -43,9 +43,9 @@ RSpec.describe 'Pages', :default_creates, type: :request do
       expect(html).to have_css('#standardAbout')
     end
 
-    it 'has the logged out navigation on the about page' do
+    it 'has the floating login button on the about page' do
       html = Capybara.string(response.body)
-      expect(html).to have_css('nav.tj-navbar')
+      expect(html).to have_css('.tj-login-fab')
     end
   end
 

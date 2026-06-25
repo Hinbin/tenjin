@@ -1,10 +1,16 @@
-.tjk-container
-  section.page-section.tj-text-center style='padding-top: 0.5rem' id='createLesson'
-    h1.page-section-header.text-uppercase Update Lesson
-    h3.text-uppercase =@lesson.subject.name
-    hr class=("small primary-red") style='margin-bottom: 3rem'
-    =simple_form_for @lesson do |f|
-      =f.input :title, wrapper: :horizontal_form
-      =f.input :video_id, label: 'URL:', wrapper: :horizontal_form
-      =f.association :topic, collection: @topics, wrapper: :horizontal_form
-      =f.button :submit, 'Update Lesson', class: 'tj-btn-primary tj-btn--full'
+- content_for :title
+  title = 'Update Lesson'
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header#createLesson
+      h1.tjs-display.tj-tsurface-title Update Lesson
+      p.tj-tsurface-lead = @lesson.subject.name
+
+    section.tjs-dashboard__section
+      .tjs-card
+        = simple_form_for @lesson do |f|
+          = f.input :title, wrapper: :horizontal_form
+          = f.input :video_id, label: 'URL:', wrapper: :horizontal_form
+          = f.association :topic, collection: @topics, wrapper: :horizontal_form
+          = f.button :submit, 'Update Lesson', class: 'tjs-btn tjs-btn--primary tj-btn--full'

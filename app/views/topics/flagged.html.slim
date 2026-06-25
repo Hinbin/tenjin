@@ -1,3 +1,10 @@
-.tjk-container
-  h1 ="Most Flagged Questions for #{@subject.name}"
-  =render 'question_table'
+- content_for :title
+  title = 'Most Flagged Questions - ' + @subject.name
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title = "Most Flagged Questions for #{@subject.name}"
+
+    section.tjs-dashboard__section
+      = render 'question_table'

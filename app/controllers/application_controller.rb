@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   after_action :verify_authorized, except: :index, unless: :devise_controller?
   after_action :verify_policy_scoped, only: :index
+  after_action :remember_theme_skin
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   helper_method :current_preview_customisation, :cosmetic_trial_open?, :cosmetic_trial_retry_in
@@ -46,6 +47,17 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  # Persist the signed-in user's equipped skin/mode in a long-lived cookie so the logged-out landing
+  # page can render in their last-used skin instead of the arcade default. See
+  # ThemeHelper#guest_theme_selection. Only meaningful for HTML GETs by a signed-in user.
+  def remember_theme_skin
+    return unless current_user && request.get? && request.format.html?
+
+    selection = Theme::Selection.for(current_user)
+    cookies.permanent[:tj_skin] = selection.skin
+    cookies.permanent[:tj_mode] = selection.dark ? 'dark' : 'light'
+  end
 
   def user_not_authorized
     flash[:alert] = 'You are not authorized to perform this action.'

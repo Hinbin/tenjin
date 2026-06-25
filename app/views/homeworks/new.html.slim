@@ -1,15 +1,20 @@
 - content_for :title
   title = 'New Homework'
-section.tj-section#set_homework
-  .tjk-container data-controller='homework'
-    h1.tj-section-header Set Homework
-    p.tj-lead = @classroom.name
-    hr.tj-hr-primary
-    .jsVars data={ lessons: @lessons.to_json }
-    = simple_form_for @homework do |f|
-      = f.input :due_date, as: :string, label: 'Due date', input_html: { type: 'datetime-local', id: 'homework_due_date', class: 'tjk-input', min: Time.current.strftime('%Y-%m-%dT%H:%M'), value: f.object.due_date&.strftime('%Y-%m-%dT%H:%M'), onchange: 'this.blur()' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
-      = f.input :required, label: 'Required %', collection: (0..100).step(10), input_html: { class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
-      = f.association :topic, collection: @classroom.subject.topics.order(:name), input_html: { class: 'tjk-input', data: { action: 'homework#loadLessons' } }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
-      = f.input :lesson_id, as: :select, disabled: true, label: 'Lesson (Optional)', input_html: { class: 'tjk-input', data: { homework_target: 'lessonSelect' } }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
-      = f.association :classroom, as: :hidden
-      = f.submit 'Set Homework', class: 'tj-btn-primary'
+.tjs-dashboard.tjs-dashboard--teacher data-controller='homework'
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Set Homework
+      p.tj-tsurface-lead = @classroom.name
+
+    section.tjs-dashboard__section#set_homework
+      .jsVars data={ lessons: @lessons.to_json }
+      .tjs-card
+        = simple_form_for @homework do |f|
+          = f.input :due_date, as: :string, label: 'Due date', input_html: { type: 'datetime-local', id: 'homework_due_date', class: 'tjk-input', min: Time.current.strftime('%Y-%m-%dT%H:%M'), value: f.object.due_date&.strftime('%Y-%m-%dT%H:%M'), onchange: 'this.blur()' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+          = f.input :required, label: 'Required %', collection: (0..100).step(10), input_html: { class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+          = f.association :topic, collection: @classroom.subject.topics.order(:name), input_html: { class: 'tjk-input', data: { action: 'homework#loadLessons' } }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+          = f.input :lesson_id, as: :select, disabled: true, label: 'Lesson (Optional)', input_html: { class: 'tjk-input', data: { homework_target: 'lessonSelect' } }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
+          = f.association :classroom, as: :hidden
+          .tj-row-actions
+            = f.submit 'Set Homework', class: 'tjs-btn tjs-btn--primary'

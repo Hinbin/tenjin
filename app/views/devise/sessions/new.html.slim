@@ -1,25 +1,28 @@
-header.masthead
-  .tjk-form-panel-wrap
-    .tjk-form-panel
-      h2 Log in
-      = simple_form_for(resource, as: resource_name, data:{turbo: false}, url: session_path(resource_name)) do |f|
+- content_for :title
+  title = 'Log in'
+.tjs-auth
+  = render 'shared/skin/backdrop'
+  .tjs-auth__inner
+    .tjs-card.tjs-auth__card
+      = render 'shared/skin/logo', size: 22
+      h1.tjs-display.tjs-auth__title Log in
+      = simple_form_for(resource, as: resource_name, data: { turbo: false }, url: session_path(resource_name)) do |f|
         .form-inputs
           - if resource.class.name == 'Admin'
             = f.input :email,                       \
               required: false,                      \
               autofocus: true,                      \
-              input_html: { autocomplete: "email" }
+              input_html: { autocomplete: "email", class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
           - else
             = f.input :login,                       \
               required: false,                      \
               autofocus: true,                      \
-              input_html: { autocomplete: "email" }
+              input_html: { autocomplete: "email", class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
           = f.input :password,                               \
             required: false,                                 \
-            input_html: { autocomplete: "current-password" }
+            input_html: { autocomplete: "current-password", class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
           = f.input :remember_me, as: :boolean if devise_mapping.rememberable?
         .form-actions
-          = f.button :submit, "Log in", class: 'tj-btn-primary tj-btn--full'
-      = render "devise/shared/links"
-footer.tj-fixed-bottom.tj-text-right.text-white style='padding: 1rem'
-  =link_to 'About', page_path('about'), class: 'text-light'
+          = f.button :submit, "Log in", class: 'tjs-btn tjs-btn--primary tj-btn--full'
+      .tjs-auth__links
+        = render "devise/shared/links"

@@ -1,103 +1,104 @@
 - content_for :title
   title = 'Gap Analysis - ' + @classroom.name
 
-.tjk-container.tj-gap
-  .tj-gap-header
-    h1.tjs-display = @classroom.name
-    p.tj-gap-subtitle Gap analysis · difficulty-aware, compared against every Tenjin student
-    = link_to '← Back to classroom', classroom_path(@classroom), class: 'tj-link'
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner.tj-gap
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title = @classroom.name
+      p.tj-tsurface-lead Gap analysis · difficulty-aware, compared against every Tenjin student
+      = link_to '← Back to classroom', classroom_path(@classroom), class: 'tj-link'
 
-  - if @report.student_count.zero?
-    section.tj-section
-      p.tj-gap-empty No enrolled students yet — there is nothing to analyse.
-  - else
-    / Screenshot-ready class summary: who's active + overall standing against the cohort.
-    section.tj-section#summary
-      = render 'shared/skin/section_head', en: 'Class summary'
-      - overall = @report.cohort_comparison[:overall]
-      .tj-gap-cards
-        a.tj-gap-card.tj-gap-card--link href='#activity'
-          = gap_card_label('Active students', 'Enrolled students who have practised in this subject, out of everyone enrolled.')
-          span.tj-gap-card-value = "#{@report.engagement[:students_active]} / #{@report.student_count}"
-        a.tj-gap-card.tj-gap-card--link href='#heatmap'
-          = gap_card_label('Standing vs cohort', standing_tooltip(overall))
-          = standing_delta(overall)
+    - if @report.student_count.zero?
+      section.tj-section
+        p.tj-gap-empty No enrolled students yet — there is nothing to analyse.
+    - else
+      / Screenshot-ready class summary: who's active + overall standing against the cohort.
+      section.tj-section#summary
+        = render 'shared/skin/section_head', en: 'Class summary'
+        - overall = @report.cohort_comparison[:overall]
+        .tj-gap-cards
+          a.tj-gap-card.tj-gap-card--link href='#activity'
+            = gap_card_label('Active students', 'Enrolled students who have practiced in this subject, out of everyone enrolled.')
+            span.tj-gap-card-value = "#{@report.engagement[:students_active]} / #{@report.student_count}"
+          a.tj-gap-card.tj-gap-card--link href='#heatmap'
+            = gap_card_label('Standing vs cohort', standing_tooltip(overall))
+            = standing_delta(overall)
 
-    / Difficulty-normalised per-topic heatmap: colour = standing vs the whole Tenjin cohort on the
-    / same questions, so a topic reads red because the class trails comparable students — not merely
-    / because it is hard. Folds together the old raw-score heatmap and the cohort-standing table.
-    section.tj-section#heatmap
-      = render 'shared/skin/section_head', en: 'Standing vs cohort by topic'
-      p.tj-gap-note How your class compares to everyone else, topic by topic — biggest gaps first. Click a topic for a by-lesson breakdown.
-      - if @report.topic_gap_grid.empty?
-        p.tj-gap-empty No topic activity recorded yet.
-      - else
-        .tj-gap-heatmap
-          - @report.topic_gap_grid.each do |topic|
-            - lessons = topic[:lessons].to_a
-            / Only offer the drill-down when there is more than one lesson to show — a single bucket
-            / would just repeat the topic figure, so those cells stay plain and non-interactive.
-            - if lessons.size > 1
-              - panel_id = "gap-lessons-#{topic[:topic_id] || 'none'}"
-              .tj-gap-heat-cell.tj-gap-heat-cell--expandable style=standing_heat_style(topic[:delta]) data-controller='accordion'
-                button.tj-gap-heat-toggle type='button' aria-expanded='false' aria-controls=panel_id data-action='accordion#toggle'
+      / Difficulty-normalised per-topic heatmap: colour = standing vs the whole Tenjin cohort on the
+      / same questions, so a topic reads red because the class trails comparable students — not merely
+      / because it is hard. Folds together the old raw-score heatmap and the cohort-standing table.
+      section.tj-section#heatmap
+        = render 'shared/skin/section_head', en: 'Standing vs cohort by topic'
+        p.tj-gap-note How your class compares to everyone else, topic by topic — biggest gaps first. Click a topic for a by-lesson breakdown.
+        - if @report.topic_gap_grid.empty?
+          p.tj-gap-empty No topic activity recorded yet.
+        - else
+          .tj-gap-heatmap
+            - @report.topic_gap_grid.each do |topic|
+              - lessons = topic[:lessons].to_a
+              / Only offer the drill-down when there is more than one lesson to show — a single bucket
+              / would just repeat the topic figure, so those cells stay plain and non-interactive.
+              - if lessons.size > 1
+                - panel_id = "gap-lessons-#{topic[:topic_id] || 'none'}"
+                .tj-gap-heat-cell.tj-gap-heat-cell--expandable style=standing_heat_style(topic[:delta]) data-controller='accordion'
+                  button.tj-gap-heat-toggle type='button' aria-expanded='false' aria-controls=panel_id data-action='accordion#toggle'
+                    = render 'gap_heat_summary', topic: topic
+                    span.tj-gap-heat-hint aria-hidden='true'
+                  .tj-gap-lessons.tj-hidden id=panel_id data-accordion-target='body'
+                    - lessons.each do |lesson|
+                      = lesson_gap_bar(lesson, topic[:topic_name])
+              - else
+                .tj-gap-heat-cell style=standing_heat_style(topic[:delta])
                   = render 'gap_heat_summary', topic: topic
-                  span.tj-gap-heat-hint aria-hidden='true'
-                .tj-gap-lessons.tj-hidden id=panel_id data-accordion-target='body'
-                  - lessons.each do |lesson|
-                    = lesson_gap_bar(lesson, topic[:topic_name])
-            - else
-              .tj-gap-heat-cell style=standing_heat_style(topic[:delta])
-                = render 'gap_heat_summary', topic: topic
 
-    section.tj-section#activity
-      = render 'shared/skin/section_head', en: 'Student activity'
-      p.tj-gap-note Who is actually practising. Drill into a student for their personal gap report.
-      .tj-gap-cards
-        .tj-gap-card
-          span.tj-gap-card-label Quizzes started
-          span.tj-gap-card-value = @report.engagement[:quizzes_started]
-        .tj-gap-card
-          span.tj-gap-card-label Questions answered
-          span.tj-gap-card-value = @report.engagement[:questions_answered]
-      - if @report.engagement[:per_student].any?
-        div data-controller='table' data-table-page-length-value='15'
-          table.tj-table
-            thead
-              tr
-                th Student
-                th Quizzes
-                th Questions
-                th Last active
-            tbody
-              - @report.engagement[:per_student].each do |e|
+      section.tj-section#activity
+        = render 'shared/skin/section_head', en: 'Student activity'
+        p.tj-gap-note Who is actually practising. Drill into a student for their personal gap report.
+        .tj-gap-cards
+          .tj-gap-card
+            span.tj-gap-card-label Quizzes started
+            span.tj-gap-card-value = @report.engagement[:quizzes_started]
+          .tj-gap-card
+            span.tj-gap-card-label Questions answered
+            span.tj-gap-card-value = @report.engagement[:questions_answered]
+        - if @report.engagement[:per_student].any?
+          div data-controller='table' data-table-page-length-value='15'
+            table.tj-table
+              thead
                 tr
-                  td = link_to e[:name], student_gap_classroom_path(@classroom, student_id: e[:user_id]), class: 'tj-link'
-                  td = e[:quizzes_started]
-                  td = e[:questions_answered]
-                  td = e[:last_active_at] ? l(e[:last_active_at].to_date, format: :long) : '—'
+                  th Student
+                  th Quizzes
+                  th Questions
+                  th Last active
+              tbody
+                - @report.engagement[:per_student].each do |e|
+                  tr
+                    td = link_to e[:name], student_gap_classroom_path(@classroom, student_id: e[:user_id]), class: 'tj-link'
+                    td = e[:quizzes_started]
+                    td = e[:questions_answered]
+                    td = e[:last_active_at] ? l(e[:last_active_at].to_date, format: :long) : '—'
 
-    section.tj-section#hardest
-      = render 'shared/skin/section_head', en: 'Hardest questions'
-      p.tj-gap-note The specific questions students found hardest — low class scores here are misconceptions to reteach.
-      - if @report.hardest_questions.empty?
-        p.tj-gap-empty No question activity recorded yet.
-      - else
-        div data-controller='table' data-table-page-length-value='10'
-          table.tj-table
-            thead
-              tr
-                th Question
-                th Topic
-                th Difficulty
-                th Class score
-                th Attempts
-            tbody
-              - @report.hardest_questions.each do |q|
+      section.tj-section#hardest
+        = render 'shared/skin/section_head', en: 'Hardest questions'
+        p.tj-gap-note The specific questions students found hardest — low class scores here are misconceptions to reteach.
+        - if @report.hardest_questions.empty?
+          p.tj-gap-empty No question activity recorded yet.
+        - else
+          div data-controller='table' data-table-page-length-value='10'
+            table.tj-table
+              thead
                 tr
-                  td = q[:question_text].present? ? truncate(q[:question_text], length: 120) : '—'
-                  td = q[:topic_name]
-                  td = difficulty_band_chip(q[:band])
-                  td = gap_percent(q[:class_mean_score])
-                  td = q[:attempts]
-
+                  th Question
+                  th Topic
+                  th Difficulty
+                  th Class score
+                  th Attempts
+              tbody
+                - @report.hardest_questions.each do |q|
+                  tr
+                    td = q[:question_text].present? ? truncate(q[:question_text], length: 120) : '—'
+                    td = q[:topic_name]
+                    td = difficulty_band_chip(q[:band])
+                    td = gap_percent(q[:class_mean_score])
+                    td = q[:attempts]

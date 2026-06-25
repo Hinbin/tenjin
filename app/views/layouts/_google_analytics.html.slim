@@ -1,6 +1,9 @@
-script async="" src='https://www.googletagmanager.com/gtag/js?id=#{ENV["GOOGLE_ANALYTICS_ID"]}'
-javascript:
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+/ Google Analytics — gated behind cookie consent. Both tags stay inert
+/ (type="text/plain") until the visitor opts in to the "analytics" category;
+/ vanilla-cookieconsent then activates them. See layouts/_cookie_consent.
+script type="text/plain" data-category="analytics" async="" src='https://www.googletagmanager.com/gtag/js?id=#{ENV["GOOGLE_ANALYTICS_ID"]}'
+script type="text/plain" data-category="analytics"
+  | window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', '#{ENV["GOOGLE_ANALYTICS_ID"]}');

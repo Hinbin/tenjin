@@ -1,22 +1,35 @@
-section.page-section.tj-text-center
-  .tjk-container
-    h1.page-section-header.text-uppercase
-      => @user.forename
-      = @user.surname
-    ==render_small_separator
-    = render('user_password') if policy(current_user).reset_password?
-    div style='display:flex; justify-content:center; gap:var(--tj-space-3); flex-wrap:wrap; padding: var(--tj-space-3) 0'
-      -if current_user.oauth_uid.blank?
-        p Link Account to Google
-        =button_to user_google_oauth2_omniauth_authorize_path,
-          data: { turbo: false },
-          id: 'loginGoogle' do
-          =image_tag('btn_google_signin_dark_normal_web.png')
-      -else
-        p Unlink Account from Google
-        =link_to "Unlink #{current_user.oauth_email}",
-          unlink_oauth_account_user_path(current_user),
-          class: 'tj-btn-danger',
-          data: { turbo_confirm: 'Are you sure?', turbo_method: "delete" }
-  - if @user.student?
-    = render('shared/homework')
+- content_for :title
+  title = @user.forename.to_s + ' ' + @user.surname.to_s
+- variant = current_user.student? ? 'tjs-dashboard--student' : 'tjs-dashboard--teacher'
+.tjs-dashboard class=variant
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title
+        => @user.forename
+        = @user.surname
+
+    - if policy(current_user).reset_password?
+      section.tjs-dashboard__section
+        .tjs-card
+          = render('user_password')
+
+    section.tjs-dashboard__section
+      .tjs-card
+        .tj-row-actions
+          - if current_user.oauth_uid.blank?
+            p Link Account to Google
+            = button_to user_google_oauth2_omniauth_authorize_path,
+              data: { turbo: false },
+              id: 'loginGoogle' do
+              = image_tag('btn_google_signin_dark_normal_web.png')
+          - else
+            p Unlink Account from Google
+            = link_to "Unlink #{current_user.oauth_email}",
+              unlink_oauth_account_user_path(current_user),
+              class: 'tjs-btn tjs-btn--danger',
+              data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' }
+
+    - if @user.student?
+      section.tjs-dashboard__section
+        = render('shared/homework')

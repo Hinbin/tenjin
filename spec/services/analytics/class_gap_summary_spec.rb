@@ -21,7 +21,7 @@ RSpec.describe Analytics::ClassGapSummary do
     enrol(bob)
   end
 
-  it 'counts enrolled students and how many have practised in the subject' do
+  it 'counts enrolled students and how many have practiced in the subject' do
     create(:student_question_statistic, user: alice, question: question, number_asked: 5,
                                         number_correct: 3, score_sum: 3.0)
 
@@ -29,7 +29,7 @@ RSpec.describe Analytics::ClassGapSummary do
     expect(summary.students_active).to eq(1)
   end
 
-  it 'returns zero active when nobody has practised' do
+  it 'returns zero active when nobody has practiced' do
     expect(summary.student_count).to eq(2)
     expect(summary.students_active).to eq(0)
   end

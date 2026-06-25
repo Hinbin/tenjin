@@ -4,10 +4,15 @@
   meta property="og:title" content="Tenjin"
   meta property="og:description" content="Quizzes: learn, compete, succeed!"
 
-header.masthead.text-white style='display:flex; align-items:center; justify-content:center'
-  div.tj-text-center
-    h1.section-heading.text-uppercase#mastheadText Learn, Compete, Succeed
-    hr.small.primary-red style='margin-bottom: 3rem'
-footer.tj-fixed-bottom.tj-text-right.text-white style='padding: 1rem'
-  = link_to 'About', page_path('about'), class: 'text-light'
-= render('student_login_modal')
+header.tj-home-hero
+  = render 'shared/skin/backdrop', home_backdrop_signature
+  .tj-home-hero__inner
+    = render 'shared/skin/logo', size: 34
+    h1.tjs-display.tj-home-hero__title#mastheadText = home_slogan
+    p.tj-home-hero__sub Complete quizzes, beat your friends.
+footer.tj-fixed-bottom.tj-text-right style='padding: 1rem'
+  = link_to 'For teachers', for_teachers_path, class: 'tj-home-hero__link'
+  span style='color: var(--dim); margin: 0 0.5rem' ·
+  = link_to 'About', page_path('about'), class: 'tj-home-hero__link'
+  span style='color: var(--dim); margin: 0 0.5rem' ·
+  a.tj-home-hero__link href="#" data-cc="show-preferencesModal" Cookies

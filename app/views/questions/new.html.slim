@@ -1,2 +1,11 @@
-.tjk-container#questionEditor
-  =render('question_edit_form')
+- content_for :title
+  title = 'New Question'
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title New Question
+
+    section.tjs-dashboard__section
+      .tjs-card#questionEditor
+        = render('question_edit_form')

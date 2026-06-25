@@ -230,3 +230,30 @@
     }
   }
 }
+
+// Floating login button — replaces the logged-out navbar (brand + Login button).
+// Pinned top-right on every logged-out page; opens #studentLoginModal.
+.tj-login-fab {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--tj-body);
+  font-weight: var(--tj-w-black);
+  text-transform: uppercase;
+  color: var(--tj-white);
+  background: var(--tj-black);
+  border: 1px solid var(--tj-white);
+  border-radius: var(--tj-radius);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+  &:hover {
+    color: var(--tj-black);
+    background: var(--tj-white);
+  }
+}

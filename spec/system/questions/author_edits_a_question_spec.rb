@@ -122,7 +122,7 @@ RSpec.describe 'Author edits a question', :default_creates, :js, type: :system d
     it 'prevents disabled topics from showing when taking a quiz' do
       visit(topic_path(topic))
       page.accept_confirm { click_link('Delete Topic') }
-      find('div', exact_text: subject.name)
+      find('h2', exact_text: subject.name)
       switch_to_student_account
       expect(page).to have_no_css('option', text: topic.name)
     end

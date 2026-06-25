@@ -26,7 +26,7 @@ class CustomisationsController < ApplicationController
     result = Customisation::EquipCustomisation.call(current_user, @customisation)
     clear_preview if result.success?
     equip_notice(result)
-    redirect_to show_available_customisations_path
+    redirect_back_or_to(show_available_customisations_path)
   end
 
   # Try-before-you-buy: store the chosen item in the session so Theme::Selection renders it live
@@ -52,7 +52,7 @@ class CustomisationsController < ApplicationController
     authorize current_user, :show?
     result = Customisation::SetMode.call(current_user, ActiveModel::Type::Boolean.new.cast(params[:dark]))
     flash[:notice] = result.errors unless result.success?
-    redirect_to show_available_customisations_path
+    redirect_back_or_to(show_available_customisations_path)
   end
 
   private

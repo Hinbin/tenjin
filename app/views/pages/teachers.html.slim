@@ -1,0 +1,327 @@
+- content_for :title
+  title Tenjin for Teachers — see where your class stands
+- content_for(:page_meta) do
+  meta name="description" content="Tenjin turns everyday quiz practice into a calm, clear picture of your class. See what they haven't understood yet, set homework that marks itself, and let students compete to revise. Made by a teacher."
+  meta property="og:type" content="website"
+  meta property="og:title" content="Tenjin for Teachers"
+  meta property="og:description" content="See what your class really understands — and teach the next lesson knowing exactly where they stand. Made by a teacher."
+
+.tj-mkt
+  / ══════════════════════════════ HERO ══════════════════════════════
+  section.tj-mkt__hero
+    / Ensō — a single zen brush circle, drawn on load
+    svg.tj-mkt__enso viewBox="0 0 100 100" fill="none" aria-hidden="true"
+      path d="M50 6 C26 6 8 26 8 50 C8 74 26 94 50 94 C71 94 90 78 92 56 C93 44 88 33 79 27" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"
+    .tj-mkt__hero-grid
+      div
+        span.tj-mkt__kicker
+          = glyph(:torii, size: 18, color: "currentColor")
+          | Tenjin · for teachers
+        h1.tj-mkt__hero-title
+          ' See what your class
+          span.tj-mkt__brush
+            | really 
+            svg viewBox="0 0 240 12" preserveAspectRatio="none" fill="none" aria-hidden="true"
+              path d="M4 8 C60 3 130 2 180 5 C205 6.5 222 8 236 7" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+          |  understands.                  
+        p.tj-mkt__hero-sub
+          | Tenjin turns everyday quiz practice into a clear picture of your class —
+          |  so you reteach what matters most, and leave the marking to us.
+        .tj-mkt__hero-cta
+          button.tj-mkt__btn.tj-mkt__btn--primary type="button" onclick="document.getElementById('studentLoginModal').showModal()"
+            = glyph(:torii, size: 18, color: "currentColor")
+            | Log in to Tenjin
+          a.tj-mkt__textlink href="#how" See how it works
+        p.tj-mkt__hero-note
+          = glyph(:check, size: 16, color: "currentColor")
+          | Made by a full-time teacher · UK-hosted · GDPR-safe
+
+      / The signature: a paper "class ledger" gap-analysis card
+      .tj-mkt__hero-media
+        .tj-mkt__card
+          .tj-mkt__card-head
+            = glyph(:torii, size: 18, color: "currentColor")
+            span.tj-mkt__card-head-title Year 10 · Computer Science
+            span.tj-mkt__card-head-meta Weakest first
+          .tj-mkt__card-body
+            .tj-mkt__heat
+              .tj-mkt__heat-row
+                .tj-mkt__heat-top
+                  span.tj-mkt__heat-label Boolean logic
+                  span.tj-mkt__heat-pct 38%
+                .tj-mkt__heat-track
+                  .tj-mkt__heat-fill.tj-mkt__heat-fill--bad style="width:38%"
+              .tj-mkt__heat-row
+                .tj-mkt__heat-top
+                  span.tj-mkt__heat-label Network protocols
+                  span.tj-mkt__heat-pct 52%
+                .tj-mkt__heat-track
+                  .tj-mkt__heat-fill.tj-mkt__heat-fill--mid style="width:52%"
+              .tj-mkt__heat-row
+                .tj-mkt__heat-top
+                  span.tj-mkt__heat-label Data representation
+                  span.tj-mkt__heat-pct 71%
+                .tj-mkt__heat-track
+                  .tj-mkt__heat-fill.tj-mkt__heat-fill--mid style="width:71%"
+              .tj-mkt__heat-row
+                .tj-mkt__heat-top
+                  span.tj-mkt__heat-label Programming constructs
+                  span.tj-mkt__heat-pct 89%
+                .tj-mkt__heat-track
+                  .tj-mkt__heat-fill.tj-mkt__heat-fill--ok style="width:89%"
+          .tj-mkt__card-foot
+            = glyph(:clock, size: 15, color: "currentColor")
+            | Updates after every quiz and homework
+
+  / ════════════════════════════ TRUST LINE ════════════════════════════
+  .tj-mkt__trust
+    .tj-mkt__trust-inner
+      .tj-mkt__trust-item
+        = glyph(:target, size: 18, color: "currentColor")
+        | Aligned to exam boards
+      .tj-mkt__trust-item
+        = glyph(:check, size: 18, color: "currentColor")
+        | Homework solved, zero marking
+      .tj-mkt__trust-item
+        = glyph(:flame, size: 18, color: "currentColor")
+        | Setup in minutes
+
+  / ═══════════════════════════ VALUE TRIAD ═══════════════════════════
+  section.tj-mkt__section
+    .tj-mkt__inner
+      span.tj-mkt__marker
+        span.tj-mkt__marker-jp 概要
+        span.tj-mkt__marker-en Overview
+      h2.tj-mkt__title What you get back
+      p.tj-mkt__lead
+        | Three things every teacher is short of — time, clarity, and students who'll
+        |  revise without being chased. Tenjin gives back all three from the same practice.
+      .tj-mkt__triad
+        .tj-mkt__tile
+          .tj-mkt__tile-icon
+            = glyph(:target, size: 22, color: "currentColor")
+          h3.tj-mkt__tile-title Clarity, not guesswork
+          p.tj-mkt__tile-text
+            | Every answer quietly builds a picture of your class. Your weakest topics
+            |  rise to the top, so you reteach what matters — not what you assumed.
+        .tj-mkt__tile
+          .tj-mkt__tile-icon
+            = glyph(:clock, size: 22, color: "currentColor")
+          h3.tj-mkt__tile-title Your evenings back
+          p.tj-mkt__tile-text
+            | Set a topic and a date. Tenjin marks every attempt the moment it's answered
+            |  and tracks who's done it — no books home, no late-night marking.
+        .tj-mkt__tile
+          .tj-mkt__tile-icon
+            = glyph(:trophy, size: 22, color: "currentColor")
+          h3.tj-mkt__tile-title Practice they choose
+          p.tj-mkt__tile-text
+            | Points, streaks and leaderboards turn retrieval practice into something
+            |  students come back to at home — willingly.
+
+  / ═════════════════════════ FEATURE: GAP ANALYSIS ═════════════════════════
+  section.tj-mkt__section.tj-mkt__section--tint
+    .tj-mkt__inner
+      .tj-mkt__feature
+        .tj-mkt__feature-body
+          span.tj-mkt__marker
+            span.tj-mkt__marker-jp 分析
+            span.tj-mkt__marker-en Analysis
+          h2.tj-mkt__feature-title Know where your class stands
+          p.tj-mkt__lead
+            | Tenjin gathers every quiz and homework attempt into one calm view you can
+            |  read in seconds — then drill into the moment you need detail.
+          ul.tj-mkt__list
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | A topic heatmap with your weakest topics ranked first
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | The hardest questions surfaced, so you can tackle misconceptions directly
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | Drill into any student for intervention, parents' evening or pupil-premium evidence
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | Mapped to the exam-board topics you actually teach
+        .tj-mkt__feature-media
+          .tj-mkt__card
+            .tj-mkt__card-head
+              = glyph(:list, size: 18, color: "currentColor")
+              span.tj-mkt__card-head-title Topic breakdown
+              span.tj-mkt__card-head-meta % correct
+            .tj-mkt__card-body
+              .tj-mkt__heat
+                .tj-mkt__heat-row
+                  .tj-mkt__heat-top
+                    span.tj-mkt__heat-label Sorting algorithms
+                    span.tj-mkt__heat-pct 41%
+                  .tj-mkt__heat-track
+                    .tj-mkt__heat-fill.tj-mkt__heat-fill--bad style="width:41%"
+                .tj-mkt__heat-row
+                  .tj-mkt__heat-top
+                    span.tj-mkt__heat-label Binary &amp; hex
+                    span.tj-mkt__heat-pct 64%
+                  .tj-mkt__heat-track
+                    .tj-mkt__heat-fill.tj-mkt__heat-fill--mid style="width:64%"
+                .tj-mkt__heat-row
+                  .tj-mkt__heat-top
+                    span.tj-mkt__heat-label CPU architecture
+                    span.tj-mkt__heat-pct 78%
+                  .tj-mkt__heat-track
+                    .tj-mkt__heat-fill.tj-mkt__heat-fill--ok style="width:78%"
+                .tj-mkt__heat-row
+                  .tj-mkt__heat-top
+                    span.tj-mkt__heat-label Iteration
+                    span.tj-mkt__heat-pct 92%
+                  .tj-mkt__heat-track
+                    .tj-mkt__heat-fill.tj-mkt__heat-fill--ok style="width:92%"
+
+  / ════════════════════════ FEATURE: HOMEWORK ════════════════════════
+  section.tj-mkt__section
+    .tj-mkt__inner
+      .tj-mkt__feature.tj-mkt__feature--flip
+        .tj-mkt__feature-body
+          span.tj-mkt__marker
+            span.tj-mkt__marker-jp 宿題
+            span.tj-mkt__marker-en Homework
+          h2.tj-mkt__feature-title Set it once, marked for good
+          p.tj-mkt__lead
+            | Choose a class, a topic and a deadline. Tenjin does the rest — every attempt
+            |  marked instantly, completion tracked per student.
+          ul.tj-mkt__list
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | One screen: pick a class, a topic, a due date
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | Marked the moment a student answers
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | See at a glance who's finished and who to nudge
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | Flows straight back into your class analysis
+        .tj-mkt__feature-media
+          .tj-mkt__media
+            .tj-mkt__hw
+              .tj-mkt__hw-row
+                .tj-mkt__hw-mark.tj-mkt__hw-mark--done
+                  = glyph(:check, size: 13, color: "currentColor")
+                span.tj-mkt__hw-name Aisha K.
+                span.tj-mkt__hw-score 10 / 10
+              .tj-mkt__hw-row
+                .tj-mkt__hw-mark.tj-mkt__hw-mark--done
+                  = glyph(:check, size: 13, color: "currentColor")
+                span.tj-mkt__hw-name Ben T.
+                span.tj-mkt__hw-score 9 / 10
+              .tj-mkt__hw-row
+                .tj-mkt__hw-mark.tj-mkt__hw-mark--todo
+                span.tj-mkt__hw-name Chloe M.
+                span.tj-mkt__hw-score Not started
+              .tj-mkt__hw-row
+                .tj-mkt__hw-mark.tj-mkt__hw-mark--done
+                  = glyph(:check, size: 13, color: "currentColor")
+                span.tj-mkt__hw-name Dev P.
+                span.tj-mkt__hw-score 8 / 10
+
+  / ════════════════════════ FEATURE: ENGAGEMENT ════════════════════════
+  section.tj-mkt__section.tj-mkt__section--tint
+    .tj-mkt__inner
+      .tj-mkt__feature
+        .tj-mkt__feature-body
+          span.tj-mkt__marker
+            span.tj-mkt__marker-jp 意欲
+            span.tj-mkt__marker-en Motivation
+          h2.tj-mkt__feature-title Revision they keep coming back to
+          p.tj-mkt__lead
+            | Tenjin wraps the quizzing in a game students opt into. Quiet rewards for
+            |  consistency; friendly competition that keeps practice ticking over.
+          ul.tj-mkt__list
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | Points, streaks and multipliers for steady practice
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | Class and school leaderboards — pupil names never leave your school
+            li
+              = glyph(:check, size: 19, color: "currentColor")
+              | Themes and avatars they unlock by revising
+        .tj-mkt__feature-media
+          .tj-mkt__media
+            .tj-mkt__lb
+              .tj-mkt__lb-row
+                span.tj-mkt__lb-rank 1
+                span.tj-mkt__lb-name Priya S.
+                span.tj-mkt__lb-pts
+                  = glyph(:sparkle, size: 14, color: "currentColor")
+                  | 4,820
+              .tj-mkt__lb-row
+                span.tj-mkt__lb-rank 2
+                span.tj-mkt__lb-name Marcus O.
+                span.tj-mkt__lb-pts
+                  = glyph(:sparkle, size: 14, color: "currentColor")
+                  | 4,375
+              .tj-mkt__lb-row.tj-mkt__lb-row--me
+                span.tj-mkt__lb-rank 3
+                span.tj-mkt__lb-name You
+                span.tj-mkt__lb-pts
+                  = glyph(:sparkle, size: 14, color: "currentColor")
+                  | 4,110
+              .tj-mkt__lb-row
+                span.tj-mkt__lb-rank 4
+                span.tj-mkt__lb-name Jordan W.
+                span.tj-mkt__lb-pts
+                  = glyph(:sparkle, size: 14, color: "currentColor")
+                  | 3,990
+
+  / ═══════════════════════════ HOW IT WORKS ═══════════════════════════
+  section#how.tj-mkt__section
+    .tj-mkt__inner
+      span.tj-mkt__marker
+        span.tj-mkt__marker-jp 手順
+        span.tj-mkt__marker-en Steps
+      h2.tj-mkt__title Up and running in one lesson
+      .tj-mkt__steps
+        .tj-mkt__step
+          .tj-mkt__step-num 一
+          h3.tj-mkt__step-title Create your class
+          p.tj-mkt__step-text
+            | Pick your subject and topics, then add your students. Tenjin sorts out
+            |  their logins for you.
+        .tj-mkt__step
+          .tj-mkt__step-num 二
+          h3.tj-mkt__step-title Set quizzes and homework
+          p.tj-mkt__step-text
+            | Choose a topic and a deadline. Students practise in class or at home, and
+            |  every answer is marked for you.
+        .tj-mkt__step
+          .tj-mkt__step-num 三
+          h3.tj-mkt__step-title Read where they stand
+          p.tj-mkt__step-text
+            | Open your class view and see exactly what to reteach next — grounded in what
+            |  every student actually answered.
+
+  / ═══════════════════════════ CLOSING CTA ═══════════════════════════
+  section.tj-mkt__section.tj-mkt__section--panel.tj-mkt__cta
+    .tj-mkt__inner.tj-mkt__inner--narrow
+      span.tj-mkt__marker
+        span.tj-mkt__marker-jp 始める
+        span.tj-mkt__marker-en Begin
+      h2.tj-mkt__title Bring Tenjin to your classroom
+      p.tj-mkt__lead
+        | Start with one class and watch the gaps close. No long setup, no marking
+        |  mountain — just sharper teaching and students who keep coming back.
+      .tj-mkt__cta-actions
+        button.tj-mkt__btn.tj-mkt__btn--primary type="button" onclick="document.getElementById('studentLoginModal').showModal()"
+          = glyph(:torii, size: 18, color: "currentColor")
+          | Log in to Tenjin
+        = link_to 'Privacy & data', page_path('about'), class: 'tj-mkt__btn tj-mkt__btn--ghost'
+
+  / ═══════════════════════════ FOOTER ═══════════════════════════
+  footer.tj-mkt__footer
+    .tj-mkt__footer-inner
+      span.tj-mkt__footer-brand
+        = glyph(:torii, size: 18, color: "currentColor")
+        | Tenjin — quizzes, homework and gap analysis for schools
+      = link_to 'About', page_path('about')

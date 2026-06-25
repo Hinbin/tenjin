@@ -16,7 +16,7 @@
               tr
                 th Name
                 th.tj-lg-table-cell Description
-                th Subject
+                th.tj-hide-sm Subject
                 th.tj-lg-table-cell # Students
                 th
             tbody
@@ -24,7 +24,7 @@
                 tr data-classroom = e.classroom.id
                   td =e.classroom.name
                   td.tj-lg-table-cell =e.classroom.description
-                  td =e.subject.name if e.subject.present?
+                  td.tj-hide-sm =e.subject.name if e.subject.present?
                   td.tj-lg-table-cell =e.classroom.enrollments.size
                   td
                     .tj-row-actions
@@ -43,13 +43,13 @@
                   tr
                     th Name
                     th.tj-lg-table-cell Description
-                    th Subject
+                    th.tj-hide-sm Subject
                 tbody
                   - @other_classrooms.each do |c|
                     tr data-classroom = c.id
                       td =c.name
                       td.tj-lg-table-cell =c.description
-                      td =c.subject.name if c.subject.present?
+                      td.tj-hide-sm =c.subject.name if c.subject.present?
           .tj-table-controls
             button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
             span.tj-table-info data-table-target='info'

@@ -69,6 +69,10 @@ body[data-skin] {
   border: var(--bd) solid var(--line);
 }
 
+// Destructive / cautionary actions (delete, archive). Semantic colours that read on any skin.
+.tjs-btn--danger  { background: var(--tj-danger); color: #fff; }
+.tjs-btn--warning { background: var(--tj-warning-fg); color: #fff; }
+
 // Heading / display type
 .tjs-display {
   font-family: var(--f-display);
