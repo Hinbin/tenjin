@@ -1,28 +1,38 @@
 - content_for :title
   title = 'Classrooms'
-.tjk-container data-controller='classroom'
-  section.tj-section#classrooms
-    p
-      | Current school sync status:#{' '}
-      b#syncStatus = @school.sync_status.humanize
-    == sync_status_button
-    h1.tj-section-header Classrooms
-    hr.tj-hr-primary
-    div data-controller='table' data-table-page-length-value='25'
-      input.tjk-input.mb-2 type='search' placeholder='Search classrooms…' data-table-target='search' data-action='input->table#search'
-      table.tj-table#classroom-table
-        thead
-          tr
-            th Name
-            th.tj-hide-sm Number of Students
-            th Subject
-        tbody
-          - @classrooms.each do |c|
-            tr
-              td = c.name
-              td.tj-hide-sm = c.enrollments.size
-              td = select_tag :subject, options_from_collection_for_select(@subjects, :id, :name, c.subject_id), include_blank: '', id: 'classroom-' + c.id.to_s, class: 'tjk-input', data: { remote: 'true', url: classroom_path(c.id), turbo_method: 'patch', action: 'change->classroom#subjectChanged' }
-      .tj-table-controls
-        button.tj-btn-secondary.btn-sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
-        span.tj-table-info data-table-target='info'
-        button.tj-btn-secondary.btn-sm type='button' data-table-target='next' data-action='click->table#next' Next ›
+.tjs-dashboard.tjs-dashboard--teacher data-controller='classroom'
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Classrooms
+      p.tj-tsurface-lead Assign a subject to each class synced from your school's MIS.
+      .tj-classroom-meta
+        span.tj-meta-chip
+          | Sync status:&nbsp;
+          strong#syncStatus = @school.sync_status.humanize
+      .tj-row-actions
+        == sync_status_button
+
+    section.tjs-dashboard__section#classrooms
+      = render 'shared/skin/section_head', en: 'Classrooms', jp: '教室'
+      div data-controller='table' data-table-page-length-value='25'
+        .tj-table-toolbar
+          input.tj-table-search type='search' placeholder='Search classrooms…' data-table-target='search' data-action='input->table#search'
+        .tjs-card.tj-table-card
+          .tj-table-responsive
+            table.tj-table#classroom-table
+              thead
+                tr
+                  th Name
+                  th.tj-hide-sm Number of Students
+                  th Subject
+              tbody
+                - @classrooms.each do |c|
+                  tr
+                    td = c.name
+                    td.tj-hide-sm = c.enrollments.size
+                    td = select_tag :subject, options_from_collection_for_select(@subjects, :id, :name, c.subject_id), include_blank: '', id: 'classroom-' + c.id.to_s, class: 'tjk-input', data: { remote: 'true', url: classroom_path(c.id), turbo_method: 'patch', action: 'change->classroom#subjectChanged' }
+        .tj-table-controls
+          button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+          span.tj-table-info data-table-target='info'
+          button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-table-target='next' data-action='click->table#next' Next ›

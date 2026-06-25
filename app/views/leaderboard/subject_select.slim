@@ -1,4 +1,14 @@
-.tjk-container
-  .tj-lb-index
-    .tjs-card.tj-lb-index-card
-      =render 'subject_select'
+- content_for :title
+  title = 'Leaderboard'
+- variant = current_user&.employee? ? 'tjs-dashboard--teacher' : 'tjs-dashboard--student'
+.tjs-dashboard class=variant
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title Leaderboard
+      p.tj-tsurface-lead Pick a subject to see where you stand.
+
+    section.tjs-dashboard__section
+      .tj-lb-index
+        .tjs-card.tj-lb-index-card
+          = render 'subject_select'

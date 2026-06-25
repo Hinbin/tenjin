@@ -436,7 +436,6 @@
 /* Shared "Try it / Stop" control (shared/_try_control) used in every previewable card. */
 .tjs-try-btn { padding: 6px 0; font-size: 11px; }
 .tjs-shop-item__try-btn,
-.tjs-skin-card__try-btn,
 .tjs-palette-chip__try-btn { width: 100%; }
 .tjs-palette-chip__try-btn { padding: 5px 0; font-size: 10.5px; }
 .tjs-try-cooldown {
@@ -452,26 +451,6 @@
 .tjs-shop-item__try { margin-top: 6px; }
 .tjs-shop-item__try form { margin: 0; }
 .tjs-palette-chip__foot .tjs-try-cooldown { margin-top: 4px; }
-
-/* Skin card "Try it" row sits under the tagline. */
-.tjs-skin-card__try {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-}
-.tjs-skin-card__try form { margin: 0; flex: 1; }
-.tjs-skin-card__trying {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--f-body);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  color: var(--gold);
-}
 
 /* Global banner shown across the app while a preview is active. */
 .tjs-preview-banner {

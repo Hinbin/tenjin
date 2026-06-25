@@ -7,9 +7,30 @@
 # `theme` Stimulus controller (also attached to body) applies any client-side override and drives
 # live switching.
 module ThemeHelper
-  # The current user's resolved {skin, palette, dark}. Falls back to defaults when logged out.
+  # The current user's resolved {skin, palette, dark}. Falls back to defaults when logged out — but a
+  # returning visitor who previously logged in had their skin stored in a cookie, so honour that on the
+  # logged-out landing page (see #guest_theme_selection and ApplicationController#remember_theme_skin).
   def theme_selection
-    @theme_selection ||= Theme::Selection.for(current_user, preview: current_preview_customisation)
+    return @theme_selection if defined?(@theme_selection)
+
+    selection = Theme::Selection.for(current_user, preview: current_preview_customisation)
+    @theme_selection = current_user ? selection : guest_theme_selection(selection)
+  end
+
+  # Per-skin landing-page slogan (the old fixed "Learn, Compete, Succeed"). Arcade keeps the original;
+  # every other skin gets a 3-beat line in its own voice. Unknown skin → the arcade default.
+  HOME_SLOGANS = {
+    'arcade' => 'Learn. Compete. Succeed.',
+    'zen' => 'Breathe. Focus. Master.',
+    'kawaii' => 'Play. Practise. Shine.',
+    'famicom' => 'Press Start. Level Up. Win.',
+    'pitch' => 'Kick Off. Compete. Triumph.',
+    'manga' => 'Train. Battle. Prevail.',
+    'street' => 'Practise. Battle. Rise.'
+  }.freeze
+
+  def home_slogan(skin = current_skin)
+    HOME_SLOGANS[skin] || HOME_SLOGANS[Theme::SkinCatalog::DEFAULT_SKIN]
   end
 
   def theme_mode
@@ -97,5 +118,21 @@ module ThemeHelper
         }
       end.transform_keys(&:to_s)
     end.to_json
+  end
+
+  private
+
+  # Skin/mode a guest sees: arcade defaults, overridden by the `tj_skin`/`tj_mode` cookies a previously
+  # signed-in visitor left behind. Only the base palette is used (guests own nothing to scope to).
+  def guest_theme_selection(default_selection)
+    skin = cookies[:tj_skin]
+    return default_selection unless Theme::SkinCatalog.skin?(skin)
+
+    Theme::Selection.new(
+      skin: skin,
+      palette: Theme::SkinCatalog::DEFAULT_PALETTE,
+      dark: cookies[:tj_mode].present? ? cookies[:tj_mode] != 'light' : default_selection.dark,
+      scene: 'none', motion: 'none', scene_fx: 'none'
+    )
   end
 end
