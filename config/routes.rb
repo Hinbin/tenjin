@@ -98,6 +98,9 @@ Rails.application.routes.draw do
   # Dev-only skin styleguide (Plan 01, Phase 0). Blocked in production by the controller.
   get 'styleguide', to: 'styleguide#show' unless Rails.env.production?
 
+  # Shareable clean URL for the teacher-facing marketing page (renders pages/teachers).
+  get '/for-teachers', to: 'pages#show', id: 'teachers', as: :for_teachers
+
   get "/pages/*id" => 'pages#show', as: :page, format: false
 
   authenticated :user do

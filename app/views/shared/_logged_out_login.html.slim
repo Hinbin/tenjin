@@ -1,0 +1,6 @@
+/ Floating sticky Login button — replaces the logged-out navbar.
+/ Pinned top-right on every logged-out page; opens #studentLoginModal.
+button.tj-login-fab type="button" onclick="document.getElementById('studentLoginModal').showModal()"
+  i.fas.fa-sign-in-alt aria-hidden="true"
+  span Login
+= render 'pages/student_login_modal'

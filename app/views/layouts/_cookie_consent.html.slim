@@ -1,17 +1,86 @@
-link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css"
-script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"
+/ UK-compliant cookie consent via vanilla-cookieconsent v3 (Orest Bida, MIT).
+/ Pinned to an exact version for reliability. Non-essential scripts (Google
+/ Analytics) stay inert until the visitor opts in to the "analytics" category —
+/ see layouts/_google_analytics, where the tags are marked
+/ type="text/plain" data-category="analytics".
+link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.css"
+script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.umd.js"
 javascript:
-  window.addEventListener("load", function(){
-  window.cookieconsent.initialise({
-    "palette": {
-      "popup": {
-        "background": "#efefef",
-        "text": "#404040"
+  (function () {
+    var config = {
+      guiOptions: {
+        consentModal: { layout: "box", position: "bottom right", equalWeightButtons: true },
+        preferencesModal: { layout: "box", equalWeightButtons: true }
       },
-      "button": {
-        "background": "#8ec760",
-        "text": "#ffffff"
+      categories: {
+        necessary: { enabled: true, readOnly: true },
+        analytics: {
+          autoClear: { cookies: [{ name: /^_ga/ }, { name: "_gid" }] }
+        }
+      },
+      language: {
+        default: "en",
+        translations: {
+          en: {
+            consentModal: {
+              title: "We use cookies",
+              description: "We use essential cookies to make Tenjin work. We'd also like to set analytics cookies to understand how the site is used — but only with your consent.",
+              acceptAllBtn: "Accept all",
+              acceptNecessaryBtn: "Reject all",
+              showPreferencesBtn: "Manage preferences",
+              footer: '<a href="/pages/about">Privacy &amp; cookie notice</a>'
+            },
+            preferencesModal: {
+              title: "Cookie preferences",
+              acceptAllBtn: "Accept all",
+              acceptNecessaryBtn: "Reject all",
+              savePreferencesBtn: "Save my choices",
+              closeIconLabel: "Close",
+              sections: [
+                {
+                  title: "How Tenjin uses cookies",
+                  description: "We use cookies to run Tenjin and, with your permission, to measure how it is used. You can change your choice at any time."
+                },
+                {
+                  title: "Strictly necessary",
+                  description: "Required for the site to function — signing in, security and remembering your session. These cannot be switched off.",
+                  linkedCategory: "necessary"
+                },
+                {
+                  title: "Analytics",
+                  description: "Google Analytics helps us understand how visitors use Tenjin so we can improve it. These cookies are only set if you allow them.",
+                  linkedCategory: "analytics",
+                  cookieTable: {
+                    headers: { name: "Cookie", domain: "Provider", desc: "Description" },
+                    body: [
+                      { name: "_ga", domain: "Google", desc: "Distinguishes unique users (2 years)." },
+                      { name: "_gid", domain: "Google", desc: "Distinguishes unique users (24 hours)." }
+                    ]
+                  }
+                },
+                {
+                  title: "More information",
+                  description: 'See our <a href="/pages/about">privacy &amp; cookie notice</a> for details.'
+                }
+              ]
+            }
+          }
+        }
       }
-    },
-    "theme": "edgeless"
-  })});
+    };
+
+    function tjRunCookieConsent() {
+      if (!window.CookieConsent) return;
+      if (!window.__tjCookieConsentInit) {
+        window.__tjCookieConsentInit = true;
+        window.CookieConsent.run(config);
+      } else if (!window.CookieConsent.validConsent()) {
+        window.CookieConsent.show(true);
+      }
+    }
+
+    // turbo:load fires on first load and every Turbo navigation, so the banner
+    // survives body swaps until a choice is saved.
+    document.addEventListener("turbo:load", tjRunCookieConsent);
+    document.addEventListener("DOMContentLoaded", tjRunCookieConsent);
+  })();

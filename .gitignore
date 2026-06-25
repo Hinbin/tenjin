@@ -77,3 +77,4 @@ yarn-debug.log*
 /config/*.key
 
 .claude/settings.local.json
+.claude/skills

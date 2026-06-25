@@ -11,5 +11,8 @@ header.tj-home-hero
     h1.tjs-display.tj-home-hero__title#mastheadText = home_slogan
     p.tj-home-hero__sub Complete quizzes, beat your friends.
 footer.tj-fixed-bottom.tj-text-right style='padding: 1rem'
+  = link_to 'For teachers', for_teachers_path, class: 'tj-home-hero__link'
+  span style='color: var(--dim); margin: 0 0.5rem' ·
   = link_to 'About', page_path('about'), class: 'tj-home-hero__link'
-= render('student_login_modal')
+  span style='color: var(--dim); margin: 0 0.5rem' ·
+  a.tj-home-hero__link href="#" data-cc="show-preferencesModal" Cookies
