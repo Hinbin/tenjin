@@ -21,7 +21,7 @@
 module StructuredQuestion
   extend ActiveSupport::Concern
 
-  STRUCTURED_TYPES = %w[drag_drop matrix fill_blank ordering].freeze
+  STRUCTURED_TYPES = %w[drag_drop matrix fill_blank ordering classify].freeze
   ANSWER_BASED_TYPES = %w[short_answer multiple].freeze
   SLOT_PATTERN = /\{\{(\w+)\}\}/
 
@@ -30,6 +30,7 @@ module StructuredQuestion
     validate :matrix_config_valid
     validate :fill_blank_config_valid
     validate :ordering_config_valid
+    validate :classify_config_valid
   end
 
   def structured?
@@ -47,7 +48,22 @@ module StructuredQuestion
     when 'matrix' then score_matrix(normalize_response(response))
     when 'fill_blank' then score_fill_blank(normalize_response(response))
     when 'ordering' then score_ordering(normalize_response(response))
+    when 'classify' then score_classify(normalize_response(response))
     else 0.0
+    end
+  end
+
+  # Integer count of correctly recalled "bits" for leaderboard point awards.
+  # Intentionally separate from score_response (which stays 0-1 for difficulty analytics).
+  def bits_correct_count(response)
+    norm = normalize_response(response)
+    case question_type
+    when 'drag_drop'  then drag_drop_bits(norm)
+    when 'fill_blank' then fill_blank_bits(norm)
+    when 'matrix'     then matrix_bits(norm)
+    when 'ordering'   then ordering_bits(norm)
+    when 'classify'   then classify_bits(norm)
+    else 0
     end
   end
 
@@ -196,5 +212,75 @@ module StructuredQuestion
     item_ids = config['items'].to_a.filter_map { |item| item['id'] }
     order = config['order'].to_a
     item_ids.size >= 2 && order.sort == item_ids.sort
+  end
+
+  # ---- classify ----------------------------------------------------------------
+  # Students assign each item tile to one of several named target buckets.
+  # config = { "items" => [{ "id" =>, "text" => }], "targets" => [{ "id" =>, "label" => }],
+  #            "correct" => { item_id => target_id, … } }
+  # Response = { item_id => target_id } for each item the student placed.
+  # Partial-credit: mean across all items (unplaced items score 0).
+  def score_classify(response)
+    correct_map = config['correct'].to_h
+    item_ids = config['items'].to_a.filter_map { |item| item['id'] }
+    return 0.0 if item_ids.empty?
+
+    correct = item_ids.count { |id| response[id] == correct_map[id] }
+    correct.to_f / item_ids.size
+  end
+
+  def classify_config_valid
+    return unless question_type == 'classify'
+
+    errors.add(:base, 'Classify needs at least two items')   if config['items'].to_a.size < 2
+    errors.add(:base, 'Classify needs at least two targets') if config['targets'].to_a.size < 2
+    errors.add(:base, 'Every item needs a correct target')   unless classify_all_items_assigned?
+    errors.add(:base, 'Targets must reference existing targets') unless classify_targets_exist?
+  end
+
+  def classify_all_items_assigned?
+    config['items'].to_a.filter_map { |item| item['id'] }.all? { |id| config.dig('correct', id).present? }
+  end
+
+  def classify_targets_exist?
+    target_ids = config['targets'].to_a.filter_map { |t| t['id'] }
+    config['correct'].to_h.values.all? { |id| target_ids.include?(id) }
+  end
+
+  # ---- bits_correct helpers -------------------------------------------------
+
+  def drag_drop_bits(response)
+    answer = config['answer'].to_h
+    answer.count { |slot, expected| Array(expected).include?(response[slot.to_s]) }
+  end
+
+  def fill_blank_bits(response)
+    answer = config['answer'].to_h
+    answer.count { |slot, expected| fill_blank_match?(response[slot.to_s], expected) }
+  end
+
+  # Counts true positives only: cells the key marks as ticked that the student also ticked.
+  # Correct non-ticks are not counted as recalled bits (they're a default, not recalled knowledge).
+  def matrix_bits(response)
+    config['rows'].to_a.sum do |row|
+      row_id = row['id']
+      expected = config.dig('correct', row_id).to_a
+      selected = response[row_id].to_a
+      expected.count { |col_id| selected.include?(col_id) }
+    end
+  end
+
+  def ordering_bits(response)
+    order = config['order'].to_a
+    return 0 if order.size < 2
+
+    given = response['order'].to_a
+    order.each_cons(2).count { |first, second| adjacent_in?(given, first, second) }
+  end
+
+  def classify_bits(response)
+    correct_map = config['correct'].to_h
+    item_ids = config['items'].to_a.filter_map { |item| item['id'] }
+    item_ids.count { |id| response[id] == correct_map[id] }
   end
 end

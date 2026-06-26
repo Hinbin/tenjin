@@ -47,3 +47,13 @@
         li Use the ↑ / ↓ buttons to reorder items. Students see the items shuffled and rebuild this sequence.
         li You need at least two items. Each item placed in its correct position earns part of the marks.
       p.tjs-builder__help-note Example: items “Fetch”, “Decode”, “Execute” entered in that order.
+  - if @question.classify?
+    .tjs-builder__help
+      h3.tjs-builder__help-title How to build a classify question
+      ol
+        li Use the Question Text box above for the instruction (e.g. “Drag each statement to the correct category.”).
+        li Add at least two targets — these are the named buckets students will drag items into.
+        li Add each item and use the dropdown to assign it to the correct target.
+        li Every item must be assigned to a target before the question can be saved.
+        li Students see the items shuffled and drag them into the matching buckets. Each correctly placed item earns part of the marks.
+      p.tjs-builder__help-note Example: targets “Embedded system” and “General-purpose computer” with items like “Has a dedicated purpose” assigned to “Embedded system”.

@@ -18,6 +18,7 @@ export default class extends Controller {
     if (this.typeValue === "fill_blank") this.normaliseFillBlank()
     if (this.typeValue === "ordering") this.normaliseOrdering()
     if (this.typeValue === "matrix") this.normaliseMatrix()
+    if (this.typeValue === "classify") this.normaliseClassify()
     this.render()
   }
 
@@ -30,6 +31,7 @@ export default class extends Controller {
     if (!this.editorTarget.firstChild) return
     if (this.typeValue === "matrix") this.captureMatrix()
     else if (this.typeValue === "ordering") this.captureOrdering()
+    else if (this.typeValue === "classify") this.captureClassify()
     else this.captureDragDrop()
     this.configTarget.value = JSON.stringify(this.buildConfig())
   }
@@ -44,6 +46,7 @@ export default class extends Controller {
       case "matrix": return this.matrixHtml()
       case "fill_blank": return this.fillBlankHtml()
       case "ordering": return this.orderingHtml()
+      case "classify": return this.classifyHtml()
       default: return this.dragDropHtml()
     }
   }
@@ -59,6 +62,13 @@ export default class extends Controller {
       }
       case "ordering":
         return { items: this.rows.map(r => ({ id: r.id, text: r.text })), order: this.rows.map(r => r.id) }
+      case "classify": {
+        const correct = {}
+        this.model.items.forEach(item => { if (item.target) correct[item.id] = item.target })
+        return { items: this.model.items.map(i => ({ id: i.id, text: i.text })),
+                 targets: this.model.targets.map(t => ({ id: t.id, label: t.label })),
+                 correct }
+      }
       default: {
         // A blank can have several correct items, so each blank's answer is an array of item ids.
         const answer = {}
@@ -236,6 +246,96 @@ export default class extends Controller {
   removeColumn (event) {
     this.captureMatrix()
     this.model.columns = this.model.columns.filter(c => c.id !== event.currentTarget.dataset.id)
+    this.render()
+  }
+
+  // ---- classify ---------------------------------------------------------------
+  // this.model = { items: [{ id, text, target }], targets: [{ id, label }] }
+  // target on each item is the id of the correct bucket (empty string = unassigned).
+  normaliseClassify () {
+    const items = this.model.items || []
+    const targets = this.model.targets || []
+    const correct = this.model.correct || {}
+    this.model.items = items.length
+      ? items.map(i => ({ id: i.id, text: i.text, target: correct[i.id] || '' }))
+      : [this.blankClassifyItem(), this.blankClassifyItem()]
+    this.model.targets = targets.length
+      ? targets.map(t => ({ id: t.id, label: t.label }))
+      : [this.blankTarget(), this.blankTarget()]
+  }
+
+  blankClassifyItem () { return { id: this.uid('ci'), text: '', target: '' } }
+  blankTarget () { return { id: this.uid('ct'), label: '' } }
+
+  captureClassify () {
+    this.editorTarget.querySelectorAll('[data-classify-item]').forEach(row => {
+      const item = this.model.items.find(i => i.id === row.dataset.classifyItem)
+      if (!item) return
+      item.text   = row.querySelector('[data-field=item-text]').value
+      item.target = row.querySelector('[data-field=item-target]').value
+    })
+    this.editorTarget.querySelectorAll('[data-classify-target]').forEach(row => {
+      const target = this.model.targets.find(t => t.id === row.dataset.classifyTarget)
+      if (!target) return
+      target.label = row.querySelector('[data-field=target-label]').value
+    })
+  }
+
+  classifyHtml () {
+    const targetOptions = this.model.targets.map(t =>
+      `<option value="${this.esc(t.id)}">${this.esc(t.label || '(unnamed)')}</option>`).join('')
+
+    const itemRows = this.model.items.map(item => `
+      <div class="tjs-builder__row" data-classify-item="${this.esc(item.id)}">
+        <input class="tjk-input" data-field="item-text" value="${this.esc(item.text)}" placeholder="Item text">
+        <select class="tjk-input" data-field="item-target">
+          <option value="">— assign to target —</option>
+          ${this.model.targets.map(t =>
+            `<option value="${this.esc(t.id)}" ${item.target === t.id ? 'selected' : ''}>${this.esc(t.label || '(unnamed)')}</option>`
+          ).join('')}
+        </select>
+        <button type="button" class="tj-btn-danger" data-action="question-builder#removeClassifyItem" data-id="${this.esc(item.id)}">Remove</button>
+      </div>`).join('')
+
+    const targetRows = this.model.targets.map(target => `
+      <div class="tjs-builder__row" data-classify-target="${this.esc(target.id)}">
+        <input class="tjk-input" data-field="target-label" value="${this.esc(target.label)}" placeholder="Bucket label">
+        <button type="button" class="tj-btn-danger" data-action="question-builder#removeClassifyTarget" data-id="${this.esc(target.id)}">Remove</button>
+      </div>`).join('')
+
+    return `
+      <label class="tjk-label">Targets (buckets)</label>
+      <div class="tjs-builder__items">${targetRows}</div>
+      <button type="button" class="tj-btn-primary" data-action="question-builder#addClassifyTarget">Add target</button>
+      <label class="tjk-label" style="margin-top:1rem">Items — assign each to the correct target</label>
+      <div class="tjs-builder__items">${itemRows}</div>
+      <button type="button" class="tj-btn-primary" data-action="question-builder#addClassifyItem">Add item</button>`
+  }
+
+  addClassifyItem () {
+    this.captureClassify()
+    this.model.items.push(this.blankClassifyItem())
+    this.render()
+  }
+
+  removeClassifyItem (event) {
+    this.captureClassify()
+    this.model.items = this.model.items.filter(i => i.id !== event.currentTarget.dataset.id)
+    this.render()
+  }
+
+  addClassifyTarget () {
+    this.captureClassify()
+    this.model.targets.push(this.blankTarget())
+    this.render()
+  }
+
+  removeClassifyTarget (event) {
+    this.captureClassify()
+    const id = event.currentTarget.dataset.id
+    this.model.targets = this.model.targets.filter(t => t.id !== id)
+    // Clear any item assignments that pointed to this target.
+    this.model.items.forEach(i => { if (i.target === id) i.target = '' })
     this.render()
   }
 

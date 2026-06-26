@@ -9,7 +9,7 @@ class Quiz::CheckAnswer < ApplicationService
 
   # Question types rendered as something other than clickable answer buttons; everything else is a
   # multiple-choice question (mirrors the `else` branches in check_answer_correct / render_question).
-  NON_MULTIPLE_CHOICE_TYPES = %w[short_answer drag_drop matrix fill_blank ordering].freeze
+  NON_MULTIPLE_CHOICE_TYPES = %w[short_answer drag_drop matrix fill_blank ordering classify].freeze
 
   def initialize(params)
     super()
@@ -76,18 +76,25 @@ class Quiz::CheckAnswer < ApplicationService
   def check_answer_correct
     case @question.question_type
     when 'short_answer' then check_short_answer
-    when 'drag_drop', 'matrix', 'fill_blank', 'ordering' then check_structured_answer
+    when 'drag_drop', 'matrix', 'fill_blank', 'ordering', 'classify' then check_structured_answer
     else check_multiple_choice
     end
   end
 
-  # Partial-credit types: store the fractional score + raw response; a perfect score counts as
-  # correct for streak/leaderboard, anything less resets the streak like a wrong answer.
+  # Partial-credit types: store the fractional score + raw response (unchanged, feeds difficulty).
+  # Points are awarded per bit recalled; a perfect score also increments the streak.
   def check_structured_answer
     response = @answer_given[:structured].to_h
     score = @question.score_response(response)
+    bits  = @question.bits_correct_count(response)
 
-    score >= 1.0 ? process_correct_answer : process_incorrect_answer
+    if score >= 1.0
+      process_correct_answer(bits: bits)
+    elsif bits > 0
+      process_partial_structured_answer(bits: bits)
+    else
+      process_incorrect_answer
+    end
     @asked_question.update(score: score, response: response)
   end
 
@@ -96,7 +103,7 @@ class Quiz::CheckAnswer < ApplicationService
   def structured_solution
     case @question.question_type
     when 'drag_drop', 'fill_blank' then @question.config['answer']
-    when 'matrix' then @question.config['correct']
+    when 'matrix', 'classify' then @question.config['correct']
     when 'ordering' then @question.config['order']
     end
   end
@@ -122,7 +129,7 @@ class Quiz::CheckAnswer < ApplicationService
     answer.correct ? process_correct_answer : process_incorrect_answer
   end
 
-  def process_correct_answer
+  def process_correct_answer(bits: 1)
     @quiz.answered_correct += 1
     return flag_too_fast if @answer_seconds.present? && @answer_seconds < MIN_ANSWER_SECONDS
 
@@ -130,7 +137,17 @@ class Quiz::CheckAnswer < ApplicationService
     # Best combo this run — display-only (results screen); does not affect scoring/outcomes.
     @quiz.max_streak = [@quiz.max_streak.to_i, @quiz.streak].max
     @asked_question.update(correct: true, score: 1.0)
-    Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question, answer_seconds: @answer_seconds)
+    Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question, answer_seconds: @answer_seconds, bits: bits)
+  end
+
+  # Partial credit: student recalled some but not all bits. Streak resets (same penalty as wrong),
+  # but points are awarded for the bits they did recall at base multiplier (×1).
+  def process_partial_structured_answer(bits:)
+    @quiz.streak = 0
+    @asked_question.update(correct: false)
+    return if @answer_seconds.present? && @answer_seconds < MIN_ANSWER_SECONDS
+
+    Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question, answer_seconds: @answer_seconds, bits: bits)
   end
 
   # Correct, but too fast to be a real read: count it toward the student's own accuracy and let the

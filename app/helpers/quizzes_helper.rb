@@ -20,6 +20,7 @@ module QuizzesHelper
     when 'matrix' then render('matrix')
     when 'fill_blank' then render('fill_blank')
     when 'ordering' then render('ordering')
+    when 'classify' then render('classify')
     else render('multiple_choice')
     end
   end

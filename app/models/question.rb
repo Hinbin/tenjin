@@ -18,7 +18,7 @@ class Question < ApplicationRecord
   # NOTE: integer 1 (formerly :boolean) is intentionally retired and left unused — boolean questions
   # were migrated to :multiple (they were already two-answer True/False MCQs).
   enum :question_type, { short_answer: 0, multiple: 2, drag_drop: 3, matrix: 4,
-                         fill_blank: 5, ordering: 6 }
+                         fill_blank: 5, ordering: 6, classify: 7 }
 
   before_update :check_short_answer
 

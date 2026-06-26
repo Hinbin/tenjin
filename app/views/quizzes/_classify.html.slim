@@ -1,0 +1,22 @@
+/ Classify question — drag item tiles into named target buckets. Partial-credit scored.
+/ KEEP: .tjs-item-tray[data-source] with .tjs-tile.tjs-draggable[data-item-id] tiles,
+/       .tjs-bucket[data-target-id] drop zones, #classifySubmit,
+/       #nextButton / .next-button / .tj-invisible. classify_question.js wires drag + submit and
+/       uses .correct-answer / .incorrect-answer for the reveal.
+.tjs-question id="classify"
+  - if @question.topic.present?
+    .tjs-question__pill
+      = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
+  .tjs-question__text ==@question.question_text
+  .tjs-item-tray data-source='true'
+    - @question.config['items'].to_a.shuffle.each do |item|
+      .tjs-tile.tjs-draggable draggable='true' data-item-id=item['id'] = item['text']
+  .tjs-classify__buckets
+    - @question.config['targets'].to_a.each do |target|
+      .tjs-bucket data-target-id=target['id']
+        .tjs-bucket__label = target['label']
+  / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
+  .tjs-quiz__fx data-quiz-target='answerFx' aria-hidden='true'
+  = render 'quizzes/answer_feedback'
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__submit.question-button#classifySubmit Check Answer
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__next.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question

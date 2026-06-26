@@ -10,7 +10,7 @@
 // Small enough to feel instant, large enough not to fire on an accidental tap.
 const MOVE_THRESHOLD = 8
 
-const CONTAINERS = '#dragDrop, #ordering'
+const CONTAINERS = '#dragDrop, #ordering, #classify'
 
 let source = null      // the tile being dragged
 let startX = 0
