@@ -28,6 +28,15 @@ RSpec.describe StructuredQuestion, type: :model do
       'order' => %w[o1 o2 o3] }
   end
 
+  let(:classify_config) do
+    { 'items' => [{ 'id' => 'ci1', 'text' => 'Has a dedicated purpose' },
+                  { 'id' => 'ci2', 'text' => 'Runs many programs' },
+                  { 'id' => 'ci3', 'text' => 'Built into a machine' }],
+      'targets' => [{ 'id' => 'ct1', 'label' => 'Embedded system' },
+                    { 'id' => 'ct2', 'label' => 'General-purpose computer' }],
+      'correct' => { 'ci1' => 'ct1', 'ci2' => 'ct2', 'ci3' => 'ct1' } }
+  end
+
   describe '#score_response for drag_drop' do
     subject(:question) do
       build(:question, question_type: 'drag_drop', question_text: cloze_text, config: drag_drop_config)
@@ -216,15 +225,6 @@ RSpec.describe StructuredQuestion, type: :model do
     it 'accepts a well-formed ordering question' do
       expect(build(:question, question_type: 'ordering', config: ordering_config)).to be_valid
     end
-  end
-
-  let(:classify_config) do
-    { 'items'   => [{ 'id' => 'ci1', 'text' => 'Has a dedicated purpose' },
-                    { 'id' => 'ci2', 'text' => 'Runs many programs' },
-                    { 'id' => 'ci3', 'text' => 'Built into a machine' }],
-      'targets' => [{ 'id' => 'ct1', 'label' => 'Embedded system' },
-                    { 'id' => 'ct2', 'label' => 'General-purpose computer' }],
-      'correct' => { 'ci1' => 'ct1', 'ci2' => 'ct2', 'ci3' => 'ct1' } }
   end
 
   describe '#score_response for classify' do

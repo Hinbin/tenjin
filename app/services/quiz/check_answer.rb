@@ -90,7 +90,7 @@ class Quiz::CheckAnswer < ApplicationService
 
     if score >= 1.0
       process_correct_answer(bits: bits)
-    elsif bits > 0
+    elsif bits.positive?
       process_partial_structured_answer(bits: bits)
     else
       process_incorrect_answer

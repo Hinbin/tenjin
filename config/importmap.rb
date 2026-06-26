@@ -54,6 +54,7 @@ pin "questions/short_response_question",    to: "questions/short_response_questi
 pin "questions/drag_drop_question",         to: "questions/drag_drop_question.js"
 pin "questions/matrix_question",            to: "questions/matrix_question.js"
 pin "questions/fill_blank_question",        to: "questions/fill_blank_question.js"
+pin "questions/classify_question",          to: "questions/classify_question.js"
 pin "questions/ordering_question",          to: "questions/ordering_question.js"
 pin "questions/import_topic_questions",     to: "questions/import_topic_questions.js"
 pin "questions/questions_shared",           to: "questions/questions_shared.js"

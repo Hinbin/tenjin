@@ -91,6 +91,7 @@ Metrics/ClassLength:
   Exclude:
     - 'app/controllers/questions_controller.rb'
     - 'app/services/quiz/create_quiz.rb'
+    - 'app/services/quiz/check_answer.rb'
     - 'app/services/customisation/shop_board.rb'
 
 Metrics/ModuleLength:

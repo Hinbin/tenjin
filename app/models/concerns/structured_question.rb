@@ -232,10 +232,14 @@ module StructuredQuestion
   def classify_config_valid
     return unless question_type == 'classify'
 
+    classify_size_errors
+    errors.add(:base, 'Every item needs a correct target')        unless classify_all_items_assigned?
+    errors.add(:base, 'Targets must reference existing targets')  unless classify_targets_exist?
+  end
+
+  def classify_size_errors
     errors.add(:base, 'Classify needs at least two items')   if config['items'].to_a.size < 2
     errors.add(:base, 'Classify needs at least two targets') if config['targets'].to_a.size < 2
-    errors.add(:base, 'Every item needs a correct target')   unless classify_all_items_assigned?
-    errors.add(:base, 'Targets must reference existing targets') unless classify_targets_exist?
   end
 
   def classify_all_items_assigned?
