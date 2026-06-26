@@ -140,7 +140,7 @@ RSpec.describe 'Student visits the dashboard', :default_creates, :js, type: :sys
       homework_lesson
       create_list(:question, 10, lesson: homework_lesson.lesson, topic: homework_lesson.lesson.topic)
       visit(dashboard_path)
-      find('.homework-row', text: homework_lesson.lesson.title).click
+      find(".homework-row[data-homework='#{homework_lesson.id}']").click
       expect(page).to have_css('p', exact_text: homework_lesson.lesson.title)
     end
 

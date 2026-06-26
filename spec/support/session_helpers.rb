@@ -49,7 +49,7 @@ module SessionHelpers
 
   def navigate_to_quiz
     visit(new_quiz_path(subject: subject.name))
-    select Topic.last.name, from: 'quiz_topic_id'
+    select topic.name, from: 'quiz_topic_id'
     click_button('Create Quiz')
     find('.trix-content')
   end

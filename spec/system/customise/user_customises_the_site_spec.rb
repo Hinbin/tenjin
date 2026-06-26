@@ -51,6 +51,7 @@ RSpec.describe 'User customises the site', :default_creates, :js, type: :system 
     it 'auto-equips a bought cosmetic so it shows as equipped' do
       gem = Customisation.avatar.find_by(value: 'gem')
       find("form[action='#{buy_customisation_path(gem)}'] input.buy-btn").click
+      expect(page).to have_css('.tjs-flash', text: 'Congratulations!')
       expect(page).to have_css(".tjs-shop-item[data-value='gem'].is-equipped")
     end
 

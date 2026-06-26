@@ -48,7 +48,8 @@ RSpec.describe 'User views an updating leaderboard', :default_creates, :js, type
 
     it 'only flashes once, for a second' do
       Leaderboard::BroadcastLeaderboardPoint.new(topic, new_entry.user).call
-      expect(page).to have_no_css('tr.score-changed', wait: 1.5)
+      expect(page).to have_css('tr.score-changed')
+      expect(page).to have_no_css('tr.score-changed', wait: 3)
     end
 
     it 're-ranks correctly' do
