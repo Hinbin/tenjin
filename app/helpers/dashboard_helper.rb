@@ -2,15 +2,15 @@
 
 module DashboardHelper
   CHALLENGE_ICONS = {
-    'number_correct'    => :check,
-    'streak'            => :flame,
-    'number_of_points'  => :star,
-    'perfect_quiz'      => :trophy,
+    'number_correct' => :check,
+    'streak' => :flame,
+    'number_of_points' => :star,
+    'perfect_quiz' => :trophy,
     'cumulative_correct' => :list,
-    'complete_quizzes'  => :scroll,
-    'big_streak'        => :bolt,
-    'daily_devotion'    => :sun,
-    'speed_run'         => :clock
+    'complete_quizzes' => :scroll,
+    'big_streak' => :bolt,
+    'daily_devotion' => :sun,
+    'speed_run' => :clock
   }.freeze
 
   SUBJECT_META = {
