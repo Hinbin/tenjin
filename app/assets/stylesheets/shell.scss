@@ -391,25 +391,5 @@ body[data-skin="famicom"] .tjs-bottom-nav__item.is-active::after {
   color: var(--dim);
 }
 
-// Challenge-points link in top-strip (preserves .tj-navbar__points selector for specs)
-.tjs-top-strip__pts-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 7px 13px;
-  background: var(--surface, rgba(28, 18, 46, 0.72));
-  border: var(--bd, 1px) solid var(--line);
-  border-radius: 999px;
-  font-family: var(--f-pixel, 'DotGothic16', monospace);
-  font-size: 12px;
-  color: var(--gold, #ffd23f);
-  text-decoration: none;
-  transition: background .15s;
-
-  &:hover { background: color-mix(in srgb, var(--surface) 80%, var(--gold) 10%); color: var(--gold); }
-
-  span#challenge-points { color: var(--gold); }
-}
-
-body[data-skin="famicom"] .tjs-top-strip__pts-link { border-radius: 0; }
-body[data-skin="arcade"]  .tjs-top-strip__pts-link { border-radius: 0; }
+// Challenge-points link in top-strip: renders the shared stat chip (see _student_top_strip),
+// so it matches the streak chip beside it. .tj-navbar__points is kept for click-to-shop specs.

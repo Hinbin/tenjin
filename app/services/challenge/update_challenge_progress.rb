@@ -16,7 +16,7 @@ class Challenge::UpdateChallengeProgress < ApplicationService
   end
 
   def call
-    update_each_challenge(subject_challenges.where(challenge_type: PER_ANSWER_TYPES))
+    update_each_challenge(subject_challenges.includes(topic: :subject).where(challenge_type: PER_ANSWER_TYPES))
   end
 
   protected

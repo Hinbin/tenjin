@@ -20,8 +20,7 @@
         = glyph(:star, size: 15, color: 'var(--gold)')
         span#challenge-points = current_user.challenge_points.to_i
     - else
-      / On all other student pages: streak chip + points link to shop
+      / On all other student pages: streak chip + matching points chip linking to the shop
       = render 'shared/skin/stat', icon: :flame, value: current_user.streak_days.to_i, label: 'streak', color: 'var(--n1)', tooltip: 'Days in a row you’ve completed a quiz. Miss a day and it resets to 1.'
-      = link_to show_available_customisations_path, class: 'tj-navbar__points tjs-top-strip__pts-link' do
-        = glyph(:star, size: 15, color: 'var(--gold)')
-        span#challenge-points = current_user.challenge_points.to_i
+      = link_to show_available_customisations_path, class: 'tj-navbar__points', title: 'Challenge points — spend them in the shop.' do
+        = render 'shared/skin/stat', icon: :star, value: current_user.challenge_points.to_i, label: 'pts', color: 'var(--gold)', value_id: 'challenge-points'

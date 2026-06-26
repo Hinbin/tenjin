@@ -112,6 +112,20 @@
   100% { transform: translateY(880px) rotate(680deg); opacity: 0; }
 }
 
+@keyframes tjs-levelup-stat {
+  0%   { transform: scale(1); }
+  22%  { transform: scale(1.65); color: var(--gold); text-shadow: 0 0 20px var(--gold); }
+  55%  { transform: scale(0.88); }
+  78%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@keyframes tjs-burst {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  70%  { opacity: 0.9; }
+  100% { transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(0); opacity: 0; }
+}
+
 // Server-stored motion preference: [data-motion="false"] suppresses all tjs animations.
 // Mirrors @media (prefers-reduced-motion: reduce) but is under user control in Settings.
 [data-motion="false"] {

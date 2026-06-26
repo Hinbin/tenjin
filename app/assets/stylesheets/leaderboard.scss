@@ -175,6 +175,21 @@ tr.score-changed {
   font-family: var(--f-body, system-ui, sans-serif);
 }
 
+// Compact "Lv N" badge trailing the name; mirrors .tjs-pill but smaller for table density.
+.tj-lb-level {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 0.7em;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--n3, currentColor);
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  vertical-align: middle;
+}
+
 // ── Awards cell ───────────────────────────────────────────────────────────
 
 .tj-lb-awards { white-space: nowrap; }

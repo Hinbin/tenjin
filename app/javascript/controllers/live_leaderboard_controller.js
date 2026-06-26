@@ -461,12 +461,15 @@ export default class extends Controller {
     const nameCell = isCurrentUser && this.user.name_effect_class
       ? `<span class="tjs-plate ${this.user.nameplate_class}" style="--tjs-plate-accent:${this.user.plate_accent}"><span class="tjs-name ${this.user.name_effect_class}">${this.escape(entry.name)}</span></span>`
       : this.escape(entry.name)
+    const levelBadge = entry.level
+      ? `<span class="tj-lb-level" title="Level ${this.escape(String(entry.level))}">Lv ${this.escape(String(entry.level))}</span>`
+      : ''
 
     return `
       <tr id="row-${entry.id}" class="${classNames.join(' ')}"${phase4Row}>
         <td id="pos-${entry.id}" class="tj-lb-rank ${medalClass}">${entry.position}</td>
         <td id="icon-${entry.id}" class="tj-lb-avatar-cell"${phase4Avatar}>${avatarCell}</td>
-        <td id="name-${entry.id}" class="tj-lb-name-cell"${phase4Nameplate}>${nameCell}</td>
+        <td id="name-${entry.id}" class="tj-lb-name-cell"${phase4Nameplate}>${nameCell}${levelBadge}</td>
         <td id="awards-${entry.id}" class="tj-lb-awards">${this.renderAwards(entry.awards)}</td>
         ${this.renderContextualRow(entry)}
         <td id="score-${entry.id}" class="tj-lb-score">${this.escape(String(entry.score))}${deltaHtml}</td>

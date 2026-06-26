@@ -55,7 +55,6 @@ module Challenge::ProgressTracking
   # Active challenges for the quiz's subject. Callers narrow this by challenge_type.
   def subject_challenges
     Challenge.joins(:topic)
-             .includes(topic: :subject)
              .where(topics: { subject_id: @quiz.subject })
              .where('end_date > ?', Time.current)
   end

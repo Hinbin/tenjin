@@ -6,9 +6,11 @@
 /   label: String  — sub-label (required)
 /   color: String  — CSS colour token (default: 'var(--n1)')
 /   tooltip: String — optional hover/focus explanation (native title)
+/   value_id: String — optional id for the value element (e.g. live-update / spec hook; default: nil)
 - color ||= 'var(--n1)'
 - tooltip = local_assigns[:tooltip]
+- value_id = local_assigns[:value_id]
 .tjs-card.tjs-stat title=tooltip style="display:flex;flex-direction:column;align-items:center;min-width:50px;padding:7px 9px;"
   = glyph(icon, size: 16, color: color, css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
-  div.tjs-display style="font-family:var(--f-pixel);font-size:14px;color:var(--ink);margin-top:3px;" = value
+  div.tjs-display id=value_id style="font-family:var(--f-pixel);font-size:14px;color:var(--ink);margin-top:3px;" = value
   div style="font-family:var(--f-body);font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;" = label

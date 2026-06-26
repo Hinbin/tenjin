@@ -74,6 +74,7 @@ class Leaderboard::BuildLeaderboard < ApplicationService
   def base_query(topic_table)
     @query = users.project(users[:id],
                            name,
+                           users[:level],
                            schools[:name].as('school_name'),
                            topic_table[:score].sum.as('score'),
                            classrooms_subquery[:name].as('classroom_names'),

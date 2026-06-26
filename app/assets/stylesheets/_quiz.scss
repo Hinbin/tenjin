@@ -552,6 +552,23 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   .tjs-quiz--shake .tjs-question { animation: tjs-shake 0.48s; }
 
   .tjs-quiz__pop--show { animation: tjs-quiz-float 1s ease-out; }
+
+  // Results level-up celebration — classes added/removed by results_controller.js
+  body:not([data-motion="false"]) {
+    .tjs-results--shake .tjs-results__inner { animation: tjs-shake 0.55s ease-in-out; }
+
+    .tjs-results__stat-value--levelup { animation: tjs-levelup-stat 0.85s cubic-bezier(.2, 1.4, .4, 1); }
+  }
+}
+
+// Celebration particles — fixed-position, created and removed by results_controller.js
+.tjs-results__particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-family: var(--f-pixel);
+  line-height: 1;
+  animation: tjs-burst 0.7s cubic-bezier(.2, .8, .2, 1) forwards;
 }
 
 @keyframes tjs-quiz-float {

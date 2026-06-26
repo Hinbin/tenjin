@@ -42,6 +42,9 @@ application.register("question-builder", QuestionBuilderController)
 import QuizController from "controllers/quiz_controller"
 application.register("quiz", QuizController)
 
+import ResultsController from "controllers/results_controller"
+application.register("results", ResultsController)
+
 import TableController from "controllers/table_controller"
 application.register("table", TableController)
 

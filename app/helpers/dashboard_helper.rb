@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 module DashboardHelper
+  CHALLENGE_ICONS = {
+    'number_correct'    => :check,
+    'streak'            => :flame,
+    'number_of_points'  => :star,
+    'perfect_quiz'      => :trophy,
+    'cumulative_correct' => :list,
+    'complete_quizzes'  => :scroll,
+    'big_streak'        => :bolt,
+    'daily_devotion'    => :sun,
+    'speed_run'         => :clock
+  }.freeze
+
   SUBJECT_META = {
     'Computer Science' => { glyph: :chip, neon: 'var(--n1)', short: 'CS', jp: 'コンピュータ' },
     'Mathematics' => { glyph: :target, neon: 'var(--n2)', short: 'MAT', jp: '数学' },

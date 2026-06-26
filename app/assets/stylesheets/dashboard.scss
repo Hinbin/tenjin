@@ -40,6 +40,35 @@ hr.primary {
   gap: 12px;
 }
 
+// Avatar + level progress stacked, kept as a single header column
+.tjs-dashboard__avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+// "Lv N" label above a thin progress bar showing % to the next level
+.tjs-dashboard__level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 52px;
+}
+
+.tjs-dashboard__level-label {
+  font-family: var(--f-pixel, monospace);
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  color: var(--dim);
+}
+
+.tjs-dashboard__level-bar {
+  width: 100%;
+}
+
 .tjs-dashboard__player-text {
   flex: 1;
   min-width: 0;
@@ -176,8 +205,8 @@ hr.primary {
 }
 
 .tjs-challenge-card--active {
-  border-left: 3px solid var(--n1) !important;
-  background: color-mix(in srgb, var(--n1) 6%, var(--surface)) !important;
+  border-left: 3px solid var(--card-accent, var(--n1)) !important;
+  background: color-mix(in srgb, var(--card-accent, var(--n1)) 6%, var(--surface)) !important;
 }
 
 .tjs-challenge-card__icon {
@@ -366,7 +395,7 @@ body[data-skin="famicom"] {
 body[data-skin="arcade"] {
   .tjs-challenge-card--active {
     box-shadow:
-      -3px 0 12px color-mix(in srgb, var(--n1) 30%, transparent),
+      -3px 0 12px color-mix(in srgb, var(--card-accent, var(--n1)) 30%, transparent),
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 }
