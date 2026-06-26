@@ -20,6 +20,6 @@ aside.tjs-sidebar aria-label="Main navigation"
       = render 'shared/skin/avatar', glyph_name: equipped_avatar_glyph(current_user), color: equipped_avatar_color(current_user), size: 38
       .tjs-sidebar__player-info
         = render 'shared/skin/player_name', name: "#{current_user.forename} #{current_user.surname}".strip, plate: equipped_nameplate(current_user), name_fx: equipped_name_effect(current_user), size: 13, accent: 'var(--n1)'
-        .tjs-sidebar__xp
+        .tjs-sidebar__pts
           = glyph(:star, size: 13, color: 'var(--gold)')
-          span = current_user.xp.to_i
+          span = current_user.challenge_points.to_i

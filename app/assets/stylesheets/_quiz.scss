@@ -596,9 +596,76 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   border-radius: 10px;
 }
 
+// ── Classify question buckets ────────────────────────────────────────────────
+.tjs-classify__buckets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--tj-space-3);
+  margin-bottom: var(--tj-space-3);
+}
+
+.tjs-bucket {
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+  border: 2px dashed color-mix(in srgb, var(--n1) 40%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--n1) 5%, transparent);
+  overflow: hidden;
+
+  &.correct-answer { border-color: var(--correct); background: color-mix(in srgb, var(--correct) 10%, var(--surface)); }
+  &.incorrect-answer { border-color: var(--incorrect); background: color-mix(in srgb, var(--incorrect) 10%, var(--surface)); }
+}
+
+.tjs-bucket__label {
+  padding: 6px 12px;
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--n1) 12%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--n1) 20%, transparent);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.tjs-bucket__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 8px;
+  padding: 10px;
+  flex: 1;
+}
+
+// Shown when a bucket is empty during an active drag — gives the finger/cursor somewhere obvious to aim.
+.tjs-bucket__hint {
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--ink) 35%, transparent);
+  pointer-events: none;
+  padding: 8px 0;
+}
+
+// Tap-to-select highlight on the source tile.
+.tjs-tile--selected {
+  border-color: var(--n1);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--n1) 45%, transparent);
+  background: color-mix(in srgb, var(--n1) 12%, var(--surface));
+}
+
+// Bucket receives the selected-tile pulse so it's obvious where to tap.
+.tjs-bucket--tap-target {
+  border-style: solid;
+  border-color: var(--n1);
+  background: color-mix(in srgb, var(--n1) 10%, var(--surface));
+}
+
 // While a tile is held, every place it can land glows; the one under the cursor lifts more strongly.
 .tjs-slot.tjs-drop-active,
-.tjs-item-tray.tjs-drop-active {
+.tjs-item-tray.tjs-drop-active,
+.tjs-bucket.tjs-drop-active {
   border-style: dashed;
   border-color: color-mix(in srgb, var(--n1) 70%, transparent);
   background: color-mix(in srgb, var(--n1) 10%, transparent);
@@ -606,7 +673,8 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
 }
 
 .tjs-slot.tjs-drop-over,
-.tjs-item-tray.tjs-drop-over {
+.tjs-item-tray.tjs-drop-over,
+.tjs-bucket.tjs-drop-over {
   border-style: solid;
   border-color: var(--n1);
   background: color-mix(in srgb, var(--n1) 18%, var(--surface));

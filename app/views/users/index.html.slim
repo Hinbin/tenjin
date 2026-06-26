@@ -1,60 +1,67 @@
-section.page-section.tj-text-center.pt-2#Users
-  .tjk-container
-    h1.page-section-header.text-uppercase Students
-    hr class=("small mb-5 primary-red")
-    div data-controller='table' data-table-page-length-value='10'
-      .tj-table-toolbar
-        input#students-search.tjk-input type='search' placeholder='Search students…' data-table-target='search' data-action='input->table#search' style='flex:1; max-width:50%'
-        button.tj-btn-secondary.tj-btn--sm type='button' data-action='click->table#exportCsv' Export CSV
-      .tj-table-responsive
-        table.tj-table#students-table
-          thead
-            tr
-              th Name
-              th Username
-              th.tj-hide-md Classes
-              th Reset Password?
-          tbody
-            - @students.each do |s|
-              tr.student-row data-id=s.id
-                td
-                  => s.forename
-                  = s.surname
-                td = s.username
-                td.tj-hide-md =get_user_classes(s)
-                td =link_to('Reset Password',
-                      reset_password_user_path(id: s.id),
-                      class: 'tj-btn-dark reset-password reset-password-student',
-                      remote: true,
-                      id: dom_id(s),
-                      data: { turbo_method: :patch })
-      .tj-table-controls
-        button.tj-btn-secondary.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
-        span data-table-target='info'
-        button.tj-btn-secondary.tj-btn--sm type='button' data-table-target='next' data-action='click->table#next' Next ›
-    -if current_user.has_role? :school_admin
-      =render('users/employee_table')
-    h1.page-section-header.text-uppercase.pt-5 Danger Zone
-    hr class=("small mb-5 primary-red")
-    div data-controller='modal'
-      button.tj-btn-danger#resetPrintModalButton type='button' data-action='click->modal#open'
-        | Reset and print all passwords
-      dialog#resetAllPasswordsModal data-modal-target='dialog'
-        div.tj-dialog-content
-          div.tj-dialog-body
-            p.tj-alert-danger This action cannot be undone.
-            p It will reset all username and passwords for your school.  Users will not be able to log in again until you give them their new password, which will be random.
-            p It should only be used when setting up your school to use Tenjin for the first time.
-            p
-              | To confirm this action, type the name of your school,#{' '}
-              strong#schoolName #{current_user.school.name}
-              |  in the box below and click confirm.
-            div style='display:flex; justify-content:center'
-              input.tjk-input#confirmAllPasswordResetTextbox style='padding: 0 var(--tj-space-2)'
-              =link_to 'Confirm',
-                reset_all_passwords_school_path(current_user.school),
-                class: 'tj-btn-danger disabled',
-                id: 'confirmAllPasswordResetButton',
-                data: { turbo_method: :patch }
+- content_for :title
+  title = 'User Admin'
+.tjs-dashboard.tjs-dashboard--teacher
+  = render 'shared/skin/backdrop'
+  .tjs-dashboard__inner
+    header.tj-tsurface-header
+      h1.tjs-display.tj-tsurface-title User Admin
+
+    section.tjs-dashboard__section#students
+      = render 'shared/skin/section_head', en: 'Students', jp: '生徒'
+      div data-controller='table' data-table-page-length-value='10'
+        .tj-table-toolbar
+          input#students-search.tj-table-search type='search' placeholder='Search students…' data-table-target='search' data-action='input->table#search'
+          button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-action='click->table#exportCsv' Export CSV
+        .tjs-card.tj-table-card
+          table.tj-table#students-table
+            thead
+              tr
+                th Name
+                th Username
+                th.tj-hide-md Classes
+                th Reset Password?
+            tbody
+              - @students.each do |s|
+                tr.student-row data-id=s.id
+                  td
+                    => s.forename
+                    = s.surname
+                  td = s.username
+                  td.tj-hide-md = get_user_classes(s)
+                  td = link_to('Reset Password',
+                        reset_password_user_path(id: s.id),
+                        class: 'tjs-btn tjs-btn--ghost tj-btn--sm reset-password reset-password-student',
+                        id: dom_id(s),
+                        data: { turbo_method: :patch })
+        .tj-table-controls
+          button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-table-target='prev' data-action='click->table#prev' ‹ Prev
+          span.tj-table-info data-table-target='info'
+          button.tjs-btn.tjs-btn--ghost.tj-btn--sm type='button' data-table-target='next' data-action='click->table#next' Next ›
+
+    - if current_user.has_role? :school_admin
+      = render('users/employee_table')
+
+    section.tjs-dashboard__section#danger-zone
+      = render 'shared/skin/section_head', en: 'Danger Zone', jp: '危険区域'
+      div data-controller='modal'
+        button.tjs-btn.tjs-btn--danger#resetPrintModalButton type='button' data-action='click->modal#open'
+          | Reset and print all passwords
+        dialog#resetAllPasswordsModal data-modal-target='dialog'
+          div.tj-dialog-content
+            div.tj-dialog-body
+              p.tj-alert-danger This action cannot be undone.
+              p It will reset all username and passwords for your school. Users will not be able to log in again until you give them their new password, which will be random.
+              p It should only be used when setting up your school to use Tenjin for the first time.
+              p
+                | To confirm this action, type the name of your school,#{' '}
+                strong#schoolName #{current_user.school.name}
+                |  in the box below and click confirm.
+              div style='display:flex; justify-content:center'
+                input.tjk-input#confirmAllPasswordResetTextbox style='padding: 0 var(--tj-space-2)'
+                = link_to 'Confirm',
+                  reset_all_passwords_school_path(current_user.school),
+                  class: 'tjs-btn tjs-btn--danger disabled',
+                  id: 'confirmAllPasswordResetButton',
+                  data: { turbo_method: :patch }
           div.tj-dialog-footer
-            button.tj-btn-secondary type='button' data-action='click->modal#close' Close
+            button.tjs-btn.tjs-btn--ghost type='button' data-action='click->modal#close' Close
