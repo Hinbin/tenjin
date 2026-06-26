@@ -6,6 +6,12 @@
 - accent   = subject_neon(@quiz.subject)
 - accuracy = @quiz.accuracy_percent
 - rank     = quiz_rank(accuracy)
+/ Progression already recorded in #finish_quiz, so current_user.xp/level are the post-quiz values.
+/ The pre-quiz level lets us spot a level-up crossed during this run for a small flourish.
+- level       = current_user.level
+- old_level   = Progression.level_for(current_user.xp - @quiz.points_earned)
+- leveled_up  = level > old_level
+- level_pct   = Progression.progress_percent(current_user.xp)
 .tjs-quiz.tjs-results
   = render 'shared/skin/backdrop'
   .tjs-results__inner
@@ -33,6 +39,17 @@
         = glyph(:flame, size: 18, color: 'var(--n1)', css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
         .tjs-results__stat-value = "×#{@quiz.max_streak}"
         .tjs-results__stat-label Best combo
+      .tjs-card.tjs-results__stat
+        = glyph(:star, size: 18, color: 'var(--n3)', css_class: (current_skin == 'arcade' ? 'tjs-icon--glow' : nil))
+        .tjs-results__stat-value = "Lv #{level}"
+        .tjs-results__stat-label Level
+
+    .tjs-card.tjs-results__run
+      .tjs-results__run-head
+        span.tjs-results__run-title = leveled_up ? "Level up! → Lv #{level}" : "Level #{level} progress"
+        span.tjs-results__run-meta style="color:#{accent};" = "#{Progression.xp_into_level(current_user.xp)}/#{Progression.band_width(level)} XP"
+      .tjs-bar
+        .tjs-bar__fill style="width:#{level_pct}%;background:#{accent};"
 
     .tjs-card.tjs-results__run
       .tjs-results__run-head

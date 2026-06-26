@@ -14,7 +14,7 @@ RSpec.describe Progression::RecordQuiz do
     end
 
     it 'recomputes the level from the new xp' do
-      quiz.update!(answered_correct: 10) # 100 xp -> level 2
+      quiz.update!(answered_correct: 22) # 220 xp -> level 2
       expect { record }.to change { user.reload.level }.from(1).to(2)
     end
 
