@@ -13,7 +13,7 @@ module TeacherNavHelper
   CONTROLLER_TO_NAV = {
     'dashboard' => :classrooms, 'classrooms' => :classrooms, 'lessons' => :lessons,
     'leaderboard' => :ranks, 'topics' => :questions, 'questions' => :questions, 'users' => :admin_users,
-    'settings' => :appearance
+    'question_reviews' => :review_queue, 'settings' => :appearance
   }.freeze
 
   # The gap-analysis surfaces all live on ClassroomsController, so disambiguate by action before
@@ -51,7 +51,10 @@ module TeacherNavHelper
   def author_nav_items
     return [] unless current_user.has_role?(:question_author, :any)
 
-    [{ id: :questions, icon: :scroll, en: 'Edit Questions', jp: '問題', path: topics_path }]
+    [
+      { id: :questions,     icon: :scroll, en: 'Edit Questions', jp: '問題', path: topics_path },
+      { id: :review_queue,  icon: :check,  en: 'Review Queue',   jp: '確認', path: question_reviews_path }
+    ]
   end
 
   def admin_nav_items

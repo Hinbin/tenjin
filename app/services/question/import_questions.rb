@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Question::ImportQuestions < ApplicationService
+  include Question::ImportBuilder
+
   def initialize(data, topic, filename)
     super()
     @json = JSON.parse(data)
@@ -23,9 +25,9 @@ class Question::ImportQuestions < ApplicationService
 
   def import_json_questions
     @json.each do |question|
-      @question = question
-      return false unless validate_question
-      return false unless build_question
+      error = import_validation_error(question)
+      return raise_error(error, question) if error
+      return false unless build_question(question)
     end
 
     @questions_to_import.each(&:save)
@@ -34,53 +36,20 @@ class Question::ImportQuestions < ApplicationService
     true
   end
 
-  def build_question
-    @question['answers_attributes'] = @question['answers']
-    @question = @question.except('answers')
-    return false unless find_or_create_lesson
+  def build_question(question_hash)
+    record = assign_import_attributes(Question.new, question_hash, @topic)
 
-    question_to_import = Question.new(@question)
-    question_to_import.topic = @topic
-    question_to_import.lesson = @lesson unless @lesson.nil?
-
-    if question_to_import.valid?
-      @questions_to_import.push(question_to_import)
+    if record.valid?
+      @questions_to_import.push(record)
     else
-      raise_error(question_to_import.errors.full_messages.join(', '))
+      raise_error(record.errors.full_messages.join(', '), question_hash)
     end
+  rescue Question::ImportBuilder::Error => e
+    raise_error(e.message, question_hash)
   end
 
-  def find_or_create_lesson
-    @lesson = nil
-    return true if @question['lesson'].nil?
-
-    @lesson = Lesson.find_or_create_by(title: @question['lesson'], topic: @topic)
-    return raise_error(@lesson.errors.full_messages.join(', ')) unless @lesson.valid?
-
-    @question = @question.except('lesson')
-  end
-
-  def validate_question
-    unless %w[question_type answers question_text].all? { |s| @question.key? s }
-      return raise_error('Question missing key')
-    end
-
-    validate_answers
-  end
-
-  def validate_answers
-    answers = @question['answers']
-    return raise_error('Answers for question not in array') unless answers.respond_to? :each
-
-    answers.each do |a|
-      return raise_error('Text key missing for answer') if a.key?('body')
-    end
-
-    true
-  end
-
-  def raise_error(error)
-    @error = error + ": #{@question}"
+  def raise_error(error, question_hash)
+    @error = "#{error}: #{question_hash}"
     false
   end
 end

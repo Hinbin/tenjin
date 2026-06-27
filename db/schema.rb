@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_24_000100) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_27_000300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -259,6 +259,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_24_000100) do
     t.index ["topic_id"], name: "index_homeworks_on_topic_id"
   end
 
+  create_table "imports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "filename"
+    t.jsonb "import_errors", default: [], null: false
+    t.integer "imported_count", default: 0, null: false
+    t.integer "skipped_count", default: 0, null: false
+    t.string "token_label"
+    t.bigint "topic_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "updated_count", default: 0, null: false
+    t.index ["topic_id"], name: "index_imports_on_topic_id"
+  end
+
   create_table "leaderboard_awards", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "school_id"
@@ -307,11 +320,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_24_000100) do
     t.integer "flagged_questions_count"
     t.bigint "lesson_id"
     t.integer "question_type"
+    t.integer "review_status", default: 0, null: false
     t.bigint "topic_id"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["lesson_id", "active"], name: "index_questions_on_lesson_id_and_active"
     t.index ["lesson_id"], name: "index_questions_on_lesson_id"
     t.index ["topic_id", "active"], name: "index_questions_on_topic_id_and_active"
+    t.index ["topic_id", "external_id"], name: "index_questions_on_topic_id_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
 
@@ -627,6 +642,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_24_000100) do
   add_foreign_key "homeworks", "classrooms"
   add_foreign_key "homeworks", "lessons"
   add_foreign_key "homeworks", "topics"
+  add_foreign_key "imports", "topics"
   add_foreign_key "leaderboard_awards", "schools"
   add_foreign_key "leaderboard_awards", "subjects"
   add_foreign_key "leaderboard_awards", "users"
