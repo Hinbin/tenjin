@@ -36,8 +36,10 @@ export default class extends Controller {
     }
     document.addEventListener('click', this._closeDropdowns)
 
-    this.listenToLeaderboard()
+    // Load the board first so the visible content never depends on the websocket succeeding;
+    // live updates are a progressive enhancement layered on afterwards.
     this.loadLeaderboard()
+    this.listenToLeaderboard()
   }
 
   disconnect () {
@@ -57,26 +59,31 @@ export default class extends Controller {
   listenToLeaderboard () {
     if (!this.subject || !this.school) return
 
-    this.subscription = consumer.subscriptions.create({
-      channel: 'LeaderboardChannel',
-      subject: this.subject,
-      school: this.school,
-      school_group: this.schoolGroup
-    }, {
-      connected: () => {
-        this.connected = true
-        this.render()
-      },
-      disconnected: () => {
-        this.connected = false
-        this.render()
-      },
-      received: (data) => {
-        if (!this.topic || String(data.topic) === String(this.topic)) {
-          this.leaderboardChange(data)
+    // A socket hiccup must not blank the already-rendered board, so swallow setup errors.
+    try {
+      this.subscription = consumer.subscriptions.create({
+        channel: 'LeaderboardChannel',
+        subject: this.subject,
+        school: this.school,
+        school_group: this.schoolGroup
+      }, {
+        connected: () => {
+          this.connected = true
+          this.render()
+        },
+        disconnected: () => {
+          this.connected = false
+          this.render()
+        },
+        received: (data) => {
+          if (!this.topic || String(data.topic) === String(this.topic)) {
+            this.leaderboardChange(data)
+          }
         }
-      }
-    })
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   loadLeaderboard () {

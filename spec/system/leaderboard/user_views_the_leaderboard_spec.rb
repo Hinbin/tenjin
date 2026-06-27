@@ -39,9 +39,11 @@ RSpec.describe 'User views the leaderboard', :default_creates, :js, type: :syste
   end
 
   it 'displays others if they have a score' do
-    create_list(:topic_score, 8, topic: topic, school: school)
+    other = create(:student, forename: 'Zelda', school: school)
+    create(:topic_score, topic: topic, user: other, school: school)
+    create_list(:topic_score, 7, topic: topic, school: school)
     visit(leaderboard_path(subject.name))
-    expect(page).to have_css('td.tj-lb-name-cell', text: another_name)
+    expect(page).to have_css('td.tj-lb-name-cell', text: initialize_name(other))
   end
 
   it 'shows me what position I am in within the school' do
