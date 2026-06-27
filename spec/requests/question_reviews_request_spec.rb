@@ -18,14 +18,14 @@ RSpec.describe 'QuestionReviews', type: :request do
       get question_reviews_path
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("question-#{pending_question.id}")
+      expect(response.body).to include(%(id="question-#{pending_question.id}"))
     end
 
     it 'omits approved questions' do
       approved = create(:question, topic:, review_status: :approved, active: true)
       get question_reviews_path
 
-      expect(response.body).not_to include("question-#{approved.id}")
+      expect(response.body).not_to include(%(id="question-#{approved.id}"))
     end
   end
 
