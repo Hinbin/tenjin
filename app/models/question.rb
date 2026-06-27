@@ -20,6 +20,11 @@ class Question < ApplicationRecord
   enum :question_type, { short_answer: 0, multiple: 2, drag_drop: 3, matrix: 4,
                          fill_blank: 5, ordering: 6, classify: 7 }
 
+  # Imported questions land as :pending and stay inactive until a human approves them, so
+  # nothing pushed through the import API can reach students before review (the student
+  # quiz scope filters on active: true — see Quiz::CreateQuiz).
+  enum :review_status, { pending: 0, approved: 1, rejected: 2 }, default: :pending
+
   before_update :check_short_answer
 
   accepts_nested_attributes_for :answers, allow_destroy: true
@@ -29,6 +34,15 @@ class Question < ApplicationRecord
 
   validate :at_least_one_correct_answer
   validate :lesson_is_for_topic
+
+  # Approving a reviewed question makes it live for students; rejecting leaves it inactive.
+  def approve!
+    update!(review_status: :approved, active: true)
+  end
+
+  def reject!
+    update!(review_status: :rejected, active: false)
+  end
 
   def lesson_is_for_topic
     errors.add(:base, 'Lesson topic must match question topic') unless lesson.blank? || lesson.topic == topic

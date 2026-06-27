@@ -1,0 +1,17 @@
+.tjk-container
+  h1.page-section-header Review Queue
+
+  - if @questions_by_topic.empty?
+    p.tj-empty No questions are waiting for review.
+  - else
+    - @questions_by_topic.each do |topic, questions|
+      section.tjs-card.tj-review-topic style='margin-bottom: var(--tj-space-5)'
+        h2.page-section-header = "#{topic.subject.name} · #{topic.name}"
+        - questions.each do |question|
+          .tj-review-item id="question-#{question.id}" style='padding: var(--tj-space-3) 0; border-top: 1px solid var(--line)'
+            .tj-review-item__type style='font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:.05em'
+              = question.question_type.humanize
+            = render 'question_reviews/preview', question: question
+            .tj-review-item__actions style='display:flex; gap:var(--tj-space-2); margin-top:var(--tj-space-2)'
+              = button_to 'Approve', approve_question_review_path(question), method: :patch, class: 'tjs-btn tjs-btn--primary tj-btn--sm'
+              = button_to 'Reject', reject_question_review_path(question), method: :patch, class: 'tjs-btn tjs-btn--ghost tj-btn--sm'

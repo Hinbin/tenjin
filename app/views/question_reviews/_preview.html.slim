@@ -1,0 +1,39 @@
+/ Renders an imported question readably so a reviewer can judge it before approving.
+.tj-review-preview
+  .tj-review-preview__text style='margin:var(--tj-space-1) 0'
+    = question.question_text.present? ? question.question_text : '(no question text)'
+
+  - case question.question_type
+  - when 'short_answer', 'multiple'
+    ul.tj-review-answers
+      - question.answers.each do |answer|
+        li class=(answer.correct ? 'is-correct' : nil)
+          = answer.correct ? '✓ ' : '· '
+          = answer.text
+  - when 'fill_blank'
+    ul.tj-review-answers
+      - question.config.fetch('answer', {}).each do |slot, accepted|
+        li
+          => "Blank #{slot}:"
+          = Array(accepted).join(' / ')
+  - when 'ordering'
+    ol.tj-review-answers
+      - items = question.config.fetch('items', []).index_by { |item| item['id'] }
+      - question.config.fetch('order', []).each do |item_id|
+        li = items.dig(item_id, 'text')
+  - when 'matrix', 'drag_drop'
+    - columns = question.config.fetch('columns', []).index_by { |col| col['id'] }
+    ul.tj-review-answers
+      - question.config.fetch('rows', []).each do |row|
+        - correct_cols = Array(question.config.dig('correct', row['id'])).map { |cid| columns.dig(cid, 'label') }
+        li
+          => "#{row['label']} →"
+          = correct_cols.join(', ')
+  - when 'classify'
+    - targets = question.config.fetch('targets', []).index_by { |t| t['id'] }
+    - items = question.config.fetch('items', []).index_by { |i| i['id'] }
+    ul.tj-review-answers
+      - question.config.fetch('correct', {}).each do |item_id, target_id|
+        li
+          => "#{items.dig(item_id, 'text')} →"
+          = targets.dig(target_id, 'label')

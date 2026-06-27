@@ -8,6 +8,13 @@ Rails.application.routes.draw do
 
   devise_for :admins, controllers: { invitations: 'admins/invitations' }
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+
+  # Token-authenticated import API for the external Question Engine pipeline.
+  namespace :api do
+    namespace :v1 do
+      resources :imports, only: [:create]
+    end
+  end
   
   
   resources :quizzes
@@ -44,6 +51,12 @@ Rails.application.routes.draw do
   end
   resources :answers
   resources :app_errors, only: %i[index show]
+  resources :question_reviews, only: [:index] do
+    member do
+      patch 'approve'
+      patch 'reject'
+    end
+  end
   resources :topics do
     member do
       patch 'archive'
