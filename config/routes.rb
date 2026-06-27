@@ -52,6 +52,9 @@ Rails.application.routes.draw do
   resources :answers
   resources :app_errors, only: %i[index show]
   resources :question_reviews, only: [:index] do
+    collection do
+      patch 'approve_all'
+    end
     member do
       patch 'approve'
       patch 'reject'

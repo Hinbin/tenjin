@@ -2,13 +2,13 @@ tr
   td
     =f.text_field(:text, id: "answer-text-#{f.index}",
                     placeholder: "Click here to add answer",
-                    class: 'form-control text-answer')
+                    class: 'tjk-input text-answer')
     -unless @question.short_answer? || @question.question_type.nil?
       td
         =f.check_box(:correct,
             onchange: "this.setAttribute('data-params', '#{f.object_name}[correct]=' + this.checked*this.checked)",
             id: "answer-check-#{f.index}",
-            class: 'form-control')
+            class: 'tjk-check-input')
     td
       - if @question.persisted?
         =link_to 'Remove', '#', class: 'tj-btn-danger',

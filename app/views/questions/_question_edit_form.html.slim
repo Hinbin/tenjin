@@ -43,9 +43,10 @@
   - else
     table.tj-table#table-answers
       thead
-        th Answer Text
-        th = "Correct?" unless @question.short_answer?
-        th
+        tr
+          th Answer Text
+          th = "Correct?" unless @question.short_answer?
+          th
       tbody.fields
         =f.fields_for :answers, @question.answers do |a|
           =render 'answer', f: a

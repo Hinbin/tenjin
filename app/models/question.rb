@@ -20,10 +20,11 @@ class Question < ApplicationRecord
   enum :question_type, { short_answer: 0, multiple: 2, drag_drop: 3, matrix: 4,
                          fill_blank: 5, ordering: 6, classify: 7 }
 
-  # Imported questions land as :pending and stay inactive until a human approves them, so
-  # nothing pushed through the import API can reach students before review (the student
-  # quiz scope filters on active: true — see Quiz::CreateQuiz).
-  enum :review_status, { pending: 0, approved: 1, rejected: 2 }, default: :pending
+  # Normally-created questions are :approved by default; only the import API explicitly stamps
+  # questions :pending (Question::ImportApiQuestions), keeping them inactive until a human
+  # approves them so nothing imported reaches students before review (the student quiz scope
+  # filters on active: true — see Quiz::CreateQuiz).
+  enum :review_status, { pending: 0, approved: 1, rejected: 2 }, default: :approved
 
   before_update :check_short_answer
 

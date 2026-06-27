@@ -43,7 +43,9 @@
   font-family: var(--tj-body);
   font-size: 0.875rem;
   font-weight: 400;
-  color: var(--tj-ink);
+  // Skin-aware ink so labels stay readable on dark dashboard cards (not the fixed --tj-ink,
+  // which is dark-on-dark and invisible on skinned teacher surfaces).
+  color: var(--ink);
   margin-bottom: var(--tj-space-1);
 
   // Fixed-width label column in horizontal layouts
@@ -108,7 +110,7 @@
 
 .tjk-hint {
   display: block;
-  color: var(--tj-grey);
+  color: var(--dim);
   font-family: var(--tj-body);
   font-size: 0.875rem;
   margin-top: var(--tj-space-1);

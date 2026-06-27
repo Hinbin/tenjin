@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_27_000300) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_28_000100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -320,7 +320,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_000300) do
     t.integer "flagged_questions_count"
     t.bigint "lesson_id"
     t.integer "question_type"
-    t.integer "review_status", default: 0, null: false
+    t.integer "review_status", default: 1, null: false
     t.bigint "topic_id"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["lesson_id", "active"], name: "index_questions_on_lesson_id_and_active"
