@@ -43,6 +43,15 @@ RSpec.describe 'QuestionReviews', type: :request do
 
       expect(pending_question.reload).to have_attributes(review_status: 'rejected', active: false)
     end
+
+    it 'responds with a Turbo Stream that removes the reviewed item' do
+      patch approve_question_review_path(pending_question), as: :turbo_stream
+
+      expect(response).to have_http_status(:success)
+      expect(response.media_type).to eq(Mime[:turbo_stream])
+      expect(response.body).to include(%(target="question-#{pending_question.id}"))
+      expect(response.body).to include('Question approved')
+    end
   end
 
   describe 'PATCH approve_all' do

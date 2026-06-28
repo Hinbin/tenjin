@@ -45,6 +45,7 @@ class Topic::DestroyTopic < ApplicationService
       homework_count: @topic.homeworks.count,
       quiz_count: @topic.quizzes.count,
       challenge_count: @topic.challenges.count,
-      usage_statistic_count: @topic.usage_statistics.count }
+      usage_statistic_count: @topic.usage_statistics.count,
+      import_count: @topic.imports.count }
   end
 end

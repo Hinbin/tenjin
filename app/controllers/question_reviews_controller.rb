@@ -28,16 +28,25 @@ class QuestionReviewsController < ApplicationController
   def approve
     authorize @question, :update?
     @question.approve!
-    redirect_to question_reviews_path, notice: 'Question approved'
+    respond_with_review('Question approved')
   end
 
   def reject
     authorize @question, :update?
     @question.reject!
-    redirect_to question_reviews_path, notice: 'Question rejected'
+    respond_with_review('Question rejected')
   end
 
   private
+
+  # Turbo Stream responses remove just the reviewed item client-side, so the reviewer can keep
+  # accepting without waiting for a full page re-render. Non-Turbo clients fall back to a redirect.
+  def respond_with_review(notice)
+    respond_to do |format|
+      format.turbo_stream { flash.now[:notice] = notice }
+      format.html { redirect_to question_reviews_path, notice: notice }
+    end
+  end
 
   def set_question
     @question = Question.find(params.expect(:id))

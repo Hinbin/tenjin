@@ -33,6 +33,7 @@ pin "controllers/navbar_controller",            to: "controllers/navbar_controll
 pin "controllers/question_builder_controller",  to: "controllers/question_builder_controller.js"
 pin "controllers/quiz_controller",              to: "controllers/quiz_controller.js"
 pin "controllers/results_controller",           to: "controllers/results_controller.js"
+pin "controllers/review_queue_controller",      to: "controllers/review_queue_controller.js"
 pin "controllers/table_controller",             to: "controllers/table_controller.js"
 pin "controllers/theme_controller",             to: "controllers/theme_controller.js"
 pin "controllers/users_controller",             to: "controllers/users_controller.js"

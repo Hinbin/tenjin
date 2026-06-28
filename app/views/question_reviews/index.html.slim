@@ -1,13 +1,13 @@
-.tjk-container
+.tjk-container data-controller='review-queue'
   h1.page-section-header Review Queue
 
-  - if @questions_by_topic.empty?
-    p.tj-empty No questions are waiting for review.
-  - else
+  p.tj-empty data-review-queue-target='empty' hidden=@questions_by_topic.any?
+    | No questions are waiting for review.
+  - unless @questions_by_topic.empty?
     .tj-row-actions style='margin-bottom: var(--tj-space-4)'
       = button_to 'Approve all', approve_all_question_reviews_path, method: :patch, class: 'tjs-btn tjs-btn--primary', data: { turbo_confirm: 'Approve every question waiting for review?' }
     - @questions_by_topic.each do |topic, questions|
-      section.tjs-card.tj-review-topic style='margin-bottom: var(--tj-space-5)'
+      section.tjs-card.tj-review-topic data-review-queue-target='section' style='margin-bottom: var(--tj-space-5)'
         h2.page-section-header = "#{topic.subject.name} · #{topic.name}"
         - questions.each do |question|
           .tj-review-item id="question-#{question.id}" style='padding: var(--tj-space-3) 0; border-top: 1px solid var(--line)'

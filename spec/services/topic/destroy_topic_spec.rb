@@ -9,6 +9,7 @@ RSpec.describe Topic::DestroyTopic, :default_creates do
   let(:homework_with_lesson) { create(:homework, classroom:, topic:, lesson:) }
   let(:usage_statistic) { create(:usage_statistic, user: student, topic:, lesson:) }
   let(:challenge) { create(:challenge, topic:) }
+  let(:import) { create(:import, topic:) }
 
   before do
     question_with_lesson
@@ -16,6 +17,7 @@ RSpec.describe Topic::DestroyTopic, :default_creates do
     create(:homework_progress, homework: homework_with_lesson, user: student)
     create(:challenge_progress, challenge:, user: student)
     usage_statistic
+    import
   end
 
   it 'deletes a heavily used topic without lesson foreign-key failures' do
@@ -28,6 +30,7 @@ RSpec.describe Topic::DestroyTopic, :default_creates do
     expect(Quiz.exists?(quiz_with_lesson.id)).to be false
     expect(Question.exists?(question_with_lesson.id)).to be false
     expect(Challenge.exists?(challenge.id)).to be false
+    expect(Import.exists?(import.id)).to be false
   end
 
   it 'preserves usage statistics while clearing deleted topic and lesson references' do

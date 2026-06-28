@@ -1,0 +1,4 @@
+/ Removes the reviewed item without reloading the queue, and refreshes the flash notice.
+= turbo_stream.remove "question-#{question.id}"
+= turbo_stream.update 'flash' do
+  = render('shared/notice_notification')

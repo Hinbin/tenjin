@@ -9,6 +9,7 @@ class Topic < ApplicationRecord
   has_many :challenges, dependent: :destroy
   has_many :homeworks, dependent: :destroy
   has_many :quizzes, dependent: :destroy
+  has_many :imports, dependent: :destroy
   has_many :usage_statistics
 
   belongs_to :default_lesson,

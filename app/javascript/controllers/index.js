@@ -45,6 +45,9 @@ application.register("quiz", QuizController)
 import ResultsController from "controllers/results_controller"
 application.register("results", ResultsController)
 
+import ReviewQueueController from "controllers/review_queue_controller"
+application.register("review-queue", ReviewQueueController)
+
 import TableController from "controllers/table_controller"
 application.register("table", TableController)
 
