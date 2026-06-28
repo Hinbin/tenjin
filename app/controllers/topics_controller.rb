@@ -9,14 +9,16 @@ class TopicsController < ApplicationController
     raise Pundit::NotAuthorizedError if @subjects.blank?
 
     topic_ids = @subjects.flat_map(&:topics).map(&:id)
-    @question_counts = Question.where(topic_id: topic_ids).group(:topic_id).count
+    @question_counts = Question.where(topic_id: topic_ids, active: true).group(:topic_id).count
   end
 
   def show
     authorize @topic
 
     @topic_lessons = Lesson.where(topic: @topic)
-    @questions = Question.with_rich_text_question_text_and_embeds
+    # The question table renders each question_text as a link label only — embeds aren't shown here,
+    # so eager-loading their attachments is wasted work (Bullet flags it). Load just the rich text.
+    @questions = Question.with_rich_text_question_text
                          .includes(:question_statistic, :lesson)
                          .where(topic: @topic, active: true)
   end

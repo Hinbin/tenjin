@@ -22,9 +22,11 @@
       .tjs-display.tjs-results__rank-en = rank[:en]
       .tjs-results__rank-jp style="color:#{rank[:color]};" = rank[:jp]
 
+    / Leaderboard points earned this run (multiplier × bits per answer) — the same figure the in-quiz
+    / HUD ticked up to. XP/level progression (points_earned) is shown in the level section below.
     .tjs-results__points.tjs-slideup
       .tjs-results__points-label Points earned
-      .tjs-results__points-value = "+#{@quiz.points_earned}"
+      .tjs-results__points-value = "+#{@quiz.leaderboard_points}"
 
     .tjs-results__stats
       .tjs-card.tjs-results__stat

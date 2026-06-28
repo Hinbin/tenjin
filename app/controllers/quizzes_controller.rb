@@ -145,7 +145,7 @@ class QuizzesController < ApplicationController
   end
 
   def set_quiz_status_variables
-    @multiplier = Multiplier.where('score <= ?', @quiz.streak).last
+    @multiplier = Multiplier.for_streak(@quiz.streak)
     @percent_complete = (@quiz.num_questions_asked / @quiz.questions.length.to_f) * 100.to_f
     @flagged_question = FlaggedQuestion.where(user: current_user, question: @question).first
   end

@@ -8,6 +8,10 @@ class Quiz::AddLeaderboardPoint < ApplicationService
     @question = params[:question]
     @answer_seconds = params[:answer_seconds]
     @bits = params.fetch(:bits, 1)
+    # The multiplier the student was shown for this question (Multiplier.for_streak) — passed in by the
+    # caller so the points awarded match the HUD exactly, rather than recomputed against a different
+    # streak boundary here.
+    @multiplier = params.fetch(:multiplier, 1)
   end
 
   # Returns the leaderboard points awarded for this answer (0 when the quiz doesn't count), so the
@@ -15,12 +19,11 @@ class Quiz::AddLeaderboardPoint < ApplicationService
   def call
     return 0 unless @quiz.counts_for_leaderboard
 
-    multiplier = Multiplier.where('score < ?', @quiz.streak).order(score: :desc).pick(:multiplier) || 1
-    points = multiplier * @bits
+    points = @multiplier * @bits
     @quiz.leaderboard_points += points
     upsert_score(@question.topic.id, @user.id, points)
 
-    Challenge::UpdateChallengeProgress.call(@quiz, multiplier, @question.topic, @answer_seconds)
+    Challenge::UpdateChallengeProgress.call(@quiz, @multiplier, @question.topic, @answer_seconds)
     Leaderboard::BroadcastLeaderboardPoint.call(@question.topic, @user)
     points
   end

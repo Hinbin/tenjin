@@ -80,6 +80,32 @@ RSpec.describe 'QuestionReviews', type: :request do
     end
   end
 
+  describe 'PATCH reject_all' do
+    before { sign_in author }
+
+    it 'rejects every pending question in the authored subject' do
+      pending_question
+      other = create(:question, topic:, review_status: :pending, active: false)
+
+      patch reject_all_question_reviews_path
+
+      expect(pending_question.reload).to have_attributes(review_status: 'rejected', active: false)
+      expect(other.reload).to have_attributes(review_status: 'rejected', active: false)
+      expect(response).to redirect_to(question_reviews_path)
+    end
+
+    it 'leaves pending questions in other subjects untouched' do
+      pending_question
+      foreign = create(:question, topic: create(:topic, subject: create(:subject)),
+                                  review_status: :pending, active: false)
+
+      patch reject_all_question_reviews_path
+
+      expect(pending_question.reload.review_status).to eq('rejected')
+      expect(foreign.reload.review_status).to eq('pending')
+    end
+  end
+
   describe 'authorization' do
     let(:other_author) { create(:question_author, subject: create(:subject)) }
 

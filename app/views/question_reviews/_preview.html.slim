@@ -1,39 +1,79 @@
-/ Renders an imported question readably so a reviewer can judge it before approving.
+/ Read-only render of an imported question, mirroring how it is presented to students (the same
+/ .tjs-question atoms) but static and with the correct answer(s) revealed, so a reviewer can judge it
+/ before approving. Shuffling is intentionally dropped here — authors review in the authored order.
 .tj-review-preview
-  .tj-review-preview__text style='margin:var(--tj-space-1) 0'
-    = question.question_text.present? ? question.question_text : '(no question text)'
+  .tjs-question
+    - case question.question_type
+    - when 'multiple'
+      .tjs-question__text ==(question.question_text.presence || '(no question text)')
+      .tjs-answers
+        - question.answers.each_with_index do |answer, i|
+          .tjs-card.tjs-tile.tjs-answer class=(answer.correct ? 'correct-answer' : nil)
+            span.tjs-answer__badge = ('A'.ord + i).chr
+            span.tjs-answer__text = answer.text
 
-  - case question.question_type
-  - when 'short_answer', 'multiple'
-    ul.tj-review-answers
-      - question.answers.each do |answer|
-        li class=(answer.correct ? 'is-correct' : nil)
-          = answer.correct ? '✓ ' : '· '
-          = answer.text
-  - when 'fill_blank'
-    ul.tj-review-answers
-      - question.config.fetch('answer', {}).each do |slot, accepted|
-        li
-          => "Blank #{slot}:"
-          = Array(accepted).join(' / ')
-  - when 'ordering'
-    ol.tj-review-answers
+    - when 'short_answer'
+      .tjs-question__text ==(question.question_text.presence || '(no question text)')
+      / Every stored answer is an accepted spelling — show them all as the correct response.
+      .tjs-answers
+        - question.answers.each do |answer|
+          .tjs-card.tjs-tile.tjs-answer.correct-answer
+            span.tjs-answer__text = answer.text
+
+    - when 'fill_blank'
+      .tjs-cloze
+        - cloze_segments(question.cloze_text).each do |kind, value|
+          - if kind == :text
+            span.tjs-cloze__text = value
+          - else
+            span.tjs-blank.correct-answer = Array(question.config.dig('answer', value)).join(' / ')
+
+    - when 'drag_drop'
       - items = question.config.fetch('items', []).index_by { |item| item['id'] }
-      - question.config.fetch('order', []).each do |item_id|
-        li = items.dig(item_id, 'text')
-  - when 'matrix', 'drag_drop'
-    - columns = question.config.fetch('columns', []).index_by { |col| col['id'] }
-    ul.tj-review-answers
-      - question.config.fetch('rows', []).each do |row|
-        - correct_cols = Array(question.config.dig('correct', row['id'])).map { |cid| columns.dig(cid, 'label') }
-        li
-          => "#{row['label']} →"
-          = correct_cols.join(', ')
-  - when 'classify'
-    - targets = question.config.fetch('targets', []).index_by { |t| t['id'] }
-    - items = question.config.fetch('items', []).index_by { |i| i['id'] }
-    ul.tj-review-answers
-      - question.config.fetch('correct', {}).each do |item_id, target_id|
-        li
-          => "#{items.dig(item_id, 'text')} →"
-          = targets.dig(target_id, 'label')
+      .tjs-cloze
+        - cloze_segments(question.cloze_text).each do |kind, value|
+          - if kind == :text
+            span.tjs-cloze__text = value
+          - else
+            span.tjs-slot.correct-answer = Array(question.config.dig('answer', value)).map { |id| items.dig(id, 'text') }.join(', ')
+
+    - when 'ordering'
+      .tjs-question__text ==(question.question_text.presence || '(no question text)')
+      - items = question.config.fetch('items', []).index_by { |item| item['id'] }
+      - order = question.config.fetch('order', []).presence || items.keys
+      ol.tjs-order-list
+        - order.each do |item_id|
+          li.tjs-order-item.correct-answer
+            span.tjs-order-item__text = items.dig(item_id, 'text')
+
+    - when 'matrix'
+      .tjs-question__text ==(question.question_text.presence || '(no question text)')
+      - columns = question.config.fetch('columns', [])
+      .tj-table-responsive
+        table.tjs-matrix
+          thead
+            tr
+              th
+              - columns.each do |col|
+                th = col['label']
+          tbody
+            - question.config.fetch('rows', []).each do |row|
+              - correct_ids = Array(question.config.dig('correct', row['id']))
+              tr
+                th scope='row' = row['label']
+                - columns.each do |col|
+                  td.tjs-matrix__cell class=(correct_ids.include?(col['id']) ? 'correct-answer' : nil)
+                    - if correct_ids.include?(col['id'])
+                      span.tj-review-cell-tick ✓
+
+    - when 'classify'
+      .tjs-question__text ==(question.question_text.presence || '(no question text)')
+      - items = question.config.fetch('items', []).index_by { |item| item['id'] }
+      - by_target = question.config.fetch('correct', {}).group_by { |_item_id, target_id| target_id }
+      .tjs-classify__buckets
+        - question.config.fetch('targets', []).each do |target|
+          .tjs-bucket
+            .tjs-bucket__label = target['label']
+            .tjs-bucket__body
+              - Array(by_target[target['id']]).each do |item_id, _target_id|
+                .tjs-tile.correct-answer = items.dig(item_id, 'text')

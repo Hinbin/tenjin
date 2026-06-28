@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   resources :question_reviews, only: [:index] do
     collection do
       patch 'approve_all'
+      patch 'reject_all'
     end
     member do
       patch 'approve'

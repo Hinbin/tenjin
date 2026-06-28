@@ -6,11 +6,11 @@ class QuestionReviewsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: %i[approve reject]
 
-  # Pending questions are scoped by hand to the subjects the author owns; index and approve_all are
-  # exempt from verify_authorized, so there is no policy_scope to verify here. The same scoping is
-  # exactly the set QuestionPolicy#update? would allow, so bulk approval over it is safe.
+  # Pending questions are scoped by hand to the subjects the author owns; index and the bulk actions
+  # are exempt from verify_authorized, so there is no policy_scope to verify here. The same scoping
+  # is exactly the set QuestionPolicy#update? would allow, so bulk approve/reject over it is safe.
   skip_after_action :verify_policy_scoped, only: :index
-  skip_after_action :verify_authorized, only: :approve_all
+  skip_after_action :verify_authorized, only: %i[approve_all reject_all]
 
   def index
     @questions_by_topic = pending_authored_questions
@@ -23,6 +23,12 @@ class QuestionReviewsController < ApplicationController
     count = pending_authored_questions.count
     pending_authored_questions.find_each(&:approve!)
     redirect_to question_reviews_path, notice: "#{count} #{'question'.pluralize(count)} approved"
+  end
+
+  def reject_all
+    count = pending_authored_questions.count
+    pending_authored_questions.find_each(&:reject!)
+    redirect_to question_reviews_path, notice: "#{count} #{'question'.pluralize(count)} rejected"
   end
 
   def approve

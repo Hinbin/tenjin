@@ -269,10 +269,12 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
         expect(page).to have_css('#multiplier', text: 2)
       end
 
-      it 'updates my multiplier straight after answering' do
+      it 'holds the applied multiplier on the reveal and only advances on the next question' do
+        # The meter shows the rate this answer earned (×1 at streak 0). It must not jump to ×2 on the
+        # reveal — that would imply points the answer didn't earn; ×2 takes effect on the next question.
         create(:multiplier, score: 1, multiplier: 2)
         fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
-        expect(page).to have_css('#multiplier', text: 2)
+        expect(page).to have_css('#multiplier', text: 1)
       end
     end
 

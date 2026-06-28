@@ -1,19 +1,19 @@
 .tjk-container data-controller='review-queue'
-  h1.page-section-header Review Queue
+  h1.tj-review__title Review Queue
 
   p.tj-empty data-review-queue-target='empty' hidden=@questions_by_topic.any?
     | No questions are waiting for review.
   - unless @questions_by_topic.empty?
-    .tj-row-actions style='margin-bottom: var(--tj-space-4)'
+    .tj-row-actions
       = button_to 'Approve all', approve_all_question_reviews_path, method: :patch, class: 'tjs-btn tjs-btn--primary', data: { turbo_confirm: 'Approve every question waiting for review?' }
+      = button_to 'Reject all', reject_all_question_reviews_path, method: :patch, class: 'tjs-btn tjs-btn--danger', data: { turbo_confirm: 'Reject every question waiting for review? This cannot be undone.' }
     - @questions_by_topic.each do |topic, questions|
-      section.tjs-card.tj-review-topic data-review-queue-target='section' style='margin-bottom: var(--tj-space-5)'
-        h2.page-section-header = "#{topic.subject.name} · #{topic.name}"
+      section.tjs-card.tj-review-topic data-review-queue-target='section'
+        h2.tj-review-topic__head = "#{topic.subject.name} · #{topic.name}"
         - questions.each do |question|
-          .tj-review-item id="question-#{question.id}" style='padding: var(--tj-space-3) 0; border-top: 1px solid var(--line)'
-            .tj-review-item__type style='font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:.05em'
-              = question.question_type.humanize
+          .tj-review-item id="question-#{question.id}"
+            .tj-review-item__type = question.question_type.humanize
             = render 'question_reviews/preview', question: question
-            .tj-review-item__actions style='display:flex; gap:var(--tj-space-2); margin-top:var(--tj-space-2)'
+            .tj-review-item__actions
               = button_to 'Approve', approve_question_review_path(question), method: :patch, class: 'tjs-btn tjs-btn--primary tj-btn--sm'
               = button_to 'Reject', reject_question_review_path(question), method: :patch, class: 'tjs-btn tjs-btn--ghost tj-btn--sm'
