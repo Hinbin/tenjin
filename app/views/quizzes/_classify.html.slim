@@ -12,7 +12,7 @@
     - @question.config['items'].to_a.shuffle.each do |item|
       .tjs-tile.tjs-draggable draggable='true' data-item-id=item['id'] = item['text']
   .tjs-classify__buckets
-    - @question.config['targets'].to_a.each do |target|
+    - @question.config['targets'].to_a.shuffle.each do |target|
       .tjs-bucket data-target-id=target['id']
         .tjs-bucket__label = target['label']
         .tjs-bucket__body

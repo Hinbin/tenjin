@@ -7,18 +7,22 @@
     .tjs-question__pill
       = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
   .tjs-question__text ==@question.question_text
+  / Shuffle rows and columns so the grid can't be answered from memorised positions. Scoring and the
+  / reveal are keyed on row/col ids (data-row/data-col), so display order is purely cosmetic. Capture
+  / the shuffled columns once so the header and every row use the same order.
+  - columns = @question.config['columns'].to_a.shuffle
   .tj-table-responsive
     table.tjs-matrix
       thead
         tr
           th
-          - @question.config['columns'].to_a.each do |col|
+          - columns.each do |col|
             th = col['label']
       tbody
-        - @question.config['rows'].to_a.each do |row|
+        - @question.config['rows'].to_a.shuffle.each do |row|
           tr data-row-id=row['id']
             th scope='row' = row['label']
-            - @question.config['columns'].to_a.each do |col|
+            - columns.each do |col|
               td.tjs-matrix__cell data-cell="#{row['id']}:#{col['id']}"
                 input type='checkbox' data-row=row['id'] data-col=col['id']
   / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
