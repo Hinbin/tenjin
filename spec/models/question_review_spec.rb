@@ -8,8 +8,8 @@ RSpec.describe Question, :default_creates do
       create(:question, topic:, review_status: :pending, active: false)
     end
 
-    it 'defaults new questions to pending' do
-      expect(create(:question, topic:).review_status).to eq('pending')
+    it 'defaults normally-created questions to approved (only imports are stamped pending)' do
+      expect(create(:question, topic:).review_status).to eq('approved')
     end
 
     it 'approving makes it active' do
