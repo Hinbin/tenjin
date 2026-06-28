@@ -17,6 +17,7 @@ class Quiz::CheckAnswer < ApplicationService
     @question = params[:question]
     @asked_question = AskedQuestion.find_by(quiz: @quiz, question: @question)
     @answer_given = params[:answer_given]
+    @points_awarded = 0
   end
 
   def call
@@ -51,9 +52,19 @@ class Quiz::CheckAnswer < ApplicationService
       score: @asked_question.score,
       streak: @quiz.streak,
       answeredCorrect: @quiz.answered_correct,
-      multiplier: Multiplier.where('score <= ?', @quiz.streak).order(id: :desc).pick(:multiplier),
+      multiplier: display_multiplier,
       tooFast: @too_fast.present?
-    }
+    }.merge(points_payload)
+  end
+
+  # Leaderboard points for the HUD: the gain from this answer plus the running quiz total to tick to.
+  def points_payload
+    { pointsAwarded: @points_awarded, pointsTotal: @quiz.leaderboard_points }
+  end
+
+  # The multiplier the student now sits at, for the HUD "mult" meter (the streak tier they've reached).
+  def display_multiplier
+    Multiplier.where('score <= ?', @quiz.streak).order(id: :desc).pick(:multiplier)
   end
 
   # For multiple choice the reveal carries per-quiz tokens, not the real answer ids (Quiz::AnswerToken),
@@ -137,7 +148,7 @@ class Quiz::CheckAnswer < ApplicationService
     # Best combo this run — display-only (results screen); does not affect scoring/outcomes.
     @quiz.max_streak = [@quiz.max_streak.to_i, @quiz.streak].max
     @asked_question.update(correct: true, score: 1.0)
-    Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question, answer_seconds: @answer_seconds, bits: bits)
+    award_points(bits)
   end
 
   # Partial credit: student recalled some but not all bits. Streak resets (same penalty as wrong),
@@ -147,7 +158,15 @@ class Quiz::CheckAnswer < ApplicationService
     @asked_question.update(correct: false)
     return if @answer_seconds.present? && @answer_seconds < MIN_ANSWER_SECONDS
 
-    Quiz::AddLeaderboardPoint.call(quiz: @quiz, question: @question, answer_seconds: @answer_seconds, bits: bits)
+    award_points(bits)
+  end
+
+  # Award leaderboard points for this answer and remember the amount so the reveal payload can show
+  # the per-question gain and the running quiz total (HUD points tick).
+  def award_points(bits)
+    @points_awarded = Quiz::AddLeaderboardPoint.call(
+      quiz: @quiz, question: @question, answer_seconds: @answer_seconds, bits: bits
+    )
   end
 
   # Correct, but too fast to be a real read: count it toward the student's own accuracy and let the

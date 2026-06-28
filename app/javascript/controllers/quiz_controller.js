@@ -23,10 +23,13 @@ export default class extends Controller {
   }
 
   handleAnswered (event) {
-    const { correct, streak, multiplier } = event.detail || {}
+    const { correct, streak, multiplier, pointsAwarded } = event.detail || {}
     this.flash(correct)
     if (correct) {
-      this.pop(`+${multiplier ?? 0}`, streak >= 2 ? `COMBO ×${streak}` : null, true)
+      // Show the actual leaderboard points earned (multiplier × bits), matching the HUD points tick;
+      // fall back to the multiplier if the payload predates pointsAwarded.
+      const gained = pointsAwarded ?? multiplier ?? 0
+      this.pop(`+${gained}`, streak >= 2 ? `COMBO ×${streak}` : null, true)
       this.burst()
     } else {
       this.shake()

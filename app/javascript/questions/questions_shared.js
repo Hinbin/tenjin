@@ -1,11 +1,41 @@
 export default function updateQuizStatistics (serverResponse) {
-  const { multiplier, answeredCorrect, streak } = serverResponse
+  const { multiplier, answeredCorrect, streak, pointsTotal } = serverResponse
   const mulEl = document.getElementById('multiplier')
   const acEl = document.getElementById('answeredCorrect')
   const stEl = document.getElementById('streak')
+  const ptsEl = document.getElementById('leaderboardPoints')
   if (mulEl) mulEl.textContent = multiplier
   if (acEl) acEl.textContent = answeredCorrect
   if (stEl) stEl.textContent = streak
+  if (ptsEl && Number.isFinite(pointsTotal)) tickCount(ptsEl, pointsTotal)
+}
+
+const REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// Animate an element's whole-number value from its current text up to `to` (easeOutCubic over ~600ms).
+// Motion-safe: with reduced motion (or no change) we just set the final value and skip the tween. A
+// short pulse class lets the meter give a little nudge as it lands (cleared on a timer, see _quiz.scss).
+function tickCount (el, to) {
+  const from = parseInt(el.textContent, 10) || 0
+  if (from === to || REDUCED_MOTION) {
+    el.textContent = to
+    return
+  }
+  const duration = 600
+  const start = performance.now()
+  const step = (now) => {
+    const t = Math.min((now - start) / duration, 1)
+    const eased = 1 - Math.pow(1 - t, 3)
+    el.textContent = Math.round(from + (to - from) * eased)
+    if (t < 1) {
+      window.requestAnimationFrame(step)
+    } else {
+      el.textContent = to
+      el.classList.add('tjs-meter__value--tick')
+      window.setTimeout(() => el.classList.remove('tjs-meter__value--tick'), 400)
+    }
+  }
+  window.requestAnimationFrame(step)
 }
 
 // PUT an answer payload to the current quiz path and resolve the parsed JSON. `params` is a flat
@@ -94,7 +124,8 @@ export function finishAnswer (correct, serverResponse) {
       correct,
       streak: serverResponse.streak,
       multiplier: serverResponse.multiplier,
-      answeredCorrect: serverResponse.answeredCorrect
+      answeredCorrect: serverResponse.answeredCorrect,
+      pointsAwarded: serverResponse.pointsAwarded
     }
   }))
   const nextBtn = document.getElementById('nextButton')

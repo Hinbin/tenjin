@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_28_000100) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_28_000200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -335,6 +335,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_000100) do
     t.integer "answered_correct"
     t.boolean "counts_for_leaderboard"
     t.datetime "created_at", precision: nil, null: false
+    t.integer "leaderboard_points", default: 0, null: false
     t.bigint "lesson_id"
     t.integer "max_streak", default: 0, null: false
     t.integer "num_questions_asked"

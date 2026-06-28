@@ -322,6 +322,13 @@ RSpec.describe 'User takes a quiz', :default_creates, :js, type: :system do
         fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
         expect(page).to have_css('#answeredCorrect', text: 1)
       end
+
+      it 'ticks the leaderboard points up after a correct answer' do
+        fill_in('shortAnswerText', with: correct_response).native.send_keys(:return)
+        # Streak 3 → 4 with only the base ×1 multiplier seeded, so this correct answer earns 1 point.
+        expect(page).to have_css('#leaderboardPoints', text: 1)
+        expect(quiz.reload.leaderboard_points).to eq(1)
+      end
     end
   end
 end

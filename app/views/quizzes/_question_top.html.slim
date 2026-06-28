@@ -15,3 +15,5 @@
     = render 'shared/skin/meter', icon: :flame, color: 'var(--n1)', label: 'streak', value: @quiz.streak, value_id: 'streak'
   = render 'shared/skin/meter', icon: :check, color: 'var(--n2)', label: 'correct', value: @quiz.answered_correct, value_id: 'answeredCorrect'
   = render 'shared/skin/meter', icon: :bolt, color: 'var(--gold)', label: 'mult', value: @multiplier.multiplier, value_id: 'multiplier'
+  / running leaderboard points this quiz — questions_shared.js ticks #leaderboardPoints up after each answer
+  = render 'shared/skin/meter', icon: :star, color: 'var(--n3)', label: 'points', value: @quiz.leaderboard_points, value_id: 'leaderboardPoints'

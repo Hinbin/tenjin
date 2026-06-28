@@ -10,14 +10,19 @@ class Quiz::AddLeaderboardPoint < ApplicationService
     @bits = params.fetch(:bits, 1)
   end
 
+  # Returns the leaderboard points awarded for this answer (0 when the quiz doesn't count), so the
+  # caller can surface the per-question award and keep a running per-quiz total for the HUD.
   def call
-    return unless @quiz.counts_for_leaderboard
+    return 0 unless @quiz.counts_for_leaderboard
 
     multiplier = Multiplier.where('score < ?', @quiz.streak).order(score: :desc).pick(:multiplier) || 1
-    upsert_score(@question.topic.id, @user.id, multiplier * @bits)
+    points = multiplier * @bits
+    @quiz.leaderboard_points += points
+    upsert_score(@question.topic.id, @user.id, points)
 
     Challenge::UpdateChallengeProgress.call(@quiz, multiplier, @question.topic, @answer_seconds)
     Leaderboard::BroadcastLeaderboardPoint.call(@question.topic, @user)
+    points
   end
 
   protected

@@ -89,6 +89,18 @@
   line-height: 1;
 }
 
+// Landing nudge when a meter ticks up (questions_shared.js adds/removes the class). Motion-safe:
+// only animates when the user hasn't asked to reduce motion.
+@media (prefers-reduced-motion: no-preference) {
+  .tjs-meter__value--tick { animation: tjs-meter-tick 360ms ease-out; }
+}
+
+@keyframes tjs-meter-tick {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+
 .tjs-meter__label {
   font-family: var(--f-body);
   font-size: 8px;
