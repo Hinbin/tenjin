@@ -22,49 +22,39 @@
 .tjs-tile:active { transform: scale(0.975); }
 
 // Atmosphere particle layer — sits above the Scene motif, below content.
+// position: fixed pins it to the viewport so the particles stay centred and visible as the page
+// scrolls (otherwise, on a tall page like the quiz, a centre-anchored effect such as the warp stars
+// ends up half-way down the document and off-screen). It still paints inside .tjs-backdrop's
+// stacking context (z-index:0), so page content — .tjs-quiz__inner at z-index:1 — stays on top.
 .tjs-motion {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 2;
   pointer-events: none;
   overflow: hidden;
 }
 
-// Shop catalogue thumbnail — a small static cluster of tinted dots (the live layer animates in
-// the backdrop, not here). Bobs gently when motion is allowed.
+// Shop catalogue thumbnail — a live miniature of the real Atmosphere. motion_preview_controller.js
+// injects the same particles the backdrop uses (petals/rain/stars/…), clipped to this small stage.
+// Faint inset background so glowing particles read against the tile.
 .tjs-motion-preview {
   position: relative;
-  width: 56px;
-  height: 46px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-
-  &__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-    box-shadow: 0 0 6px currentColor;
-  }
+  width: 100%;
+  height: 56px;
+  overflow: hidden;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--ink) 6%, var(--surface));
 }
 
 .tjs-motion-preview--none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
   color: var(--dim);
   font-size: 20px;
   font-family: var(--f-body);
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  body:not([data-motion="false"]) {
-    .tjs-motion-preview__dot { animation: tjs-bob 1.6s ease-in-out infinite; }
-    .tjs-motion-preview__dot:nth-child(2) { animation-delay: .22s; }
-    .tjs-motion-preview__dot:nth-child(3) { animation-delay: .44s; }
-  }
-}
-
-@keyframes tjs-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 
 // Entrance helpers — base state is already visible; motion only when allowed.
 .tjs-slideup,

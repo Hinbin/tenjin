@@ -14,17 +14,23 @@ export default class extends Controller {
   static values = { id: String, token: String, enabled: Boolean }
 
   connect() {
-    const id = this.idValue
-    if (!this.enabledValue || !id || id === "none") return
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
-
-    const build = BUILDERS[id]
-    if (build) build(this.element, this.tokenValue || "var(--n1)")
+    if (!this.enabledValue) return
+    runMotionFamily(this.element, this.idValue, this.tokenValue || "var(--n1)")
   }
 
   disconnect() {
     this.element.replaceChildren()
   }
+}
+
+// Render a particle family into `root`, tinted by `token`. Shared with the shop's Atmosphere
+// preview (motion_preview_controller) so the catalogue thumbnail shows the REAL effect, not a
+// generic stand-in. No-ops under reduced-motion or for the empty/none family.
+export function runMotionFamily(root, id, token) {
+  if (!root || !id || id === "none") return
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+  const build = BUILDERS[id]
+  if (build) build(root, token || "var(--n1)")
 }
 
 const rnd = (a, b) => a + Math.random() * (b - a)
@@ -55,12 +61,16 @@ const BUILDERS = {
     }, { "--px": rnd(-8, 8) + "px" })
   }),
   stars: (root, col) => {
-    const hub = part(root, "div", { left: "50%", top: "46%", width: 0, height: 0 })
-    times(20).forEach(() => {
-      const a = rnd(0, Math.PI * 2), dist = rnd(60, 150)
+    // Warp field radiates from the centre and fills the whole stage. Reach scales to the layer's
+    // own size — the full viewport for the live backdrop (which is position:fixed, so it follows
+    // scrolling), or the small tile for the shop preview — so stars spread edge-to-edge in both.
+    const reach = Math.max(root.clientWidth, root.clientHeight, 320)
+    const hub = part(root, "div", { left: "50%", top: "50%", width: 0, height: 0 })
+    times(44).forEach(() => {
+      const a = rnd(0, Math.PI * 2), dist = rnd(reach * 0.4, reach * 0.95)
       part(hub, "i", {
         width: "3px", height: "3px", borderRadius: "50%", background: col, boxShadow: `0 0 6px ${col}`,
-        animation: anim("tjs-warpstar", rnd(1.6, 3), "ease-in", rnd(0, 2.4)),
+        animation: anim("tjs-warpstar", rnd(1.8, 3.4), "ease-in", rnd(0, 2.8)),
       }, { "--tx": Math.cos(a) * dist + "px", "--ty": Math.sin(a) * dist + "px" })
     })
   },

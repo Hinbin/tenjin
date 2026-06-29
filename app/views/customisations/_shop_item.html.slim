@@ -14,10 +14,23 @@
       .tjs-streak-aura class=streak_aura_class(item.value)
         = glyph(:flame, size: 26, color: 'var(--n1)')
     - when 'answer_effect'
+      / Signature particle for the effect (matches the live in-quiz burst), staggered idle twinkle.
       .tjs-answer-preview data-effect=item.value
-        = glyph(:star, size: 15, color: 'var(--n2)')
-        = glyph(:sparkle, size: 18, color: 'var(--gold)')
-        = glyph(:star, size: 15, color: 'var(--n1)')
+        - %w[var(--n2) var(--gold) var(--n1)].each_with_index do |col, i|
+          span.tjs-answer-preview__p style="--i:#{i};color:#{col};"
+            - case item.value
+            - when 'confetti'
+              span.tjs-answer-preview__confetti
+            - when 'pixel'
+              span.tjs-answer-preview__pixel
+            - when 'fireworks'
+              span.tjs-answer-preview__spark
+            - when 'sakura'
+              = glyph(:sakura, size: 18, color: col)
+            - when 'stars'
+              = glyph(:star, size: 17, color: col)
+            - else
+              = glyph(:sparkle, size: 18, color: col)
     - when 'scene'
       - scene_id = item.value.split(':').last
       - if scene_id == 'none'
@@ -30,9 +43,8 @@
       - if motion_id == 'none'
         .tjs-motion-preview.tjs-motion-preview--none —
       - else
-        .tjs-motion-preview style="color:#{item.token};" data-motion=motion_id
-          - 3.times do
-            span.tjs-motion-preview__dot
+        / Live miniature of the actual Atmosphere — reuses the backdrop particle builders.
+        .tjs-motion-preview style="color:#{item.token};" data-motion=motion_id data-controller='motion-preview' data-motion-preview-id-value=motion_id data-motion-preview-token-value=item.token data-motion-preview-enabled-value=motion_pref_data
     - when 'scene_fx'
       - if item.value == 'none'
         .tjs-scenefx-preview.tjs-scenefx-preview--none —

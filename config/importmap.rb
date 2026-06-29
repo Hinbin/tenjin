@@ -29,6 +29,7 @@ pin "controllers/lesson_filter_controller",     to: "controllers/lesson_filter_c
 pin "controllers/live_leaderboard_controller",  to: "controllers/live_leaderboard_controller.js"
 pin "controllers/modal_controller",             to: "controllers/modal_controller.js"
 pin "controllers/motion_controller",            to: "controllers/motion_controller.js"
+pin "controllers/motion_preview_controller",    to: "controllers/motion_preview_controller.js"
 pin "controllers/navbar_controller",            to: "controllers/navbar_controller.js"
 pin "controllers/question_builder_controller",  to: "controllers/question_builder_controller.js"
 pin "controllers/quiz_controller",              to: "controllers/quiz_controller.js"

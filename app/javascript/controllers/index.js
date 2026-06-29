@@ -33,6 +33,9 @@ application.register("modal", ModalController)
 import MotionController from "controllers/motion_controller"
 application.register("motion", MotionController)
 
+import MotionPreviewController from "controllers/motion_preview_controller"
+application.register("motion-preview", MotionPreviewController)
+
 import NavbarController from "controllers/navbar_controller"
 application.register("navbar", NavbarController)
 

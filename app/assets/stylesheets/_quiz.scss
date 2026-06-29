@@ -290,10 +290,82 @@ body[data-skin="famicom"] .tjs-quiz {
 .tjs-quiz__pop-text--good { color: var(--n2); }
 .tjs-quiz__pop-text--bad { color: var(--n1); }
 
-// answer-effect mount — Phase 4 cosmetics paint here; harmless empty box otherwise
+// answer-effect mount — quiz_controller.js injects a burst of particles here on a correct answer.
+// Box has no height of its own; particles burst outward from its centre point (just below the
+// answers) and clean themselves up on a timer. Harmless empty box when no effect is firing.
 .tjs-quiz__fx {
   position: relative;
   height: 0;
+  z-index: 30;
+}
+
+// Expanding shockwave ring — fires for every effect so the hit always reads, even on the free one.
+.tjs-answerfx__ring {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 50%;
+  border: 2.5px solid color-mix(in srgb, var(--n2) 75%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tjs-answerfx__p {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tjs-answerfx__p--confetti {
+  width: 8px;
+  height: 13px;
+  border-radius: 1px;
+  background: currentColor;
+}
+.tjs-answerfx__p--pixel {
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  box-shadow: 2px 2px 0 var(--edge, rgba(0, 0, 0, 0.45));
+}
+.tjs-answerfx__p--firework {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 11px currentColor, 0 0 4px #fff;
+}
+.tjs-answerfx__p svg { filter: drop-shadow(0 0 5px currentColor); }
+
+@media (prefers-reduced-motion: no-preference) {
+  body:not([data-motion="false"]) {
+    .tjs-answerfx__ring { animation: tjs-answerfx-ring 0.55s ease-out forwards; }
+    .tjs-answerfx__p { animation: tjs-answerfx-fly 0.9s cubic-bezier(0.15, 0.7, 0.3, 1) var(--delay, 0s) forwards; }
+    .tjs-answerfx__p--confetti { animation: tjs-answerfx-confetti 1s ease-in var(--delay, 0s) forwards; }
+  }
+}
+
+@keyframes tjs-answerfx-ring {
+  0%   { opacity: 0.9; transform: scale(0.3); }
+  100% { opacity: 0; transform: scale(3.6); }
+}
+@keyframes tjs-answerfx-fly {
+  0%   { opacity: 1; transform: translate(0, 0) scale(0.4) rotate(0); }
+  18%  { opacity: 1; transform: translate(calc(var(--tx) * 0.32), calc(var(--ty) * 0.32)) scale(1.2) rotate(calc(var(--rot) * 0.3)); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(var(--rot)); }
+}
+@keyframes tjs-answerfx-confetti {
+  0%   { opacity: 1; transform: translate(var(--x, 0), -12px) rotate(0); }
+  12%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--x, 0), var(--fall, 160px)) rotate(var(--rot, 540deg)); }
 }
 
 // ── Lesson sidebar: question column + compact video card ───────────────────

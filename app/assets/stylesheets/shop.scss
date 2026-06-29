@@ -237,10 +237,50 @@
   border: 1px solid var(--line);
 }
 
+// Answer-effect thumbnail — a small fan of the effect's signature particle (matches the live burst),
+// gently twinkling so the tile reads as motion without firing the full effect.
 .tjs-answer-preview {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 9px;
+}
+.tjs-answer-preview__p {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tjs-answer-preview__p svg { filter: drop-shadow(0 0 4px currentColor); }
+.tjs-answer-preview__confetti {
+  width: 8px;
+  height: 13px;
+  border-radius: 1px;
+  background: currentColor;
+  transform: rotate(-16deg);
+}
+.tjs-answer-preview__pixel {
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  box-shadow: 2px 2px 0 var(--edge, rgba(0, 0, 0, 0.45));
+}
+.tjs-answer-preview__spark {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 9px currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body:not([data-motion="false"]) .tjs-answer-preview__p {
+    animation: tjs-answer-twinkle 1.7s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.2s);
+  }
+}
+@keyframes tjs-answer-twinkle {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.82; }
+  50%      { transform: translateY(-4px) scale(1.14); opacity: 1; }
 }
 
 // ── Skins: full-width "selling" cards ───────────────────────────────────────
