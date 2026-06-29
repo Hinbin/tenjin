@@ -62,7 +62,15 @@ class DashboardController < ApplicationController
     return unless @active_subject
 
     @topics = @active_subject.topics.where(active: true).order(:name)
+    load_topic_mastery
+  end
+
+  # Preloads the three per-topic inputs the dashboard mastery bar blends (see Topic::MasteryBar):
+  # this week's points, lifetime points, and precomputed cross-Tenjin percentile standing.
+  def load_topic_mastery
     @topic_scores = TopicScore.where(topic: @topics, user: current_user).index_by(&:topic_id)
+    @all_time_topic_scores = AllTimeTopicScore.where(topic: @topics, user: current_user).index_by(&:topic_id)
+    @topic_percentiles = TopicPercentile.where(topic: @topics, user: current_user).pluck(:topic_id, :percentile).to_h
   end
 
   def active_subject_from_param

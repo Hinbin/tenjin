@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_28_000200) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_29_000100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -525,6 +525,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_000200) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
+  create_table "topic_percentiles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "percentile", default: 0, null: false
+    t.bigint "topic_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["topic_id"], name: "index_topic_percentiles_on_topic_id"
+    t.index ["user_id", "topic_id"], name: "index_topic_percentiles_on_user_id_and_topic_id", unique: true
+  end
+
   create_table "topic_scores", force: :cascade do |t|
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "score", default: 0, null: false
@@ -662,6 +672,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_000200) do
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "student_question_statistics", "questions"
   add_foreign_key "student_question_statistics", "users"
+  add_foreign_key "topic_percentiles", "topics"
+  add_foreign_key "topic_percentiles", "users"
   add_foreign_key "topic_scores", "topics"
   add_foreign_key "topic_scores", "users"
   add_foreign_key "topics", "subjects"

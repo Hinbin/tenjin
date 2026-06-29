@@ -6,6 +6,7 @@ class Leaderboard::ResetWeeklyLeaderboard < ApplicationService
     update_classroom_winners
     create_leaderboard_awards
     copy_points_to_all_time_scores
+    Leaderboard::ComputeTopicPercentiles.call
     reset_weekly_leaderboard_tables
   end
 

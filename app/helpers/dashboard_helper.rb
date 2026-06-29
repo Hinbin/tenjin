@@ -30,9 +30,15 @@ module DashboardHelper
     @challenge_progresses.any? { |cp| cp.challenge_id == challenge.id && cp.completed }
   end
 
-  def topic_mastery_pct(topic_id, max_score: 500)
-    score = @topic_scores&.dig(topic_id)&.score.to_i
-    (score * 100.0 / max_score).round.clamp(0, 100)
+  # Blends this week's effort, lifetime mastery, and cross-Tenjin peer standing into the topic bar's
+  # fill. The percentile half is precomputed weekly (see Leaderboard::ComputeTopicPercentiles), so this
+  # stays a lookup against the three hashes the controller preloads — no per-topic queries.
+  def topic_mastery_pct(topic_id)
+    Topic::MasteryBar.call(
+      weekly_score: @topic_scores&.dig(topic_id)&.score,
+      all_time_score: @all_time_topic_scores&.dig(topic_id)&.score,
+      percentile: @topic_percentiles&.dig(topic_id)
+    )
   end
 
   def write_challenge_progress(challenge, challenge_progresses)
