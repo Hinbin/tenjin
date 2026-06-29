@@ -42,8 +42,14 @@
 
   &__actions {
     display: flex;
+    align-items: center;
     gap: var(--tj-space-2);
     margin-top: var(--tj-space-3);
+
+    // button_to renders a wrapping <form>; without this it becomes the flex item
+    // and stretches differently from the bare <a> Edit link, so the buttons end up
+    // different heights. Neutralise the wrapper and align all three on natural height.
+    form { margin: 0; display: inline-flex; }
   }
 }
 

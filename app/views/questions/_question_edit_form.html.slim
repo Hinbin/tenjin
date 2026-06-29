@@ -51,4 +51,4 @@
         =f.fields_for :answers, @question.answers do |a|
           =render 'answer', f: a
     =link_to_add_row('Add Answer', f, :answers, class: 'tjs-btn tjs-btn--secondary tj-btn--full')
-  =f.submit("Save Question", class: 'tjs-btn tjs-btn--primary tj-btn--full')
+  =f.submit(@question.pending? ? 'Accept and save' : 'Save Question', class: 'tjs-btn tjs-btn--primary tj-btn--full')

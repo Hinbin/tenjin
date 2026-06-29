@@ -50,7 +50,7 @@ class QuestionsController < ApplicationController
     check_answers
 
     if @question.save
-      redirect_to @question, notice: 'Question successfully updated'
+      accept_from_queue_or_redirect
     else
       render :show, status: :unprocessable_content
     end
@@ -58,9 +58,16 @@ class QuestionsController < ApplicationController
 
   def destroy
     authorize @question
-    redirect_to topic_path(@question.topic)
 
-    @question.update_attribute(:active, false)
+    # A pending question lives in the review queue; deleting it there means rejecting it (removing it
+    # from the queue) rather than just deactivating a live question.
+    if @question.pending?
+      @question.reject!
+      redirect_to question_reviews_path, notice: 'Question removed from review queue'
+    else
+      @question.update_attribute(:active, false)
+      redirect_to topic_path(@question.topic)
+    end
   end
 
   def download_topic
@@ -101,6 +108,17 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  # When a pending question is edited from the review queue, "Accept and save" both persists the edits
+  # and approves it (making it live), then returns the reviewer to the queue. Live questions just save.
+  def accept_from_queue_or_redirect
+    if @question.pending?
+      @question.approve!
+      redirect_to question_reviews_path, notice: 'Question accepted and saved'
+    else
+      redirect_to @question, notice: 'Question successfully updated'
+    end
+  end
 
   def topic_params
     params.require(:topic_id)

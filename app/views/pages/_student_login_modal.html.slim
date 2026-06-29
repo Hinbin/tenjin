@@ -7,7 +7,7 @@ dialog#studentLoginModal.tjs-login-modal
       span aria-hidden='true' &times;
     = render 'shared/skin/logo', size: 22
     h1.tjs-display.tjs-auth__title Log in
-    = simple_form_for(resource, as: resource_name, data: { turbo: false }, url: session_path(resource_name)) do |f|
+    = simple_form_for(User.new, as: :user, data: { turbo: false }, url: user_session_path) do |f|
       .form-inputs
         = f.input :login,                       \
           required: false,                      \
@@ -16,7 +16,7 @@ dialog#studentLoginModal.tjs-login-modal
         = f.input :password,                                         \
           required: false,                                          \
           input_html: { autocomplete: "current-password", class: 'tjk-input' }, label_html: { class: 'tjk-label' }, wrapper_html: { class: 'tjk-field' }
-        = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' } if devise_mapping.rememberable?
+        = f.input :remember_me, as: :boolean, input_html: { checked: 'checked' }
       .form-actions
         = f.button :submit, "Log in", class: 'tjs-btn tjs-btn--primary tj-btn--full', id: 'loginModal'
     .tjs-login-modal__divider

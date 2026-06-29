@@ -10,7 +10,10 @@
       .tjs-card#questionEditor
         = render('question_edit_form')
       .tj-row-actions
-        = link_to 'Back to Topic Questions', topic_path(@question.topic), class: 'tjs-btn tjs-btn--ghost'
+        - if @question.pending?
+          = link_to 'Back to Review Queue', question_reviews_path, class: 'tjs-btn tjs-btn--ghost'
+        - else
+          = link_to 'Back to Topic Questions', topic_path(@question.topic), class: 'tjs-btn tjs-btn--ghost'
 
     section.tjs-dashboard__section
       = render 'shared/skin/section_head', en: 'Statistics', jp: '統計'
@@ -30,7 +33,7 @@
           reset_flags_question_path,
           data: { turbo_method: 'patch' },
           class: 'tjs-btn tjs-btn--secondary'
-        = link_to 'Delete Question',
+        = link_to (@question.pending? ? 'Delete from queue' : 'Delete Question'),
           question_path(@question),
           data: { turbo_confirm: 'Are you sure?', turbo_method: 'delete' },
           class: 'tjs-btn tjs-btn--danger'
