@@ -57,3 +57,17 @@
         li Every item must be assigned to a target before the question can be saved.
         li Students see the items shuffled and drag them into the matching buckets. Each correctly placed item earns part of the marks.
       p.tjs-builder__help-note Example: targets “Embedded system” and “General-purpose computer” with items like “Has a dedicated purpose” assigned to “Embedded system”.
+  - if @question.match?
+    .tjs-builder__help
+      h3.tjs-builder__help-title How to build a match question
+      ol
+        li Use the Question Text box above for the instruction (e.g. “Match each component to what it does.”).
+        li Add the definitions on the right first — these are what students connect keywords to.
+        li
+          | Add at least one
+          strong  extra
+          | definition with no keyword pointing at it — these are distractors (wrong options that don't match anything).
+        li Add each keyword on the left and use the dropdown to pick its one correct definition.
+        li Every keyword must have a correct definition, and no two keywords can share the same definition, before the question can be saved.
+        li Students tap a keyword then its definition to connect them (a line is drawn on larger screens). Each correct pairing earns part of the marks.
+      p.tjs-builder__help-note Example: keywords “CPU”, “RAM” matched to “The brain of the computer”, “Fast volatile memory”, with an extra “Permanent storage” definition left as a distractor.

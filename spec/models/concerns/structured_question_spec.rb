@@ -37,6 +37,18 @@ RSpec.describe StructuredQuestion, type: :model do
       'correct' => { 'ci1' => 'ct1', 'ci2' => 'ct2', 'ci3' => 'ct1' } }
   end
 
+  let(:match_config) do
+    { 'left' => [{ 'id' => 'ml1', 'text' => 'CPU' },
+                 { 'id' => 'ml2', 'text' => 'RAM' },
+                 { 'id' => 'ml3', 'text' => 'Hard drive' }],
+      'right' => [{ 'id' => 'mr1', 'text' => 'Brain of the computer' },
+                  { 'id' => 'mr2', 'text' => 'Volatile working memory' },
+                  { 'id' => 'mr3', 'text' => 'Permanent storage' },
+                  { 'id' => 'mr4', 'text' => 'High-speed cache (distractor)' },
+                  { 'id' => 'mr5', 'text' => 'A computer network (distractor)' }],
+      'correct' => { 'ml1' => 'mr1', 'ml2' => 'mr2', 'ml3' => 'mr3' } }
+  end
+
   describe '#score_response for drag_drop' do
     subject(:question) do
       build(:question, question_type: 'drag_drop', question_text: cloze_text, config: drag_drop_config)
@@ -243,6 +255,54 @@ RSpec.describe StructuredQuestion, type: :model do
     end
   end
 
+  describe '#score_response for match' do
+    subject(:question) { build(:question, question_type: 'match', config: match_config) }
+
+    it 'gives full marks when every keyword is paired with its correct definition' do
+      expect(question.score_response('ml1' => 'mr1', 'ml2' => 'mr2', 'ml3' => 'mr3')).to eq(1.0)
+    end
+
+    it 'gives partial credit when one keyword is paired with a distractor' do
+      expect(question.score_response('ml1' => 'mr4', 'ml2' => 'mr2', 'ml3' => 'mr3').round(2)).to eq(0.67)
+    end
+
+    it 'gives zero for an empty response' do
+      expect(question.score_response({})).to eq(0.0)
+    end
+  end
+
+  describe 'match validation' do
+    it 'accepts a well-formed match question' do
+      expect(build(:question, question_type: 'match', config: match_config)).to be_valid
+    end
+
+    it 'rejects a match question with fewer than two keywords' do
+      bad = match_config.merge('left' => [{ 'id' => 'ml1', 'text' => 'only' }],
+                               'correct' => { 'ml1' => 'mr1' })
+      expect(build(:question, question_type: 'match', config: bad)).to be_invalid
+    end
+
+    it 'rejects a match question with no distractor (definitions do not out-number keywords)' do
+      bad = match_config.merge('right' => match_config['right'].first(3))
+      expect(build(:question, question_type: 'match', config: bad)).to be_invalid
+    end
+
+    it 'rejects a match question where a keyword has no correct definition' do
+      bad = match_config.merge('correct' => { 'ml1' => 'mr1', 'ml2' => 'mr2' })
+      expect(build(:question, question_type: 'match', config: bad)).to be_invalid
+    end
+
+    it 'rejects a match question where correct references a non-existent definition' do
+      bad = match_config.merge('correct' => { 'ml1' => 'mr1', 'ml2' => 'mr2', 'ml3' => 'mr99' })
+      expect(build(:question, question_type: 'match', config: bad)).to be_invalid
+    end
+
+    it 'rejects a match question where two keywords share the same definition' do
+      bad = match_config.merge('correct' => { 'ml1' => 'mr1', 'ml2' => 'mr1', 'ml3' => 'mr3' })
+      expect(build(:question, question_type: 'match', config: bad)).to be_invalid
+    end
+  end
+
   describe 'classify validation' do
     it 'accepts a well-formed classify question' do
       expect(build(:question, question_type: 'classify', config: classify_config)).to be_valid
@@ -354,6 +414,22 @@ RSpec.describe StructuredQuestion, type: :model do
 
       it 'returns 2 for two correct placements' do
         expect(question.bits_correct_count('ci1' => 'ct2', 'ci2' => 'ct2', 'ci3' => 'ct1')).to eq(2)
+      end
+
+      it 'returns 0 for an empty response' do
+        expect(question.bits_correct_count({})).to eq(0)
+      end
+    end
+
+    describe 'match' do
+      subject(:question) { build(:question, question_type: 'match', config: match_config) }
+
+      it 'returns 3 when every keyword is correctly paired' do
+        expect(question.bits_correct_count('ml1' => 'mr1', 'ml2' => 'mr2', 'ml3' => 'mr3')).to eq(3)
+      end
+
+      it 'returns 2 for two correct pairings' do
+        expect(question.bits_correct_count('ml1' => 'mr4', 'ml2' => 'mr2', 'ml3' => 'mr3')).to eq(2)
       end
 
       it 'returns 0 for an empty response' do

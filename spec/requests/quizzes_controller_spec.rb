@@ -106,6 +106,20 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
         get quiz_path(id: quiz.id)
         expect(response).to have_http_status(:success)
       end
+
+      it 'renders a match question' do
+        question = create(:question, question_type: 'match',
+                                     config: { 'left' => [{ 'id' => 'ml1', 'text' => 'CPU' },
+                                                          { 'id' => 'ml2', 'text' => 'RAM' }],
+                                               'right' => [{ 'id' => 'mr1', 'text' => 'Brain' },
+                                                           { 'id' => 'mr2', 'text' => 'Volatile memory' },
+                                                           { 'id' => 'mr3', 'text' => 'Distractor' }],
+                                               'correct' => { 'ml1' => 'mr1', 'ml2' => 'mr2' } })
+        quiz.update_attribute(:question_order, [question.id])
+        get quiz_path(id: quiz.id)
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include('tjs-match')
+      end
     end
   end
 
@@ -252,6 +266,40 @@ RSpec.describe 'using a quiz', :default_creates, type: :request do
     it 'returns the ordered solution for the reveal' do
       patch quiz_path(id: quiz.id), params: { answer: { structured: { order: %w[o1 o2 o3] } } }
       expect(response.parsed_body['solution']).to eq(%w[o1 o2 o3])
+    end
+  end
+
+  describe 'answering a match question' do
+    let(:match_question) do
+      create(:question, topic: topic, question_type: 'match',
+                        config: { 'left' => [{ 'id' => 'ml1', 'text' => 'CPU' },
+                                             { 'id' => 'ml2', 'text' => 'RAM' }],
+                                  'right' => [{ 'id' => 'mr1', 'text' => 'Brain of the computer' },
+                                              { 'id' => 'mr2', 'text' => 'Volatile memory' },
+                                              { 'id' => 'mr3', 'text' => 'Permanent storage (distractor)' }],
+                                  'correct' => { 'ml1' => 'mr1', 'ml2' => 'mr2' } })
+    end
+    let(:quiz) do
+      create(:new_quiz, user: student, question_order: [match_question.id], counts_for_leaderboard: false,
+                        answered_correct: 0, streak: 0, max_streak: 0)
+    end
+    let(:asked_question) { create(:asked_question, quiz: quiz, question: match_question) }
+
+    before { asked_question }
+
+    it 'stores a full score when every keyword is paired correctly' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { 'ml1' => 'mr1', 'ml2' => 'mr2' } } }
+      expect(asked_question.reload).to have_attributes(score: 1.0, response: { 'ml1' => 'mr1', 'ml2' => 'mr2' })
+    end
+
+    it 'stores a partial score when one keyword is paired with a distractor' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { 'ml1' => 'mr3', 'ml2' => 'mr2' } } }
+      expect(asked_question.reload.score).to eq(0.5)
+    end
+
+    it 'returns the left-to-right solution map for the reveal' do
+      patch quiz_path(id: quiz.id), params: { answer: { structured: { 'ml1' => 'mr1', 'ml2' => 'mr2' } } }
+      expect(response.parsed_body['solution']).to eq('ml1' => 'mr1', 'ml2' => 'mr2')
     end
   end
 

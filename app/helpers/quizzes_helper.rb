@@ -13,16 +13,13 @@ module QuizzesHelper
     'Geography' => 'var(--n1)'
   }.freeze
 
+  # Question types that render their own quiz partial named after the type; everything else (multiple,
+  # and the retired boolean) falls back to the multiple-choice partial.
+  SELF_NAMED_QUESTION_PARTIALS = %w[short_answer drag_drop matrix fill_blank ordering classify match].freeze
+
   def render_question
-    case @question.question_type
-    when 'short_answer' then render('short_answer')
-    when 'drag_drop' then render('drag_drop')
-    when 'matrix' then render('matrix')
-    when 'fill_blank' then render('fill_blank')
-    when 'ordering' then render('ordering')
-    when 'classify' then render('classify')
-    else render('multiple_choice')
-    end
+    type = @question.question_type
+    render(SELF_NAMED_QUESTION_PARTIALS.include?(type) ? type : 'multiple_choice')
   end
 
   def subject_neon(subject)

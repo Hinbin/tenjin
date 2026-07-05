@@ -9,7 +9,7 @@ class Quiz::CheckAnswer < ApplicationService
 
   # Question types rendered as something other than clickable answer buttons; everything else is a
   # multiple-choice question (mirrors the `else` branches in check_answer_correct / render_question).
-  NON_MULTIPLE_CHOICE_TYPES = %w[short_answer drag_drop matrix fill_blank ordering classify].freeze
+  NON_MULTIPLE_CHOICE_TYPES = %w[short_answer drag_drop matrix fill_blank ordering classify match].freeze
 
   def initialize(params)
     super()
@@ -94,7 +94,7 @@ class Quiz::CheckAnswer < ApplicationService
   def check_answer_correct
     case @question.question_type
     when 'short_answer' then check_short_answer
-    when 'drag_drop', 'matrix', 'fill_blank', 'ordering', 'classify' then check_structured_answer
+    when 'drag_drop', 'matrix', 'fill_blank', 'ordering', 'classify', 'match' then check_structured_answer
     else check_multiple_choice
     end
   end
@@ -117,11 +117,11 @@ class Quiz::CheckAnswer < ApplicationService
   end
 
   # The correct mapping for the reveal: drag_drop -> slot=>item; matrix -> row=>[cols];
-  # fill_blank -> slot=>accepted text; ordering -> ordered list of item ids.
+  # fill_blank -> slot=>accepted text; ordering -> ordered list of item ids; match -> left=>right.
   def structured_solution
     case @question.question_type
     when 'drag_drop', 'fill_blank' then @question.config['answer']
-    when 'matrix', 'classify' then @question.config['correct']
+    when 'matrix', 'classify', 'match' then @question.config['correct']
     when 'ordering' then @question.config['order']
     end
   end

@@ -763,6 +763,151 @@ body[data-skin="arcade"] .tjs-results__points-value { text-shadow: 0 0 18px var(
   background: color-mix(in srgb, var(--n1) 10%, var(--surface));
 }
 
+// ── Match question ("draw a line": tap a keyword, then its definition) ───────
+// Wide screens show two columns with SVG connector lines; the stacked media query below turns the
+// keywords into chips over full-width definition cards for phones. The pairing colour is set inline as
+// --pair by match_question.js; the .correct-answer / .incorrect-answer reveal is handled by the global
+// .tjs-quiz override above (so only the badge needs re-colouring here).
+.tjs-match {
+  --tjs-match-p1: #22d3ee;
+  --tjs-match-p2: #f472d0;
+  --tjs-match-p3: #fbbf24;
+  --tjs-match-p4: #a3e635;
+  --tjs-match-p5: #c084fc;
+  margin-bottom: var(--tj-space-3);
+}
+
+.tjs-match__cols {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
+  gap: clamp(28px, 6vw, 72px);
+  align-items: start;
+}
+
+// SVG overlay carrying the connector lines; sits over the columns, ignores pointer events.
+.tjs-match__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tjs-match__side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+// Column heading — only surfaced in the stacked layout to label the two lists.
+.tjs-match__stack-label {
+  display: none;
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.tjs-match__node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--f-body);
+  font-size: 14px;
+  text-align: left;
+  color: var(--ink);
+  background: var(--surface);
+  border: 2px solid color-mix(in srgb, var(--n1) 35%, transparent);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover { border-color: var(--n1); }
+  &:focus-visible { outline: 2px solid var(--n1); outline-offset: 2px; }
+}
+
+.tjs-match__item { justify-content: space-between; font-weight: 700; }
+.tjs-match__text { flex: 1; }
+
+// Selected keyword, waiting for a definition tap.
+.tjs-match__node.is-selected {
+  border-color: var(--n1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--n1) 30%, transparent);
+}
+
+// Paired: border + tint take the connection's colour.
+.tjs-match__node.is-paired {
+  border-color: var(--pair, var(--n1));
+  background: color-mix(in srgb, var(--pair, var(--n1)) 12%, var(--surface));
+}
+
+// Connection badge — the number shared by a keyword and its matched definition.
+.tjs-match__badge {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-family: var(--f-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: #08111f;
+  background: var(--pair, transparent);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.tjs-match__option .tjs-match__badge { order: -1; }
+.tjs-match__node.is-paired .tjs-match__badge { opacity: 1; transform: scale(1); }
+
+// Anchor dots the connector lines spring from (wide layout only).
+.tjs-match__anchor {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--pair, transparent);
+  transform: translateY(-50%) scale(0);
+  transition: transform 0.15s ease;
+  z-index: 3;
+}
+
+.tjs-match__item .tjs-match__anchor { right: -5px; }
+.tjs-match__option .tjs-match__anchor { left: -5px; }
+.tjs-match__node.is-paired .tjs-match__anchor { transform: translateY(-50%) scale(1); }
+
+// Reveal — the green/red fill comes from the global override; recolour the badge to match.
+.tjs-match__node.correct-answer .tjs-match__badge { background: var(--correct); }
+.tjs-match__node.incorrect-answer .tjs-match__badge { background: var(--incorrect); }
+
+// Stacked layout for phones: keyword chips row over full-width definition cards, lines hidden.
+@media (max-width: 640px) {
+  .tjs-match__cols { grid-template-columns: 1fr; gap: 16px; }
+  .tjs-match__lines { display: none; }
+  .tjs-match__stack-label { display: block; }
+
+  .tjs-match__side--left { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .tjs-match__side--left .tjs-match__node {
+    width: auto;
+    padding: 8px 12px;
+    border-radius: 999px;
+  }
+  .tjs-match__anchor { display: none; }
+}
+
 // While a tile is held, every place it can land glows; the one under the cursor lifts more strongly.
 .tjs-slot.tjs-drop-active,
 .tjs-item-tray.tjs-drop-active,

@@ -19,6 +19,7 @@ export default class extends Controller {
     if (this.typeValue === "ordering") this.normaliseOrdering()
     if (this.typeValue === "matrix") this.normaliseMatrix()
     if (this.typeValue === "classify") this.normaliseClassify()
+    if (this.typeValue === "match") this.normaliseMatch()
     this.render()
   }
 
@@ -32,6 +33,7 @@ export default class extends Controller {
     if (this.typeValue === "matrix") this.captureMatrix()
     else if (this.typeValue === "ordering") this.captureOrdering()
     else if (this.typeValue === "classify") this.captureClassify()
+    else if (this.typeValue === "match") this.captureMatch()
     else this.captureDragDrop()
     this.configTarget.value = JSON.stringify(this.buildConfig())
   }
@@ -47,6 +49,7 @@ export default class extends Controller {
       case "fill_blank": return this.fillBlankHtml()
       case "ordering": return this.orderingHtml()
       case "classify": return this.classifyHtml()
+      case "match": return this.matchHtml()
       default: return this.dragDropHtml()
     }
   }
@@ -67,6 +70,13 @@ export default class extends Controller {
         this.model.items.forEach(item => { if (item.target) correct[item.id] = item.target })
         return { items: this.model.items.map(i => ({ id: i.id, text: i.text })),
                  targets: this.model.targets.map(t => ({ id: t.id, label: t.label })),
+                 correct }
+      }
+      case "match": {
+        const correct = {}
+        this.model.left.forEach(item => { if (item.answer) correct[item.id] = item.answer })
+        return { left: this.model.left.map(l => ({ id: l.id, text: l.text })),
+                 right: this.model.right.map(r => ({ id: r.id, text: r.text })),
                  correct }
       }
       default: {
@@ -336,6 +346,94 @@ export default class extends Controller {
     this.model.targets = this.model.targets.filter(t => t.id !== id)
     // Clear any item assignments that pointed to this target.
     this.model.items.forEach(i => { if (i.target === id) i.target = '' })
+    this.render()
+  }
+
+  // ---- match -------------------------------------------------------------------
+  // this.model = { left: [{ id, text, answer }], right: [{ id, text }] }
+  // answer on each left item is the id of its correct right definition ('' = unassigned). Extra right
+  // definitions with no keyword pointing at them are distractors.
+  normaliseMatch () {
+    const left = this.model.left || []
+    const right = this.model.right || []
+    const correct = this.model.correct || {}
+    this.model.left = left.length
+      ? left.map(l => ({ id: l.id, text: l.text, answer: correct[l.id] || '' }))
+      : [this.blankMatchLeft(), this.blankMatchLeft()]
+    this.model.right = right.length
+      ? right.map(r => ({ id: r.id, text: r.text }))
+      : [this.blankMatchRight(), this.blankMatchRight(), this.blankMatchRight()]
+  }
+
+  blankMatchLeft () { return { id: this.uid('ml'), text: '', answer: '' } }
+  blankMatchRight () { return { id: this.uid('mr'), text: '' } }
+
+  captureMatch () {
+    this.editorTarget.querySelectorAll('[data-match-left]').forEach(row => {
+      const item = this.model.left.find(l => l.id === row.dataset.matchLeft)
+      if (!item) return
+      item.text   = row.querySelector('[data-field=left-text]').value
+      item.answer = row.querySelector('[data-field=left-answer]').value
+    })
+    this.editorTarget.querySelectorAll('[data-match-right]').forEach(row => {
+      const item = this.model.right.find(r => r.id === row.dataset.matchRight)
+      if (!item) return
+      item.text = row.querySelector('[data-field=right-text]').value
+    })
+  }
+
+  matchHtml () {
+    const rightRows = this.model.right.map(r => `
+      <div class="tjs-builder__row" data-match-right="${this.esc(r.id)}">
+        <input class="tjk-input" data-field="right-text" value="${this.esc(r.text)}" placeholder="Definition text">
+        <button type="button" class="tj-btn-danger" data-action="question-builder#removeMatchRight" data-id="${this.esc(r.id)}">Remove</button>
+      </div>`).join('')
+
+    const leftRows = this.model.left.map(l => `
+      <div class="tjs-builder__row" data-match-left="${this.esc(l.id)}">
+        <input class="tjk-input" data-field="left-text" value="${this.esc(l.text)}" placeholder="Keyword">
+        <select class="tjk-input" data-field="left-answer">
+          <option value="">— correct definition —</option>
+          ${this.model.right.map(r =>
+            `<option value="${this.esc(r.id)}" ${l.answer === r.id ? 'selected' : ''}>${this.esc(r.text || '(empty)')}</option>`
+          ).join('')}
+        </select>
+        <button type="button" class="tj-btn-danger" data-action="question-builder#removeMatchLeft" data-id="${this.esc(l.id)}">Remove</button>
+      </div>`).join('')
+
+    return `
+      <label class="tjk-label">Definitions (right) — add extra ones as distractors</label>
+      <div class="tjs-builder__items">${rightRows}</div>
+      <button type="button" class="tj-btn-primary" data-action="question-builder#addMatchRight">Add definition</button>
+      <label class="tjk-label" style="margin-top:1rem">Keywords (left) — pick each one's correct definition</label>
+      <div class="tjs-builder__items">${leftRows}</div>
+      <button type="button" class="tj-btn-primary" data-action="question-builder#addMatchLeft">Add keyword</button>`
+  }
+
+  addMatchLeft () {
+    this.captureMatch()
+    this.model.left.push(this.blankMatchLeft())
+    this.render()
+  }
+
+  removeMatchLeft (event) {
+    this.captureMatch()
+    this.model.left = this.model.left.filter(l => l.id !== event.currentTarget.dataset.id)
+    this.render()
+  }
+
+  addMatchRight () {
+    this.captureMatch()
+    this.model.right.push(this.blankMatchRight())
+    this.render()
+  }
+
+  removeMatchRight (event) {
+    this.captureMatch()
+    const id = event.currentTarget.dataset.id
+    this.model.right = this.model.right.filter(r => r.id !== id)
+    // Clear any keyword whose correct definition was this one.
+    this.model.left.forEach(l => { if (l.answer === id) l.answer = '' })
     this.render()
   }
 

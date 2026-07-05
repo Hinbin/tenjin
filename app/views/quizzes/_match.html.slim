@@ -1,0 +1,34 @@
+/ Match question — pair each left keyword with its right definition (a "draw a line" question).
+/ Tap a keyword then a definition to connect them; a shared colour + number badge marks each pair, and
+/ on wide screens match_question.js also draws an SVG connector line. The right column is shuffled and
+/ carries extra distractor definitions. Partial-credit scored on the server (Question#score_response).
+/ KEEP: .tjs-match__item[data-left-id] keywords, .tjs-match__option[data-right-id] definitions,
+/       svg.tjs-match__lines overlay, #matchSubmit, #nextButton / .next-button / .tj-invisible.
+/       match_question.js wires tap-pairing + submit and reveals via .correct-answer / .incorrect-answer.
+.tjs-question id="match"
+  - if @question.topic.present?
+    .tjs-question__pill
+      = render 'shared/skin/pill', text: @question.topic.name, color: subject_neon(@quiz.subject)
+  .tjs-question__text ==@question.question_text
+  .tjs-match
+    .tjs-match__cols
+      .tjs-match__side.tjs-match__side--left
+        .tjs-match__stack-label Keywords — tap one
+        - @question.config['left'].to_a.shuffle.each do |left|
+          button.tjs-match__node.tjs-match__item type='button' data-left-id=left['id']
+            span.tjs-match__text = left['text']
+            span.tjs-match__badge
+            span.tjs-match__anchor
+      svg.tjs-match__lines aria-hidden='true'
+      .tjs-match__side.tjs-match__side--right
+        .tjs-match__stack-label Definitions — then tap the match
+        - @question.config['right'].to_a.shuffle.each do |right|
+          button.tjs-match__node.tjs-match__option type='button' data-right-id=right['id']
+            span.tjs-match__badge
+            span.tjs-match__text = right['text']
+            span.tjs-match__anchor
+  / answer-effect mount — Phase 4 renders the equipped answer-effect burst here on a correct answer
+  .tjs-quiz__fx data-quiz-target='answerFx' aria-hidden='true'
+  = render 'quizzes/answer_feedback'
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__submit.question-button#matchSubmit Check Answer
+  button.tjs-btn.tjs-btn--primary.tjs-quiz__next.next-button.tj-invisible#nextButton onclick='location.reload()' Next Question

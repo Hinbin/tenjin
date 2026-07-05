@@ -18,7 +18,7 @@ class Question < ApplicationRecord
   # NOTE: integer 1 (formerly :boolean) is intentionally retired and left unused — boolean questions
   # were migrated to :multiple (they were already two-answer True/False MCQs).
   enum :question_type, { short_answer: 0, multiple: 2, drag_drop: 3, matrix: 4,
-                         fill_blank: 5, ordering: 6, classify: 7 }
+                         fill_blank: 5, ordering: 6, classify: 7, match: 8 }
 
   # Normally-created questions are :approved by default; only the import API explicitly stamps
   # questions :pending (Question::ImportApiQuestions), keeping them inactive until a human

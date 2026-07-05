@@ -16,12 +16,17 @@
 #     config = { "answer" => { "1" => "control|control unit", "2" => "arithmetic logic" } }
 #   ordering:  students arrange shuffled item tiles into the correct sequence (a process: sort steps,
 #     fetch-decode-execute, …). config = { "items" => [{ "id" =>, "text" => }], "order" => [id, …] }
+#   match:     students pair each left keyword with its right definition (a "draw a line" question);
+#     the right side carries extra unmatched definitions as distractors. Strictly 1:1 — each keyword
+#     has one correct definition and each definition answers at most one keyword.
+#     config = { "left" => [{ "id" =>, "text" => }], "right" => [{ "id" =>, "text" => }],
+#                "correct" => { left_id => right_id, … } }
 #
 # Scoring is partial-credit (0.0..1.0) so difficulty analysis can tell a near-miss from a blank.
 module StructuredQuestion
   extend ActiveSupport::Concern
 
-  STRUCTURED_TYPES = %w[drag_drop matrix fill_blank ordering classify].freeze
+  STRUCTURED_TYPES = %w[drag_drop matrix fill_blank ordering classify match].freeze
   ANSWER_BASED_TYPES = %w[short_answer multiple].freeze
   SLOT_PATTERN = /\{\{(\w+)\}\}/
 
@@ -31,6 +36,7 @@ module StructuredQuestion
     validate :fill_blank_config_valid
     validate :ordering_config_valid
     validate :classify_config_valid
+    validate :match_config_valid
   end
 
   def structured?
@@ -49,6 +55,7 @@ module StructuredQuestion
     when 'fill_blank' then score_fill_blank(normalize_response(response))
     when 'ordering' then score_ordering(normalize_response(response))
     when 'classify' then score_classify(normalize_response(response))
+    when 'match' then score_match(normalize_response(response))
     else 0.0
     end
   end
@@ -63,6 +70,7 @@ module StructuredQuestion
     when 'matrix'     then matrix_bits(norm)
     when 'ordering'   then ordering_bits(norm)
     when 'classify'   then classify_bits(norm)
+    when 'match'      then match_bits(norm)
     else 0
     end
   end
@@ -221,12 +229,20 @@ module StructuredQuestion
   # Response = { item_id => target_id } for each item the student placed.
   # Partial-credit: mean across all items (unplaced items score 0).
   def score_classify(response)
-    correct_map = config['correct'].to_h
-    item_ids = config['items'].to_a.filter_map { |item| item['id'] }
-    return 0.0 if item_ids.empty?
+    score_pairs(config['items'].to_a.filter_map { |item| item['id'] }, config['correct'].to_h, response)
+  end
 
-    correct = item_ids.count { |id| response[id] == correct_map[id] }
-    correct.to_f / item_ids.size
+  # Shared by the pairing types (classify, match): each unit id maps to exactly one correct value in
+  # correct_map; reward each unit whose response equals its expected value. Partial credit = mean
+  # (unanswered units score 0). count_pairs is the same tally as an integer, for the bit count.
+  def score_pairs(unit_ids, correct_map, response)
+    return 0.0 if unit_ids.empty?
+
+    count_pairs(unit_ids, correct_map, response).to_f / unit_ids.size
+  end
+
+  def count_pairs(unit_ids, correct_map, response)
+    unit_ids.count { |id| response[id] == correct_map[id] }
   end
 
   def classify_config_valid
@@ -249,6 +265,51 @@ module StructuredQuestion
   def classify_targets_exist?
     target_ids = config['targets'].to_a.filter_map { |t| t['id'] }
     config['correct'].to_h.values.all? { |id| target_ids.include?(id) }
+  end
+
+  # ---- match ----------------------------------------------------------------
+  # Students pair each left keyword with its right definition ("draw a line"). Same pair-scoring as
+  # classify (score_pairs), but the right side is a distinct list that carries extra distractor
+  # definitions, and the pairing is strictly 1:1 (each definition answers at most one keyword).
+  # Response = { left_id => right_id } for each keyword the student connected.
+  def score_match(response)
+    score_pairs(config['left'].to_a.filter_map { |left| left['id'] }, config['correct'].to_h, response)
+  end
+
+  def match_config_valid
+    return unless question_type == 'match'
+
+    match_size_errors
+    errors.add(:base, 'Every keyword needs a correct definition')             unless match_all_left_assigned?
+    errors.add(:base, 'Correct answers must reference existing definitions')  unless match_answers_exist?
+    errors.add(:base, 'Each definition can answer only one keyword')          unless match_answers_unique?
+  end
+
+  def match_size_errors
+    errors.add(:base, 'Match needs at least two keywords') if config['left'].to_a.size < 2
+    return unless match_missing_distractor?
+
+    errors.add(:base, 'Match needs at least one more definition than keyword (a distractor)')
+  end
+
+  # The right side must out-number the left so at least one definition is an unmatched distractor.
+  def match_missing_distractor?
+    left = config['left'].to_a.size
+    left.positive? && config['right'].to_a.size <= left
+  end
+
+  def match_all_left_assigned?
+    config['left'].to_a.filter_map { |left| left['id'] }.all? { |id| config.dig('correct', id).present? }
+  end
+
+  def match_answers_exist?
+    right_ids = config['right'].to_a.filter_map { |right| right['id'] }
+    config['correct'].to_h.values.all? { |id| right_ids.include?(id) }
+  end
+
+  def match_answers_unique?
+    values = config['correct'].to_h.values
+    values.uniq.size == values.size
   end
 
   # ---- bits_correct helpers -------------------------------------------------
@@ -283,8 +344,10 @@ module StructuredQuestion
   end
 
   def classify_bits(response)
-    correct_map = config['correct'].to_h
-    item_ids = config['items'].to_a.filter_map { |item| item['id'] }
-    item_ids.count { |id| response[id] == correct_map[id] }
+    count_pairs(config['items'].to_a.filter_map { |item| item['id'] }, config['correct'].to_h, response)
+  end
+
+  def match_bits(response)
+    count_pairs(config['left'].to_a.filter_map { |left| left['id'] }, config['correct'].to_h, response)
   end
 end
