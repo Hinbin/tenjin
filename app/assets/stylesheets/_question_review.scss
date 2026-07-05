@@ -80,6 +80,47 @@
   .tjs-matrix__cell { text-align: center; }
   .tj-review-cell-tick { color: var(--correct); font-weight: 700; }
 
+  // Match reveal: each authored keyword shown beside the definition it pairs with.
+  .tj-review-match {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tj-review-match__pair {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 8px;
+
+    .tjs-tile { cursor: default; }
+  }
+
+  .tj-review-match__arrow { color: var(--muted, var(--ink)); font-weight: 700; }
+
+  // Unused item bank shown so reviewers can judge the distractors (wrong options that aren't
+  // the answer to anything). Rendered neutrally — never with the .correct-answer highlight.
+  .tj-review-distractors {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .tj-review-distractors__label {
+    color: var(--muted, var(--ink));
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .tj-review-distractors__item {
+    cursor: default;
+    opacity: 0.85;
+  }
+
   // Mirror of the _quiz.scss .tjs-quiz answer-reveal override, scoped to the preview.
   .correct-answer {
     background: color-mix(in srgb, var(--correct) 16%, var(--surface)) !important;

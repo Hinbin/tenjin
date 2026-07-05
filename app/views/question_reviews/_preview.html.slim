@@ -30,12 +30,19 @@
 
     - when 'drag_drop'
       - items = question.config.fetch('items', []).index_by { |item| item['id'] }
+      - used_ids = question.config.fetch('answer', {}).values.flatten.uniq
       .tjs-cloze
         - cloze_segments(question.cloze_text).each do |kind, value|
           - if kind == :text
             span.tjs-cloze__text = value
           - else
             span.tjs-slot.correct-answer = Array(question.config.dig('answer', value)).map { |id| items.dig(id, 'text') }.join(', ')
+      - distractors = question.config.fetch('items', []).reject { |item| used_ids.include?(item['id']) }
+      - if distractors.any?
+        .tj-review-distractors
+          span.tj-review-distractors__label Distractors
+          - distractors.each do |item|
+            span.tjs-tile.tj-review-distractors__item = item['text']
 
     - when 'ordering'
       .tjs-question__text ==(question.question_text.presence || '(no question text)')
@@ -66,10 +73,29 @@
                     - if correct_ids.include?(col['id'])
                       span.tj-review-cell-tick ✓
 
+    - when 'match'
+      .tjs-question__text ==(question.question_text.presence || '(no question text)')
+      - rights = question.config.fetch('right', []).index_by { |right| right['id'] }
+      - correct = question.config.fetch('correct', {})
+      .tj-review-match
+        - question.config.fetch('left', []).each do |left|
+          .tj-review-match__pair
+            .tjs-tile.correct-answer = left['text']
+            span.tj-review-match__arrow aria-hidden='true' →
+            .tjs-tile.correct-answer = rights.dig(correct[left['id']], 'text')
+      - matched_ids = correct.values
+      - distractors = question.config.fetch('right', []).reject { |right| matched_ids.include?(right['id']) }
+      - if distractors.any?
+        .tj-review-distractors
+          span.tj-review-distractors__label Distractors
+          - distractors.each do |right|
+            span.tjs-tile.tj-review-distractors__item = right['text']
+
     - when 'classify'
       .tjs-question__text ==(question.question_text.presence || '(no question text)')
       - items = question.config.fetch('items', []).index_by { |item| item['id'] }
-      - by_target = question.config.fetch('correct', {}).group_by { |_item_id, target_id| target_id }
+      - correct = question.config.fetch('correct', {})
+      - by_target = correct.group_by { |_item_id, target_id| target_id }
       .tjs-classify__buckets
         - question.config.fetch('targets', []).each do |target|
           .tjs-bucket
@@ -77,3 +103,9 @@
             .tjs-bucket__body
               - Array(by_target[target['id']]).each do |item_id, _target_id|
                 .tjs-tile.correct-answer = items.dig(item_id, 'text')
+      - distractors = question.config.fetch('items', []).reject { |item| correct.key?(item['id']) }
+      - if distractors.any?
+        .tj-review-distractors
+          span.tj-review-distractors__label Distractors
+          - distractors.each do |item|
+            span.tjs-tile.tj-review-distractors__item = item['text']
